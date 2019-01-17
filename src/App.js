@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { Sidebar, Menu, Segment, Icon, Image, Header } from "semantic-ui-react"
+
 import './App.css'
+import MainContent from './components/AlgoGroupView'
 
 class App extends Component {
   state = {
@@ -13,7 +15,6 @@ class App extends Component {
 
   render() {
     const {content} = this.state
-    const contentComponent = 'HELLO'
 
     return (
       <Sidebar.Pushable as={Segment}>
@@ -51,7 +52,7 @@ class App extends Component {
               NEuler - Playground for Neo4j Graph Algorithms
             </Header>
           </Segment>
-         {contentComponent}
+          <MainContent />
         </Sidebar.Pusher>
       </Sidebar.Pushable>
     )
