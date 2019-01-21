@@ -47,7 +47,7 @@ class Algorithms extends Component {
                 <Button basic color='green' onClick={() => {
                   const taskId = generateTaskId()
                   const parameters = this.state.parameters['pageRank']
-                  const {label, relationshipType} = parameters
+                  const {label, relationshipType} = parameters || {}
 
                   pageRank({
                     taskId,
