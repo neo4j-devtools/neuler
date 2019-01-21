@@ -1,15 +1,15 @@
 import React from 'react'
-import {Form, Button, Checkbox} from "semantic-ui-react"
+import {Form, Checkbox} from "semantic-ui-react"
 
-export default () => (
+export default ({onChange}) => (
   <Form size='mini' style={{marginBottom: '1em'}}>
     <Form.Field>
       <label>Label</label>
-      <input placeholder='Label' />
+      <input placeholder='Label' onChange={evt => onChange('label', evt.target.value)}/>
     </Form.Field>
     <Form.Field>
       <label>Relationship Type</label>
-      <input placeholder='Relationship Type' />
+      <input placeholder='Relationship Type' onChange={evt => onChange('relationshipType', evt.target.value)} />
     </Form.Field>
     <Form.Field>
       <label>Iterations</label>
