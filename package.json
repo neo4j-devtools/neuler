@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "neo4j-driver": "^1.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-redux": "^6.0.0",
     "react-scripts": "2.1.1",
-    "semantic-ui-react": "^0.84.0"
+    "redux": "^4.0.1",
+    "semantic-ui-react": "^0.84.0",
+    "uuid": "^3.3.2"
   },
   "scripts": {
     "start": "react-scripts start",
