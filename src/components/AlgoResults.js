@@ -8,14 +8,16 @@ const getPanes = tasks => tasks.map(task =>
       <Table color='green'>
         <Table.Header>
           <Table.Row>
-            <Table.HeaderCell>Name</Table.HeaderCell>
+            <Table.HeaderCell>Labels</Table.HeaderCell>
+            <Table.HeaderCell>Properties</Table.HeaderCell>
             <Table.HeaderCell>Page Rank</Table.HeaderCell>
           </Table.Row>
         </Table.Header>
         <Table.Body>
           {task.result && task.result.map(result =>
             <Table.Row>
-              <Table.Cell>{result.name}</Table.Cell>
+              <Table.Cell>{result.labels}</Table.Cell>
+              <Table.Cell>{result.properties.toString()}</Table.Cell>
               <Table.Cell>{result.score}</Table.Cell>
             </Table.Row>
           )}

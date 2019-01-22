@@ -2,8 +2,8 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
-import CentralityForm from './CentralityForm'
-import BetweennesForm from './BetweennesForm'
+import CentralityForm from './Centralities/PageRankForm'
+import BetweennesForm from './Centralities/BetweennesForm'
 import { pageRank } from "../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
@@ -11,7 +11,11 @@ import { addTask, completeTask } from "../ducks/tasks"
 
 class Algorithms extends Component {
   state = {
-    parameters: {}
+    parameters: {
+      pageRank: {
+        direction: 'Outgoing'
+      }
+    }
   }
   render() {
     const { addTask, completeTask } = this.props
@@ -31,7 +35,7 @@ class Algorithms extends Component {
             </Card.Content>
             <Card.Content extra>
               <div>
-                <CentralityForm onChange={(key, value) => {
+                <CentralityForm {...this.state.parameters.pageRank} onChange={(key, value) => {
                   const parameters = {...this.state.parameters}
                   if (!parameters['pageRank']) {
                     parameters['pageRank'] = {}
@@ -40,19 +44,15 @@ class Algorithms extends Component {
                   this.setState({
                     parameters
                   })
-
                 }}/>
               </div>
               <div className='ui two buttons'>
                 <Button basic color='green' onClick={() => {
                   const taskId = generateTaskId()
-                  const parameters = this.state.parameters['pageRank']
-                  const {label, relationshipType} = parameters || {}
 
                   pageRank({
                     taskId,
-                    label,
-                    relationshipType
+                    ...this.state.parameters['pageRank']
                   }).then(result => {
                     console.log(result)
                     completeTask(taskId, result)
