@@ -57,7 +57,7 @@ class Algorithms extends Component {
         this.props.completeTask(taskId, result)
       })
 
-      this.props.addTask(taskId, algorithm)
+      this.props.addTask(taskId, algorithm, this.state.parameters[algorithm])
     }
   }
 
@@ -123,10 +123,11 @@ class Algorithms extends Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  addTask: (taskId, algorithm) => {
+  addTask: (taskId, algorithm, parameters) => {
     const task = {
       algorithm,
       taskId,
+      parameters,
       startTime: new Date()
     }
     dispatch(addTask({ ...task }))

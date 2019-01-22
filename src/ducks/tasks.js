@@ -2,11 +2,12 @@ const NAME = 'TASKS'
 const ADD_TASK = `${NAME}/ADD_TASK`
 const COMPLETE_TASK = `${NAME}/COMPLETE_TASK`
 
-export const addTask = ({taskId, algorithm, startTime}) => ({
+export const addTask = ({taskId, algorithm, startTime, parameters}) => ({
   type: ADD_TASK,
   taskId,
   algorithm,
-  startTime
+  startTime,
+  parameters
 })
 
 export const completeTask = ({taskId, result}) => ({
@@ -23,6 +24,7 @@ export default (state = [], action) => {
         algorithm: action.algorithm,
         startTime: action.startTime,
         result: action.result,
+        parameters: action.parameters,
         completed: false
       }])
     case COMPLETE_TASK:
