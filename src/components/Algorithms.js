@@ -4,7 +4,7 @@ import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
 import CentralityForm from './Centralities/PageRankForm'
 import BetweennesForm from './Centralities/BetweennesForm'
-import { pageRank } from "../services/centralities"
+import { betweenness, pageRank } from "../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../ducks/tasks"
@@ -12,13 +12,56 @@ import { addTask, completeTask } from "../ducks/tasks"
 class Algorithms extends Component {
   state = {
     parameters: {
-      pageRank: {
+      'Page Rank': {
+        direction: 'Outgoing'
+      },
+      'Betweenness': {
         direction: 'Outgoing'
       }
     }
   }
+
+  onChangeParam(algorithm, key, value) {
+    const parameters = { ...this.state.parameters }
+    if (!parameters[algorithm]) {
+      parameters[algorithm] = {}
+    }
+    parameters[algorithm][key] = value
+    this.setState({
+      parameters
+    })
+  }
+
+  onRunAlgo(algorithm) {
+    const taskId = generateTaskId()
+
+    let service
+
+    switch (algorithm) {
+      case 'Page Rank':
+        service = pageRank
+        break
+      case 'Betweenness':
+        service = betweenness
+        break
+      default:
+        break
+    }
+
+    if (service) {
+      service({
+        taskId,
+        ...this.state.parameters[algorithm]
+      }).then(result => {
+        console.log(result)
+        this.props.completeTask(taskId, result)
+      })
+
+      this.props.addTask(taskId, algorithm)
+    }
+  }
+
   render() {
-    const { addTask, completeTask } = this.props
     return (
       <div style={{ margin: '0 2em', width: '99%' }}>
         <Header as='h2'>Centrality Algorithms</Header>
@@ -35,32 +78,11 @@ class Algorithms extends Component {
             </Card.Content>
             <Card.Content extra>
               <div>
-                <CentralityForm {...this.state.parameters.pageRank} onChange={(key, value) => {
-                  const parameters = {...this.state.parameters}
-                  if (!parameters['pageRank']) {
-                    parameters['pageRank'] = {}
-                  }
-                  parameters['pageRank'][key] = value
-                  this.setState({
-                    parameters
-                  })
-                }}/>
+                <CentralityForm {...this.state.parameters['Page Rank']}
+                                onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
               </div>
               <div className='ui two buttons'>
-                <Button basic color='green' onClick={() => {
-                  const taskId = generateTaskId()
-
-                  pageRank({
-                    taskId,
-                    ...this.state.parameters['pageRank']
-                  }).then(result => {
-                    console.log(result)
-                    completeTask(taskId, result)
-                  })
-
-                  addTask(taskId, 'Page Rank')
-
-                }}>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Page Rank')}>
                   Run
                 </Button>
                 <Button basic color='red'>
@@ -81,10 +103,11 @@ class Algorithms extends Component {
             </Card.Content>
             <Card.Content extra>
               <div>
-                <BetweennesForm/>
+                <BetweennesForm {...this.state.parameters['Betweenness']}
+                                onChange={this.onChangeParam.bind(this, 'Betweenness')}/>
               </div>
               <div className='ui two buttons'>
-                <Button basic color='green'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Betweenness')}>
                   Run
                 </Button>
                 <Button basic color='red'>

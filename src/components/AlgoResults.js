@@ -4,7 +4,7 @@ import { connect } from "react-redux"
 
 const getPanes = tasks => tasks.map(task =>
   ({
-    menuItem: `${task.algorithm}. Started at: ${task.startTime.toLocaleString()}`, render: () => <Tab.Pane>
+    menuItem: `${task.algorithm}. Started at: ${task.startTime.toLocaleString()}`, render: () => <Tab.Pane key={task.startTime.toLocaleString()}>
       <Table color='green'>
         <Table.Header>
           <Table.Row>
@@ -14,8 +14,8 @@ const getPanes = tasks => tasks.map(task =>
           </Table.Row>
         </Table.Header>
         <Table.Body>
-          {task.result && task.result.map(result =>
-            <Table.Row>
+          {task.result && task.result.map((result, idx) =>
+            <Table.Row key={idx}>
               <Table.Cell>{result.labels}</Table.Cell>
               <Table.Cell>{result.properties.toString()}</Table.Cell>
               <Table.Cell>{result.score}</Table.Cell>
