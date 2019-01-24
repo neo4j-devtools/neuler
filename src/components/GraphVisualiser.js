@@ -12,18 +12,17 @@ export default class extends Component {
       server_password: "a",
       labels: {
         "Person": {
-          caption: "name"
+          caption: "name",
+          size: "pagerank"
         },
         "Movie": {
           caption: 'title'
         }
       },
-      relationships: {
-        "ACTED_IN": {
-          "caption": false
-        }
-      },
-      initial_cypher: "MATCH (n)-[r:ACTED_IN]->(m) RETURN n,r,m"
+      initial_cypher: `match (n:Person)
+where exists(n.pagerank)
+return { labels: labels(n), properties: { identity: ID(n), name: n.name, pagerank: n.pagerank } } as path
+`
     }
   }
 
@@ -32,11 +31,6 @@ export default class extends Component {
     viz.render();
   }
 
-  /*setVisContainer (visContainer) {
-    console.log(visContainer)
-    this.visContainer = visContainer
-  }
-*/
   render() {
     return <div id='viz' style={{width: '1100px', height: '500px'}} ref={this.visContainer} />
   }

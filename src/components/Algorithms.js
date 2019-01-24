@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
-import CentralityForm from './Centralities/PageRankForm'
+import PageRankForm from './Centralities/PageRankForm'
 import BetweennesForm from './Centralities/BetweennesForm'
 import { betweenness, pageRank } from "../services/centralities"
 
@@ -13,7 +13,8 @@ class Algorithms extends Component {
   state = {
     parameters: {
       'Page Rank': {
-        direction: 'Outgoing'
+        direction: 'Outgoing',
+        persist: true
       },
       'Betweenness': {
         direction: 'Outgoing'
@@ -78,7 +79,7 @@ class Algorithms extends Component {
             </Card.Content>
             <Card.Content extra>
               <div>
-                <CentralityForm {...this.state.parameters['Page Rank']}
+                <PageRankForm {...this.state.parameters['Page Rank']}
                                 onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
               </div>
               <div className='ui two buttons'>

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form } from "semantic-ui-react"
 
-export default ({onChange, direction}) => (
+export default ({onChange, direction, persist}) => (
   <React.Fragment>
     <Form.Field>
       <label>Label</label>
@@ -35,5 +35,12 @@ export default ({onChange, direction}) => (
         onChange={() => onChange('direction', 'Both')}
       />
     </Form.Group>
+    <Form.Field inline>
+      <label>Store results</label>
+      <input type='checkbox' checked={persist} onChange={evt => {
+        console.log(evt.target, evt)
+        onChange('persist', evt.target.checked)
+      }} />
+    </Form.Field>
   </React.Fragment>
 )

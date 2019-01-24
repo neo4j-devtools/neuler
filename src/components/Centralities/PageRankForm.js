@@ -8,11 +8,11 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, iterations, direction } = this.props
+    const { onChange, iterations, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
-        <CentralityForm onChange={onChange} direction={direction}/>
+        <CentralityForm onChange={onChange} direction={direction} persist={persist}/>
         {/* <Form.Field>
           <label>Iterations</label>
           <input

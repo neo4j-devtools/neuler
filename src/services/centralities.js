@@ -1,10 +1,10 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 
-export const pageRank = ({ label, relationshipType, direction, iterations = 20, dampingFactor = 0.85 }) => {
+export const pageRank = ({ label, relationshipType, direction, persist, iterations = 20, dampingFactor = 0.85 }) => {
   console.log(label, relationshipType, direction)
 
-  const parameters = {
+  const baseParameters = {
     "label": label || null,
     "relationshipType": relationshipType || null,
     "direction": direction || 'Outgoing',
@@ -12,7 +12,11 @@ export const pageRank = ({ label, relationshipType, direction, iterations = 20, 
     "dampingFactor": dampingFactor
   }
 
-  return runAlgorithm(pageRankStreamCypher, parameters)
+  return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getPageRankFetchCypher(baseParameters.label), {
+      ...baseParameters,
+      write: true,
+      writeProperty: 'pagerank'
+    }, persist)
 }
 
 export const betweenness = ({ label, relationshipType, direction }) => {
@@ -27,29 +31,49 @@ export const betweenness = ({ label, relationshipType, direction }) => {
   return runAlgorithm(betweennessStreamCypher, parameters)
 }
 
-const runAlgorithm = (cypher, parameters) =>
-  runCypher(cypher, parameters)
-    .then(result => {
-      if (result.records) {
-        return result.records.map(record => {
-          const { properties, labels } = record.get('node')
-          return {
-            properties: Object.keys(properties).reduce((props, propKey) => {
-              props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
-              return props
-            }, {}),
-            labels,
-            score: record.get('score')
-          }
+const handleException = error => {
+  console.error(error)
+  throw new Error(error)
+}
+
+const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted) => {
+  if (persisted) {
+    return runCypher(streamCypher, parameters)
+      .then(parseResultStream)
+      .catch(handleException)
+  } else {
+    return new Promise((resolve, reject) => {
+      runCypher(storeCypher, parameters)
+        .then(() => {
+          runCypher(fetchCypher, {
+            writeProperty: parameters.writeProperty
+          })
+            .then(result => resolve(parseResultStream(result)))
+            .catch(reject)
         })
-      } else {
-        console.error(result.error)
-        throw new Error(result.error)
+        .catch(handleException)
+    })
+  }
+}
+
+const parseResultStream = result => {
+  if (result.records) {
+    return result.records.map(record => {
+      const { properties, labels } = record.get('node')
+      return {
+        properties: Object.keys(properties).reduce((props, propKey) => {
+          props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
+          return props
+        }, {}),
+        labels,
+        score: record.get('score')
       }
     })
-    .catch(error => {
-      console.error(error)
-    })
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
 
 const betweennessStreamCypher = `
   CALL algo.betweenness.stream($label, $relationshipType, {
@@ -72,3 +96,18 @@ const pageRankStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, score
   RETURN node, score
   ORDER BY score DESC`
+
+const pageRankStoreCypher = `
+  CALL algo.pageRank($label, $relationshipType, {
+    iterations: $iterations, 
+    dampingFactor: $dampingFactor,
+    direction: $direction,
+    write: true,
+    writeProperty: $writeProperty
+    })
+  `
+
+const getPageRankFetchCypher = label => `MATCH (node${label ? ':' + label : ''}) 
+WHERE not(node[$writeProperty] is null)
+RETURN node, node[$writeProperty] AS score
+ORDER BY score DESC`
