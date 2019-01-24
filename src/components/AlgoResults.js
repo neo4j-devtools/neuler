@@ -1,13 +1,25 @@
 import React from 'react'
 import { Table, Tab, Header } from 'semantic-ui-react'
 import { connect } from "react-redux"
+import GraphVisualiser from './GraphVisualiser'
+import CentralityResult from './Centralities/CentralityResult'
 
 const getAlgoPanes = task => [{
   menuItem: `Table`,
-  render: () => <AlgoResultTab task={task}/>
+  render: () => {
+    switch (task.algorithm) {
+      case 'Page Rank':
+        return <CentralityResult task={task}/>
+      default:
+        return null
+    }
+  }
 }, {
   menuItem: `Code`,
   render: () => <div>{Object.values(task.parameters).map(param => param.toString()).join(', ')}</div>
+}, {
+  menuItem: `Vis`,
+  render: () => <GraphVisualiser/>
 }]
 
 const getResultPanes = tasks => tasks.map(task =>
@@ -15,29 +27,6 @@ const getResultPanes = tasks => tasks.map(task =>
     menuItem: `${task.algorithm}. Started at: ${task.startTime.toLocaleString()}`,
     render: () => <HorizontalAlgoTab task={task}/>
   })
-)
-
-const AlgoResultTab = ({ task }) => (
-  <Tab.Pane key={task.startTime.toLocaleString()}>
-    <Table color='green'>
-      <Table.Header>
-        <Table.Row>
-          <Table.HeaderCell>Labels</Table.HeaderCell>
-          <Table.HeaderCell>Properties</Table.HeaderCell>
-          <Table.HeaderCell>Page Rank</Table.HeaderCell>
-        </Table.Row>
-      </Table.Header>
-      <Table.Body>
-        {task.result && task.result.map((result, idx) =>
-          <Table.Row key={idx}>
-            <Table.Cell>{result.labels}</Table.Cell>
-            <Table.Cell>{result.properties.toString()}</Table.Cell>
-            <Table.Cell>{result.score}</Table.Cell>
-          </Table.Row>
-        )}
-      </Table.Body>
-    </Table>
-  </Tab.Pane>
 )
 
 const TabExampleVerticalTabular = ({ tasks }) => (
