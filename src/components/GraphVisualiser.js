@@ -34,7 +34,7 @@ export default class extends Component {
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
         caption: captions[label],
-        size: "pagerank"
+        size: this.props.writeProperty
       }
       return labelConfig
     }, {})
@@ -46,10 +46,10 @@ export default class extends Component {
   }
 
   componentDidMount() {
-    const {results, label, relationshipType} = this.props
+    const {results, label, relationshipType, writeProperty} = this.props
     this.setState({
       cypher: `match path = (n${label ? ':'+label : ''})
-where not(n["pagerank"] is null)
+where not(n["${writeProperty}"] is null)
 return path
 union
 match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()

@@ -42,5 +42,9 @@ export default ({onChange, direction, persist}) => (
         onChange('persist', evt.target.checked)
       }} />
     </Form.Field>
+    <Form.Field inline>
+      <label>Write Property</label>
+      <input placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
+    </Form.Field>
   </React.Fragment>
 )
