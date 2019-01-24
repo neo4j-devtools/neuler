@@ -1,4 +1,5 @@
 import { runCypher } from "./stores/neoStore"
+import { v1 } from 'neo4j-driver'
 
 export const pageRank = ({ label, relationshipType, direction, iterations = 20, dampingFactor = 0.85 }) => {
   console.log(label, relationshipType, direction)
@@ -33,7 +34,10 @@ const runAlgorithm = (cypher, parameters) =>
         return result.records.map(record => {
           const { properties, labels } = record.get('node')
           return {
-            properties,
+            properties: Object.keys(properties).reduce((props, propKey) => {
+              props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
+              return props
+            }, {}),
             labels,
             score: record.get('score')
           }
