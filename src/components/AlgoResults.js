@@ -1,5 +1,5 @@
 import React from 'react'
-import { Table, Tab, Header } from 'semantic-ui-react'
+import { Table, Tab, Header, Label, Segment } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './GraphVisualiser'
 import CentralityResult from './Centralities/CentralityResult'
@@ -16,7 +16,13 @@ const getAlgoPanes = task => [{
   }
 }, {
   menuItem: `Code`,
-  render: () => <div>{Object.values(task.parameters).map(param => param.toString()).join(', ')}</div>
+  render: () => (
+    <div>
+        {task.parameters ?  <Segment.Group>{Object.keys(task.parameters).map(key => <Segment>:param {key} => '{task.parameters[key] ? task.parameters[key].toString(): null}';</Segment>) }</Segment.Group> : null }
+
+      <Segment>{task.query}</Segment>
+    </div>
+    )
 }, {
   menuItem: `Vis`,
   render: () => <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} relationshipType={task.parameters.relationshipType} writeProperty={task.parameters.writeProperty} />

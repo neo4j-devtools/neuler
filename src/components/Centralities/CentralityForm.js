@@ -46,7 +46,7 @@ export default ({onChange, direction, persist}) => (
       {
         persist ?
           <Form.Field inline>
-            <Input size='mini' basic placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
+            <Input size='mini' basic="true" placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
           </Form.Field>
           : null
       }

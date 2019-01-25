@@ -25,7 +25,6 @@ export default (state = [], action) => {
         algorithm: action.algorithm,
         startTime: action.startTime,
         result: action.result,
-        parameters: action.parameters,
         completed: false
       })
       return newState
@@ -33,7 +32,9 @@ export default (state = [], action) => {
       const tasks = [...state]
       const task = tasks.find(task => task.taskId === action.taskId)
       if (task) {
-        task.result = action.result
+        task.result = action.result.rows
+        task.query = action.result.query
+        task.parameters = action.result.parameters
         task.completed = true
         return tasks
       } else {

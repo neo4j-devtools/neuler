@@ -49,7 +49,7 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
           runCypher(fetchCypher, {
             writeProperty: parameters.writeProperty
           })
-            .then(result => resolve(parseResultStream(result)))
+            .then(result => resolve({rows: parseResultStream(result), query: storeCypher, parameters: parameters}))
             .catch(reject)
         })
         .catch(handleException)
@@ -81,26 +81,26 @@ const betweennessStreamCypher = `
      direction: $direction
     })
   YIELD nodeId, centrality
- 
+
   WITH algo.getNodeById(nodeId) AS node, centrality AS score
   RETURN node, score
   ORDER BY score DESC`
 
 const pageRankStreamCypher = `
   CALL algo.pageRank.stream($label, $relationshipType, {
-    iterations: $iterations, 
+    iterations: $iterations,
     dampingFactor: $dampingFactor,
     direction: $direction
     })
   YIELD nodeId, score
- 
+
   WITH algo.getNodeById(nodeId) AS node, score
   RETURN node, score
   ORDER BY score DESC`
 
 const pageRankStoreCypher = `
   CALL algo.pageRank($label, $relationshipType, {
-    iterations: $iterations, 
+    iterations: $iterations,
     dampingFactor: $dampingFactor,
     direction: $direction,
     write: true,
@@ -108,7 +108,7 @@ const pageRankStoreCypher = `
     })
   `
 
-const getPageRankFetchCypher = label => `MATCH (node${label ? ':' + label : ''}) 
+const getPageRankFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS score
 ORDER BY score DESC`
