@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form } from "semantic-ui-react"
+import { Form, Input } from "semantic-ui-react"
 
 export default ({onChange, direction, persist}) => (
   <React.Fragment>
@@ -35,16 +35,21 @@ export default ({onChange, direction, persist}) => (
         onChange={() => onChange('direction', 'Both')}
       />
     </Form.Group>
-    <Form.Field inline>
-      <label>Store results</label>
-      <input type='checkbox' checked={persist} onChange={evt => {
-        console.log(evt.target, evt)
-        onChange('persist', evt.target.checked)
-      }} />
-    </Form.Field>
-    <Form.Field inline>
-      <label>Write Property</label>
-      <input placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
-    </Form.Field>
+    <Form.Group inline>
+      <Form.Field inline>
+        <label>Store results</label>
+        <input type='checkbox' checked={persist} onChange={evt => {
+          console.log(evt.target, evt)
+          onChange('persist', evt.target.checked)
+        }}/>
+      </Form.Field>
+      {
+        persist ?
+          <Form.Field inline>
+            <Input size='mini' basic placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
+          </Form.Field>
+          : null
+      }
+    </Form.Group>
   </React.Fragment>
 )
