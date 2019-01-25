@@ -59,7 +59,7 @@ class Algorithms extends Component {
         this.props.completeTask(taskId, result)
       })
 
-      this.props.addTask(taskId, algorithm, this.state.parameters[algorithm])
+      this.props.addTask(taskId, algorithm, {...this.state.parameters[algorithm]})
     }
   }
 

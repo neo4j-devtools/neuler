@@ -19,14 +19,16 @@ export const completeTask = ({taskId, result}) => ({
 export default (state = [], action) => {
   switch (action.type) {
     case ADD_TASK:
-      return state.concat([{
+      const newState = [...state]
+      newState.unshift({
         taskId: action.taskId,
         algorithm: action.algorithm,
         startTime: action.startTime,
         result: action.result,
         parameters: action.parameters,
         completed: false
-      }])
+      })
+      return newState
     case COMPLETE_TASK:
       const tasks = [...state]
       const task = tasks.find(task => task.taskId === action.taskId)

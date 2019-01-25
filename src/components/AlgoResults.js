@@ -19,13 +19,13 @@ const getAlgoPanes = task => [{
   render: () => <div>{Object.values(task.parameters).map(param => param.toString()).join(', ')}</div>
 }, {
   menuItem: `Vis`,
-  render: () => <GraphVisualiser results={task.result} label={task.parameters.label} relationshipType={task.parameters.relationshipType} writeProperty={task.parameters.writeProperty} />
+  render: () => <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} relationshipType={task.parameters.relationshipType} writeProperty={task.parameters.writeProperty} />
 }]
 
 const getResultPanes = tasks => tasks.map(task =>
   ({
     menuItem: `${task.algorithm}. Started at: ${task.startTime.toLocaleString()}`,
-    render: () => <HorizontalAlgoTab task={task}/>
+    render: () => <HorizontalAlgoTab task={task} key={task.id}/>
   })
 )
 

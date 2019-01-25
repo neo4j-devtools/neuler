@@ -3,6 +3,7 @@ import { Grid, Form, Button, Icon, Select } from "semantic-ui-react"
 
 export default class extends Component {
   state = {
+    taskId: null,
     labels: {},
     captions: {},
     cypher: null
@@ -29,8 +30,8 @@ export default class extends Component {
     }
   }
 
-  onConfigChange(a, b) {
-    const { captions } = this.state
+  onConfigChange(reload) {
+    const { captions, cypher } = this.state
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
         caption: captions[label],
@@ -40,25 +41,38 @@ export default class extends Component {
     }, {})
 
     this.config.initial_cypher = this.state.cypher
+    this.config.container_id = 'div_'+ this.state.taskId
 
-    this.vis = new window.NeoVis.default(this.config);
-    this.vis.render();
+    const {relationshipType} = this.props
+
+    if(relationshipType) {
+      this.config.relationships = {
+        [relationshipType]: {
+          caption: false
+        }
+      }
+    }
+
+    if (reload === true) {
+      this.vis.renderWithCypher(cypher)
+    } else {
+      this.vis = new window.NeoVis.default(this.config);
+      this.vis.render();
+    }
   }
 
-  componentDidMount() {
-    const {results, label, relationshipType, writeProperty} = this.props
-    this.setState({
-      cypher: `match path = (n${label ? ':'+label : ''})
+  generateCypher(label, relationshipType, writeProperty) {
+    return `match path = (n${label ? ':'+label : ''})
 where not(n["${writeProperty}"] is null)
 return path
 union
 match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()
 return path`
-    })
-    this.dataUpdated(results)
   }
 
-  dataUpdated(results) {
+  dataUpdated(props) {
+    const {results, label, relationshipType, writeProperty, taskId} = props
+
     let captions = {}
     if (results && results.length > 0) {
 
@@ -80,7 +94,11 @@ return path`
         return labelsMap
       }, {})
 
-      this.setState({ labels: labelProperties, captions })
+      this.setState({
+        cypher: this.generateCypher(label, relationshipType, writeProperty),
+        labels: labelProperties, captions,
+        taskId
+      })
     }
   }
 
@@ -91,6 +109,19 @@ return path`
     captions[label] = prop.value
 
     this.setState({ captions })
+  }
+
+  componentDidMount() {
+    this.dataUpdated(this.props)
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if(nextProps.taskId !== this.props.taskId) {
+      console.log('componentWillReceiveProps CHANGED', this.props.taskId, nextProps.taskId)
+      this.dataUpdated(nextProps)
+
+      this.vis && this.vis.clearNetwork()
+    }
   }
 
   render() {
@@ -120,7 +151,7 @@ return path`
         </Form>
       </Grid.Row>
       <Grid.Row style={{ padding: '2em 10em 0em 2em' }}>
-        <div style={{ width: '100%', height: '100%' }} id='viz' ref={this.visContainer}/>
+        <div style={{ width: '100%', height: '100%' }} id={'div_' + this.state.taskId} ref={this.visContainer}/>
       </Grid.Row>
     </Grid>
   }
