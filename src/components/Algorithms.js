@@ -14,7 +14,7 @@ class Algorithms extends Component {
     parameters: {
       'Page Rank': {
         direction: 'Outgoing',
-        persist: true,
+        persist: false,
         writeProperty: "pagerank"
       },
       'Betweenness': {
