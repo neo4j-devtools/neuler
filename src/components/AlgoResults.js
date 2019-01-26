@@ -18,7 +18,22 @@ const getAlgoPanes = task => [{
   menuItem: `Code`,
   render: () => (
     <div>
-        {task.parameters ?  <Segment.Group>{Object.keys(task.parameters).map(key => <Segment>:param {key} => '{task.parameters[key] ? task.parameters[key].toString(): null}';</Segment>) }</Segment.Group> : null }
+      {
+        task.parameters
+          ? <Segment.Group>
+            {
+              Object.keys(task.parameters).map(key =>
+                <Segment>:param {key} =>
+                  {task.parameters[key]
+                    ? (typeof task.parameters[key] === 'string'
+                        ? `'${task.parameters[key]}'`
+                        : task.parameters[key])
+                    : 'null'};
+                </Segment>
+              )}
+          </Segment.Group>
+          : null
+      }
 
       <Segment>{task.query}</Segment>
     </div>
