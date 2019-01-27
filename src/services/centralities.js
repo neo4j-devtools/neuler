@@ -1,23 +1,24 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 
-export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
-  console.log(label, relationshipType, direction)
-
-  const baseParameters = {
+const baseParameters = (label, relationshipType, direction, concurrency) => {
+  return {
     "label": label || null,
     "relationshipType": relationshipType || null,
     "direction": direction || 'Outgoing',
-    "iterations": parseInt(iterations) || 20,
-    "dampingFactor": parseFloat(dampingFactor) || 0.85,
-    "weightProperty": weightProperty || null,
-    "defaultValue": parseFloat(defaultValue) || 1.0,
     "concurrency": parseInt(concurrency) || null
   }
+}
 
-  console.log(baseParameters)
+export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency)
+
   return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getPageRankFetchCypher(baseParameters.label), {
-      ...baseParameters,
+      ...params,
+      iterations: parseInt(iterations) || 20,
+      dampingFactor: parseFloat(dampingFactor) || 0.85,
+      weightProperty: weightProperty || null,
+      defaultValue: parseFloat(defaultValue) || 1.0,
       write: true,
       writeProperty: writeProperty || "pagerank"
     }, persist)
