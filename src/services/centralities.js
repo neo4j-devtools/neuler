@@ -96,7 +96,8 @@ const pageRankStreamCypher = `
 
   WITH algo.getNodeById(nodeId) AS node, score
   RETURN node, score
-  ORDER BY score DESC`
+  ORDER BY score DESC
+  LIMIT 50`
 
 const pageRankStoreCypher = `
   CALL algo.pageRank($label, $relationshipType, {
@@ -111,4 +112,5 @@ const pageRankStoreCypher = `
 const getPageRankFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS score
-ORDER BY score DESC`
+ORDER BY score DESC
+LIMIT 50`
