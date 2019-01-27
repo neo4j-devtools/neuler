@@ -36,6 +36,18 @@ export const betweenness = ({ label, relationshipType, direction, concurrency, p
                       {...params, ...betweenParams}, persist)
 }
 
+export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth }) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency)
+  const betweenParams  ={
+    write: true,
+    writeProperty: writeProperty || "betweenness",
+    maxDepth: parseInt(maxDepth) || null
+  }
+
+  return runAlgorithm(approxBetweennessStreamCypher, approxBetweennessStoreCypher, getFetchCypher(baseParameters.label),
+                      {...params, ...betweenParams}, persist)
+}
+
 const handleException = error => {
   console.error(error)
   throw new Error(error)
@@ -93,7 +105,29 @@ const betweennessStreamCypher = `
 
 const betweennessStoreCypher = `
   CALL algo.betweenness($label, $relationshipType, {
-     direction: $direction
+     direction: $direction,
+     write: true,
+     writeProperty: $writeProperty
+    })`
+
+const approxBetweennessStreamCypher = `
+  CALL algo.betweenness.sampled.stream($label, $relationshipType, {
+     direction: $direction,
+     maxDepth: $maxDepth
+    })
+  YIELD nodeId, centrality
+
+  WITH algo.getNodeById(nodeId) AS node, centrality AS score
+  RETURN node, score
+  ORDER BY score DESC
+  LIMIT 50`
+
+const approxBetweennessStoreCypher = `
+  CALL algo.betweenness.sampled($label, $relationshipType, {
+     direction: $direction,
+     write: true,
+     writeProperty: $writeProperty,
+     maxDepth: $maxDepth
     })`
 
 const pageRankStreamCypher = `

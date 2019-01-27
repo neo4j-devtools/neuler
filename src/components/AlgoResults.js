@@ -12,6 +12,8 @@ const getAlgoPanes = task => [{
         return <CentralityResult task={task}/>
         case 'Betweenness':
           return <CentralityResult task={task}/>
+        case 'Approx Betweenness':
+          return <CentralityResult task={task}/>
       default:
         return null
     }

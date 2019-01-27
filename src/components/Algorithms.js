@@ -4,7 +4,8 @@ import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
 import PageRankForm from './Centralities/PageRankForm'
 import BetweennesForm from './Centralities/BetweennesForm'
-import { betweenness, pageRank } from "../services/centralities"
+import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
+import { betweenness, pageRank, approxBetweenness } from "../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../ducks/tasks"
@@ -21,7 +22,12 @@ class Algorithms extends Component {
         defaultValue: 1
       },
       'Betweenness': {
-        direction: 'Outgoing'
+        direction: 'Outgoing',
+        persist: false,
+        writeProperty: "betweenness"
+      },
+      'Approx Betweenness': {
+
       }
     }
   }
@@ -48,6 +54,9 @@ class Algorithms extends Component {
         break
       case 'Betweenness':
         service = betweenness
+        break
+      case 'Approx Betweenness':
+        service = approxBetweenness;
         break
       default:
         break
@@ -113,6 +122,30 @@ class Algorithms extends Component {
               </div>
               <div className='ui two buttons'>
                 <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Betweenness')}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
+          <Card>
+            <Card.Content>
+              <Icon name='connectdevelop'/>
+              <Card.Header>Approx Betweenness Centrality</Card.Header>
+              <Card.Meta>RA-Brandes algorithm is the best known algorithm for calculating an approximate score for betweenness centrality</Card.Meta>
+              <Card.Description>
+                Rather than calculating the shortest path between every pair of nodes, the RA-Brandes algorithm considers only a subset of nodes.
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <ApproxBetweennessForm {...this.state.parameters['Approx Betweenness']}
+                                onChange={this.onChangeParam.bind(this, 'Approx Betweenness')}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Approx Betweenness')}>
                   Run
                 </Button>
                 <Button basic color='red'>
