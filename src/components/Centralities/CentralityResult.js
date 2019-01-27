@@ -8,7 +8,7 @@ export default ({ task }) => (
         <Table.Row>
           <Table.HeaderCell>Labels</Table.HeaderCell>
           <Table.HeaderCell>Properties</Table.HeaderCell>
-          <Table.HeaderCell>Page Rank</Table.HeaderCell>
+          <Table.HeaderCell>Score</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>

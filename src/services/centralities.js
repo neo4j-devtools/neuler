@@ -3,37 +3,37 @@ import { v1 } from 'neo4j-driver'
 
 const baseParameters = (label, relationshipType, direction, concurrency) => {
   return {
-    "label": label || null,
-    "relationshipType": relationshipType || null,
-    "direction": direction || 'Outgoing',
-    "concurrency": parseInt(concurrency) || null
+    label: label || null,
+    relationshipType: relationshipType || null,
+    direction: direction || 'Outgoing',
+    concurrency: parseInt(concurrency) || null
   }
 }
 
 export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
   const params = baseParameters(label, relationshipType, direction, concurrency)
-
-  return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getPageRankFetchCypher(baseParameters.label), {
-      ...params,
-      iterations: parseInt(iterations) || 20,
-      dampingFactor: parseFloat(dampingFactor) || 0.85,
-      weightProperty: weightProperty || null,
-      defaultValue: parseFloat(defaultValue) || 1.0,
-      write: true,
-      writeProperty: writeProperty || "pagerank"
-    }, persist)
-}
-
-export const betweenness = ({ label, relationshipType, direction }) => {
-  console.log('betweenness called', label, relationshipType, direction)
-
-  const parameters = {
-    "label": label || null,
-    "relationshipType": relationshipType || null,
-    "direction": direction || 'Outgoing'
+  const pageRankParams = {
+    iterations: parseInt(iterations) || 20,
+    dampingFactor: parseFloat(dampingFactor) || 0.85,
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "pagerank"
   }
 
-  return runAlgorithm(betweennessStreamCypher, parameters)
+  return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getFetchCypher(baseParameters.label),
+                      {...pageRankParams, ...params}, persist)
+}
+
+export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency)
+  const betweenParams  ={
+    write: true,
+    writeProperty: writeProperty || "betweenness"
+  }
+
+  return runAlgorithm(betweennessStreamCypher, betweennessStoreCypher, getFetchCypher(baseParameters.label),
+                      {...params, ...betweenParams}, persist)
 }
 
 const handleException = error => {
@@ -88,7 +88,13 @@ const betweennessStreamCypher = `
 
   WITH algo.getNodeById(nodeId) AS node, centrality AS score
   RETURN node, score
-  ORDER BY score DESC`
+  ORDER BY score DESC
+  LIMIT 50`
+
+const betweennessStoreCypher = `
+  CALL algo.betweenness($label, $relationshipType, {
+     direction: $direction
+    })`
 
 const pageRankStreamCypher = `
   CALL algo.pageRank.stream($label, $relationshipType, {
@@ -120,7 +126,7 @@ const pageRankStoreCypher = `
     })
   `
 
-const getPageRankFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
+const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS score
 ORDER BY score DESC
