@@ -1,7 +1,7 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 
-export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, iterations, dampingFactor }) => {
+export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
   console.log(label, relationshipType, direction)
 
   const baseParameters = {
@@ -11,7 +11,8 @@ export const pageRank = ({ label, relationshipType, direction, persist, writePro
     "iterations": parseInt(iterations) || 20,
     "dampingFactor": parseFloat(dampingFactor) || 0.85,
     "weightProperty": weightProperty || null,
-    "defaultValue": parseFloat(defaultValue) || 1.0
+    "defaultValue": parseFloat(defaultValue) || 1.0,
+    "concurrency": parseInt(concurrency) || null
   }
 
   console.log(baseParameters)
@@ -92,7 +93,10 @@ const pageRankStreamCypher = `
   CALL algo.pageRank.stream($label, $relationshipType, {
     iterations: $iterations,
     dampingFactor: $dampingFactor,
-    direction: $direction
+    direction: $direction,
+    weightProperty: $weightProperty,
+    defaultValue: $defaultValue,
+    concurrency: $concurrency
     })
   YIELD nodeId, score
 
@@ -105,9 +109,13 @@ const pageRankStoreCypher = `
   CALL algo.pageRank($label, $relationshipType, {
     iterations: $iterations,
     dampingFactor: $dampingFactor,
+    concurrency: $concurrency,
     direction: $direction,
     write: true,
-    writeProperty: $writeProperty
+    writeProperty: $writeProperty,
+    weightProperty: $weightProperty,
+    defaultValue: $defaultValue,
+    concurrency: $concurrency
     })
   `
 
