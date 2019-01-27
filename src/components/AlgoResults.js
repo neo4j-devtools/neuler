@@ -26,9 +26,9 @@ const getAlgoPanes = task => [{
                 <Segment>:param {key} =>
                   {task.parameters[key]
                     ? (typeof task.parameters[key] === 'string'
-                        ? `'${task.parameters[key]}'`
-                        : task.parameters[key])
-                    : 'null'};
+                        ? ` '${task.parameters[key]}'`
+                        : ` ${task.parameters[key]}`)
+                    : ' null'};
                 </Segment>
               )}
           </Segment.Group>

@@ -40,7 +40,7 @@ const handleException = error => {
 const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted) => {
   if (!persisted) {
     return runCypher(streamCypher, parameters)
-      .then(result => ({rows: parseResultStream(result), query: storeCypher, parameters: parameters}))
+      .then(result => ({rows: parseResultStream(result), query: streamCypher, parameters: parameters}))
       .catch(handleException)
   } else {
     return new Promise((resolve, reject) => {
