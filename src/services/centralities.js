@@ -1,7 +1,7 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 
-export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, iterations, dampingFactor }) => {
+export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, iterations, dampingFactor }) => {
   console.log(label, relationshipType, direction)
 
   const baseParameters = {
@@ -9,7 +9,9 @@ export const pageRank = ({ label, relationshipType, direction, persist, writePro
     "relationshipType": relationshipType || null,
     "direction": direction || 'Outgoing',
     "iterations": parseInt(iterations) || 20,
-    "dampingFactor": parseFloat(dampingFactor) || 0.85
+    "dampingFactor": parseFloat(dampingFactor) || 0.85,
+    "weightProperty": weightProperty || null,
+    "defaultValue": parseFloat(defaultValue) || 1.0
   }
 
   console.log(baseParameters)

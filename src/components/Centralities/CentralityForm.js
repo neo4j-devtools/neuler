@@ -12,7 +12,7 @@ export default ({onChange, direction, persist}) => (
       <input placeholder='Relationship Type' onChange={evt => onChange('relationshipType', evt.target.value)}/>
     </Form.Field>
     <Form.Group inline>
-      <label>Direction</label>
+      <label style={{ 'width': '8em' }}>Direction</label>
       <Form.Radio
         label='Out'
         name='radioGroup'
@@ -37,7 +37,7 @@ export default ({onChange, direction, persist}) => (
     </Form.Group>
     <Form.Group inline>
       <Form.Field inline>
-        <label>Store results</label>
+        <label style={{ 'width': '8em' }}>Store results</label>
         <input type='checkbox' checked={persist} onChange={evt => {
           console.log(evt.target, evt)
           onChange('persist', evt.target.checked)

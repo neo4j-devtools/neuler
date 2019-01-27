@@ -17,7 +17,8 @@ class Algorithms extends Component {
         persist: false,
         writeProperty: "pagerank",
         dampingFactor: 0.85,
-        iterations: 20
+        iterations: 20,
+        defaultValue: 1
       },
       'Betweenness': {
         direction: 'Outgoing'
