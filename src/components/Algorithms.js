@@ -15,7 +15,9 @@ class Algorithms extends Component {
       'Page Rank': {
         direction: 'Outgoing',
         persist: false,
-        writeProperty: "pagerank"
+        writeProperty: "pagerank",
+        dampingFactor: 0.85,
+        iterations: 20
       },
       'Betweenness': {
         direction: 'Outgoing'

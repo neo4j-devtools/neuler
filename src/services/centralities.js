@@ -1,18 +1,18 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 
-export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, iterations = 20, dampingFactor = 0.85 }) => {
+export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, iterations, dampingFactor }) => {
   console.log(label, relationshipType, direction)
 
   const baseParameters = {
     "label": label || null,
     "relationshipType": relationshipType || null,
     "direction": direction || 'Outgoing',
-    "iterations": iterations,
-    "dampingFactor": dampingFactor
+    "iterations": parseInt(iterations) || 20,
+    "dampingFactor": parseFloat(dampingFactor) || 0.85
   }
 
-  console.log(writeProperty)
+  console.log(baseParameters)
   return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getPageRankFetchCypher(baseParameters.label), {
       ...baseParameters,
       write: true,
