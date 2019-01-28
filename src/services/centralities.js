@@ -36,12 +36,14 @@ export const betweenness = ({ label, relationshipType, direction, concurrency, p
                       {...params, ...betweenParams}, persist)
 }
 
-export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth }) => {
+export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth, probability, strategy }) => {
   const params = baseParameters(label, relationshipType, direction, concurrency)
   const betweenParams  ={
     write: true,
     writeProperty: writeProperty || "betweenness",
-    maxDepth: parseInt(maxDepth) || null
+    maxDepth: parseInt(maxDepth) || null,
+    probability: parseFloat(probability) || null,
+    strategy: strategy || null
   }
 
   return runAlgorithm(approxBetweennessStreamCypher, approxBetweennessStoreCypher, getFetchCypher(baseParameters.label),
@@ -113,7 +115,9 @@ const betweennessStoreCypher = `
 const approxBetweennessStreamCypher = `
   CALL algo.betweenness.sampled.stream($label, $relationshipType, {
      direction: $direction,
-     maxDepth: $maxDepth
+     maxDepth: $maxDepth,
+     probability: $probability,
+     strategy: $strategy
     })
   YIELD nodeId, centrality
 
@@ -127,7 +131,9 @@ const approxBetweennessStoreCypher = `
      direction: $direction,
      write: true,
      writeProperty: $writeProperty,
-     maxDepth: $maxDepth
+     maxDepth: $maxDepth,
+     probability: $probability,
+     strategy: $strategy
     })`
 
 const pageRankStreamCypher = `

@@ -27,7 +27,7 @@ class Algorithms extends Component {
         writeProperty: "betweenness"
       },
       'Approx Betweenness': {
-
+        strategy: "random"
       }
     }
   }
