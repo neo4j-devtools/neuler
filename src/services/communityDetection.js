@@ -23,6 +23,19 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
                       {...baseParams, ...extraParams}, persist)
 }
 
+export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "louvain"
+  }
+
+  return runAlgorithm(lpaStreamCypher, lpaStoreCypher, getFetchCypher(baseParameters.label),
+                      {...baseParams, ...extraParams}, persist)
+}
+
 
 const handleException = error => {
   console.error(error)
@@ -89,4 +102,22 @@ const louvainStoreCypher = `
      direction: $direction,
      write: true,
      writeProperty: $writeProperty
+    })`
+
+const lpaStreamCypher = `
+  CALL algo.labelPropagation.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeId, label
+
+  WITH algo.getNodeById(nodeId) AS node, label AS community
+  RETURN node, community
+  ORDER BY community
+  LIMIT 50`
+
+const lpaStoreCypher = `
+  CALL algo.labelPropagation($label, $relationshipType, $direction, {
+     direction: $direction,
+     write: true,
+     partitionProperty: $writeProperty
     })`

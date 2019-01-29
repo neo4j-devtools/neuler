@@ -10,6 +10,8 @@ const getAlgoPanes = task => [{
     switch (task.algorithm) {
       case 'Louvain':
         return <CommunityResult task={task}/>
+      case 'LPA':
+        return <CommunityResult task={task}/>
       default:
         return null
     }

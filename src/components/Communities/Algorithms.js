@@ -3,7 +3,8 @@ import { connect } from 'react-redux'
 import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
 import LouvainForm from './LouvainForm'
-import { louvain } from "../../services/communityDetection"
+import LabelPropagationForm from './LabelPropagationForm'
+import { louvain, lpa } from "../../services/communityDetection"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -16,7 +17,14 @@ class Algorithms extends Component {
         persist: false,
         writeProperty: "louvain",
         defaultValue: 1
+      },
+      'LPA': {
+        direction: 'Outgoing',
+        persist: false,
+        writeProperty: "lpa",
+        defaultValue: 1
       }
+
     }
   }
 
@@ -39,6 +47,9 @@ class Algorithms extends Component {
     switch (algorithm) {
       case 'Louvain':
         service = louvain
+        break
+      case 'LPA':
+        service = lpa
         break
       default:
         break
@@ -66,10 +77,9 @@ class Algorithms extends Component {
             <Card.Content>
               <Icon name='sitemap'/>
               <Card.Header>Louvain</Card.Header>
-              <Card.Meta>named after Google co-founder Larry Page</Card.Meta>
+              <Card.Meta>one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales</Card.Meta>
               <Card.Description>
-                PageRank is an algorithm that measures the <strong>transitive</strong> influence or connectivity of
-                nodes
+                The "Louvain algorithm" was proposed in 2008 by authors from the University of Louvain.
               </Card.Description>
             </Card.Content>
             <Card.Content extra>
@@ -88,6 +98,30 @@ class Algorithms extends Component {
             </Card.Content>
           </Card>
 
+          <Card>
+            <Card.Content>
+              <Icon name='sitemap'/>
+              <Card.Header>Label Propagation</Card.Header>
+              <Card.Meta> a fast algorithm for finding communities in a graph</Card.Meta>
+              <Card.Description>
+                LPA is a relatively new algorithm, and was only proposed by Raghavan et al in 2007
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <LabelPropagationForm {...this.state.parameters['LPA']}
+                                onChange={this.onChangeParam.bind(this, 'LPA')}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'LPA')}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
 
 
         </Card.Group>
