@@ -25,6 +25,7 @@ export default (state = [], action) => {
         algorithm: action.algorithm,
         startTime: action.startTime,
         result: action.result,
+        parameters: action.parameters,
         completed: false
       })
       return newState
