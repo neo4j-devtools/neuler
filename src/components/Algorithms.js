@@ -5,7 +5,7 @@ import { Button, Card, Icon, Header } from 'semantic-ui-react'
 import PageRankForm from './Centralities/PageRankForm'
 import BetweennesForm from './Centralities/BetweennesForm'
 import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
-import { betweenness, pageRank, approxBetweenness } from "../services/centralities"
+import { pageRank, articleRank, betweenness, approxBetweenness } from "../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../ducks/tasks"
@@ -17,6 +17,14 @@ class Algorithms extends Component {
         direction: 'Outgoing',
         persist: false,
         writeProperty: "pagerank",
+        dampingFactor: 0.85,
+        iterations: 20,
+        defaultValue: 1
+      },
+      'Article Rank': {
+        direction: 'Outgoing',
+        persist: false,
+        writeProperty: "articlerank",
         dampingFactor: 0.85,
         iterations: 20,
         defaultValue: 1
@@ -51,6 +59,9 @@ class Algorithms extends Component {
     switch (algorithm) {
       case 'Page Rank':
         service = pageRank
+        break
+      case 'Article Rank':
+        service = articleRank
         break
       case 'Betweenness':
         service = betweenness
@@ -105,6 +116,33 @@ class Algorithms extends Component {
               </div>
             </Card.Content>
           </Card>
+
+          <Card>
+            <Card.Content>
+              <Icon name='sitemap'/>
+              <Card.Header>Article Rank</Card.Header>
+              <Card.Meta>a variant of the PageRank algorithm</Card.Meta>
+              <Card.Description>
+                PageRank assumes that relationships from nodes that have a low out-degree are more important than relationships from nodes with a higher out-degree.
+                ArticleRank weakens this assumption.
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <PageRankForm {...this.state.parameters['Article Rank']}
+                                onChange={this.onChangeParam.bind(this, 'Article Rank')}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Article Rank')}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
+
           <Card>
             <Card.Content>
               <Icon name='connectdevelop'/>

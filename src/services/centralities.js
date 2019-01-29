@@ -25,6 +25,21 @@ export const pageRank = ({ label, relationshipType, direction, persist, writePro
                       {...pageRankParams, ...params}, persist)
 }
 
+export const articleRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency)
+  const articleRankParams = {
+    iterations: parseInt(iterations) || 20,
+    dampingFactor: parseFloat(dampingFactor) || 0.85,
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "articlerank"
+  }
+
+  return runAlgorithm(articleRankStreamCypher, articleRankStoreCypher, getFetchCypher(baseParameters.label),
+                      {...articleRankParams, ...params}, persist)
+}
+
 export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
   const params = baseParameters(label, relationshipType, direction, concurrency)
   const betweenParams  ={
@@ -165,6 +180,37 @@ const pageRankStoreCypher = `
     concurrency: $concurrency
     })
   `
+
+const articleRankStreamCypher = `
+  CALL algo.articleRank.stream($label, $relationshipType, {
+    iterations: $iterations,
+    dampingFactor: $dampingFactor,
+    direction: $direction,
+    weightProperty: $weightProperty,
+    defaultValue: $defaultValue,
+    concurrency: $concurrency
+    })
+  YIELD nodeId, score
+
+  WITH algo.getNodeById(nodeId) AS node, score
+  RETURN node, score
+  ORDER BY score DESC
+  LIMIT 50`
+
+const articleRankStoreCypher = `
+  CALL algo.articleRank($label, $relationshipType, {
+    iterations: $iterations,
+    dampingFactor: $dampingFactor,
+    concurrency: $concurrency,
+    direction: $direction,
+    write: true,
+    writeProperty: $writeProperty,
+    weightProperty: $weightProperty,
+    defaultValue: $defaultValue,
+    concurrency: $concurrency
+    })
+  `
+
 
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)

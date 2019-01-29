@@ -10,10 +10,12 @@ const getAlgoPanes = task => [{
     switch (task.algorithm) {
       case 'Page Rank':
         return <CentralityResult task={task}/>
-        case 'Betweenness':
-          return <CentralityResult task={task}/>
-        case 'Approx Betweenness':
-          return <CentralityResult task={task}/>
+      case 'Article Rank':
+        return <CentralityResult task={task}/>
+      case 'Betweenness':
+        return <CentralityResult task={task}/>
+      case 'Approx Betweenness':
+        return <CentralityResult task={task}/>
       default:
         return null
     }
