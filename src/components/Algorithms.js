@@ -5,7 +5,8 @@ import { Button, Card, Icon, Header } from 'semantic-ui-react'
 import PageRankForm from './Centralities/PageRankForm'
 import BetweennesForm from './Centralities/BetweennesForm'
 import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
-import { pageRank, articleRank, betweenness, approxBetweenness } from "../services/centralities"
+import ClosenessCentralityForm from './Centralities/ClosenessCentralityForm'
+import { pageRank, articleRank, betweenness, approxBetweenness, closeness } from "../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../ducks/tasks"
@@ -67,7 +68,10 @@ class Algorithms extends Component {
         service = betweenness
         break
       case 'Approx Betweenness':
-        service = approxBetweenness;
+        service = approxBetweenness
+        break
+      case 'Closeness':
+        service = closeness
         break
       default:
         break
@@ -168,6 +172,7 @@ class Algorithms extends Component {
               </div>
             </Card.Content>
           </Card>
+
           <Card>
             <Card.Content>
               <Icon name='connectdevelop'/>
@@ -192,6 +197,33 @@ class Algorithms extends Component {
               </div>
             </Card.Content>
           </Card>
+
+          <Card>
+            <Card.Content>
+              <Icon name='connectdevelop'/>
+              <Card.Header>Closeness Centrality</Card.Header>
+              <Card.Meta>detect nodes that are able to spread information very efficiently through a graph</Card.Meta>
+              <Card.Description>
+                The closeness centrality of a node measures its average farness (inverse distance) to all other nodes. Nodes with a high closeness score have the shortest distances to all other nodes.
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <ClosenessCentralityForm {...this.state.parameters['Closeness']}
+                                onChange={this.onChangeParam.bind(this, 'Closeness')}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Closeness')}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
+
+
         </Card.Group>
       </div>
     )

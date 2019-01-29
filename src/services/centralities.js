@@ -65,6 +65,18 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
                       {...params, ...betweenParams}, persist)
 }
 
+export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency)
+  const closenessParams  ={
+    write: true,
+    writeProperty: writeProperty || "closeness"
+  }
+
+  return runAlgorithm(closenessStreamCypher, closenessStoreCypher, getFetchCypher(baseParameters.label),
+                      {...params, ...closenessParams}, persist)
+}
+
+
 const handleException = error => {
   console.error(error)
   throw new Error(error)
@@ -122,6 +134,24 @@ const betweennessStreamCypher = `
 
 const betweennessStoreCypher = `
   CALL algo.betweenness($label, $relationshipType, {
+     direction: $direction,
+     write: true,
+     writeProperty: $writeProperty
+    })`
+
+const closenessStreamCypher = `
+  CALL algo.closeness.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeId, centrality
+
+  WITH algo.getNodeById(nodeId) AS node, centrality AS score
+  RETURN node, score
+  ORDER BY score DESC
+  LIMIT 50`
+
+const closenessStoreCypher = `
+  CALL algo.closeness($label, $relationshipType, {
      direction: $direction,
      write: true,
      writeProperty: $writeProperty
