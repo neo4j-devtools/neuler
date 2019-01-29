@@ -11,8 +11,8 @@ const baseParameters = (label, relationshipType, direction, concurrency) => {
 }
 
 export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency)
-  const pageRankParams = {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
     iterations: parseInt(iterations) || 20,
     dampingFactor: parseFloat(dampingFactor) || 0.85,
     weightProperty: weightProperty || null,
@@ -22,12 +22,12 @@ export const pageRank = ({ label, relationshipType, direction, persist, writePro
   }
 
   return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getFetchCypher(baseParameters.label),
-                      {...pageRankParams, ...params}, persist)
+                      {...baseParams, ...extraParams}, persist)
 }
 
 export const articleRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency)
-  const articleRankParams = {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
     iterations: parseInt(iterations) || 20,
     dampingFactor: parseFloat(dampingFactor) || 0.85,
     weightProperty: weightProperty || null,
@@ -37,23 +37,23 @@ export const articleRank = ({ label, relationshipType, direction, persist, write
   }
 
   return runAlgorithm(articleRankStreamCypher, articleRankStoreCypher, getFetchCypher(baseParameters.label),
-                      {...articleRankParams, ...params}, persist)
+                      {...baseParams, ...extraParams}, persist)
 }
 
 export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency)
-  const betweenParams  ={
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams  ={
     write: true,
     writeProperty: writeProperty || "betweenness"
   }
 
   return runAlgorithm(betweennessStreamCypher, betweennessStoreCypher, getFetchCypher(baseParameters.label),
-                      {...params, ...betweenParams}, persist)
+                      {...baseParams, ...extraParams}, persist)
 }
 
 export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth, probability, strategy }) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency)
-  const betweenParams  ={
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
     write: true,
     writeProperty: writeProperty || "betweenness",
     maxDepth: parseInt(maxDepth) || null,
@@ -62,7 +62,7 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
   }
 
   return runAlgorithm(approxBetweennessStreamCypher, approxBetweennessStoreCypher, getFetchCypher(baseParameters.label),
-                      {...params, ...betweenParams}, persist)
+                      {...baseParams, ...extraParams}, persist)
 }
 
 export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
@@ -80,7 +80,7 @@ export const harmonic = ({ label, relationshipType, direction, concurrency, pers
   const baseParams = baseParameters(label, relationshipType, direction, concurrency)
   const extraParams  ={
     write: true,
-    writeProperty: writeProperty || "closeness"
+    writeProperty: writeProperty || "harmonic"
   }
 
   return runAlgorithm(harmonicStreamCypher, harmonicStoreCypher, getFetchCypher(baseParameters.label),
