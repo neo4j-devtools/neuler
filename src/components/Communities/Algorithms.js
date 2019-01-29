@@ -14,9 +14,7 @@ class Algorithms extends Component {
       'Louvain': {
         direction: 'Outgoing',
         persist: false,
-        writeProperty: "pagerank",
-        dampingFactor: 0.85,
-        iterations: 20,
+        writeProperty: "louvain",
         defaultValue: 1
       }
     }
