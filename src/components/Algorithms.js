@@ -96,7 +96,7 @@ class Algorithms extends Component {
 
   render() {
     return (
-      <div style={{ margin: '0 2em', width: '99%' }}>
+      <div style={{ margin: '0 2em', width: '96%' }}>
         <Header as='h2'>Centrality Algorithms</Header>
         <Card.Group>
           <Card>
