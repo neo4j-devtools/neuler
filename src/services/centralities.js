@@ -42,7 +42,7 @@ export const articleRank = ({ label, relationshipType, direction, persist, write
 
 export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency)
-  const extraParams  ={
+  const extraParams = {
     write: true,
     writeProperty: writeProperty || "betweenness"
   }
@@ -55,7 +55,7 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
   const baseParams = baseParameters(label, relationshipType, direction, concurrency)
   const extraParams = {
     write: true,
-    writeProperty: writeProperty || "betweenness",
+    writeProperty: writeProperty || "approxBetweenness",
     maxDepth: parseInt(maxDepth) || null,
     probability: parseFloat(probability) || null,
     strategy: strategy || null
@@ -67,7 +67,7 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
 
 export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency)
-  const extraParams  ={
+  const extraParams = {
     write: true,
     writeProperty: writeProperty || "closeness"
   }
@@ -78,7 +78,7 @@ export const closeness = ({ label, relationshipType, direction, concurrency, per
 
 export const harmonic = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency)
-  const extraParams  ={
+  const extraParams = {
     write: true,
     writeProperty: writeProperty || "harmonic"
   }
@@ -86,7 +86,6 @@ export const harmonic = ({ label, relationshipType, direction, concurrency, pers
   return runAlgorithm(harmonicStreamCypher, harmonicStoreCypher, getFetchCypher(baseParameters.label),
                       {...baseParams, ...extraParams}, persist)
 }
-
 
 const handleException = error => {
   console.error(error)
