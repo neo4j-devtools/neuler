@@ -2,15 +2,15 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
-import PageRankForm from './Centralities/PageRankForm'
-import BetweennesForm from './Centralities/BetweennesForm'
-import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
-import ClosenessCentralityForm from './Centralities/ClosenessCentralityForm'
-import HarmonicCentralityForm from './Centralities/HarmonicCentralityForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../services/centralities"
+import PageRankForm from './PageRankForm'
+import BetweennesForm from './BetweennesForm'
+import ApproxBetweennessForm from './ApproxBetweennessForm'
+import ClosenessCentralityForm from './ClosenessCentralityForm'
+import HarmonicCentralityForm from './HarmonicCentralityForm'
+import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
-import { addTask, completeTask } from "../ducks/tasks"
+import { addTask, completeTask } from "../../ducks/tasks"
 
 class Algorithms extends Component {
   state = {

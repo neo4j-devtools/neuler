@@ -2,7 +2,8 @@ import React, { Component } from 'react'
 import { Sidebar, Menu, Segment, Icon, Image, Header } from "semantic-ui-react"
 
 import './App.css'
-import MainContent from './components/AlgoGroupView'
+import CentralityAlgorithms from './components/Centralities/AlgoGroupView'
+import CommunityAlgorithms from './components/Communities/AlgoGroupView'
 
 class App extends Component {
   state = {
@@ -52,7 +53,8 @@ class App extends Component {
               NEuler - Playground for Neo4j Graph Algorithms
             </Header>
           </Segment>
-          <MainContent />
+          {content == "centralities" ? <CentralityAlgorithms /> : <CommunityAlgorithms /> }
+
         </Sidebar.Pusher>
       </Sidebar.Pushable>
     )

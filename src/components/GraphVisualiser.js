@@ -17,7 +17,7 @@ export default class extends Component {
       container_id: "viz",
       server_url: "bolt://localhost:7687",
       server_user: "neo4j",
-      server_password: "a",
+      server_password: "neo",
       labels: {
         "Person": {
           caption: "name",

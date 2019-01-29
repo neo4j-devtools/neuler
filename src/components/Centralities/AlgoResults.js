@@ -1,8 +1,8 @@
 import React from 'react'
 import { Table, Tab, Header, Label, Segment } from 'semantic-ui-react'
 import { connect } from "react-redux"
-import GraphVisualiser from './GraphVisualiser'
-import CentralityResult from './Centralities/CentralityResult'
+import GraphVisualiser from '../GraphVisualiser'
+import CentralityResult from './CentralityResult'
 
 const getAlgoPanes = task => [{
   menuItem: `Table`,
