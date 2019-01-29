@@ -66,14 +66,25 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
 }
 
 export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency)
-  const closenessParams  ={
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams  ={
     write: true,
     writeProperty: writeProperty || "closeness"
   }
 
   return runAlgorithm(closenessStreamCypher, closenessStoreCypher, getFetchCypher(baseParameters.label),
-                      {...params, ...closenessParams}, persist)
+                      {...baseParams, ...extraParams}, persist)
+}
+
+export const harmonic = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams  ={
+    write: true,
+    writeProperty: writeProperty || "closeness"
+  }
+
+  return runAlgorithm(harmonicStreamCypher, harmonicStoreCypher, getFetchCypher(baseParameters.label),
+                      {...baseParams, ...extraParams}, persist)
 }
 
 
@@ -152,6 +163,24 @@ const closenessStreamCypher = `
 
 const closenessStoreCypher = `
   CALL algo.closeness($label, $relationshipType, {
+     direction: $direction,
+     write: true,
+     writeProperty: $writeProperty
+    })`
+
+const harmonicStreamCypher = `
+  CALL algo.closeness.harmonic.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeId, centrality
+
+  WITH algo.getNodeById(nodeId) AS node, centrality AS score
+  RETURN node, score
+  ORDER BY score DESC
+  LIMIT 50`
+
+const harmonicStoreCypher = `
+  CALL algo.closeness.harmonic($label, $relationshipType, {
      direction: $direction,
      write: true,
      writeProperty: $writeProperty

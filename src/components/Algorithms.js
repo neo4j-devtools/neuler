@@ -6,7 +6,8 @@ import PageRankForm from './Centralities/PageRankForm'
 import BetweennesForm from './Centralities/BetweennesForm'
 import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
 import ClosenessCentralityForm from './Centralities/ClosenessCentralityForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness } from "../services/centralities"
+import HarmonicCentralityForm from './Centralities/HarmonicCentralityForm'
+import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../services/centralities"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../ducks/tasks"
@@ -72,6 +73,9 @@ class Algorithms extends Component {
         break
       case 'Closeness':
         service = closeness
+        break
+      case 'Harmonic':
+        service = harmonic
         break
       default:
         break
@@ -214,6 +218,31 @@ class Algorithms extends Component {
               </div>
               <div className='ui two buttons'>
                 <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Closeness')}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
+
+          <Card>
+            <Card.Content>
+              <Icon name='connectdevelop'/>
+              <Card.Header>Harmonic Centrality</Card.Header>
+              <Card.Meta>a variant of closeness centrality, that was invented to solve the problem the original formula had when dealing with unconnected graphs.</Card.Meta>
+              <Card.Description>
+                Harmonic centrality was proposed by Marchiori and Latora in Harmony in the Small World while trying to come up with a sensible notion of "average shortest path".
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <HarmonicCentralityForm {...this.state.parameters['Harmonic']}
+                                onChange={this.onChangeParam.bind(this, 'Harmonic')}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Harmonic')}>
                   Run
                 </Button>
                 <Button basic color='red'>
