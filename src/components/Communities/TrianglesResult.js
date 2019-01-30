@@ -6,17 +6,17 @@ export default ({ task }) => (
     <Table color='green'>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Labels</Table.HeaderCell>
-          <Table.HeaderCell>Properties</Table.HeaderCell>
-          <Table.HeaderCell>Community</Table.HeaderCell>
+          <Table.HeaderCell>Node A Labels</Table.HeaderCell>
+          <Table.HeaderCell>Node A Properties</Table.HeaderCell>
+
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
-            <Table.Cell>{result.labels.join(', ')}</Table.Cell>
-            <Table.Cell>{JSON.stringify(result.properties, null, 2)}</Table.Cell>
-            <Table.Cell>{result.community}</Table.Cell>
+            <Table.Cell>{result.nodeALabels.join(', ')}</Table.Cell>
+            <Table.Cell>{JSON.stringify(result.nodeAProperties, null, 2)}</Table.Cell>
+
           </Table.Row>
         )}
       </Table.Body>

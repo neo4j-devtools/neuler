@@ -79,9 +79,9 @@ const handleException = error => {
   throw new Error(error)
 }
 
-const runStreamingAlgorithm = (streamCypher, parameters) => {
+const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn=parseResultStream) => {
   return runCypher(streamCypher, parameters)
-    .then(result => ({rows: parseResultStream(result), query: streamCypher, parameters: parameters}))
+    .then(result => ({rows: parseResultStreamFn(result), query: streamCypher, parameters: parameters}))
     .catch(handleException)
 }
 
@@ -105,7 +105,7 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
 
 const parseResultStream = result => {
   if (result.records) {
-    const x  = result.records.map(record => {
+    return result.records.map(record => {
       const { properties, labels } = record.get('node')
 
       return {
@@ -116,8 +116,6 @@ const parseResultStream = result => {
         labels: labels,
       }
     })
-    console.log(x)
-    return x
   } else {
     console.error(result.error)
     throw new Error(result.error)
@@ -126,7 +124,7 @@ const parseResultStream = result => {
 
 const parseTrianglesResultStream = result => {
   if (result.records) {
-    const x  =result.records.map(record => {
+    return result.records.map(record => {
       const { properties, labels } = record.get('nodeA')
 
       return {
@@ -137,8 +135,6 @@ const parseTrianglesResultStream = result => {
         nodeALabels: labels,
       }
     })
-    console.log(x)
-    return x
   } else {
     console.error(result.error)
     throw new Error(result.error)
