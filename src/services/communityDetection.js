@@ -82,7 +82,7 @@ const handleException = error => {
 }
 
 const runStreamingAlgorithm = (streamCypher, parameters) => {
-  runCypher(streamCypher, parameters)
+  return runCypher(streamCypher, parameters)
     .then(result => ({rows: parseResultStream(result), query: streamCypher, parameters: parameters}))
     .catch(handleException)
 }
