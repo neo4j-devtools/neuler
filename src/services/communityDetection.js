@@ -81,11 +81,15 @@ const handleException = error => {
   throw new Error(error)
 }
 
+const runStreamingAlgorithm = (streamCypher, parameters) => {
+  runCypher(streamCypher, parameters)
+    .then(result => ({rows: parseResultStream(result), query: streamCypher, parameters: parameters}))
+    .catch(handleException)
+}
+
 const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted) => {
   if (!persisted) {
-    return runCypher(streamCypher, parameters)
-      .then(result => ({rows: parseResultStream(result), query: streamCypher, parameters: parameters}))
-      .catch(handleException)
+    return runStreamingAlgorithm(streamCypher, parameters)
   } else {
     return new Promise((resolve, reject) => {
       runCypher(storeCypher, parameters)
