@@ -74,11 +74,17 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
   return runStreamingAlgorithm(trianglesStreamCypher, {...baseParams, ...extraParams}, result => {
     if (result.records) {
       return result.records.map(record => {
-        const { properties, labels } = record.get('nodeA')
+        const nodeA = record.get('nodeA')
+        const nodeB = record.get('nodeB')
+        const nodeC = record.get('nodeC')
 
         return {
-          nodeAProperties: parseProperties(properties),
-          nodeALabels: labels,
+          nodeAProperties: parseProperties(nodeA.properties),
+          nodeALabels: nodeA.labels,
+          nodeBProperties: parseProperties(nodeB.properties),
+          nodeBLabels: nodeB.labels,
+          nodeCProperties: parseProperties(nodeC.properties),
+          nodeCLabels: nodeC.labels,
         }
       })
     } else {
@@ -130,10 +136,7 @@ const parseResultStream = result => {
       const { properties, labels } = record.get('node')
 
       return {
-        properties: Object.keys(properties).reduce((props, propKey) => {
-          props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
-          return props
-        }, {}),
+        properties: parseProperties(properties),
         labels: labels,
         community: record.get('community').toNumber()
       }

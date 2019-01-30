@@ -8,6 +8,10 @@ export default ({ task }) => (
         <Table.Row>
           <Table.HeaderCell>Node A Labels</Table.HeaderCell>
           <Table.HeaderCell>Node A Properties</Table.HeaderCell>
+          <Table.HeaderCell>Node B Labels</Table.HeaderCell>
+          <Table.HeaderCell>Node B Properties</Table.HeaderCell>
+          <Table.HeaderCell>Node C Labels</Table.HeaderCell>
+          <Table.HeaderCell>Node CS Properties</Table.HeaderCell>
 
         </Table.Row>
       </Table.Header>
@@ -16,6 +20,10 @@ export default ({ task }) => (
           <Table.Row key={idx}>
             <Table.Cell>{result.nodeALabels.join(', ')}</Table.Cell>
             <Table.Cell>{JSON.stringify(result.nodeAProperties, null, 2)}</Table.Cell>
+            <Table.Cell>{result.nodeBLabels.join(', ')}</Table.Cell>
+            <Table.Cell>{JSON.stringify(result.nodeBProperties, null, 2)}</Table.Cell>
+            <Table.Cell>{result.nodeCLabels.join(', ')}</Table.Cell>
+            <Table.Cell>{JSON.stringify(result.nodeCProperties, null, 2)}</Table.Cell>
 
           </Table.Row>
         )}
