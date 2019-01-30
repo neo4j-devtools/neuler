@@ -8,7 +8,8 @@ import ConnectedComponentsForm from './ConnectedComponentsForm'
 import StronglyConnectedComponentsForm from './StronglyConnectedComponentsForm'
 import TrianglesForm from './TrianglesForm'
 import TriangleCountForm from './TriangleCountForm'
-import { louvain, lpa, connectedComponents, stronglyConnectedComponents, triangles, triangleCount } from "../../services/communityDetection"
+import BalancedTriadsForm from './BalancedTriadsForm'
+import { louvain, lpa, connectedComponents, stronglyConnectedComponents, triangles, triangleCount, balancedTriads } from "../../services/communityDetection"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -66,6 +67,9 @@ class Algorithms extends Component {
         break
       case "Triangle Count":
         service = triangleCount
+        break
+      case "Balanced Triads":
+        service = balancedTriads
         break
       default:
         break
@@ -239,6 +243,31 @@ class Algorithms extends Component {
         </div>
       </Card.Content>
     </Card>
+
+    <Card>
+    <Card.Content>
+      <Icon name='sitemap'/>
+      <Card.Header>Balanced Triads</Card.Header>
+      <Card.Meta> used to evaluate structural balance of the graph.</Card.Meta>
+      <Card.Description>
+        It is based on the Balance Theory proposed by Fritz Heider in 1958.
+      </Card.Description>
+    </Card.Content>
+    <Card.Content extra>
+      <div>
+        <BalancedTriadsForm {...this.state.parameters['Balanced Triads']}
+                        onChange={this.onChangeParam.bind(this, 'Balanced Triads')}/>
+      </div>
+      <div className='ui two buttons'>
+        <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Balanced Triads')}>
+          Run
+        </Button>
+        <Button basic color='red'>
+          Cancel
+        </Button>
+      </div>
+    </Card.Content>
+  </Card>
 
 
         </Card.Group>

@@ -123,6 +123,35 @@ export const triangleCount = ({ label, relationshipType, direction, persist, wri
   })
 }
 
+export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    balancedProperty: balancedProperty || "balanced",
+    unbalancedProperty: unbalancedProperty || "unbalanced"
+  }
+
+  return runAlgorithm(balancedTriadsStreamCypher, balancedTriadsStoreCypher, getFetchBalancedTriadsCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
+    if (result.records) {
+      return result.records.map(record => {
+        const { properties, labels } = record.get('node')
+
+        return {
+          properties: parseProperties(properties),
+          labels: labels,
+          balanced: record.get('balanced').toNumber(),
+          unbalanced: record.get('unbalanced'),
+        }
+      })
+    } else {
+      console.error(result.error)
+      throw new Error(result.error)
+    }
+  })
+}
+
 export const parseProperties = (properties) => {
   return Object.keys(properties).reduce((props, propKey) => {
     props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
@@ -184,6 +213,13 @@ WHERE not(node[$writeProperty] is null) AND not(node[$clusteringCoefficientPrope
 RETURN node, node[$writeProperty] AS triangles, node[$clusteringCoefficientProperty] AS coefficient
 ORDER BY triangles DESC
 LIMIT 50`
+
+const getFetchBalancedTriadsCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$balancedProperty] is null) AND not(node[$unbalancedProperty] is null)
+RETURN node, node[$balancedProperty] AS balanced, node[$unbalancedProperty] AS unbalanced
+ORDER BY balanced DESC
+LIMIT 50`
+
 
 const louvainStreamCypher = `
   CALL algo.louvain.stream($label, $relationshipType, {
@@ -283,4 +319,23 @@ const triangleCountStoreCypher = `
      write: true,
      writeProperty: $writeProperty,
      clusteringCoefficientProperty: $clusteringCoefficientProperty
+    })`
+
+const balancedTriadsStreamCypher = `
+  CALL algo.balancedTriads.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeId, balanced, unbalanced
+
+  WITH algo.getNodeById(nodeId) AS node, balanced, unbalanced
+  RETURN node, balanced, unbalanced
+  ORDER BY balanced DESC
+  LIMIT 50`
+
+const balancedTriadsStoreCypher = `
+  CALL algo.balancedTriads($label, $relationshipType, {
+     direction: $direction,
+     write: true,
+     balancedProperty: $balancedProperty,
+     unbalancedProperty: $unbalancedProperty
     })`

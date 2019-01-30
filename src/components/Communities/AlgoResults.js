@@ -5,6 +5,7 @@ import GraphVisualiser from '../GraphVisualiser'
 import CommunityResult from './CommunityResult'
 import TrianglesResult from './TrianglesResult'
 import TriangleCountResult from './TriangleCountResult'
+import BalancedTriadsResult from './BalancedTriadsResult'
 
 const getAlgoPanes = task => [{
   menuItem: `Table`,
@@ -22,6 +23,8 @@ const getAlgoPanes = task => [{
         return <TrianglesResult task={task}/>
       case 'Triangle Count':
         return <TriangleCountResult task={task}/>
+      case 'Balanced Triads':
+        return <BalancedTriadsResult task={task}/>
       default:
         return null
     }
