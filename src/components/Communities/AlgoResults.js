@@ -12,6 +12,8 @@ const getAlgoPanes = task => [{
         return <CommunityResult task={task}/>
       case 'LPA':
         return <CommunityResult task={task}/>
+      case 'Connected Components':
+        return <CommunityResult task={task}/>
       default:
         return null
     }

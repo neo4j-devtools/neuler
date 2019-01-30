@@ -4,7 +4,8 @@ import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
 import LouvainForm from './LouvainForm'
 import LabelPropagationForm from './LabelPropagationForm'
-import { louvain, lpa } from "../../services/communityDetection"
+import ConnectedComponentsForm from './ConnectedComponentsForm'
+import { louvain, lpa, connectedComponents } from "../../services/communityDetection"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -51,6 +52,8 @@ class Algorithms extends Component {
       case 'LPA':
         service = lpa
         break
+      case "Connected Components":
+        service = connectedComponents
       default:
         break
     }
@@ -114,6 +117,31 @@ class Algorithms extends Component {
               </div>
               <div className='ui two buttons'>
                 <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'LPA')}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
+
+          <Card>
+            <Card.Content>
+              <Icon name='sitemap'/>
+              <Card.Header>Connected Components</Card.Header>
+              <Card.Meta>finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set</Card.Meta>
+              <Card.Description>
+                The algorithm was first described by Bernard A. Galler and Michael J. Fischer in 1964.
+              </Card.Description>
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <LabelPropagationForm {...this.state.parameters['Connected Components']}
+                                onChange={this.onChangeParam.bind(this, 'Connected Components')}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Connected Components')}>
                   Run
                 </Button>
                 <Button basic color='red'>
