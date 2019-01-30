@@ -104,7 +104,7 @@ export const triangleCount = ({ label, relationshipType, direction, persist, wri
     clusteringCoefficientProperty: "clusteringCoefficient"
   }
 
-  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
+  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchTriangleCountCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
     if (result.records) {
       return result.records.map(record => {
         const { properties, labels } = record.get('node')
@@ -148,9 +148,7 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
     return new Promise((resolve, reject) => {
       runCypher(storeCypher, parameters)
         .then(() => {
-          runCypher(fetchCypher, {
-            writeProperty: parameters.writeProperty
-          })
+          runCypher(fetchCypher, parameters)
             .then(result => resolve({rows: parseResultStreamFn(result), query: storeCypher, parameters: parameters}))
             .catch(reject)
         })
@@ -179,6 +177,12 @@ const parseResultStream = result => {
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS community
+LIMIT 50`
+
+const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$writeProperty] is null) AND not(node[$clusteringCoefficientProperty] is null)
+RETURN node, node[$writeProperty] AS triangles, node[$clusteringCoefficientProperty] AS coefficient
+ORDER BY triangles DESC
 LIMIT 50`
 
 const louvainStreamCypher = `
@@ -274,9 +278,9 @@ const triangleCountStreamCypher = `
   LIMIT 50`
 
 const triangleCountStoreCypher = `
-  CALL algo.triangleCount($label, $relationshipType, $direction, {
+  CALL algo.triangleCount($label, $relationshipType, {
      direction: $direction,
      write: true,
      writeProperty: $writeProperty,
-     clusteringCoefficientProperty: $writeProperty
+     clusteringCoefficientProperty: $clusteringCoefficientProperty
     })`

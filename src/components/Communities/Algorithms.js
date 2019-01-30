@@ -7,6 +7,7 @@ import LabelPropagationForm from './LabelPropagationForm'
 import ConnectedComponentsForm from './ConnectedComponentsForm'
 import StronglyConnectedComponentsForm from './StronglyConnectedComponentsForm'
 import TrianglesForm from './TrianglesForm'
+import TriangleCountForm from './TriangleCountForm'
 import { louvain, lpa, connectedComponents, stronglyConnectedComponents, triangles, triangleCount } from "../../services/communityDetection"
 
 import { v4 as generateTaskId } from 'uuid'
@@ -225,7 +226,7 @@ class Algorithms extends Component {
       </Card.Content>
       <Card.Content extra>
         <div>
-          <TrianglesForm {...this.state.parameters['Triangle Count']}
+          <TriangleCountForm {...this.state.parameters['Triangle Count']}
                           onChange={this.onChangeParam.bind(this, 'Triangle Count')}/>
         </div>
         <div className='ui two buttons'>
