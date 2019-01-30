@@ -4,7 +4,7 @@ let driver
 
 const getDriver = () => {
   if (!driver) {
-    driver = neo.driver('bolt://localhost:7687', neo.auth.basic("neo4j", "neo"))
+    driver = neo.driver('bolt://localhost:7687', neo.auth.basic("neo4j", "a"))
   }
 
   return driver
