@@ -1,11 +1,11 @@
 import React from 'react'
-import { Form, Input } from "semantic-ui-react"
+import { Form, Input, Dropdown } from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency}) => (
+export default ({onChange, direction, persist, concurrency, label, labelOptions}) => (
   <React.Fragment>
     <Form.Field>
       <label>Label</label>
-      <input placeholder='Label' onChange={evt => onChange('label', evt.target.value)}/>
+      <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
     </Form.Field>
     <Form.Field>
       <label>Relationship Type</label>

@@ -15,6 +15,10 @@ import { addTask, completeTask } from "../../ducks/tasks"
 class Algorithms extends Component {
   state = {
     collapsed: false,
+    labelOptions: [
+      { key: null, value: null, text: 'All labels' },
+      { key: 'Character', value: 'Character', text: 'Character' }
+    ],
     parameters: {
       'Page Rank': {
         direction: 'Outgoing',
@@ -132,8 +136,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <PageRankForm {...this.state.parameters['Page Rank']}
-                                onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
+                  <PageRankForm {...this.state.parameters['Page Rank']} labelOptions={this.state.labelOptions} onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
                 </div>
                 <div className='ui two buttons'>
                   <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Page Rank')}>
@@ -159,7 +162,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <PageRankForm {...this.state.parameters['Article Rank']}
+                  <PageRankForm {...this.state.parameters['Article Rank']} labelOptions={this.state.labelOptions}
                                 onChange={this.onChangeParam.bind(this, 'Article Rank')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -185,7 +188,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <BetweennesForm {...this.state.parameters['Betweenness']}
+                  <BetweennesForm {...this.state.parameters['Betweenness']} labelOptions={this.state.labelOptions}
                                   onChange={this.onChangeParam.bind(this, 'Betweenness')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -212,7 +215,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <ApproxBetweennessForm {...this.state.parameters['Approx Betweenness']}
+                  <ApproxBetweennessForm {...this.state.parameters['Approx Betweenness']} labelOptions={this.state.labelOptions}
                                          onChange={this.onChangeParam.bind(this, 'Approx Betweenness')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -238,7 +241,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <ClosenessCentralityForm {...this.state.parameters['Closeness']}
+                  <ClosenessCentralityForm {...this.state.parameters['Closeness']} labelOptions={this.state.labelOptions}
                                            onChange={this.onChangeParam.bind(this, 'Closeness')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -265,7 +268,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <HarmonicCentralityForm {...this.state.parameters['Harmonic']}
+                  <HarmonicCentralityForm {...this.state.parameters['Harmonic']} labelOptions={this.state.labelOptions} 
                                           onChange={this.onChangeParam.bind(this, 'Harmonic')}/>
                 </div>
                 <div className='ui two buttons'>

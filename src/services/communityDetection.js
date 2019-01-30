@@ -133,6 +133,8 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
     unbalancedProperty: unbalancedProperty || "unbalanced"
   }
 
+  console.log(balancedTriadsStreamCypher, extraParams)
+
   return runAlgorithm(balancedTriadsStreamCypher, balancedTriadsStoreCypher, getFetchBalancedTriadsCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
     if (result.records) {
       return result.records.map(record => {
