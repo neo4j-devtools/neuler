@@ -77,10 +77,7 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
         const { properties, labels } = record.get('nodeA')
 
         return {
-          nodeAProperties: Object.keys(properties).reduce((props, propKey) => {
-            props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
-            return props
-          }, {}),
+          nodeAProperties: parseProperties(properties),
           nodeALabels: labels,
         }
       })
@@ -89,6 +86,13 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
       throw new Error(result.error)
     }
   })
+}
+
+export const parseProperties = (properties) => {
+  return Object.keys(properties).reduce((props, propKey) => {
+    props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
+    return props
+  }, {})
 }
 
 const handleException = error => {
@@ -131,6 +135,7 @@ const parseResultStream = result => {
           return props
         }, {}),
         labels: labels,
+        community: record.get('community').toNumber()
       }
     })
   } else {
