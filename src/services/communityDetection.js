@@ -94,6 +94,20 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
   })
 }
 
+export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "triangles",
+    clusteringCoefficientProperty: "clusteringCoefficient"
+  }
+
+  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchCypher(baseParameters.label),
+                      {...baseParams, ...extraParams}, persist)
+}
+
 export const parseProperties = (properties) => {
   return Object.keys(properties).reduce((props, propKey) => {
     props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
@@ -112,9 +126,9 @@ const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn=par
     .catch(handleException)
 }
 
-const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted) => {
+const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn=parseResultStream) => {
   if (!persisted) {
-    return runStreamingAlgorithm(streamCypher, parameters)
+    return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
   } else {
     return new Promise((resolve, reject) => {
       runCypher(storeCypher, parameters)
@@ -122,7 +136,7 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
           runCypher(fetchCypher, {
             writeProperty: parameters.writeProperty
           })
-            .then(result => resolve({rows: parseResultStream(result), query: storeCypher, parameters: parameters}))
+            .then(result => resolve({rows: parseResultStreamFn(result), query: storeCypher, parameters: parameters}))
             .catch(reject)
         })
         .catch(handleException)
@@ -232,3 +246,22 @@ const trianglesStreamCypher = `
 
   RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
   LIMIT 50`
+
+const triangleCountStreamCypher = `
+  CALL algo.triangleCount.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeId, triangles, coefficient
+
+  WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
+  RETURN node, triangles, coefficient
+  ORDER BY triangles DESC
+  LIMIT 50`
+
+const triangleCountStoreCypher = `
+  CALL algo.triangleCount($label, $relationshipType, $direction, {
+     direction: $direction,
+     write: true,
+     writeProperty: $writeProperty,
+     clusteringCoefficientProperty: $writeProperty
+    })`

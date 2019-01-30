@@ -19,6 +19,8 @@ const getAlgoPanes = task => [{
         return <CommunityResult task={task}/>
       case 'Triangles':
         return <TrianglesResult task={task}/>
+      case 'Triangle Count':
+        return <CommunityResult task={task}/>
       default:
         return null
     }
