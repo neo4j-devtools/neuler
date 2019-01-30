@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import GraphVisualiser from '../GraphVisualiser'
 import CommunityResult from './CommunityResult'
 import TrianglesResult from './TrianglesResult'
+import TriangleCountResult from './TriangleCountResult'
 
 const getAlgoPanes = task => [{
   menuItem: `Table`,
@@ -20,7 +21,7 @@ const getAlgoPanes = task => [{
       case 'Triangles':
         return <TrianglesResult task={task}/>
       case 'Triangle Count':
-        return <CommunityResult task={task}/>
+        return <TriangleCountResult task={task}/>
       default:
         return null
     }

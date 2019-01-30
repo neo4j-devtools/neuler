@@ -104,8 +104,23 @@ export const triangleCount = ({ label, relationshipType, direction, persist, wri
     clusteringCoefficientProperty: "clusteringCoefficient"
   }
 
-  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
+    if (result.records) {
+      return result.records.map(record => {
+        const { properties, labels } = record.get('node')
+
+        return {
+          properties: parseProperties(properties),
+          labels: labels,
+          triangles: record.get('triangles').toNumber(),
+          coefficient: record.get('coefficient'),
+        }
+      })
+    } else {
+      console.error(result.error)
+      throw new Error(result.error)
+    }
+  })
 }
 
 export const parseProperties = (properties) => {
