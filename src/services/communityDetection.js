@@ -71,7 +71,24 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
     writeProperty: writeProperty || "scc"
   }
 
-  return runStreamingAlgorithm(trianglesStreamCypher, {...baseParams, ...extraParams}, parseTrianglesResultStream)
+  return runStreamingAlgorithm(trianglesStreamCypher, {...baseParams, ...extraParams}, result => {
+    if (result.records) {
+      return result.records.map(record => {
+        const { properties, labels } = record.get('nodeA')
+
+        return {
+          nodeAProperties: Object.keys(properties).reduce((props, propKey) => {
+            props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
+            return props
+          }, {}),
+          nodeALabels: labels,
+        }
+      })
+    } else {
+      console.error(result.error)
+      throw new Error(result.error)
+    }
+  })
 }
 
 const handleException = error => {
@@ -114,25 +131,6 @@ const parseResultStream = result => {
           return props
         }, {}),
         labels: labels,
-      }
-    })
-  } else {
-    console.error(result.error)
-    throw new Error(result.error)
-  }
-}
-
-const parseTrianglesResultStream = result => {
-  if (result.records) {
-    return result.records.map(record => {
-      const { properties, labels } = record.get('nodeA')
-
-      return {
-        nodeAProperties: Object.keys(properties).reduce((props, propKey) => {
-          props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
-          return props
-        }, {}),
-        nodeALabels: labels,
       }
     })
   } else {
