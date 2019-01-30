@@ -56,6 +56,7 @@ class Algorithms extends Component {
         break
       case "Connected Components":
         service = connectedComponents
+        break
       case "Strongly Connected Components":
         service = stronglyConnectedComponents
         break
@@ -71,6 +72,7 @@ class Algorithms extends Component {
         taskId,
         ...this.state.parameters[algorithm]
       }).then(result => {
+        console.log("Got result...")
         console.log(result)
         this.props.completeTask(taskId, result)
       })

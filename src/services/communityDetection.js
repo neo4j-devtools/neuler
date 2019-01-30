@@ -71,10 +71,8 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
     writeProperty: writeProperty || "scc"
   }
 
-  return runAlgorithm(trianglesStreamCypher, stronglyConnectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, false)
+  return runStreamingAlgorithm(trianglesStreamCypher, {...baseParams, ...extraParams}, parseTrianglesResultStream)
 }
-
 
 const handleException = error => {
   console.error(error)
@@ -107,17 +105,40 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
 
 const parseResultStream = result => {
   if (result.records) {
-    return result.records.map(record => {
+    const x  = result.records.map(record => {
       const { properties, labels } = record.get('node')
+
       return {
         properties: Object.keys(properties).reduce((props, propKey) => {
           props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
           return props
         }, {}),
-        labels,
-        community: record.get('community').toNumber()
+        labels: labels,
       }
     })
+    console.log(x)
+    return x
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
+
+const parseTrianglesResultStream = result => {
+  if (result.records) {
+    const x  =result.records.map(record => {
+      const { properties, labels } = record.get('nodeA')
+
+      return {
+        nodeAProperties: Object.keys(properties).reduce((props, propKey) => {
+          props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
+          return props
+        }, {}),
+        nodeALabels: labels,
+      }
+    })
+    console.log(x)
+    return x
   } else {
     console.error(result.error)
     throw new Error(result.error)

@@ -3,6 +3,7 @@ import { Table, Tab, Header, Label, Segment } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from '../GraphVisualiser'
 import CommunityResult from './CommunityResult'
+import TrianglesResult from './TrianglesResult'
 
 const getAlgoPanes = task => [{
   menuItem: `Table`,
@@ -16,6 +17,8 @@ const getAlgoPanes = task => [{
         return <CommunityResult task={task}/>
       case 'Strongly Connected Components':
         return <CommunityResult task={task}/>
+      case 'Triangles':
+        return <TrianglesResult task={task}/>
       default:
         return null
     }
