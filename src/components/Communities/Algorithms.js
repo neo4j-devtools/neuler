@@ -5,7 +5,8 @@ import { Button, Card, Icon, Header } from 'semantic-ui-react'
 import LouvainForm from './LouvainForm'
 import LabelPropagationForm from './LabelPropagationForm'
 import ConnectedComponentsForm from './ConnectedComponentsForm'
-import { louvain, lpa, connectedComponents } from "../../services/communityDetection"
+import StronglyConnectedComponentsForm from './StronglyConnectedComponentsForm'
+import { louvain, lpa, connectedComponents, stronglyConnectedComponents } from "../../services/communityDetection"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -54,6 +55,9 @@ class Algorithms extends Component {
         break
       case "Connected Components":
         service = connectedComponents
+      case "Strongly Connected Components":
+        service = stronglyConnectedComponents
+        break
       default:
         break
     }
@@ -137,7 +141,7 @@ class Algorithms extends Component {
             </Card.Content>
             <Card.Content extra>
               <div>
-                <LabelPropagationForm {...this.state.parameters['Connected Components']}
+                <ConnectedComponentsForm {...this.state.parameters['Connected Components']}
                                 onChange={this.onChangeParam.bind(this, 'Connected Components')}/>
               </div>
               <div className='ui two buttons'>
@@ -150,6 +154,31 @@ class Algorithms extends Component {
               </div>
             </Card.Content>
           </Card>
+
+          <Card>
+          <Card.Content>
+            <Icon name='sitemap'/>
+            <Card.Header>Strongly Connected Components</Card.Header>
+            <Card.Meta>finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set.</Card.Meta>
+            <Card.Description>
+              SCC is one of the earliest graph algorithms, and the first linear-time algorithm was described by Tarjan in 1972
+            </Card.Description>
+          </Card.Content>
+          <Card.Content extra>
+            <div>
+              <StronglyConnectedComponentsForm {...this.state.parameters['Strongly Connected Components']}
+                              onChange={this.onChangeParam.bind(this, 'Strongly Connected Components')}/>
+            </div>
+            <div className='ui two buttons'>
+              <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Strongly Connected Components')}>
+                Run
+              </Button>
+              <Button basic color='red'>
+                Cancel
+              </Button>
+            </div>
+          </Card.Content>
+        </Card>
 
 
         </Card.Group>

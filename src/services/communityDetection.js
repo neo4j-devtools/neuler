@@ -49,6 +49,19 @@ export const connectedComponents = ({ label, relationshipType, direction, persis
                       {...baseParams, ...extraParams}, persist)
 }
 
+export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "scc"
+  }
+
+  return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
+                      {...baseParams, ...extraParams}, persist)
+}
+
 
 const handleException = error => {
   console.error(error)
@@ -148,6 +161,24 @@ const connectedComponentsStreamCypher = `
 
 const connectedComponentsStoreCypher = `
   CALL algo.unionFind($label, $relationshipType, $direction, {
+     direction: $direction,
+     write: true,
+     partitionProperty: $writeProperty
+    })`
+
+const stronglyConnectedComponentsStreamCypher = `
+  CALL algo.scc.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeId, partition
+
+  WITH algo.getNodeById(nodeId) AS node, partition AS community
+  RETURN node, community
+  ORDER BY community
+  LIMIT 50`
+
+const stronglyConnectedComponentsStoreCypher = `
+  CALL algo.scc($label, $relationshipType, $direction, {
      direction: $direction,
      write: true,
      partitionProperty: $writeProperty
