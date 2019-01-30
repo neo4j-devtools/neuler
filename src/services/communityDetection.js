@@ -62,6 +62,19 @@ export const stronglyConnectedComponents = ({ label, relationshipType, direction
                       {...baseParams, ...extraParams}, persist)
 }
 
+export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "scc"
+  }
+
+  return runAlgorithm(trianglesStreamCypher, stronglyConnectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
+                      {...baseParams, ...extraParams}, false)
+}
+
 
 const handleException = error => {
   console.error(error)
@@ -183,3 +196,12 @@ const stronglyConnectedComponentsStoreCypher = `
      write: true,
      partitionProperty: $writeProperty
     })`
+
+const trianglesStreamCypher = `
+  CALL algo.triangle.stream($label, $relationshipType, {
+     direction: $direction
+    })
+  YIELD nodeA, nodeB, nodeC
+
+  RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
+  LIMIT 50`

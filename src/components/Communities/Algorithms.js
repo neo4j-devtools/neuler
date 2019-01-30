@@ -6,7 +6,8 @@ import LouvainForm from './LouvainForm'
 import LabelPropagationForm from './LabelPropagationForm'
 import ConnectedComponentsForm from './ConnectedComponentsForm'
 import StronglyConnectedComponentsForm from './StronglyConnectedComponentsForm'
-import { louvain, lpa, connectedComponents, stronglyConnectedComponents } from "../../services/communityDetection"
+import TrianglesForm from './TrianglesForm'
+import { louvain, lpa, connectedComponents, stronglyConnectedComponents, triangles } from "../../services/communityDetection"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -57,6 +58,9 @@ class Algorithms extends Component {
         service = connectedComponents
       case "Strongly Connected Components":
         service = stronglyConnectedComponents
+        break
+      case "Triangles":
+        service = triangles
         break
       default:
         break
@@ -179,6 +183,31 @@ class Algorithms extends Component {
             </div>
           </Card.Content>
         </Card>
+
+        <Card>
+        <Card.Content>
+          <Icon name='sitemap'/>
+          <Card.Header>Triangles</Card.Header>
+          <Card.Meta>finds set of three nodes, where each node has a relationship to all other nodes.</Card.Meta>
+          <Card.Description>
+            gained popularity in social network analysis
+          </Card.Description>
+        </Card.Content>
+        <Card.Content extra>
+          <div>
+            <TrianglesForm {...this.state.parameters['Triangles']}
+                            onChange={this.onChangeParam.bind(this, 'Triangles')}/>
+          </div>
+          <div className='ui two buttons'>
+            <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Triangles')}>
+              Run
+            </Button>
+            <Button basic color='red'>
+              Cancel
+            </Button>
+          </div>
+        </Card.Content>
+      </Card>
 
 
         </Card.Group>
