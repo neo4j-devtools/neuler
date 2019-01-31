@@ -15,10 +15,6 @@ import { addTask, completeTask } from "../../ducks/tasks"
 class Algorithms extends Component {
   state = {
     collapsed: false,
-    labelOptions: [
-      { key: null, value: null, text: 'All labels' },
-      { key: 'Character', value: 'Character', text: 'Character' }
-    ],
     parameters: {
       'Page Rank': {
         direction: 'Outgoing',
@@ -45,6 +41,15 @@ class Algorithms extends Component {
         strategy: "random"
       }
     }
+  }
+
+  componentDidMount() {
+    this.setState({
+      labelOptions: [
+        { key: null, value: null, text: 'Any' },
+        { key: 'Character', value: 'Character', text: 'Character' }
+      ],
+    })
   }
 
   onChangeParam(algorithm, key, value) {
@@ -268,7 +273,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <HarmonicCentralityForm {...this.state.parameters['Harmonic']} labelOptions={this.state.labelOptions} 
+                  <HarmonicCentralityForm {...this.state.parameters['Harmonic']} labelOptions={this.state.labelOptions}
                                           onChange={this.onChangeParam.bind(this, 'Harmonic')}/>
                 </div>
                 <div className='ui two buttons'>
