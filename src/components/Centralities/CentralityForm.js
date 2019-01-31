@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, Dropdown } from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency, label, labelOptions}) => (
+export default ({onChange, direction, persist, concurrency, label, labelOptions, relationshipTypeOptions}) => (
   <React.Fragment>
     <Form.Field>
       <label>Label</label>
@@ -9,7 +9,7 @@ export default ({onChange, direction, persist, concurrency, label, labelOptions}
     </Form.Field>
     <Form.Field>
       <label>Relationship Type</label>
-      <input placeholder='Relationship Type' onChange={evt => onChange('relationshipType', evt.target.value)}/>
+      <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
     </Form.Field>
     <Form.Group inline>
       <label style={{ 'width': '8em' }}>Direction</label>

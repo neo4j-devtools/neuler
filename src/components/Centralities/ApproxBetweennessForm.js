@@ -2,9 +2,9 @@ import React from 'react'
 import {Form, Button, Checkbox} from "semantic-ui-react"
 import CentralityForm from "./CentralityForm"
 
-export default ({ onChange, labelOptions, direction, persist, concurrency, maxDepth, strategy, probability }) => (
+export default ({ onChange, labelOptions, relationshipTypeOptions, direction, persist, concurrency, maxDepth, strategy, probability }) => (
   <Form size='mini' style={{ marginBottom: '1em' }}>
-    <CentralityForm onChange={onChange} direction={direction} persist={persist} concurrency={concurrency} labelOptions={labelOptions}/>
+    <CentralityForm onChange={onChange} direction={direction} persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions} />
     <Form.Group inline>
       <label style={{ 'width': '8em' }}>Strategy</label>
       <Form.Radio

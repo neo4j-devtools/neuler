@@ -4,11 +4,18 @@ import { v1 } from 'neo4j-driver'
 export const loadLabels = () => {
 
   return runCypher("CALL db.labels()", {})
-    .then(result => ({rows: parseResultStream(result)}))
+    .then(result => ({rows: parseLabelsResultStream(result)}))
     .catch(handleException)
 }
 
-const parseResultStream = result => {
+export const loadRelationshipTypes = () => {
+
+  return runCypher("CALL db.relationshipTypes()", {})
+    .then(result => ({rows: parseRelTypesResultStream(result)}))
+    .catch(handleException)
+}
+
+const parseLabelsResultStream = result => {
   if (result.records) {
     return result.records.map(record => {
       return {
@@ -20,6 +27,20 @@ const parseResultStream = result => {
     throw new Error(result.error)
   }
 }
+
+const parseRelTypesResultStream = result => {
+  if (result.records) {
+    return result.records.map(record => {
+      return {
+        label: record.get("relationshipType")
+      }
+    })
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
+
 const handleException = error => {
   console.error(error)
   throw new Error(error)

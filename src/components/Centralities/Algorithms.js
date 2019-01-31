@@ -8,7 +8,7 @@ import ApproxBetweennessForm from './ApproxBetweennessForm'
 import ClosenessCentralityForm from './ClosenessCentralityForm'
 import HarmonicCentralityForm from './HarmonicCentralityForm'
 import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../../services/centralities"
-import {loadLabels} from "../../services/metadata"
+import {loadLabels, loadRelationshipTypes} from "../../services/metadata"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -50,6 +50,14 @@ class Algorithms extends Component {
       labels.unshift({ key: null, value: null, text: 'Any' })
       this.setState({
         labelOptions:  labels,
+      })
+    })
+
+    loadRelationshipTypes().then(result => {
+      const relationshipTypes = result.rows.map(row => { return {key: row.label, value: row.label, text: row.label} })
+      relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
+      this.setState({
+        relationshipTypeOptions: relationshipTypes
       })
     })
 
@@ -144,7 +152,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <PageRankForm {...this.state.parameters['Page Rank']} labelOptions={this.state.labelOptions} onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
+                  <PageRankForm {...this.state.parameters['Page Rank']} labelOptions={this.state.labelOptions} relationshipTypeOptions={this.state.relationshipTypeOptions} onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
                 </div>
                 <div className='ui two buttons'>
                   <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Page Rank')}>
@@ -170,7 +178,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <PageRankForm {...this.state.parameters['Article Rank']} labelOptions={this.state.labelOptions}
+                  <PageRankForm {...this.state.parameters['Article Rank']} labelOptions={this.state.labelOptions} relationshipTypeOptions={this.state.relationshipTypeOptions}
                                 onChange={this.onChangeParam.bind(this, 'Article Rank')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -196,7 +204,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <BetweennesForm {...this.state.parameters['Betweenness']} labelOptions={this.state.labelOptions}
+                  <BetweennesForm {...this.state.parameters['Betweenness']} labelOptions={this.state.labelOptions} relationshipTypeOptions={this.state.relationshipTypeOptions}
                                   onChange={this.onChangeParam.bind(this, 'Betweenness')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -223,7 +231,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <ApproxBetweennessForm {...this.state.parameters['Approx Betweenness']} labelOptions={this.state.labelOptions}
+                  <ApproxBetweennessForm {...this.state.parameters['Approx Betweenness']} labelOptions={this.state.labelOptions} relationshipTypeOptions={this.state.relationshipTypeOptions}
                                          onChange={this.onChangeParam.bind(this, 'Approx Betweenness')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -249,7 +257,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <ClosenessCentralityForm {...this.state.parameters['Closeness']} labelOptions={this.state.labelOptions}
+                  <ClosenessCentralityForm {...this.state.parameters['Closeness']} labelOptions={this.state.labelOptions} relationshipTypeOptions={this.state.relationshipTypeOptions}
                                            onChange={this.onChangeParam.bind(this, 'Closeness')}/>
                 </div>
                 <div className='ui two buttons'>
@@ -276,7 +284,7 @@ class Algorithms extends Component {
               </Card.Content>
               <Card.Content extra>
                 <div>
-                  <HarmonicCentralityForm {...this.state.parameters['Harmonic']} labelOptions={this.state.labelOptions}
+                  <HarmonicCentralityForm {...this.state.parameters['Harmonic']} labelOptions={this.state.labelOptions} relationshipTypeOptions={this.state.relationshipTypeOptions}
                                           onChange={this.onChangeParam.bind(this, 'Harmonic')}/>
                 </div>
                 <div className='ui two buttons'>
