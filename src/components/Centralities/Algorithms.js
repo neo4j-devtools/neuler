@@ -8,6 +8,7 @@ import ApproxBetweennessForm from './ApproxBetweennessForm'
 import ClosenessCentralityForm from './ClosenessCentralityForm'
 import HarmonicCentralityForm from './HarmonicCentralityForm'
 import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../../services/centralities"
+import {loadLabels} from "../../services/metadata"
 
 import { v4 as generateTaskId } from 'uuid'
 import { addTask, completeTask } from "../../ducks/tasks"
@@ -44,12 +45,14 @@ class Algorithms extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      labelOptions: [
-        { key: null, value: null, text: 'Any' },
-        { key: 'Character', value: 'Character', text: 'Character' }
-      ],
+    loadLabels().then(result => {
+      const labels = result.rows.map(row => { return {key: row.label, value: row.label, text: row.label} })
+      labels.unshift({ key: null, value: null, text: 'Any' })
+      this.setState({
+        labelOptions:  labels,
+      })
     })
+
   }
 
   onChangeParam(algorithm, key, value) {
