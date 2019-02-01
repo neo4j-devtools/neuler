@@ -7,6 +7,7 @@ import CommunityAlgorithms from './components/Communities/AlgoGroupView'
 
 class App extends Component {
   state = {
+    status: 'groups',
     content: 'centralities'
   }
 
@@ -48,12 +49,31 @@ class App extends Component {
         </Sidebar>
 
         <Sidebar.Pusher>
-          <Segment basic inverted vertical={false} style={{height: '5em'}}>
-            <Header as='h1' inverted color='grey'>
-              NEuler - Playground for Neo4j Graph Algorithms
+          <Segment basic inverted vertical={false} style={{ height: '5em', display: 'flex', width:'90%', justifyContent: 'space-between' }}>
+            <Menu inverted>
+              <Menu.Item as='a'>
+                <Icon name='connectdevelop'/>
+                Page Rank
+              </Menu.Item>
+              <Menu.Item as='a'>
+                <Icon name='clone'/>
+                Article Rank
+              </Menu.Item>
+              <Menu.Item as='a'>
+                <Icon name='clone'/>
+                Betweenness Centrality
+              </Menu.Item>
+              <Menu.Item as='a'>
+                <Icon name='clone'/>
+                Approx. Betweenness Centrality
+              </Menu.Item>
+            </Menu>
+            <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
+              NEuler
             </Header>
           </Segment>
-          {content == "centralities" ? <CentralityAlgorithms /> : <CommunityAlgorithms /> }
+
+          {content == "centralities" ? <CentralityAlgorithms/> : <CommunityAlgorithms/>}
 
         </Sidebar.Pusher>
       </Sidebar.Pushable>
