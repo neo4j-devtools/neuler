@@ -164,7 +164,7 @@ class Algorithms extends Component {
                 </div>
               </Card.Content>
             </Card>
-
+{/*
             <Card>
               <Card.Content>
                 <Icon name='sitemap'/>
@@ -296,7 +296,7 @@ class Algorithms extends Component {
                   </Button>
                 </div>
               </Card.Content>
-            </Card>
+            </Card>*/}
 
 
           </Card.Group>
