@@ -1,15 +1,17 @@
 import React from 'react'
 import { Grid } from 'semantic-ui-react'
 
-import Algorithms from './Algorithms'
+import AlgorithmForm from './AlgorithmForm'
 import AlgoResults from './AlgoResults'
 
 export default () =>
-    <Grid divided='vertically' columns={1}>
-      <Grid.Row>
-        <Algorithms/>
-      </Grid.Row>
-      <Grid.Row style={{padding: '2em 10em 0em 2em'}}>
+  <Grid columns={2}>
+      <Grid.Row style={{margin: '0', padding: '0'}}>
+        <Grid.Column width={3}>
+          <AlgorithmForm/>
+        </Grid.Column>
+        <Grid.Column width={13}>
         <AlgoResults/>
+        </Grid.Column>
       </Grid.Row>
     </Grid>
