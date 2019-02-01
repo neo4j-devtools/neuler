@@ -1,33 +1,22 @@
-import React from 'react'
-import { Table, Tab, Header, Label, Segment } from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { Button, Tab, Header, Icon, Segment } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from '../GraphVisualiser'
 import CentralityResult from './CentralityResult'
 
+const tabContentStyle = {
+  height: '80vh', overflowY: 'auto', overflowX: 'hidden', width: '70vw'
+}
+
 const getAlgoPanes = task => [{
   menuItem: `Table`,
-  render: () => {
-    switch (task.algorithm) {
-      case 'Page Rank':
-        return <CentralityResult task={task}/>
-      case 'Article Rank':
-        return <CentralityResult task={task}/>
-      case 'Betweenness':
-        return <CentralityResult task={task}/>
-      case 'Approx Betweenness':
-        return <CentralityResult task={task}/>
-      case 'Closeness':
-        return <CentralityResult task={task}/>
-      case 'Harmonic':
-        return <CentralityResult task={task}/>
-      default:
-        return null
-    }
-  }
+  render: () => <div style={tabContentStyle}>
+    <CentralityResult task={task}/>
+  </div>
 }, {
   menuItem: `Code`,
   render: () => (
-    <div>
+    <div style={tabContentStyle}>
       {
         task.parameters
           ? <Segment.Group>
