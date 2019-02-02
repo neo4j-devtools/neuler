@@ -1,18 +1,21 @@
 import React, { Component } from 'react'
 import { Button, Tab, Header, Icon, Segment } from 'semantic-ui-react'
 import { connect } from "react-redux"
-import GraphVisualiser from '../GraphVisualiser'
-import CentralityResult from './CentralityResult'
+import GraphVisualiser from './GraphVisualiser'
+import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 
 const tabContentStyle = {
   height: '80vh', overflowY: 'auto', overflowX: 'hidden', width: '70vw'
 }
 
-const getAlgoPanes = task => [{
+const getAlgoPanes = (task) => [{
   menuItem: `Table`,
-  render: () => <div style={tabContentStyle}>
-    <CentralityResult task={task}/>
-  </div>
+  render: () => {
+    const { ResultView } = getAlgorithmDefinitions(task.group, task.algorithm)
+    return <div style={tabContentStyle}>
+      <ResultView task={task}/>
+    </div>
+  }
 }, {
   menuItem: `Code`,
   render: () => (
@@ -22,7 +25,7 @@ const getAlgoPanes = task => [{
           ? <Segment.Group>
             {
               Object.keys(task.parameters).map(key =>
-                <Segment>:param {key} =>
+                <Segment key={key}>:param {key} =>
                   {task.parameters[key]
                     ? (typeof task.parameters[key] === 'string'
                       ? ` '${task.parameters[key]}'`
@@ -105,7 +108,6 @@ class TabExampleVerticalTabular extends Component {
     )*/
   }
 }
-
 
 const mapStateProps = state => ({
   tasks: state.tasks

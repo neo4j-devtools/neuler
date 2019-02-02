@@ -2,46 +2,23 @@ import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { Button, Card, Icon, Header } from 'semantic-ui-react'
 
-import PageRankForm from './PageRankForm'
-import BetweennesForm from './BetweennesForm'
-import ApproxBetweennessForm from './ApproxBetweennessForm'
-import ClosenessCentralityForm from './ClosenessCentralityForm'
-import HarmonicCentralityForm from './HarmonicCentralityForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../../services/centralities"
-import { loadLabels, loadRelationshipTypes } from "../../services/metadata"
+import PageRankForm from './Centralities/PageRankForm'
+import BetweennesForm from './Centralities/BetweennesForm'
+import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
+import ClosenessCentralityForm from './Centralities/ClosenessCentralityForm'
+import HarmonicCentralityForm from './Centralities/HarmonicCentralityForm'
+import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../services/centralities"
+import { loadLabels, loadRelationshipTypes } from "../services/metadata"
 
 import { v4 as generateTaskId } from 'uuid'
-import { addTask, completeTask } from "../../ducks/tasks"
+import { addTask, completeTask } from "../ducks/tasks"
+import { getAlgorithmDefinitions } from "./algorithmsLibrary"
+import { getCurrentAlgorithm } from "../ducks/algorithms"
 
 class Algorithms extends Component {
   state = {
     collapsed: false,
-    parameters: {
-      'Page Rank': {
-        direction: 'Outgoing',
-        persist: false,
-        writeProperty: "pagerank",
-        dampingFactor: 0.85,
-        iterations: 20,
-        defaultValue: 1
-      },
-      'Article Rank': {
-        direction: 'Outgoing',
-        persist: false,
-        writeProperty: "articlerank",
-        dampingFactor: 0.85,
-        iterations: 20,
-        defaultValue: 1
-      },
-      'Betweenness': {
-        direction: 'Outgoing',
-        persist: false,
-        writeProperty: "betweenness"
-      },
-      'Approx Betweenness': {
-        strategy: "random"
-      }
-    }
+    parameters: {}
   }
 
   componentDidMount() {
@@ -65,35 +42,37 @@ class Algorithms extends Component {
       })
     })
 
+    const { activeGroup, activeAlgorithm } = this.props
+    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+    this.setState({ parameters })
+
   }
 
-  onChangeParam(algorithm, key, value) {
+  onChangeParam(key, value) {
     const parameters = { ...this.state.parameters }
-    if (!parameters[algorithm]) {
-      parameters[algorithm] = {}
-    }
-    parameters[algorithm][key] = value
+    parameters[key] = value
     this.setState({
       parameters
     })
   }
 
-  onRunAlgo(algorithm) {
+  onRunAlgo() {
     const taskId = generateTaskId()
 
-    let service = pageRank
+    const { service } = this.props.currentAlgorithm
+    const { activeGroup, activeAlgorithm } = this.props
 
     if (service) {
       service({
         taskId,
-        ...this.state.parameters[algorithm]
+        ...this.state.parameters
       }).then(result => {
         console.log(result)
         this.props.completeTask(taskId, result)
         this.setState({ collapsed: true })
       })
 
-      this.props.addTask(taskId, algorithm, { ...this.state.parameters[algorithm] })
+      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...this.state.parameters })
     }
   }
 
@@ -102,6 +81,7 @@ class Algorithms extends Component {
   }
 
   render() {
+    const { Form, description } = this.props.currentAlgorithm
 
     const containerStyle = {
       width: '96%',
@@ -120,21 +100,20 @@ class Algorithms extends Component {
         <Card>
           <Card.Content>
             <Icon name='sitemap'/>
-            <Card.Header>Page Rank</Card.Header>
-            <Card.Meta>named after Google co-founder Larry Page</Card.Meta>
-            <Card.Description>
-              PageRank is an algorithm that measures the <strong>transitive</strong> influence or connectivity of
-              nodes
-            </Card.Description>
+            <Card.Header>
+              {this.props.activeAlgorithm}
+            </Card.Header>
+            <Card.Meta>{description}
+            </Card.Meta>
           </Card.Content>
           <Card.Content extra>
             <div>
-              <PageRankForm {...this.state.parameters['Page Rank']} labelOptions={this.state.labelOptions}
-                            relationshipTypeOptions={this.state.relationshipTypeOptions}
-                            onChange={this.onChangeParam.bind(this, 'Page Rank')}/>
+              <Form {...this.state.parameters} labelOptions={this.state.labelOptions}
+                    relationshipTypeOptions={this.state.relationshipTypeOptions}
+                    onChange={this.onChangeParam.bind(this)}/>
             </div>
             <div className='ui two buttons'>
-              <Button basic color='green' onClick={this.onRunAlgo.bind(this, 'Page Rank')}>
+              <Button basic color='green' onClick={this.onRunAlgo.bind(this)}>
                 Run
               </Button>
               <Button basic color='red'>
@@ -154,9 +133,16 @@ class Algorithms extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  activeGroup: state.algorithms.group,
+  activeAlgorithm: state.algorithms.algorithm,
+  currentAlgorithm: getCurrentAlgorithm(state)
+})
+
 const mapDispatchToProps = dispatch => ({
-  addTask: (taskId, algorithm, parameters) => {
+  addTask: (taskId, group, algorithm, parameters) => {
     const task = {
+      group,
       algorithm,
       taskId,
       parameters,
@@ -169,4 +155,4 @@ const mapDispatchToProps = dispatch => ({
   }
 })
 
-export default connect(null, mapDispatchToProps)(Algorithms)
+export default connect(mapStateToProps, mapDispatchToProps)(Algorithms)
