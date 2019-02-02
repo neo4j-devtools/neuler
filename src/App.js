@@ -2,8 +2,12 @@ import React, { Component } from 'react'
 import { Sidebar, Menu, Segment, Icon, Image, Header } from "semantic-ui-react"
 
 import './App.css'
-import CentralityAlgorithms from './components/Centralities/AlgoGroupView'
-import CommunityAlgorithms from './components/Communities/AlgoGroupView'
+
+import AlgorithmsGroupMenu from "./components/AlgorithmGroupsMenu"
+import { selectAlgorithm } from "./ducks/algorithms"
+import { connect } from "react-redux"
+import { getAlgorithms } from "./components/algorithmsLibrary"
+import MainContent from './components/MainContent'
 
 class App extends Component {
   state = {
@@ -17,6 +21,7 @@ class App extends Component {
 
   render() {
     const {content} = this.state
+    const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
 
     return (
       <Sidebar.Pushable as={Segment}>
@@ -30,50 +35,23 @@ class App extends Component {
           visible={true}
           width='thin'
         >
-          <Menu.Item active={content === 'centralities'} as='a' onClick={this.handleMenuClick.bind(this, 'centralities')}>
-            <Icon name='sun' />
-            Centralities
-          </Menu.Item>
-          <Menu.Item active={content === 'community'} as='a' onClick={this.handleMenuClick.bind(this, 'community')}>
-            <Icon name='group' />
-            Community Detection
-          </Menu.Item>
-          <Menu.Item as='a'>
-            <Icon name='connectdevelop' />
-            Path Finding
-          </Menu.Item>
-          <Menu.Item as='a'>
-            <Icon name='clone' />
-            Similarities
-          </Menu.Item>
+          <AlgorithmsGroupMenu/>
         </Sidebar>
 
         <Sidebar.Pusher>
           <Segment basic inverted vertical={false} style={{ height: '5em', display: 'flex', width:'90%', justifyContent: 'space-between' }}>
             <Menu inverted>
-              <Menu.Item as='a'>
-                <Icon name='connectdevelop'/>
-                Page Rank
-              </Menu.Item>
-              <Menu.Item as='a'>
-                <Icon name='clone'/>
-                Article Rank
-              </Menu.Item>
-              <Menu.Item as='a'>
-                <Icon name='clone'/>
-                Betweenness Centrality
-              </Menu.Item>
-              <Menu.Item as='a'>
-                <Icon name='clone'/>
-                Approx. Betweenness Centrality
-              </Menu.Item>
+              {getAlgorithms(activeGroup).map(algorithm =>
+                <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm} onClick={() => selectAlgorithm(algorithm)}>
+                  {algorithm}
+                </Menu.Item>)}
             </Menu>
             <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
               NEuler
             </Header>
           </Segment>
 
-          {content == "centralities" ? <CentralityAlgorithms/> : <CommunityAlgorithms/>}
+          <MainContent />
 
         </Sidebar.Pusher>
       </Sidebar.Pushable>
@@ -81,4 +59,13 @@ class App extends Component {
   }
 }
 
-export default App
+const mapStateToProps = state => ({
+  activeGroup: state.algorithms.group,
+  activeAlgorithm: state.algorithms.algorithm
+})
+
+const mapDispatchToProps = dispatch => ({
+  selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(App)
