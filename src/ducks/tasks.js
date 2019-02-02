@@ -2,9 +2,10 @@ const NAME = 'TASKS'
 const ADD_TASK = `${NAME}/ADD_TASK`
 const COMPLETE_TASK = `${NAME}/COMPLETE_TASK`
 
-export const addTask = ({taskId, algorithm, startTime, parameters}) => ({
+export const addTask = ({taskId, group, algorithm, startTime, parameters}) => ({
   type: ADD_TASK,
   taskId,
+  group,
   algorithm,
   startTime,
   parameters
@@ -22,6 +23,7 @@ export default (state = [], action) => {
       const newState = [...state]
       newState.unshift({
         taskId: action.taskId,
+        group: action.group,
         algorithm: action.algorithm,
         startTime: action.startTime,
         result: action.result,
