@@ -64,7 +64,8 @@ export default {
       service: approxBetweenness,
       ResultView: CentralityResult,
       parameters: {
-        strategy: "random"
+        strategy: "random",
+        direction: "Outgoing"
       }
     },
     "Closeness": {
