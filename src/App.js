@@ -9,7 +9,7 @@ import { connect } from "react-redux"
 import { getAlgorithms } from "./components/algorithmsLibrary"
 import MainContent from './components/MainContent'
 
-class App extends Component {
+class NEuler extends Component {
   state = {
     status: 'groups',
     content: 'centralities'
@@ -56,6 +56,12 @@ class App extends Component {
         </Sidebar.Pusher>
       </Sidebar.Pushable>
     )
+  }
+}
+
+class App extends Component {
+  render() {
+    return (<NEuler {...this.props} />)
   }
 }
 

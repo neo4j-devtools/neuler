@@ -47,7 +47,7 @@ export default {
         iterations: 20,
         defaultValue: 1
       },
-      description: ``
+      description: `a variant of the PageRank algorithm`
     },
     'Betweenness': {
       Form: BetweennesForm,
@@ -57,7 +57,8 @@ export default {
         direction: 'Outgoing',
         persist: false,
         writeProperty: "betweenness"
-      }
+      },
+      description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
     },
     'Approx Betweenness': {
       Form: ApproxBetweennessForm,
@@ -66,19 +67,23 @@ export default {
       parameters: {
         strategy: "random",
         direction: "Outgoing"
-      }
+      },
+      description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
     },
     "Closeness": {
       Form: ClosenessCentralityForm,
       service: closeness,
       ResultView: CentralityResult,
-      parameters: {}
+      parameters: {},
+      description: `detect nodes that are able to spread information very efficiently through a graph`
     },
     "Harmonic": {
       Form: HarmonicCentralityForm,
       service: harmonic,
       ResultView: CentralityResult,
-      parameters: {}
+      parameters: {},
+      description: `a variant of closeness centrality, that was invented to solve the problem the original
+-                  formula had when dealing with unconnected graphs.`
     }
   }
 }
