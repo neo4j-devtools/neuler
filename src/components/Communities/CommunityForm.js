@@ -1,16 +1,16 @@
 import React from 'react'
-import { Form, Input } from "semantic-ui-react"
+import { Form, Input, Dropdown } from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency}) => (
+export default ({onChange, direction, persist, concurrency, labelOptions, relationshipTypeOptions}) => (
   <React.Fragment>
-    <Form.Field>
-      <label>Label</label>
-      <input placeholder='Label' onChange={evt => onChange('label', evt.target.value)}/>
-    </Form.Field>
-    <Form.Field>
-      <label>Relationship Type</label>
-      <input placeholder='Relationship Type' onChange={evt => onChange('relationshipType', evt.target.value)}/>
-    </Form.Field>
+  <Form.Field>
+    <label>Label</label>
+    <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
+  </Form.Field>
+  <Form.Field>
+    <label>Relationship Type</label>
+    <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
+  </Form.Field>
     <Form.Group inline>
       <label style={{ 'width': '8em' }}>Direction</label>
       <Form.Radio

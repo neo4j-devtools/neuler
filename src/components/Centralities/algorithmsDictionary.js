@@ -46,7 +46,8 @@ export default {
         dampingFactor: 0.85,
         iterations: 20,
         defaultValue: 1
-      }
+      },
+      description: ``
     },
     'Betweenness': {
       Form: BetweennesForm,
