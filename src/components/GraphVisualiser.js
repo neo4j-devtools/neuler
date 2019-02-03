@@ -128,7 +128,7 @@ return path`
     const { labels } = this.state
 
     return <Grid divided='vertically' columns={1}>
-      <Grid.Row>
+      <Grid.Row style={{ marginLeft: '1em' }}>
         <Form>
           <Form.Group inline>
             {Object.keys(labels).map(label =>
@@ -150,7 +150,7 @@ return path`
           </Form.Group>
         </Form>
       </Grid.Row>
-      <Grid.Row style={{ padding: '2em 10em 0em 2em' }}>
+      <Grid.Row>
         <div style={{ width: '100%', height: '100%' }} id={'div_' + this.state.taskId} ref={this.visContainer}/>
       </Grid.Row>
     </Grid>
