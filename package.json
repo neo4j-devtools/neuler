@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "graph-app-kit": "^1.0.4",
     "neo4j-driver": "^1.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
