@@ -15,11 +15,20 @@ import { addTask, completeTask } from "../ducks/tasks"
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import { getCurrentAlgorithm } from "../ducks/algorithms"
 
+import * as PropTypes from "prop-types";
 class Algorithms extends Component {
+  constructor(props, context) {
+    super(props, context);
+  }
+
   state = {
     collapsed: false,
     parameters: {}
   }
+
+  static contextTypes = {
+        driver: PropTypes.object
+  };
 
   componentDidMount() {
     loadLabels().then(result => {
@@ -63,6 +72,8 @@ class Algorithms extends Component {
     const { activeGroup, activeAlgorithm } = this.props
 
     if (service) {
+      console.log("executing algorithm...")
+      console.log(this.context.driver)
       service({
         taskId,
         ...this.state.parameters
@@ -81,6 +92,8 @@ class Algorithms extends Component {
   }
 
   render() {
+    console.log(this.context.driver)  
+
     const { Form, description } = this.props.currentAlgorithm
 
     const containerStyle = {

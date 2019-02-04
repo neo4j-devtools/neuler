@@ -15,19 +15,11 @@ import {
   ConnectModal
 } from 'graph-app-kit/components/GraphAppBase';
 
-import {Cypher} from 'graph-app-kit/components/Cypher'
-
-import { Render } from 'graph-app-kit/components/Render';
-
-import Neo4jDesktopStandIn from './neo4jDesktop/Neo4jDesktopStandIn';
-
 import { v1 as neo4j } from 'neo4j-driver'
 
 import * as PropTypes from "prop-types";
 
 class NEuler extends Component {
-  // static contextType = DriverContext;
-
   static contextTypes = {
         driver: PropTypes.object
   };
@@ -48,6 +40,7 @@ class NEuler extends Component {
   render() {
     const {content} = this.state
     const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
+
     console.log(this.context.driver)
 
     return (
@@ -88,18 +81,17 @@ class NEuler extends Component {
 
 class App extends Component {
   render() {
-    const localDriver = neo4j.driver("bolt://localhost", neo4j.auth.basic("neo4j", "neo"));
-return (
-            <GraphAppBase
-              driverFactory={neo4j}
-              integrationPoint={window.neo4jDesktopApi}
-              render={({ connectionState, connectionDetails, setCredentials, initialDesktopContext }) => {
-                return (
-                  <NEuler key="app" {...this.props} data={connectionDetails} connected={connectionState === CONNECTED} />
-                );
-              }}
-            />
-          )
+    return (
+      <GraphAppBase
+        driverFactory={neo4j}
+        integrationPoint={window.neo4jDesktopApi}
+        render={({ connectionState, connectionDetails, setCredentials, initialDesktopContext }) => {
+          return (
+            <NEuler key="app" {...this.props} data={connectionDetails} connected={connectionState === CONNECTED} />
+          );
+        }}
+      />
+    )
   }
 }
 
