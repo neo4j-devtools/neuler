@@ -23,7 +23,9 @@ class Algorithms extends Component {
 
   state = {
     collapsed: false,
-    parameters: {}
+    parameters: {},
+    labelOptions: [{ key: null, value: null, text: 'Any' }],
+    relationshipTypeOptions: [{ key: null, value: null, text: 'Any' }]
   }
 
   static contextTypes = {
@@ -92,7 +94,8 @@ class Algorithms extends Component {
   }
 
   render() {
-    console.log(this.context.driver)  
+    console.log("AlgorithmForm#render")
+    console.log(this.context.driver)
 
     const { Form, description } = this.props.currentAlgorithm
 

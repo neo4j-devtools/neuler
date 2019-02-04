@@ -41,6 +41,7 @@ class NEuler extends Component {
     const {content} = this.state
     const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
 
+  console.log("App#render")
     console.log(this.context.driver)
 
     return (
