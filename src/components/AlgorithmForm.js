@@ -33,30 +33,34 @@ class Algorithms extends Component {
   };
 
   componentDidMount() {
-    loadLabels().then(result => {
-      const labels = result.rows.map(row => {
-        return { key: row.label, value: row.label, text: row.label }
-      })
-      labels.unshift({ key: null, value: null, text: 'Any' })
-      this.setState({
-        labelOptions: labels,
-      })
-    })
-
-    loadRelationshipTypes().then(result => {
-      const relationshipTypes = result.rows.map(row => {
-        return { key: row.label, value: row.label, text: row.label }
-      })
-      relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
-      this.setState({
-        relationshipTypeOptions: relationshipTypes
-      })
-    })
-
     const { activeGroup, activeAlgorithm } = this.props
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
     this.setState({ parameters })
+  }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.metadata !== nextProps.metadata) {
+      console.log('metadata changed')
+      this.loadMetadata(nextProps.metadata)
+    }
+  }
+
+  loadMetadata(metadata) {
+    const labels = metadata.labels.map(row => {
+      return { key: row.label, value: row.label, text: row.label }
+    })
+    labels.unshift({ key: null, value: null, text: 'Any' })
+    this.setState({
+      labelOptions: labels,
+    })
+
+    const relationshipTypes = metadata.relationshipTypes.map(row => {
+      return { key: row.label, value: row.label, text: row.label }
+    })
+    relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
+    this.setState({
+      relationshipTypeOptions: relationshipTypes
+    })
   }
 
   onChangeParam(key, value) {
@@ -77,6 +81,7 @@ class Algorithms extends Component {
       console.log("executing algorithm...")
       console.log(this.context.driver)
       service({
+        driver: this.context.driver,
         taskId,
         ...this.state.parameters
       }).then(result => {
@@ -152,7 +157,8 @@ class Algorithms extends Component {
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
   activeAlgorithm: state.algorithms.algorithm,
-  currentAlgorithm: getCurrentAlgorithm(state)
+  currentAlgorithm: getCurrentAlgorithm(state),
+  metadata: state.metadata
 })
 
 const mapDispatchToProps = dispatch => ({

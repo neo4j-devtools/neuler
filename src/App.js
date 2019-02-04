@@ -18,6 +18,9 @@ import {
 import { v1 as neo4j } from 'neo4j-driver'
 
 import * as PropTypes from "prop-types";
+import { setDriver } from "./services/stores/neoStore"
+import { loadLabels, loadRelationshipTypes } from "./services/metadata"
+import { setLabels, setRelationshipTypes } from "./ducks/metadata"
 
 class NEuler extends Component {
   static contextTypes = {
@@ -35,6 +38,15 @@ class NEuler extends Component {
 
   handleMenuClick (content) {
     this.setState({content})
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.context.driver !== nextContext.driver) {
+      console.log('setting', nextContext.driver)
+      setDriver(nextContext.driver)
+      loadLabels().then(this.props.setLabels)
+      loadRelationshipTypes().then(this.props.setRelationshipTypes)
+    }
   }
 
   render() {
@@ -86,10 +98,16 @@ class App extends Component {
       <GraphAppBase
         driverFactory={neo4j}
         integrationPoint={window.neo4jDesktopApi}
-        render={({ connectionState, connectionDetails, setCredentials, initialDesktopContext }) => {
-          return (
+        render={({ connectionState, connectionDetails, setCredentials, initialDesktopContext}) => {
+          return [
+            <ConnectModal
+              key="modal"
+              errorMsg={connectionDetails ? connectionDetails.message : ""}
+              onSubmit={setCredentials}
+              show={connectionState !== CONNECTED}
+            />,
             <NEuler key="app" {...this.props} data={connectionDetails} connected={connectionState === CONNECTED} />
-          );
+          ]
         }}
       />
     )
@@ -102,7 +120,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm))
+  selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
+  setLabels: labels => dispatch(setLabels(labels)),
+  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

@@ -10,6 +10,10 @@ const getDriver = () => {
   return driver
 }
 
+export const setDriver = newDriver => {
+  driver = newDriver
+}
+
 const getSession = () => {
   return getDriver().session()
 }
