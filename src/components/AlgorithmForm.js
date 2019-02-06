@@ -78,10 +78,7 @@ class Algorithms extends Component {
     const { activeGroup, activeAlgorithm } = this.props
 
     if (service) {
-      console.log("executing algorithm...")
-      console.log(this.context.driver)
       service({
-        driver: this.context.driver,
         taskId,
         ...this.state.parameters
       }).then(result => {
@@ -99,9 +96,6 @@ class Algorithms extends Component {
   }
 
   render() {
-    console.log("AlgorithmForm#render")
-    console.log(this.context.driver)
-
     const { Form, description } = this.props.currentAlgorithm
 
     const containerStyle = {

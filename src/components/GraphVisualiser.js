@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import { Grid, Form, Button, Icon, Select } from "semantic-ui-react"
+import NeoVis from "./visualisation/neovis"
+import { getDriver } from "../services/stores/neoStore"
 
 export default class extends Component {
   state = {
@@ -53,12 +55,12 @@ export default class extends Component {
       }
     }
 
-    if (reload === true) {
+   /* if (reload === true) {
       this.vis.renderWithCypher(cypher)
-    } else {
-      this.vis = new window.NeoVis.default(this.config);
+    } else {*/
+      this.vis = new NeoVis(this.config, getDriver());
       this.vis.render();
-    }
+    //}
   }
 
   generateCypher(label, relationshipType, writeProperty) {

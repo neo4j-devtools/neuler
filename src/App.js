@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Sidebar, Menu, Segment, Icon, Image, Header } from "semantic-ui-react"
+import { Sidebar, Menu, Segment, Placeholder, Header } from "semantic-ui-react"
 
 import './App.css'
 
@@ -9,23 +9,15 @@ import { connect } from "react-redux"
 import { getAlgorithms } from "./components/algorithmsLibrary"
 import MainContent from './components/MainContent'
 
-import {
-  GraphAppBase,
-  CONNECTED,
-  ConnectModal
-} from 'graph-app-kit/components/GraphAppBase';
+import { ConnectModal } from './components/ConnectModal';
 
-import { v1 as neo4j } from 'neo4j-driver'
-
-import * as PropTypes from "prop-types";
 import { setDriver } from "./services/stores/neoStore"
 import { loadLabels, loadRelationshipTypes } from "./services/metadata"
 import { setLabels, setRelationshipTypes } from "./ducks/metadata"
+import { setConnected, setDisconnected, CONNECTED, CONNECTING, DISCONNECTED, INITIAL } from "./ducks/connection"
+import { initializeConnection, tryConnect } from "./services/connections"
 
 class NEuler extends Component {
-  static contextTypes = {
-        driver: PropTypes.object
-  };
 
   constructor(props, context) {
     super(props, context);
@@ -40,21 +32,8 @@ class NEuler extends Component {
     this.setState({content})
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (this.context.driver !== nextContext.driver) {
-      console.log('setting', nextContext.driver)
-      setDriver(nextContext.driver)
-      loadLabels().then(this.props.setLabels)
-      loadRelationshipTypes().then(this.props.setRelationshipTypes)
-    }
-  }
-
   render() {
-    const {content} = this.state
     const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
-
-  console.log("App#render")
-    console.log(this.context.driver)
 
     return (
       <Sidebar.Pushable as={Segment}>
@@ -93,36 +72,72 @@ class NEuler extends Component {
 }
 
 class App extends Component {
+  constructor(props) {
+    super(props)
+
+    const { setConnected, setDisconnected } = this.props
+    initializeConnection(setConnected, setDisconnected)
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.connectionInfo !== nextProps.connectionInfo
+      && nextProps.connectionInfo.status === CONNECTED) {
+      loadLabels().then(this.props.setLabels)
+      loadRelationshipTypes().then(this.props.setRelationshipTypes)
+    }
+  }
+
   render() {
-    return (
-      <GraphAppBase
-        driverFactory={neo4j}
-        integrationPoint={window.neo4jDesktopApi}
-        render={({ connectionState, connectionDetails, setCredentials, initialDesktopContext}) => {
-          return [
-            <ConnectModal
-              key="modal"
-              errorMsg={connectionDetails ? connectionDetails.message : ""}
-              onSubmit={setCredentials}
-              show={connectionState !== CONNECTED}
-            />,
-            <NEuler key="app" {...this.props} data={connectionDetails} connected={connectionState === CONNECTED} />
-          ]
-        }}
-      />
-    )
+    const { connectionInfo, setConnected } = this.props
+
+    const placeholder = <Placeholder fluid>
+      <Placeholder.Image rectangular/>
+    </Placeholder>
+
+    console.log('connectionInfo', connectionInfo)
+
+    switch (connectionInfo.status) {
+      case INITIAL:
+      case DISCONNECTED:
+        if (!!window.neo4jDesktopApi) {
+          return placeholder
+        } else {
+          return <ConnectModal
+            key="modal"
+            errorMsg="Could not get a connection!"
+            onSubmit={(username, password) => {
+              const credentials = { username, password }
+              tryConnect(credentials)
+                .then(() => {
+                  console.log("tryConnect - then", credentials)
+                  setConnected(credentials)
+                })
+                .catch(setDisconnected)
+            }}
+            show={true}
+          />
+        }
+      case CONNECTED:
+        return <NEuler key="app" {...this.props} />
+      case
+      CONNECTING:
+        return placeholder
+    }
   }
 }
 
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
-  activeAlgorithm: state.algorithms.algorithm
+  activeAlgorithm: state.algorithms.algorithm,
+  connectionInfo: state.connections
 })
 
 const mapDispatchToProps = dispatch => ({
   selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
   setLabels: labels => dispatch(setLabels(labels)),
-  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes))
+  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+  setConnected: credentials => dispatch(setConnected(credentials)),
+  setDisconnected: () => dispatch(setDisconnected())
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)
