@@ -15,6 +15,14 @@ export const initializeConnection = (setConnected, setDisconnected) => {
       }
     )
     window.neo4jDesktopApi.showMenuOnRightClick && window.neo4jDesktopApi.showMenuOnRightClick(false)
+  } else {
+    const credentials = {
+      username: 'neo4j',
+      password: 'neo4j'
+    }
+
+    tryConnect(credentials)
+      .then(() => setConnected(credentials))
   }
 }
 
