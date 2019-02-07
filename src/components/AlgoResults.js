@@ -23,6 +23,7 @@ const getAlgoPanes = (task) => [{
       {
         task.parameters
           ? <Segment.Group>
+
             {
               Object.keys(task.parameters).map(key =>
                 <Segment key={key}>:param {key} =>
@@ -37,7 +38,8 @@ const getAlgoPanes = (task) => [{
           : null
       }
 
-      <Segment>{task.query}</Segment>
+
+      <Segment><pre>{task.query}</pre></Segment>
     </div>
   )
 }, {
