@@ -22,21 +22,21 @@ const PropertiesView = ({ labels, properties, hideProp, resetLabelsProperties, h
   const hiddenProps = extractHiddenProperties(labels, hiddenProperties)
 
   const resetButton = hiddenProps.length > 0
-    ? <Grid.Column key='reset' style={{ maxWidth: '20em' }}>
+    ? <Grid.Column key='reset'>
       <Form>
         <Form.Field>
-          <Icon name='undo' color='green' onClick={() => resetLabelsProperties(labels)} style={{cursor: 'pointer'}}/>
+          <Icon name='undo' color='green' onClick={() => resetLabelsProperties(labels)} style={{ cursor: 'pointer' }}/>
         </Form.Field>
       </Form>
     </Grid.Column>
     : null
 
   return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-    <Grid columns={4} style={{width: '100%'}}>
+    <Grid columns={4} style={{ width: '100%' }}>
       {Object.keys(properties)
         .filter(key => !hiddenProps.includes(key))
         .map(key =>
-          <Grid.Column key={key} style={{ maxWidth: '20em' }}>
+          <Grid.Column key={key} style={{ maxWidth: '20em', padding: '0.5em' }}>
             <PropertyCell propertyKey={key} value={properties[key]} hideProp={key => hideProp(labels, key)}
                           labels={labels}/>
           </Grid.Column>
@@ -71,7 +71,9 @@ class PropertyCell extends Component {
     return (<Form>
       <Form.Field onMouseOver={this.onMouseOver.bind(this)} onMouseLeave={this.onMouseLeave.bind(this)}>
         <label style={{ maxWidth: '20em' }}>{propertyKey}
-          {status === "idle" ? null : <Icon style={{cursor: 'pointer'}} color='red' onClick={() => this.props.hideProp(propertyKey)} name="minus circle"/>}
+          {status === "idle" ? null :
+            <Icon style={{ cursor: 'pointer' }} color='red' onClick={() => this.props.hideProp(propertyKey)}
+                  name="minus circle"/>}
         </label>
         <Label style={cellStyle} basic>{value}</Label>
 

@@ -10,6 +10,7 @@
     "react-redux": "^6.0.0",
     "react-scripts": "2.1.1",
     "redux": "^4.0.1",
+    "redux-persist": "^5.10.0",
     "semantic-ui-react": "^0.84.0",
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
