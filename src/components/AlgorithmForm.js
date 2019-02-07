@@ -15,37 +15,52 @@ import { addTask, completeTask } from "../ducks/tasks"
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import { getCurrentAlgorithm } from "../ducks/algorithms"
 
+import * as PropTypes from "prop-types";
 class Algorithms extends Component {
-  state = {
-    collapsed: false,
-    parameters: {}
+  constructor(props, context) {
+    super(props, context);
   }
 
+  state = {
+    collapsed: false,
+    parameters: {},
+    labelOptions: [{ key: null, value: null, text: 'Any' }],
+    relationshipTypeOptions: [{ key: null, value: null, text: 'Any' }]
+  }
+
+  static contextTypes = {
+        driver: PropTypes.object
+  };
+
   componentDidMount() {
-    loadLabels().then(result => {
-      const labels = result.rows.map(row => {
-        return { key: row.label, value: row.label, text: row.label }
-      })
-      labels.unshift({ key: null, value: null, text: 'Any' })
-      this.setState({
-        labelOptions: labels,
-      })
-    })
-
-    loadRelationshipTypes().then(result => {
-      const relationshipTypes = result.rows.map(row => {
-        return { key: row.label, value: row.label, text: row.label }
-      })
-      relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
-      this.setState({
-        relationshipTypeOptions: relationshipTypes
-      })
-    })
-
     const { activeGroup, activeAlgorithm } = this.props
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
     this.setState({ parameters })
+  }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.metadata !== nextProps.metadata) {
+      console.log('metadata changed')
+      this.loadMetadata(nextProps.metadata)
+    }
+  }
+
+  loadMetadata(metadata) {
+    const labels = metadata.labels.map(row => {
+      return { key: row.label, value: row.label, text: row.label }
+    })
+    labels.unshift({ key: null, value: null, text: 'Any' })
+    this.setState({
+      labelOptions: labels,
+    })
+
+    const relationshipTypes = metadata.relationshipTypes.map(row => {
+      return { key: row.label, value: row.label, text: row.label }
+    })
+    relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
+    this.setState({
+      relationshipTypeOptions: relationshipTypes
+    })
   }
 
   onChangeParam(key, value) {
@@ -84,6 +99,7 @@ class Algorithms extends Component {
     const { Form, description } = this.props.currentAlgorithm
 
     const containerStyle = {
+      display: 'flex',
       width: '96%',
       overflow: 'hidden'
     }
@@ -122,7 +138,7 @@ class Algorithms extends Component {
             </div>
           </Card.Content>
         </Card>
-        {/* <div style={{ width: '100%', textAlign: 'center', paddingTop: '1em' }}>
+       {/* <div style={{ height: '100%', width: '1em', textAlign: 'center', paddingTop: '1em' }}>
           <Button icon size='mini' onClick={this.toggleCollapse.bind(this)}>
             <Icon name={toggleIcon}/>
           </Button>
@@ -136,7 +152,8 @@ class Algorithms extends Component {
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
   activeAlgorithm: state.algorithms.algorithm,
-  currentAlgorithm: getCurrentAlgorithm(state)
+  currentAlgorithm: getCurrentAlgorithm(state),
+  metadata: state.metadata
 })
 
 const mapDispatchToProps = dispatch => ({

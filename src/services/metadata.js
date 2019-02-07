@@ -4,14 +4,14 @@ import { v1 } from 'neo4j-driver'
 export const loadLabels = () => {
 
   return runCypher("CALL db.labels()", {})
-    .then(result => ({rows: parseLabelsResultStream(result)}))
+    .then(parseLabelsResultStream)
     .catch(handleException)
 }
 
 export const loadRelationshipTypes = () => {
 
   return runCypher("CALL db.relationshipTypes()", {})
-    .then(result => ({rows: parseRelTypesResultStream(result)}))
+    .then(parseRelTypesResultStream)
     .catch(handleException)
 }
 

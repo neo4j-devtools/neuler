@@ -870,6 +870,47 @@
   resolved "https://registry.yarnpkg.com/@csstools/convert-colors/-/convert-colors-1.4.0.tgz#ad495dc41b12e75d588c6db8b9834f08fa131eb7"
   integrity sha512-5a6wqoJV/xEdbRNKVo6I4hO3VjyDq//8q2f9I6PBAvMesJHFauXDorcNCsr9RzvsZnaWi5NYCcfyqP1QeFHFbw==
 
+"@data-ui/radial-chart@0.0.11":
+  version "0.0.11"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@data-ui/radial-chart/-/radial-chart-0.0.11.tgz#281910dc215dd1a63d87eca1e1d220e7297b1703"
+  integrity sha1-KBkQ3CFd0aY9h+yh4dIg5yl7FwM=
+  dependencies:
+    "@data-ui/theme" "0.0.9"
+    "@vx/event" "0.0.140"
+    "@vx/group" "0.0.140"
+    "@vx/scale" "0.0.140"
+    "@vx/shape" "0.0.140"
+    "@vx/tooltip" "0.0.140"
+    prop-types "^15.5.10"
+
+"@data-ui/theme@0.0.9":
+  version "0.0.9"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@data-ui/theme/-/theme-0.0.9.tgz#a9d66b20d74018009c129eed4326ca4ef3b83127"
+  integrity sha1-qdZrINdAGACcEp7tQybKTvO4MSc=
+
+"@data-ui/xy-chart@0.0.25":
+  version "0.0.25"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@data-ui/xy-chart/-/xy-chart-0.0.25.tgz#5d104a48003cdf97817bea983000f6556c076ae6"
+  integrity sha1-XRBKSAA835eBe+qYMAD2VWwHauY=
+  dependencies:
+    "@data-ui/theme" "0.0.9"
+    "@vx/axis" "0.0.140"
+    "@vx/curve" "0.0.140"
+    "@vx/event" "0.0.140"
+    "@vx/glyph" "0.0.140"
+    "@vx/gradient" "0.0.140"
+    "@vx/grid" "0.0.140"
+    "@vx/group" "0.0.140"
+    "@vx/pattern" "0.0.140"
+    "@vx/point" "0.0.136"
+    "@vx/responsive" "0.0.140"
+    "@vx/scale" "0.0.140"
+    "@vx/shape" "0.0.140"
+    "@vx/tooltip" "0.0.140"
+    "@vx/voronoi" "0.0.140"
+    d3-array "^1.2.0"
+    prop-types "^15.5.10"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -925,6 +966,192 @@
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@types/tapable/-/tapable-1.0.2.tgz#e13182e1b69871a422d7863e11a4a6f5b814a4bd"
   integrity sha512-42zEJkBpNfMEAvWR5WlwtTH22oDzcMjFsL9gDGExwF8X8WvAiw7Vwop7hPw03QT8TKfec83LwbHj6SvpqM4ELQ==
+
+"@vx/axis@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/axis/-/axis-0.0.140.tgz#aad557c281c6cc21c1516977301552c7052e5224"
+  integrity sha1-qtVXwoHGzCHBUWl3MBVSxwUuUiQ=
+  dependencies:
+    "@vx/group" "0.0.140"
+    "@vx/point" "0.0.136"
+    "@vx/shape" "0.0.140"
+    classnames "^2.2.5"
+    prop-types "15.5.10"
+
+"@vx/axis@^0.0.142":
+  version "0.0.142"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/axis/-/axis-0.0.142.tgz#99353d4430aa1d1136c7a5a8c7287550f21c1d12"
+  integrity sha1-mTU9RDCqHRE2x6Woxyh1UPIcHRI=
+  dependencies:
+    "@vx/group" "0.0.140"
+    "@vx/point" "0.0.136"
+    "@vx/shape" "0.0.142"
+    classnames "^2.2.5"
+    prop-types "15.5.10"
+
+"@vx/bounds@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/bounds/-/bounds-0.0.140.tgz#4ede9766aabb41b791a4fbf4c27fcc19ed83f910"
+  integrity sha1-Tt6XZqq7QbeRpPv0wn/MGe2D+RA=
+  dependencies:
+    prop-types "^15.5.10"
+
+"@vx/curve@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/curve/-/curve-0.0.140.tgz#29ef388e8b3718213d66a896d569dc1ebc8edf89"
+  integrity sha1-Ke84jos3GCE9ZqiW1WncHryO34k=
+  dependencies:
+    d3-shape "^1.0.6"
+
+"@vx/event@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/event/-/event-0.0.140.tgz#658ec4de92cd61df40b883296168d4e0824015bf"
+  integrity sha1-ZY7E3pLNYd9AuIMpYWjU4IJAFb8=
+  dependencies:
+    "@vx/point" "0.0.136"
+
+"@vx/glyph@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/glyph/-/glyph-0.0.140.tgz#f8323f82aee22192b675bef25789bbb7d74691ba"
+  integrity sha1-+DI/gq7iIZK2db7yV4m7t9dGkbo=
+  dependencies:
+    "@vx/group" "0.0.140"
+    classnames "^2.2.5"
+    d3-shape "^1.2.0"
+
+"@vx/gradient@0.0.140", "@vx/gradient@^0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/gradient/-/gradient-0.0.140.tgz#56b421016cbae0dcb00190cfffb9e860a28febf4"
+  integrity sha1-VrQhAWy64NywAZDP/7noYKKP6/Q=
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.5.7"
+
+"@vx/grid@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/grid/-/grid-0.0.140.tgz#9dfd3071bc5d90d4b457dd55d7f795699233b230"
+  integrity sha1-nf0wcbxdkNS0V91V1/eVaZIzsjA=
+  dependencies:
+    "@vx/group" "0.0.140"
+    "@vx/point" "0.0.136"
+    "@vx/shape" "0.0.140"
+    classnames "^2.2.5"
+
+"@vx/grid@^0.0.142":
+  version "0.0.142"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/grid/-/grid-0.0.142.tgz#c2ee59522b72bf92d737dd21c37efc9fa93305da"
+  integrity sha1-wu5ZUityv5LXN90hw378n6kzBdo=
+  dependencies:
+    "@vx/group" "0.0.140"
+    "@vx/point" "0.0.136"
+    "@vx/shape" "0.0.142"
+    classnames "^2.2.5"
+
+"@vx/group@0.0.140", "@vx/group@^0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/group/-/group-0.0.140.tgz#cba9b0b3f2f007e5be7346f3c86f73f70e038a23"
+  integrity sha1-y6mws/LwB+W+c0bzyG9z9w4DiiM=
+  dependencies:
+    classnames "^2.2.5"
+
+"@vx/group@0.0.143":
+  version "0.0.143"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/group/-/group-0.0.143.tgz#38dbd3fa2740d573c6fdfc691ebc15e85d3eb01b"
+  integrity sha1-ONvT+idA1XPG/fxpHrwV6F0+sBs=
+  dependencies:
+    classnames "^2.2.5"
+
+"@vx/legend@0.0.143":
+  version "0.0.143"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/legend/-/legend-0.0.143.tgz#a1b50087298123f1e65de26a3bc73a6bd9268421"
+  integrity sha1-obUAhymBI/HmXeJqO8c6a9kmhCE=
+  dependencies:
+    "@vx/group" "0.0.143"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/mock-data@^0.0.136":
+  version "0.0.136"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/mock-data/-/mock-data-0.0.136.tgz#726c5f23fde25f22ff442f93bea398a3e695b6b7"
+  integrity sha1-cmxfI/3iXyL/RC+TvqOYo+aVtrc=
+  dependencies:
+    d3-random "^1.0.3"
+
+"@vx/pattern@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/pattern/-/pattern-0.0.140.tgz#f49f57c6f13cb5b3baaa5bbec174c5d3aa782da7"
+  integrity sha1-9J9XxvE8tbO6qlu+wXTF06p4Lac=
+  dependencies:
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/point@0.0.136":
+  version "0.0.136"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/point/-/point-0.0.136.tgz#93b325b4b95c9d5b96df740f4204017f57396559"
+  integrity sha1-k7MltLlcnVuW33QPQgQBf1c5ZVk=
+
+"@vx/responsive@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/responsive/-/responsive-0.0.140.tgz#c73ec68b9e89a181605f1ac9ecc09f35216779a8"
+  integrity sha1-xz7Gi56JoYFgXxrJ7MCfNSFneag=
+  dependencies:
+    lodash "^4.0.8"
+
+"@vx/scale@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/scale/-/scale-0.0.140.tgz#1eb087d11d0000b250c2cdc4061b9e2212edb10d"
+  integrity sha1-HrCH0R0AALJQws3EBhueIhLtsQ0=
+  dependencies:
+    d3-scale "^1.0.5"
+
+"@vx/scale@^0.0.143":
+  version "0.0.143"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/scale/-/scale-0.0.143.tgz#4a13ab93f4d59cb487d6278b55606f2460091d0b"
+  integrity sha1-ShOrk/TVnLSH1ieLVWBvJGAJHQs=
+  dependencies:
+    d3-scale "^1.0.5"
+
+"@vx/shape@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/shape/-/shape-0.0.140.tgz#6a282d5fdf3a5752b6e938bb3debe983e89ff6d3"
+  integrity sha1-aigtX986V1K26Ti7Pevpg+if9tM=
+  dependencies:
+    "@vx/curve" "0.0.140"
+    "@vx/group" "0.0.140"
+    "@vx/point" "0.0.136"
+    classnames "^2.2.5"
+    d3-shape "^1.2.0"
+    prop-types "^15.5.10"
+
+"@vx/shape@0.0.142":
+  version "0.0.142"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/shape/-/shape-0.0.142.tgz#3728eda292c004e61d9f88ae119b6154ccbf79e5"
+  integrity sha1-NyjtopLABOYdn4iuEZthVMy/eeU=
+  dependencies:
+    "@vx/curve" "0.0.140"
+    "@vx/group" "0.0.140"
+    "@vx/point" "0.0.136"
+    classnames "^2.2.5"
+    d3-shape "^1.2.0"
+    prop-types "^15.5.10"
+
+"@vx/tooltip@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/tooltip/-/tooltip-0.0.140.tgz#c5c8306272877c1bbd4e8b478ea5291f1019ffe3"
+  integrity sha1-xcgwYnKHfBu9TotHjqUpHxAZ/+M=
+  dependencies:
+    "@vx/bounds" "0.0.140"
+    classnames "^2.2.5"
+    prop-types "^15.5.10"
+
+"@vx/voronoi@0.0.140":
+  version "0.0.140"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@vx/voronoi/-/voronoi-0.0.140.tgz#7bbfea80e6f3531dfdd9dee94000a4a39fa4d4d6"
+  integrity sha1-e7/qgObzUx392d7pQACko5+k1NY=
+  dependencies:
+    "@vx/group" "0.0.140"
+    classnames "^2.2.5"
+    d3-voronoi "^1.1.2"
 
 "@webassemblyjs/ast@1.7.6":
   version "1.7.6"
@@ -1208,6 +1435,11 @@ ansi-styles@^3.2.0, ansi-styles@^3.2.1:
   dependencies:
     color-convert "^1.9.0"
 
+antlr4@4.7.0:
+  version "4.7.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/antlr4/-/antlr4-4.7.0.tgz#297f956ddc06f83397fc0990ecf2e0cf20bfbbee"
+  integrity sha1-KX+VbdwG+DOX/AmQ7PLgzyC/u+4=
+
 anymatch@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/anymatch/-/anymatch-2.0.0.tgz#bcb24b4f37934d9aa7ac17b4adaf89e7c76ef2eb"
@@ -1338,10 +1570,17 @@ arrify@^1.0.1:
   resolved "https://registry.yarnpkg.com/arrify/-/arrify-1.0.1.tgz#898508da2226f380df904728456849c1501a4b0d"
   integrity sha1-iYUI2iIm84DfkEcoRWhJwVAaSw0=
 
-asap@~2.0.6:
+asap@~2.0.3, asap@~2.0.6:
   version "2.0.6"
   resolved "https://registry.yarnpkg.com/asap/-/asap-2.0.6.tgz#e50347611d7e690943208bbdafebcbc2fb866d46"
   integrity sha1-5QNHYR1+aQlDIIu9r+vLwvuGbUY=
+
+ascii-data-table@^2.1.1:
+  version "2.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ascii-data-table/-/ascii-data-table-2.1.1.tgz#8f62f67c0f2625339a7e0b568c2aeed875a410fe"
+  integrity sha1-j2L2fA8mJTOafgtWjCru2HWkEP4=
+  dependencies:
+    core-js "^2.4.1"
 
 asn1.js@^4.0.0:
   version "4.10.1"
@@ -1651,7 +1890,7 @@ babel-register@^6.26.0:
     mkdirp "^0.5.1"
     source-map-support "^0.4.15"
 
-babel-runtime@^6.22.0, babel-runtime@^6.26.0:
+babel-runtime@^6.22.0, babel-runtime@^6.25.0, babel-runtime@^6.26.0:
   version "6.26.0"
   resolved "https://registry.yarnpkg.com/babel-runtime/-/babel-runtime-6.26.0.tgz#965c7058668e82b55d7bfe04ff2337bc8b5647fe"
   integrity sha1-llxwWGaOgrVde/4E/yM3vItWR/4=
@@ -2215,7 +2454,7 @@ class-utils@^0.3.5:
     isobject "^3.0.0"
     static-extend "^0.1.1"
 
-classnames@^2.2.6:
+classnames@^2.2.5, classnames@^2.2.6:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
   integrity sha512-JR/iSQOSt+LQIWwrwEzJ9uk0xfN3mTVYMwt1Ir5mUcSN6pU+V4zQFFaJsclJbPuAUQH+yfWef6tm7l1quW3C8Q==
@@ -2287,6 +2526,11 @@ code-point-at@^1.0.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/code-point-at/-/code-point-at-1.1.0.tgz#0d070b4d043a5bea33a2f1a40e2edb3d9a4ccf77"
   integrity sha1-DQcLTQQ6W+ozovGkDi7bPZpMz3c=
+
+codemirror@^5.29.0:
+  version "5.43.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/codemirror/-/codemirror-5.43.0.tgz#2454b5e0f7005dc9945ab7b0d9594ccf233da040"
+  integrity sha1-JFS14PcAXcmUWrew2VlMzyM9oEA=
 
 collection-visit@^1.0.0:
   version "1.0.0"
@@ -2487,10 +2731,20 @@ core-js@2.5.7:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.5.7.tgz#f972608ff0cead68b841a16a932d0b183791814e"
   integrity sha512-RszJCAxg/PP6uzXVXL6BsxSXx/B05oJAQ2vkJRjyjrEcNVycaqOmNb5OTxZPE3xa5gwZduqza6L9JOCenh/Ecw==
 
+core-js@^1.0.0:
+  version "1.2.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/core-js/-/core-js-1.2.7.tgz#652294c14651db28fa93bd2d5ff2983a4f08c636"
+  integrity sha1-ZSKUwUZR2yj6k70tX/KYOk8IxjY=
+
 core-js@^2.4.0, core-js@^2.5.0:
   version "2.6.2"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.2.tgz#267988d7268323b349e20b4588211655f0e83944"
   integrity sha512-NdBPF/RVwPW6jr0NCILuyN9RiqLo2b1mddWHkUL+VnvcB7dzlnBJ1bXYntjpTGOgkZiiLWj2JxmOr7eGE3qK6g==
+
+core-js@^2.4.1:
+  version "2.6.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/core-js/-/core-js-2.6.3.tgz#4b70938bdffdaf64931e66e2db158f0892289c49"
+  integrity sha1-S3CTi9/9r2STHmbi2xWPCJIonEk=
 
 core-util-is@1.0.2, core-util-is@~1.0.0:
   version "1.0.2"
@@ -2787,6 +3041,96 @@ cyclist@~0.2.2:
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/cyclist/-/cyclist-0.2.2.tgz#1b33792e11e914a2fd6d6ed6447464444e5fa640"
   integrity sha1-GzN5LhHpFKL9bW7WRHRkRE5fpkA=
+
+cypher-codemirror@^1.0.5:
+  version "1.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-codemirror/-/cypher-codemirror-1.1.4.tgz#fe1ba60ddf0ae58ef93c8bdba36f00574663fa25"
+  integrity sha1-/humDd8K5Y75PIvbo28AV0Zj+iU=
+  dependencies:
+    cypher-editor-support "1.1.4"
+
+cypher-editor-support@1.1.4:
+  version "1.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/cypher-editor-support/-/cypher-editor-support-1.1.4.tgz#8098fef843e0bcaab517e310c21a4808c8d8c9e5"
+  integrity sha1-gJj++EPgvKq1F+MQwhpICMjYyeU=
+  dependencies:
+    antlr4 "4.7.0"
+    fuzzaldrin "2.1.0"
+    lodash "4.17.4"
+
+d3-array@^1.2.0:
+  version "1.2.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
+  integrity sha1-Y1zk1e6nWfb2BYY9vPww7cc39x8=
+
+d3-collection@1:
+  version "1.0.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-collection/-/d3-collection-1.0.7.tgz#349bd2aa9977db071091c13144d5e4f16b5b310e"
+  integrity sha1-NJvSqpl32wcQkcExRNXk8WtbMQ4=
+
+d3-color@1:
+  version "1.2.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-color/-/d3-color-1.2.3.tgz#6c67bb2af6df3cc8d79efcc4d3a3e83e28c8048f"
+  integrity sha1-bGe7KvbfPMjXnvzE06PoPijIBI8=
+
+d3-format@1:
+  version "1.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-format/-/d3-format-1.3.2.tgz#6a96b5e31bcb98122a30863f7d92365c00603562"
+  integrity sha1-apa14xvLmBIqMIY/fZI2XABgNWI=
+
+d3-interpolate@1:
+  version "1.3.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-interpolate/-/d3-interpolate-1.3.2.tgz#417d3ebdeb4bc4efcc8fd4361c55e4040211fd68"
+  integrity sha1-QX0+vetLxO/Mj9Q2HFXkBAIR/Wg=
+  dependencies:
+    d3-color "1"
+
+d3-path@1:
+  version "1.0.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-path/-/d3-path-1.0.7.tgz#8de7cd693a75ac0b5480d3abaccd94793e58aae8"
+  integrity sha1-jefNaTp1rAtUgNOrrM2UeT5Yqug=
+
+d3-random@^1.0.3:
+  version "1.1.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-random/-/d3-random-1.1.2.tgz#2833be7c124360bf9e2d3fd4f33847cfe6cab291"
+  integrity sha1-KDO+fBJDYL+eLT/U8zhHz+bKspE=
+
+d3-scale@^1.0.5:
+  version "1.0.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-scale/-/d3-scale-1.0.7.tgz#fa90324b3ea8a776422bd0472afab0b252a0945d"
+  integrity sha1-+pAySz6op3ZCK9BHKvqwslKglF0=
+  dependencies:
+    d3-array "^1.2.0"
+    d3-collection "1"
+    d3-color "1"
+    d3-format "1"
+    d3-interpolate "1"
+    d3-time "1"
+    d3-time-format "2"
+
+d3-shape@^1.0.6, d3-shape@^1.2.0:
+  version "1.3.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-shape/-/d3-shape-1.3.3.tgz#b136e6caa9374034b5946bbd414aaa54a39087c3"
+  integrity sha1-sTbmyqk3QDS1lGu9QUqqVKOQh8M=
+  dependencies:
+    d3-path "1"
+
+d3-time-format@2:
+  version "2.1.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-time-format/-/d3-time-format-2.1.3.tgz#ae06f8e0126a9d60d6364eac5b1533ae1bac826b"
+  integrity sha1-rgb44BJqnWDWNk6sWxUzrhusgms=
+  dependencies:
+    d3-time "1"
+
+d3-time@1:
+  version "1.0.10"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-time/-/d3-time-1.0.10.tgz#8259dd71288d72eeacfd8de281c4bf5c7393053c"
+  integrity sha1-glndcSiNcu6s/Y3igcS/XHOTBTw=
+
+d3-voronoi@^1.1.2:
+  version "1.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-voronoi/-/d3-voronoi-1.1.4.tgz#dd3c78d7653d2bb359284ae478645d95944c8297"
+  integrity sha1-3Tx412U9K7NZKErkeGRdlZRMgpc=
 
 damerau-levenshtein@^1.0.4:
   version "1.0.4"
@@ -3174,6 +3518,11 @@ elliptic@^6.0.0:
     minimalistic-assert "^1.0.0"
     minimalistic-crypto-utils "^1.0.0"
 
+emitter-component@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/emitter-component/-/emitter-component-1.1.1.tgz#065e2dbed6959bf470679edabeaf7981d1003ab6"
+  integrity sha1-Bl4tvtaVm/RwZ57avq95gdEAOrY=
+
 emoji-regex@^6.5.1:
   version "6.5.1"
   resolved "https://registry.yarnpkg.com/emoji-regex/-/emoji-regex-6.5.1.tgz#9baea929b155565c11ea41c6626eaa65cef992c2"
@@ -3188,6 +3537,13 @@ encodeurl@~1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/encodeurl/-/encodeurl-1.0.2.tgz#ad3ff4c86ec2d029322f5a02c3a9a606c95b3f59"
   integrity sha1-rT/0yG7C0CkyL1oCw6mmBslbP1k=
+
+encoding@^0.1.11:
+  version "0.1.12"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/encoding/-/encoding-0.1.12.tgz#538b66f3ee62cd1ab51ec323829d1f9480c74beb"
+  integrity sha1-U4tm8+5izRq1HsMjgp0flIDHS+s=
+  dependencies:
+    iconv-lite "~0.4.13"
 
 end-of-stream@^1.0.0, end-of-stream@^1.1.0:
   version "1.4.1"
@@ -3743,6 +4099,19 @@ fb-watchman@^2.0.0:
   dependencies:
     bser "^2.0.0"
 
+fbjs@^0.8.9:
+  version "0.8.17"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fbjs/-/fbjs-0.8.17.tgz#c4d598ead6949112653d6588b01a5cdcd9f90fdd"
+  integrity sha1-xNWY6taUkRJlPWWIsBpc3Nn5D90=
+  dependencies:
+    core-js "^1.0.0"
+    isomorphic-fetch "^2.1.1"
+    loose-envify "^1.0.0"
+    object-assign "^4.1.0"
+    promise "^7.1.1"
+    setimmediate "^1.0.5"
+    ua-parser-js "^0.7.18"
+
 figgy-pudding@^3.5.1:
   version "3.5.1"
   resolved "https://registry.yarnpkg.com/figgy-pudding/-/figgy-pudding-3.5.1.tgz#862470112901c727a0e495a80744bd5baa1d6790"
@@ -4046,6 +4415,11 @@ functional-red-black-tree@^1.0.1:
   resolved "https://registry.yarnpkg.com/functional-red-black-tree/-/functional-red-black-tree-1.0.1.tgz#1b0ab3bd553b2a0d6399d29c0e3ea0b252078327"
   integrity sha1-GwqzvVU7Kg1jmdKcDj6gslIHgyc=
 
+fuzzaldrin@2.1.0:
+  version "2.1.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/fuzzaldrin/-/fuzzaldrin-2.1.0.tgz#90204c3e2fdaa6941bb28d16645d418063a90e9b"
+  integrity sha1-kCBMPi/appQbso0WZF1BgGOpDps=
+
 gauge@~2.7.3:
   version "2.7.4"
   resolved "https://registry.yarnpkg.com/gauge/-/gauge-2.7.4.tgz#2c03405c7538c39d7eb37b317022e325fb018bf7"
@@ -4193,6 +4567,29 @@ graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.1.15.tgz#ffb703e1066e8a0eeaa4c8b80ba9253eeefbfb00"
   integrity sha512-6uHUhOPEBgQ24HM+r6b/QwWfZq+yiFcipKFrOFiBEnWdy5sdzYoi+pJeQaPI5qOLRFqWmAXUPQNsielzdLoecA==
 
+graph-app-kit@^1.0.4:
+  version "1.0.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/graph-app-kit/-/graph-app-kit-1.0.4.tgz#3ad320805ab284d45c210210794033db139a2fed"
+  integrity sha1-OtMggFqyhNRcIQIQeUAz2xOaL+0=
+  dependencies:
+    "@data-ui/radial-chart" "0.0.11"
+    "@data-ui/theme" "0.0.9"
+    "@data-ui/xy-chart" "0.0.25"
+    "@vx/axis" "^0.0.142"
+    "@vx/glyph" "0.0.140"
+    "@vx/gradient" "^0.0.140"
+    "@vx/grid" "^0.0.142"
+    "@vx/group" "^0.0.140"
+    "@vx/legend" "0.0.143"
+    "@vx/mock-data" "^0.0.136"
+    "@vx/scale" "^0.0.143"
+    "@vx/shape" "0.0.142"
+    ascii-data-table "^2.1.1"
+    codemirror "^5.29.0"
+    cypher-codemirror "^1.0.5"
+    semantic-ui-css "^2.2.12"
+    semantic-ui-react "^0.74.2"
+
 growly@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/growly/-/growly-1.3.0.tgz#f10748cbe76af964b7c96c93c6bcc28af120c081"
@@ -4248,6 +4645,11 @@ h2x-types@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/h2x-types/-/h2x-types-1.1.0.tgz#ec0d5e3674e2207269f32976ac9c82aaff4818e6"
   integrity sha512-QdH5qfLcdF209UsCdM0ZNZ9Dwm2PHvMfeLZtivBrjX3Y/df4US2pwsUC4HBfWhye/mx/t6puODeC7Oacb/Ol8g==
+
+hammerjs@^2.0.6, hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+  integrity sha1-BO93hiz/K7edMPdpIJWTAiK/YPE=
 
 handle-thing@^1.2.5:
   version "1.2.5"
@@ -4553,7 +4955,7 @@ iconv-lite@0.4.23:
   dependencies:
     safer-buffer ">= 2.1.2 < 3"
 
-iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4:
+iconv-lite@0.4.24, iconv-lite@^0.4.24, iconv-lite@^0.4.4, iconv-lite@~0.4.13:
   version "0.4.24"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.24.tgz#2022b4b25fbddc21d2f524974a474aafe733908b"
   integrity sha512-v3MXnZAcvnywkTUEZomIActle7RXXeedOR31wwl7VlyoXO4Qi9arvSenNQWne1TcRwhCL1HwLI21bEqdpj8/rA==
@@ -5055,7 +5457,7 @@ is-root@2.0.0:
   resolved "https://registry.yarnpkg.com/is-root/-/is-root-2.0.0.tgz#838d1e82318144e5a6f77819d90207645acc7019"
   integrity sha512-F/pJIk8QD6OX5DNhRB7hWamLsUilmkDGho48KbgZ6xg/lmAZXHxzXQ91jzB3yRSw5kdQGGGc4yz8HYhTYIMWPg==
 
-is-stream@^1.1.0:
+is-stream@^1.0.1, is-stream@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/is-stream/-/is-stream-1.1.0.tgz#12d4a3dd4e68e0b79ceb8dbc84173ae80d91ca44"
   integrity sha1-EtSj3U5o4Lec6428hBc66A2RykQ=
@@ -5127,6 +5529,14 @@ isobject@^3.0.0, isobject@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/isobject/-/isobject-3.0.1.tgz#4e431e92b11a9731636aa1f9c8d1ccbcfdab78df"
   integrity sha1-TkMekrEalzFjaqH5yNHMvP2reN8=
+
+isomorphic-fetch@^2.1.1:
+  version "2.2.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/isomorphic-fetch/-/isomorphic-fetch-2.2.1.tgz#611ae1acf14f5e81f729507472819fe9733558a9"
+  integrity sha1-YRrhrPFPXoH3KVB0coGf6XM1WKk=
+  dependencies:
+    node-fetch "^1.0.1"
+    whatwg-fetch ">=0.10.0"
 
 isstream@~0.1.2:
   version "0.1.2"
@@ -5534,6 +5944,11 @@ joi@^11.1.1:
     isemail "3.x.x"
     topo "2.x.x"
 
+jquery@x.*:
+  version "3.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/jquery/-/jquery-3.3.1.tgz#958ce29e81c9790f31be7792df5d4d95fc57fbca"
+  integrity sha1-lYzinoHJeQ8xvneS311NlfxX+8o=
+
 js-levenshtein@^1.1.3:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/js-levenshtein/-/js-levenshtein-1.1.6.tgz#c6cee58eb3550372df8deb85fad5ce66ce01d59d"
@@ -5730,6 +6145,11 @@ keyboard-key@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/keyboard-key/-/keyboard-key-1.0.2.tgz#212e14dde4c2059814336159bbc5acd0a348ca6b"
   integrity sha512-05cjQmw4ss/YuY2utmVim0wywDyBZGUivo8siLPkWinwGWtKlO8/4RGbPUqNycwlD3u/3D15eNRjnNAyaTDs8g==
+
+keycharm@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/keycharm/-/keycharm-0.2.0.tgz#fa6ea2e43b90a68028843d27f2075d35a8c3e6f9"
+  integrity sha1-+m6i5DuQpoAohD0n8gddNajD5vk=
 
 killable@^1.0.0:
   version "1.0.1"
@@ -5940,7 +6360,12 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-"lodash@>=3.5 <5", lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5:
+lodash@4.17.4:
+  version "4.17.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash/-/lodash-4.17.4.tgz#78203a4d1c328ae1d86dca6460e369b57f4055ae"
+  integrity sha1-eCA6TRwyiuHYbcpkYONptX9AVa4=
+
+"lodash@>=3.5 <5", lodash@^4.0.8, lodash@^4.13.1, lodash@^4.17.10, lodash@^4.17.11, lodash@^4.17.4, lodash@^4.17.5:
   version "4.17.11"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.11.tgz#b39ea6229ef607ecd89e2c8df12536891cac9b8d"
   integrity sha512-cQKh8igo5QUhZ7lg38DYWAxMvjSAKG0A8wGSVimP07SIUEK2UO+arSRKbRZWtelMtN5V0Hkwh5ryOto/SshYIg==
@@ -6283,6 +6708,11 @@ mkdirp@0.5.1, mkdirp@0.5.x, mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@~0.5.0, mkdirp@
   dependencies:
     minimist "0.0.8"
 
+moment@^2.18.1:
+  version "2.24.0"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.24.0.tgz#0d055d53f5052aa653c9f6eb68bb5d12bf5c2b5b"
+  integrity sha512-bV7f+6l2QigeBBZSM/6yTNq4P2fNpSWj/0e7jQcy87A8e7o2nAfP/34/2ky5Vw4B9S446EtIhodAzkFCcR4dQg==
+
 move-concurrently@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/move-concurrently/-/move-concurrently-1.0.1.tgz#be2c005fda32e0b29af1f05d7c4b33214c701f92"
@@ -6389,6 +6819,14 @@ no-case@^2.2.0:
   integrity sha512-rmTZ9kz+f3rCvK2TD1Ue/oZlns7OGoIWP4fc3llxxRXlOkHKoWPPWJOfFYpITabSow43QJbRIoHQXtt10VldyQ==
   dependencies:
     lower-case "^1.1.1"
+
+node-fetch@^1.0.1:
+  version "1.7.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/node-fetch/-/node-fetch-1.7.3.tgz#980f6f72d85211a5347c6b2bc18c5b84c3eb47ef"
+  integrity sha1-mA9vcthSEaU0fGsrwYxbhMPrR+8=
+  dependencies:
+    encoding "^0.1.11"
+    is-stream "^1.0.1"
 
 node-forge@0.7.5:
   version "0.7.5"
@@ -7721,6 +8159,13 @@ promise@8.0.2:
   dependencies:
     asap "~2.0.6"
 
+promise@^7.1.1:
+  version "7.3.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/promise/-/promise-7.3.1.tgz#064b72602b18f90f29192b8b1bc418ffd1ebd3bf"
+  integrity sha1-BktyYCsY+Q8pGSuLG8QY/9Hr078=
+  dependencies:
+    asap "~2.0.3"
+
 prompts@^0.1.9:
   version "0.1.14"
   resolved "https://registry.yarnpkg.com/prompts/-/prompts-0.1.14.tgz#a8e15c612c5c9ec8f8111847df3337c9cbd443b2"
@@ -7729,13 +8174,28 @@ prompts@^0.1.9:
     kleur "^2.0.1"
     sisteransi "^0.1.1"
 
-prop-types@^15.6.2:
+prop-types@15.5.10:
+  version "15.5.10"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/prop-types/-/prop-types-15.5.10.tgz#2797dfc3126182e3a95e3dfbb2e893ddd7456154"
+  integrity sha1-J5ffwxJhguOpXj37suiT3ddFYVQ=
+  dependencies:
+    fbjs "^0.8.9"
+    loose-envify "^1.3.1"
+
+prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.2:
   version "15.6.2"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.2.tgz#05d5ca77b4453e985d60fc7ff8c859094a497102"
   integrity sha512-3pboPvLiWD7dkI3qf3KbUe6hKFKa52w+AE0VCqECtf+QHAKgOL37tTaNCnuX1nAAQ4ZhyP+kYVKf8rLmJ/feDQ==
   dependencies:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
+
+propagating-hammerjs@^1.4.6:
+  version "1.4.6"
+  resolved "https://registry.yarnpkg.com/propagating-hammerjs/-/propagating-hammerjs-1.4.6.tgz#fed00e9b00767ffd42d14f5b531bc493eb672e37"
+  integrity sha1-/tAOmwB2f/1C0U9bUxvEk+tnLjc=
+  dependencies:
+    hammerjs "^2.0.6"
 
 proxy-addr@~2.0.4:
   version "2.0.4"
@@ -8528,6 +8988,23 @@ selfsigned@^1.9.1:
   dependencies:
     node-forge "0.7.5"
 
+semantic-ui-css@^2.2.12:
+  version "2.4.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/semantic-ui-css/-/semantic-ui-css-2.4.1.tgz#f5aea39fafb787cbd905ec724272a3f9cba9004a"
+  integrity sha1-9a6jn6+3h8vZBexyQnKj+cupAEo=
+  dependencies:
+    jquery x.*
+
+semantic-ui-react@^0.74.2:
+  version "0.74.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/semantic-ui-react/-/semantic-ui-react-0.74.2.tgz#0a55f6f22dd61780600664931813f302262c330d"
+  integrity sha1-ClX28i3WF4BgBmSTGBPzAiYsMw0=
+  dependencies:
+    babel-runtime "^6.25.0"
+    classnames "^2.2.5"
+    lodash "^4.17.4"
+    prop-types "^15.5.10"
+
 semantic-ui-react@^0.84.0:
   version "0.84.0"
   resolved "https://registry.yarnpkg.com/semantic-ui-react/-/semantic-ui-react-0.84.0.tgz#43f908fd547b1e8b2b108675a93cd7d7460bcdbe"
@@ -8618,7 +9095,7 @@ set-value@^2.0.0:
     is-plain-object "^2.0.3"
     split-string "^3.0.1"
 
-setimmediate@^1.0.4:
+setimmediate@^1.0.4, setimmediate@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
   integrity sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
@@ -9398,6 +9875,11 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
+ua-parser-js@^0.7.18:
+  version "0.7.19"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/ua-parser-js/-/ua-parser-js-0.7.19.tgz#94151be4c0a7fb1d001af7022fdaca4642659e4b"
+  integrity sha1-lBUb5MCn+x0AGvcCL9rKRkJlnks=
+
 uglify-es@^3.3.4:
   version "3.3.9"
   resolved "https://registry.yarnpkg.com/uglify-es/-/uglify-es-3.3.9.tgz#0c1c4f0700bed8dbc124cdb304d2592ca203e677"
@@ -9629,6 +10111,17 @@ verror@1.10.0:
     core-util-is "1.0.2"
     extsprintf "^1.2.0"
 
+vis@^4.21.0:
+  version "4.21.0"
+  resolved "https://registry.yarnpkg.com/vis/-/vis-4.21.0.tgz#dd71638bff7f6495d00bc9f40c253526133ded6b"
+  integrity sha1-3XFji/9/ZJXQC8n0DCU1JhM97Ws=
+  dependencies:
+    emitter-component "^1.1.1"
+    hammerjs "^2.0.8"
+    keycharm "^0.2.0"
+    moment "^2.18.1"
+    propagating-hammerjs "^1.4.6"
+
 vm-browserify@0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-0.0.4.tgz#5d7ea45bbef9e4a6ff65f95438e0a87c357d5a73"
@@ -9807,7 +10300,7 @@ whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3, whatwg-encoding@^1.0.5:
   dependencies:
     iconv-lite "0.4.24"
 
-whatwg-fetch@3.0.0:
+whatwg-fetch@3.0.0, whatwg-fetch@>=0.10.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/whatwg-fetch/-/whatwg-fetch-3.0.0.tgz#fc804e458cc460009b1a2b966bc8817d2578aefb"
   integrity sha512-9GSJUgz1D4MfyKU7KRqwOjXCXTqWdFNvEr7eUBYchQiVc744mqK/MzXPNR2WsPkmkOa4ywfg8C2n8h+13Bey1Q==
