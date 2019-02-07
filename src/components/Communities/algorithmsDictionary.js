@@ -18,6 +18,7 @@ import TrianglesForm from "./TrianglesForm"
 import TriangleCountForm from "./TriangleCountForm"
 import BalancedTriadsForm from "./BalancedTriadsForm"
 import TrianglesResult from "./TrianglesResult"
+import LouvainResult from "./LouvainResult"
 import TriangleCountResult from "./TriangleCountResult"
 import BalancedTriadsResult from "./BalancedTriadsResult"
 
@@ -35,7 +36,7 @@ export default {
     "Louvain": {
       Form: LouvainForm,
       service: louvain,
-      ResultView: CommunityResult,
+      ResultView: LouvainResult,
       parameters: {
         direction: 'Outgoing',
         persist: false,

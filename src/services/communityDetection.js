@@ -10,17 +10,35 @@ const baseParameters = (label, relationshipType, direction, concurrency) => {
   }
 }
 
-export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
+export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency }) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: writeProperty || "louvain"
+    writeProperty: writeProperty || "louvain",
+    includeIntermediateCommunities: intermediateCommunities || false,
+    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || "louvainIntermediate",
+    communityProperty: communityProperty || "louvain"
   }
 
-  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
+    if (result.records) {
+      return result.records.map(record => {
+        const { properties, labels } = record.get('node')
+
+        return {
+          properties: parseProperties(properties),
+          labels: labels,
+          community: record.get('community').toNumber(),
+          communities: record.get('communities').map(value => value.toNumber()).toString()
+        }
+      })
+    } else {
+      console.error(result.error)
+      throw new Error(result.error)
+    }
+  })
 }
 
 export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
@@ -225,12 +243,14 @@ LIMIT 50`
 
 const louvainStreamCypher = `
   CALL algo.louvain.stream($label, $relationshipType, {
-     direction: $direction
+     direction: $direction,
+     includeIntermediateCommunities: $includeIntermediateCommunities,
+     communityProperty: $communityProperty
     })
-  YIELD nodeId, community
+  YIELD nodeId, community, communities
 
-  WITH algo.getNodeById(nodeId) AS node, community AS community
-  RETURN node, community
+  WITH algo.getNodeById(nodeId) AS node, community AS community, communities
+  RETURN node, community, communities
   ORDER BY community
   LIMIT 50`
 
@@ -238,7 +258,10 @@ const louvainStoreCypher = `
   CALL algo.louvain($label, $relationshipType, {
      direction: $direction,
      write: true,
-     writeProperty: $writeProperty
+     writeProperty: $writeProperty,
+     includeIntermediateCommunities: $includeIntermediateCommunities,
+     intermediateCommunitiesWriteProperty: $intermediateCommunitiesWriteProperty,
+     communityProperty: $communityProperty
     })`
 
 const lpaStreamCypher = `

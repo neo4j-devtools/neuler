@@ -12,7 +12,7 @@ export default ({onChange, direction, persist, concurrency, labelOptions, relati
     <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
   </Form.Field>
     <Form.Group inline>
-      <label style={{ 'width': '8em' }}>Direction</label>
+      <label style={{ 'width': '10em' }}>Direction</label>
       <Form.Radio
         label='Out'
         name='radioGroup'
@@ -37,7 +37,7 @@ export default ({onChange, direction, persist, concurrency, labelOptions, relati
     </Form.Group>
     <Form.Group inline>
       <Form.Field inline>
-        <label style={{ 'width': '8em' }}>Store results</label>
+        <label style={{ 'width': '10em' }}>Store results</label>
         <input type='checkbox' checked={persist} onChange={evt => {
           console.log(evt.target, evt)
           onChange('persist', evt.target.checked)
@@ -52,7 +52,7 @@ export default ({onChange, direction, persist, concurrency, labelOptions, relati
       }
     </Form.Group>
     <Form.Field inline>
-      <label style={{ 'width': '8em' }}>Concurrency</label>
+      <label style={{ 'width': '10em' }}>Concurrency</label>
       <input
         type='number'
         placeholder="Concurrency"
