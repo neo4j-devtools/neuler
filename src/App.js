@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Sidebar, Menu, Segment, Placeholder, Header } from "semantic-ui-react"
+import { Sidebar, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-react"
 
 import './App.css'
 
@@ -90,9 +90,9 @@ class App extends Component {
   render() {
     const { connectionInfo, setConnected } = this.props
 
-    const placeholder = <Placeholder fluid>
-      <Placeholder.Image rectangular/>
-    </Placeholder>
+    const placeholder = <Dimmer active>
+      <Loader size='massive'>Connecting</Loader>
+    </Dimmer>
 
     console.log('connectionInfo', connectionInfo)
 

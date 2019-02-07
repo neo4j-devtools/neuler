@@ -9,7 +9,7 @@ export default () =>
       <Grid.Column width={3}>
         <AlgorithmForm />
       </Grid.Column>
-      <Grid.Column width={13}>
+      <Grid.Column width={12} style={{paddingLeft: '0'}}>
         <AlgoResults/>
       </Grid.Column>
     </Grid.Row>

@@ -23,6 +23,7 @@ export const initializeConnection = (setConnected, setDisconnected) => {
 
     tryConnect(credentials)
       .then(() => setConnected(credentials))
+      .catch(() => {})
   }
 }
 

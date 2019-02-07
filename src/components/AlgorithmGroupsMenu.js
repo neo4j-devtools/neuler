@@ -12,14 +12,14 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup}) => <div>
     <Icon name='group'/>
     Community Detection
   </Menu.Item>
-  <Menu.Item as='a'>
+  {/*<Menu.Item as='a'>
     <Icon name='connectdevelop'/>
     Path Finding
   </Menu.Item>
   <Menu.Item as='a'>
     <Icon name='clone'/>
     Similarities
-  </Menu.Item>
+  </Menu.Item>*/}
 </div>
 
 const mapStateToProps = state => ({

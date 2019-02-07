@@ -99,6 +99,7 @@ class Algorithms extends Component {
     const { Form, description } = this.props.currentAlgorithm
 
     const containerStyle = {
+      display: 'flex',
       width: '96%',
       overflow: 'hidden'
     }
@@ -137,7 +138,7 @@ class Algorithms extends Component {
             </div>
           </Card.Content>
         </Card>
-        {/* <div style={{ width: '100%', textAlign: 'center', paddingTop: '1em' }}>
+       {/* <div style={{ height: '100%', width: '1em', textAlign: 'center', paddingTop: '1em' }}>
           <Button icon size='mini' onClick={this.toggleCollapse.bind(this)}>
             <Icon name={toggleIcon}/>
           </Button>
