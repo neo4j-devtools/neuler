@@ -16,8 +16,7 @@ export default ({ task }) => (
         {task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell>{result.labels.join(', ')}</Table.Cell>
-            {/*<Table.Cell>{JSON.stringify(result.properties, null, 2)}</Table.Cell>*/}
-            <Table.Cell> <PropertiesView properties={result.properties}/></Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels}/></Table.Cell>
             <Table.Cell>{result.score}</Table.Cell>
           </Table.Row>
         )}

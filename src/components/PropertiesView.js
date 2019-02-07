@@ -8,12 +8,23 @@ const cellStyle = {
   overflow: 'hidden'
 }
 
-const PropertiesView = ({ properties, hideProp, hiddenProperties }) => <Grid columns={2}>
+const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
+  const hiddenProps = Object.keys(hiddenPropertiesMap).reduce((hiddenProperties, label) => {
+    if (labels.includes(label)) {
+      hiddenPropertiesMap[label].forEach(propertyKey => hiddenProperties.add(propertyKey))
+    }
+    return hiddenProperties
+  }, new Set())
+  return Array.from(hiddenProps)
+}
+
+const PropertiesView = ({ labels, properties, hideProp, hiddenProperties = {} }) => <Grid columns={2}>
   {Object.keys(properties)
-    .filter(key => !hiddenProperties.includes(key))
+    .filter(key => !extractHiddenProperties(labels, hiddenProperties).includes(key))
     .map(key =>
       <Grid.Column key={key} style={{ maxWidth: '20em' }}>
-        <PropertyCell propertyKey={key} value={properties[key]} hideProp={hideProp}/>
+        <PropertyCell propertyKey={key} value={properties[key]} hideProp={key => hideProp(labels, key)}
+                      labels={labels}/>
       </Grid.Column>
     )
   }
@@ -57,7 +68,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  hideProp: key => dispatch(hideProperty(key))
+  hideProp: (labels, key) => dispatch(hideProperty(labels, key))
 })
 
 export default connect(

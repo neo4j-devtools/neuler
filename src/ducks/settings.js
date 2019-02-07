@@ -3,7 +3,7 @@ const SET = `${NAME}/SET`
 const HIDE_PROPERTY = `${NAME}/HIDE_PROPERTY`
 
 const initialState = {
-  hiddenProperties: []
+  hiddenProperties: {}
 }
 
 export const set = (key, value) => ({
@@ -12,8 +12,9 @@ export const set = (key, value) => ({
   value
 })
 
-export const hideProperty = key => ({
+export const hideProperty = (labels, key) => ({
   type: HIDE_PROPERTY,
+  labels,
   key
 })
 
@@ -25,15 +26,21 @@ export default (state = initialState, action) => {
         [action.key]: action.value
       }
     case HIDE_PROPERTY:
-      const hiddenProperties = [...state.hiddenProperties]
-      if (hiddenProperties.includes(action.key)) {
-        return state
-      } else {
-        hiddenProperties.push(action.key)
-        return {
-          ...state,
-          hiddenProperties
+      const hiddenPropertiesMap = { ...state.hiddenProperties }
+      action.labels.forEach(label => {
+        const hiddenProperties = hiddenPropertiesMap[label]
+
+        if (hiddenProperties) {
+          if (!hiddenProperties.includes(action.key)) {
+            hiddenProperties.push(action.key)
+          }
+        } else {
+          hiddenPropertiesMap[label] = [action.key]
         }
+      })
+      return {
+        ...state,
+        hiddenProperties: hiddenPropertiesMap
       }
     default:
       return state
