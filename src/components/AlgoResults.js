@@ -101,11 +101,6 @@ class TabExampleVerticalTabular extends Component {
     } else {
       return null
     }
-    /*(
-      <div style={{  }}>
-        <Tab menu={{ vertical: false, tabular: true }} panes={getResultPanes(tasks)}/>
-      </div>
-    )*/
   }
 }
 
