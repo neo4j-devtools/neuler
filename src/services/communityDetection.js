@@ -26,12 +26,12 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
     if (result.records) {
       return result.records.map(record => {
         const { properties, labels } = record.get('node')
-
+        const communities = record.get("communities")
         return {
           properties: parseProperties(properties),
           labels: labels,
           community: record.get('community').toNumber(),
-          communities: record.get('communities').map(value => value.toNumber()).toString()
+          communities: communities ? communities.map(value => value.toNumber()).toString() : null
         }
       })
     } else {
