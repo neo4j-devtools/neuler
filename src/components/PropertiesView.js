@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Form, Grid, Label, Icon } from 'semantic-ui-react'
-import { hideProperty } from "../ducks/settings"
+import { hideProperty, resetLabelsProperties } from "../ducks/settings"
 import { connect } from 'react-redux'
 
 const cellStyle = {
@@ -18,17 +18,34 @@ const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   return Array.from(hiddenProps)
 }
 
-const PropertiesView = ({ labels, properties, hideProp, hiddenProperties = {} }) => <Grid columns={2}>
-  {Object.keys(properties)
-    .filter(key => !extractHiddenProperties(labels, hiddenProperties).includes(key))
-    .map(key =>
-      <Grid.Column key={key} style={{ maxWidth: '20em' }}>
-        <PropertyCell propertyKey={key} value={properties[key]} hideProp={key => hideProp(labels, key)}
-                      labels={labels}/>
-      </Grid.Column>
-    )
-  }
-</Grid>
+const PropertiesView = ({ labels, properties, hideProp, resetLabelsProperties, hiddenProperties = {} }) => {
+  const hiddenProps = extractHiddenProperties(labels, hiddenProperties)
+
+  const resetButton = hiddenProps.length > 0
+    ? <Grid.Column key='reset' style={{ maxWidth: '20em' }}>
+      <Form>
+        <Form.Field>
+          <Icon name='undo' color='green' onClick={() => resetLabelsProperties(labels)} style={{cursor: 'pointer'}}/>
+        </Form.Field>
+      </Form>
+    </Grid.Column>
+    : null
+
+  return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+    <Grid columns={4} style={{width: '100%'}}>
+      {Object.keys(properties)
+        .filter(key => !hiddenProps.includes(key))
+        .map(key =>
+          <Grid.Column key={key} style={{ maxWidth: '20em' }}>
+            <PropertyCell propertyKey={key} value={properties[key]} hideProp={key => hideProp(labels, key)}
+                          labels={labels}/>
+          </Grid.Column>
+        )
+      }
+    </Grid>
+    {resetButton}
+  </div>
+}
 
 class PropertyCell extends Component {
   state = {
@@ -68,7 +85,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  hideProp: (labels, key) => dispatch(hideProperty(labels, key))
+  hideProp: (labels, key) => dispatch(hideProperty(labels, key)),
+  resetLabelsProperties: labels => dispatch(resetLabelsProperties(labels))
 })
 
 export default connect(
