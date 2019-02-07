@@ -43,7 +43,7 @@ class PropertyCell extends Component {
     return (<Form>
       <Form.Field onMouseOver={this.onMouseOver.bind(this)} onMouseLeave={this.onMouseLeave.bind(this)}>
         <label style={{ maxWidth: '20em' }}>{propertyKey}
-          {status === "idle" ? null : <Icon onClick={() => this.props.hideProp(propertyKey)} name="minus circle"/>}
+          {status === "idle" ? null : <Icon style={{cursor: 'pointer'}} color='red' onClick={() => this.props.hideProp(propertyKey)} name="minus circle"/>}
         </label>
         <Label style={cellStyle} basic>{value}</Label>
 
