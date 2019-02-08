@@ -17,6 +17,8 @@ import { setLabels, setRelationshipTypes } from "./ducks/metadata"
 import { setConnected, setDisconnected, CONNECTED, CONNECTING, DISCONNECTED, INITIAL } from "./ducks/connection"
 import { initializeConnection, tryConnect } from "./services/connections"
 
+import {checkGraphAlgorithmsInstalled} from "./services/installation"
+
 class NEuler extends Component {
 
   constructor(props, context) {
@@ -71,6 +73,31 @@ class NEuler extends Component {
   }
 }
 
+class CheckGraphAlgorithmsInstalled extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      algorithmsInstalled: false
+    }
+
+    checkGraphAlgorithmsInstalled().then(result => {
+      this.setState({
+        algorithmsInstalled: result
+      })
+    });
+  }
+
+  render() {
+     if(this.state.algorithmsInstalled) {
+      return this.props.children;
+     } else {
+       return <Dimmer active>
+         <Loader size='massive'>This application relies on the Graph Algorithms plugin. You can install it via the 'Plugins' tab in the project view.</Loader>
+       </Dimmer>
+     }
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -118,7 +145,10 @@ class App extends Component {
           />
         }
       case CONNECTED:
-        return <NEuler key="app" {...this.props} />
+
+        return (<CheckGraphAlgorithmsInstalled {...this.props}>
+                  <NEuler key="app" {...this.props} />
+                </CheckGraphAlgorithmsInstalled>)
       case
       CONNECTING:
         return placeholder
