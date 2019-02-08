@@ -22,24 +22,24 @@ const getAlgoPanes = (task) => [{
     <div style={tabContentStyle}>
       {
         task.parameters
-          ? <Segment.Group>
+          ? <Segment>
 
             {
               Object.keys(task.parameters).map(key =>
-                <Segment key={key}>:param {key} =>
+                <pre key={key}>:param {key} =>
                   {task.parameters[key]
                     ? (typeof task.parameters[key] === 'string'
                       ? ` '${task.parameters[key]}'`
                       : ` ${task.parameters[key]}`)
                     : ' null'};
-                </Segment>
+                </pre>
               )}
-          </Segment.Group>
+          </Segment>
           : null
       }
 
 
-      <Segment><pre>{task.query}</pre></Segment>
+      <Segment><pre>{task.query && task.query.replace('\n  ', '\n')}</pre></Segment>
     </div>
   )
 }, {

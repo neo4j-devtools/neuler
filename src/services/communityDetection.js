@@ -22,7 +22,7 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
     communityProperty: communityProperty || "louvain"
   }
 
-  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchLouvainCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
 }
 
 export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
@@ -205,6 +205,11 @@ const parseResultStream = result => {
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS community
+LIMIT 50`
+
+const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$writeProperty] is null)
+RETURN node, node[$writeProperty] AS community, node[$intermediateCommunitiesWriteProperty] as communities
 LIMIT 50`
 
 const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})

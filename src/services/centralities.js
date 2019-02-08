@@ -207,21 +207,20 @@ const approxBetweennessStoreCypher = `
      strategy: $strategy
     })`
 
-const pageRankStreamCypher = `
-  CALL algo.pageRank.stream($label, $relationshipType, {
-    iterations: $iterations,
-    dampingFactor: $dampingFactor,
-    direction: $direction,
-    weightProperty: $weightProperty,
-    defaultValue: $defaultValue,
-    concurrency: $concurrency
-    })
-  YIELD nodeId, score
+const pageRankStreamCypher = `CALL algo.pageRank.stream($label, $relationshipType, {
+  iterations: $iterations,
+  dampingFactor: $dampingFactor,
+  direction: $direction,
+  weightProperty: $weightProperty,
+  defaultValue: $defaultValue,
+  concurrency: $concurrency
+  })
+YIELD nodeId, score
 
-  WITH algo.getNodeById(nodeId) AS node, score
-  RETURN node, score
-  ORDER BY score DESC
-  LIMIT 50`
+WITH algo.getNodeById(nodeId) AS node, score
+RETURN node, score
+ORDER BY score DESC
+LIMIT 50`
 
 const pageRankStoreCypher = `
   CALL algo.pageRank($label, $relationshipType, {
