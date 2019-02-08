@@ -22,23 +22,7 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
     communityProperty: communityProperty || "louvain"
   }
 
-  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
-    if (result.records) {
-      return result.records.map(record => {
-        const { properties, labels } = record.get('node')
-        const communities = record.get("communities")
-        return {
-          properties: parseProperties(properties),
-          labels: labels,
-          community: record.get('community').toNumber(),
-          communities: communities ? communities.map(value => value.toNumber()).toString() : null
-        }
-      })
-    } else {
-      console.error(result.error)
-      throw new Error(result.error)
-    }
-  })
+  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
 }
 
 export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
@@ -174,6 +158,7 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
 
 export const parseProperties = (properties) => {
   return Object.keys(properties).reduce((props, propKey) => {
+    console.log(propKey, properties[propKey])
     props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
     return props
   }, {})
@@ -210,11 +195,13 @@ const parseResultStream = result => {
   if (result.records) {
     return result.records.map(record => {
       const { properties, labels } = record.get('node')
+      const communities = record.has("communities") ? record.get("communities") : null
 
       return {
         properties: parseProperties(properties),
         labels: labels,
-        community: record.get('community').toNumber()
+        community: record.get('community').toNumber(),
+        communities: communities ? communities.map(value => value.toNumber()).toString() : null
       }
     })
   } else {

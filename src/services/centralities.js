@@ -118,6 +118,7 @@ const parseResultStream = result => {
       const { properties, labels } = record.get('node')
       return {
         properties: Object.keys(properties).reduce((props, propKey) => {
+          // props[propKey] = properties[propKey] instanceof Array ? properties[propKey].map(value => value.toNumber()).toString() : properties[propKey]
           props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
           return props
         }, {}),
