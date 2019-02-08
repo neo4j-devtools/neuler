@@ -1,5 +1,5 @@
 import { runCypher } from "./stores/neoStore"
-import { v1 } from 'neo4j-driver'
+import { parseProperties } from "./resultMapper"
 
 const baseParameters = (label, relationshipType, direction, concurrency) => {
   return {
@@ -154,14 +154,6 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
       throw new Error(result.error)
     }
   })
-}
-
-export const parseProperties = (properties) => {
-  return Object.keys(properties).reduce((props, propKey) => {
-    console.log(propKey, properties[propKey])
-    props[propKey] = v1.isInt(properties[propKey]) ? properties[propKey].toNumber() : properties[propKey]
-    return props
-  }, {})
 }
 
 const handleException = error => {
