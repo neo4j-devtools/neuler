@@ -5,7 +5,8 @@ import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
 import { getAlgorithms } from "./algorithmsLibrary"
 import MainContent from './MainContent'
 import { connect } from "react-redux"
-
+import { Form, Input, Dropdown } from "semantic-ui-react"
+import { limit } from "../ducks/settings"
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -22,11 +23,27 @@ class NEuler extends Component {
   }
 
   render() {
-    const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
+    const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
 
     return (
       <Container fluid style={{ display: 'flex' }}>
-          <AlgorithmsGroupMenu/>
+          <AlgorithmsGroupMenu>
+            <Form>
+            <Form.Field inline>
+              <label style={{ 'width': '10em' }}>Rows to show</label>
+              <input
+                type='number'
+                placeholder="Rows"
+                min={1}
+                max={1000}
+                step={1}
+                value={limit}
+                onChange={evt => this.props.updateLimit(evt.target.value)}
+                style={{ 'width': '10em' }}
+              />
+            </Form.Field>
+          </Form>
+        </AlgorithmsGroupMenu>
         <div style={{width: '100%'}}>
           <Segment basic inverted vertical={false}
                    style={{ height: '5em', display: 'flex', justifyContent: 'space-between' }}>
@@ -53,7 +70,7 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  limit: limit => dispatch(limit(limit))
+  updateLimit: value => dispatch(limit(value))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NEuler)

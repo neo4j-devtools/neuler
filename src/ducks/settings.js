@@ -9,7 +9,7 @@ const initialState = {
   limit: 50
 }
 
-export const limit = (limit) => ({
+export const limit = limit => ({
   type: LIMIT,
   limit
 })
@@ -36,7 +36,7 @@ export default (state = initialState, action) => {
     case LIMIT:
       return {
         ...state,
-        limit: action.value
+        limit: action.limit
       }
     case SET:
       return {
