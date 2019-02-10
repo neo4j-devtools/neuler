@@ -4,6 +4,7 @@ import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-re
 import './App.css'
 
 import AlgorithmsGroupMenu from "./components/AlgorithmGroupsMenu"
+import CheckGraphAlgorithmsInstalled from "./components/CheckGraphAlgorithmsInstalled"
 import { selectAlgorithm } from "./ducks/algorithms"
 import { connect } from "react-redux"
 import { getAlgorithms } from "./components/algorithmsLibrary"
@@ -17,10 +18,8 @@ import { setLabels, setRelationshipTypes } from "./ducks/metadata"
 import { setConnected, setDisconnected, CONNECTED, CONNECTING, DISCONNECTED, INITIAL } from "./ducks/connection"
 import { initializeConnection, tryConnect } from "./services/connections"
 
-import {checkGraphAlgorithmsInstalled} from "./services/installation"
 
 class NEuler extends Component {
-
   constructor(props, context) {
     super(props, context);
   }
@@ -61,30 +60,20 @@ class NEuler extends Component {
   }
 }
 
-class CheckGraphAlgorithmsInstalled extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      algorithmsInstalled: false
-    }
+// const mapStateToProps = state => ({
+//   limit: state.settings.limit
+// })
+//
+// const mapDispatchToProps = dispatch => ({
+//   limit: limit => dispatch(limit(limit))
+// })
+//
+// connect(
+//   mapStateToProps,
+//   mapDispatchToProps
+// )(NEuler)
 
-    checkGraphAlgorithmsInstalled().then(result => {
-      this.setState({
-        algorithmsInstalled: result
-      })
-    });
-  }
 
-  render() {
-     if(this.state.algorithmsInstalled) {
-      return this.props.children;
-     } else {
-       return <Dimmer active>
-         <Loader size='massive'>This application relies on the Graph Algorithms plugin. You can install it via the 'Plugins' tab in the project view.</Loader>
-       </Dimmer>
-     }
-  }
-}
 
 class App extends Component {
   constructor(props) {
