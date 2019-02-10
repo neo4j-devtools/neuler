@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Sidebar, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-react"
+import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-react"
 
 import './App.css'
 
@@ -38,22 +38,11 @@ class NEuler extends Component {
     const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
 
     return (
-      <Sidebar.Pushable as={Segment}>
-        <Sidebar
-          as={Menu}
-          animation='push'
-          direction='left'
-          icon='labeled'
-          inverted
-          vertical
-          visible={true}
-          width='thin'
-        >
+      <Container fluid style={{ display: 'flex' }}>
           <AlgorithmsGroupMenu/>
-        </Sidebar>
-
-        <Sidebar.Pusher>
-          <Segment basic inverted vertical={false} style={{ height: '5em', display: 'flex', width:'90%', justifyContent: 'space-between' }}>
+        <div style={{width: '100%'}}>
+          <Segment basic inverted vertical={false}
+                   style={{ height: '5em', display: 'flex', justifyContent: 'space-between' }}>
             <Menu inverted>
               {getAlgorithms(activeGroup).map(algorithm =>
                 <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm} onClick={() => selectAlgorithm(algorithm)}>
@@ -66,9 +55,8 @@ class NEuler extends Component {
           </Segment>
 
           <MainContent />
-
-        </Sidebar.Pusher>
-      </Sidebar.Pushable>
+        </div>
+      </Container>
     )
   }
 }
