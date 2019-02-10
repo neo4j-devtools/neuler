@@ -2,7 +2,7 @@ import React from 'react'
 import { Tab, Table } from "semantic-ui-react"
 
 export default ({ task }) => (
-  <Tab.Pane key={task.startTime.toLocaleString()}>
+  <Tab.Pane key={task.startTime.toLocaleString()} style={{ padding: '1em 0' }}>
     <Table color='green'>
       <Table.Header>
         <Table.Row>

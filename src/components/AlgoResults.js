@@ -5,7 +5,9 @@ import GraphVisualiser from './GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 
 const tabContentStyle = {
-  height: '80vh', overflowY: 'auto', overflowX: 'hidden', width: '70vw'
+  height: '85vh',
+  overflowY: 'auto',
+  overflowX: 'hidden'
 }
 
 const getAlgoPanes = (task) => [{
