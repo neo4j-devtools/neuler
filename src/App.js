@@ -19,23 +19,6 @@ import { setLabels, setRelationshipTypes } from "./ducks/metadata"
 import { setConnected, setDisconnected, CONNECTED, CONNECTING, DISCONNECTED, INITIAL } from "./ducks/connection"
 import { initializeConnection, tryConnect } from "./services/connections"
 
-
-
-// const mapStateToProps = state => ({
-//   limit: state.settings.limit
-// })
-//
-// const mapDispatchToProps = dispatch => ({
-//   limit: limit => dispatch(limit(limit))
-// })
-//
-// connect(
-//   mapStateToProps,
-//   mapDispatchToProps
-// )(NEuler)
-
-
-
 class App extends Component {
   constructor(props) {
     super(props)

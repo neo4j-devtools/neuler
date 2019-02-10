@@ -4,6 +4,7 @@ import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-re
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
 import { getAlgorithms } from "./algorithmsLibrary"
 import MainContent from './MainContent'
+import { connect } from "react-redux"
 
 
 class NEuler extends Component {
@@ -47,4 +48,12 @@ class NEuler extends Component {
   }
 }
 
-export default NEuler
+const mapStateToProps = state => ({
+  limit: state.settings.limit
+})
+
+const mapDispatchToProps = dispatch => ({
+  limit: limit => dispatch(limit(limit))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(NEuler)
