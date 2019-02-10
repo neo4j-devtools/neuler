@@ -7,7 +7,8 @@ const baseParameters = (label, relationshipType, direction, concurrency) => {
     label: label || null,
     relationshipType: relationshipType || null,
     direction: direction || 'Outgoing',
-    concurrency: parseInt(concurrency) || null
+    concurrency: parseInt(concurrency) || null,
+    limit: 50
   }
 }
 
@@ -102,9 +103,7 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
     return new Promise((resolve, reject) => {
       runCypher(storeCypher, parameters)
         .then(() => {
-          runCypher(fetchCypher, {
-            writeProperty: parameters.writeProperty
-          })
+          runCypher(fetchCypher, parameters)
             .then(result => resolve({rows: parseResultStream(result), query: storeCypher, parameters: parameters}))
             .catch(reject)
         })
@@ -138,7 +137,7 @@ const betweennessStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, centrality AS score
   RETURN node, score
   ORDER BY score DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const betweennessStoreCypher = `
   CALL algo.betweenness($label, $relationshipType, {
@@ -156,7 +155,7 @@ const closenessStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, centrality AS score
   RETURN node, score
   ORDER BY score DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const closenessStoreCypher = `
   CALL algo.closeness($label, $relationshipType, {
@@ -174,7 +173,7 @@ const harmonicStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, centrality AS score
   RETURN node, score
   ORDER BY score DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const harmonicStoreCypher = `
   CALL algo.closeness.harmonic($label, $relationshipType, {
@@ -195,7 +194,7 @@ const approxBetweennessStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, centrality AS score
   RETURN node, score
   ORDER BY score DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const approxBetweennessStoreCypher = `
   CALL algo.betweenness.sampled($label, $relationshipType, {
@@ -220,7 +219,7 @@ YIELD nodeId, score
 WITH algo.getNodeById(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
-LIMIT 50`
+LIMIT $limit`
 
 const pageRankStoreCypher = `
   CALL algo.pageRank($label, $relationshipType, {
@@ -250,7 +249,7 @@ const articleRankStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, score
   RETURN node, score
   ORDER BY score DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const articleRankStoreCypher = `
   CALL algo.articleRank($label, $relationshipType, {
@@ -271,4 +270,4 @@ const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS score
 ORDER BY score DESC
-LIMIT 50`
+LIMIT $limit`
