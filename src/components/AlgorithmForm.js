@@ -33,9 +33,10 @@ class Algorithms extends Component {
   };
 
   componentDidMount() {
-    const { activeGroup, activeAlgorithm } = this.props
+    const { activeGroup, activeAlgorithm, metadata } = this.props
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
     this.setState({ parameters })
+    this.loadMetadata(metadata)
   }
 
   componentWillReceiveProps(nextProps, nextContext) {

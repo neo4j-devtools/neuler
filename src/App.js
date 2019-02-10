@@ -106,12 +106,22 @@ class App extends Component {
     initializeConnection(setConnected, setDisconnected)
   }
 
+  componentDidMount() {
+    if (this.props.connectionInfo.status === CONNECTED) {
+      this.onConnected()
+    }
+  }
+
   componentWillReceiveProps(nextProps, nextContext) {
     if (this.props.connectionInfo !== nextProps.connectionInfo
       && nextProps.connectionInfo.status === CONNECTED) {
-      loadLabels().then(this.props.setLabels)
-      loadRelationshipTypes().then(this.props.setRelationshipTypes)
+      this.onConnected()
     }
+  }
+
+  onConnected() {
+    loadLabels().then(this.props.setLabels)
+    loadRelationshipTypes().then(this.props.setRelationshipTypes)
   }
 
   render() {
