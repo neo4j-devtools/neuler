@@ -1,18 +1,18 @@
 import { runCypher } from "./stores/neoStore"
 import { parseProperties } from "./resultMapper"
 
-const baseParameters = (label, relationshipType, direction, concurrency) => {
+const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
     label: label || null,
     relationshipType: relationshipType || null,
     direction: direction || 'Outgoing',
     concurrency: parseInt(concurrency) || null,
-    limit: 50
+    limit: parseInt(limit) || 50
   }
 }
 
-export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -26,8 +26,8 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
   return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchLouvainCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
 }
 
-export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit}) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -39,8 +39,8 @@ export const lpa = ({ label, relationshipType, direction, persist, writeProperty
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -52,8 +52,8 @@ export const connectedComponents = ({ label, relationshipType, direction, persis
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -65,8 +65,8 @@ export const stronglyConnectedComponents = ({ label, relationshipType, direction
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -97,8 +97,8 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
   })
 }
 
-export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -126,8 +126,8 @@ export const triangleCount = ({ label, relationshipType, direction, persist, wri
   })
 }
 
-export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,

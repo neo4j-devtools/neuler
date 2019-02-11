@@ -2,18 +2,19 @@ import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 import { parseProperties } from "./resultMapper"
 
-const baseParameters = (label, relationshipType, direction, concurrency) => {
+const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
     label: label || null,
     relationshipType: relationshipType || null,
     direction: direction || 'Outgoing',
     concurrency: parseInt(concurrency) || null,
-    limit: 50
+    limit: parseInt(limit) || 50
   }
 }
 
-export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
+  console.log(limit)
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     iterations: parseInt(iterations) || 20,
     dampingFactor: parseFloat(dampingFactor) || 0.85,
@@ -27,8 +28,8 @@ export const pageRank = ({ label, relationshipType, direction, persist, writePro
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const articleRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const articleRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     iterations: parseInt(iterations) || 20,
     dampingFactor: parseFloat(dampingFactor) || 0.85,
@@ -42,8 +43,8 @@ export const articleRank = ({ label, relationshipType, direction, persist, write
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     write: true,
     writeProperty: writeProperty || "betweenness"
@@ -53,8 +54,8 @@ export const betweenness = ({ label, relationshipType, direction, concurrency, p
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth, probability, strategy }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth, probability, strategy, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     write: true,
     writeProperty: writeProperty || "approxBetweenness",
@@ -67,8 +68,8 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     write: true,
     writeProperty: writeProperty || "closeness"
@@ -78,8 +79,8 @@ export const closeness = ({ label, relationshipType, direction, concurrency, per
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const harmonic = ({ label, relationshipType, direction, concurrency, persist, writeProperty }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const harmonic = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     write: true,
     writeProperty: writeProperty || "harmonic"

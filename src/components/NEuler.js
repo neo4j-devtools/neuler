@@ -58,7 +58,7 @@ class NEuler extends Component {
             </Header>
           </Segment>
 
-          <MainContent />
+          <MainContent limit={limit} />
         </div>
       </Container>
     )
