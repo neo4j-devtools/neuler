@@ -29,8 +29,8 @@ class NEuler extends Component {
       <Container fluid style={{ display: 'flex' }}>
           <AlgorithmsGroupMenu>
             <Form>
-            <Form.Field inline>
-              <label style={{ 'width': '10em' }}>Rows to show</label>
+            <Form.Field>
+              <label style={{ 'width': '10em', 'color': 'white' }}>Rows to show</label>
               <input
                 type='number'
                 placeholder="Rows"
