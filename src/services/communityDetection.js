@@ -147,7 +147,7 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
           properties: parseProperties(properties),
           labels: labels,
           balanced: record.get('balanced').toNumber(),
-          unbalanced: record.get('unbalanced'),
+          unbalanced: record.get('unbalanced').toNumber(),
         }
       })
     } else {
