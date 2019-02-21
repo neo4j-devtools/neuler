@@ -1,17 +1,18 @@
 import { runCypher } from "./stores/neoStore"
 import { parseProperties } from "./resultMapper"
 
-const baseParameters = (label, relationshipType, direction, concurrency) => {
+const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
     label: label || null,
     relationshipType: relationshipType || null,
     direction: direction || 'Outgoing',
-    concurrency: parseInt(concurrency) || null
+    concurrency: parseInt(concurrency) || null,
+    limit: parseInt(limit) || 50
   }
 }
 
-export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -25,8 +26,8 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
   return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchLouvainCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
 }
 
-export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit}) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -38,8 +39,8 @@ export const lpa = ({ label, relationshipType, direction, persist, writeProperty
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -51,8 +52,8 @@ export const connectedComponents = ({ label, relationshipType, direction, persis
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -64,8 +65,8 @@ export const stronglyConnectedComponents = ({ label, relationshipType, direction
                       {...baseParams, ...extraParams}, persist)
 }
 
-export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -96,8 +97,8 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
   })
 }
 
-export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -125,8 +126,8 @@ export const triangleCount = ({ label, relationshipType, direction, persist, wri
   })
 }
 
-export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency)
+export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit }) => {
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
@@ -146,7 +147,7 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
           properties: parseProperties(properties),
           labels: labels,
           balanced: record.get('balanced').toNumber(),
-          unbalanced: record.get('unbalanced'),
+          unbalanced: record.get('unbalanced').toNumber(),
         }
       })
     } else {
@@ -205,24 +206,24 @@ const parseResultStream = result => {
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS community
-LIMIT 50`
+LIMIT $limit`
 
 const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS community, node[$intermediateCommunitiesWriteProperty] as communities
-LIMIT 50`
+LIMIT $limit`
 
 const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null) AND not(node[$clusteringCoefficientProperty] is null)
 RETURN node, node[$writeProperty] AS triangles, node[$clusteringCoefficientProperty] AS coefficient
 ORDER BY triangles DESC
-LIMIT 50`
+LIMIT $limit`
 
 const getFetchBalancedTriadsCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$balancedProperty] is null) AND not(node[$unbalancedProperty] is null)
 RETURN node, node[$balancedProperty] AS balanced, node[$unbalancedProperty] AS unbalanced
 ORDER BY balanced DESC
-LIMIT 50`
+LIMIT $limit`
 
 
 const louvainStreamCypher = `
@@ -236,7 +237,7 @@ const louvainStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, community AS community, communities
   RETURN node, community, communities
   ORDER BY community
-  LIMIT 50`
+  LIMIT $limit`
 
 const louvainStoreCypher = `
   CALL algo.louvain($label, $relationshipType, {
@@ -257,7 +258,7 @@ const lpaStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, label AS community
   RETURN node, community
   ORDER BY community
-  LIMIT 50`
+  LIMIT $limit`
 
 const lpaStoreCypher = `
   CALL algo.labelPropagation($label, $relationshipType, $direction, {
@@ -275,7 +276,7 @@ const connectedComponentsStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, setId AS community
   RETURN node, community
   ORDER BY community
-  LIMIT 50`
+  LIMIT $limit`
 
 const connectedComponentsStoreCypher = `
   CALL algo.unionFind($label, $relationshipType, $direction, {
@@ -293,7 +294,7 @@ const stronglyConnectedComponentsStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, partition AS community
   RETURN node, community
   ORDER BY community
-  LIMIT 50`
+  LIMIT $limit`
 
 const stronglyConnectedComponentsStoreCypher = `
   CALL algo.scc($label, $relationshipType, $direction, {
@@ -309,7 +310,7 @@ const trianglesStreamCypher = `
   YIELD nodeA, nodeB, nodeC
 
   RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
-  LIMIT 50`
+  LIMIT $limit`
 
 const triangleCountStreamCypher = `
   CALL algo.triangleCount.stream($label, $relationshipType, {
@@ -320,7 +321,7 @@ const triangleCountStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
   RETURN node, triangles, coefficient
   ORDER BY triangles DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const triangleCountStoreCypher = `
   CALL algo.triangleCount($label, $relationshipType, {
@@ -339,7 +340,7 @@ const balancedTriadsStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, balanced, unbalanced
   RETURN node, balanced, unbalanced
   ORDER BY balanced DESC
-  LIMIT 50`
+  LIMIT $limit`
 
 const balancedTriadsStoreCypher = `
   CALL algo.balancedTriads($label, $relationshipType, {

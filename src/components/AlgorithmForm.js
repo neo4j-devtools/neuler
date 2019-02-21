@@ -76,7 +76,8 @@ class Algorithms extends Component {
     const taskId = generateTaskId()
 
     const { service } = this.props.currentAlgorithm
-    const { activeGroup, activeAlgorithm } = this.props
+    const { activeGroup, activeAlgorithm, limit } = this.props
+    this.state.parameters.limit = limit
 
     if (service) {
       service({

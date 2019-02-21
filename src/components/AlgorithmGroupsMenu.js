@@ -13,7 +13,7 @@ const menuStyle = {
   height: '100vh'
 }
 
-const AlgorithmsGroupMenu = ({ activeGroup, selectGroup }) => <Menu vertical={true} inverted style={menuStyle}>
+const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) => <Menu vertical={true} inverted style={menuStyle}>
   <Menu.Item active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
              style={menuItemStyle}>
     <Icon name='sun'/>
@@ -23,6 +23,9 @@ const AlgorithmsGroupMenu = ({ activeGroup, selectGroup }) => <Menu vertical={tr
              style={menuItemStyle}>
     <Icon name='group'/>
     Community Detection
+  </Menu.Item>
+  <Menu.Item>
+  {children}
   </Menu.Item>
   {/*<Menu.Item as='a'>
     <Icon name='connectdevelop'/>

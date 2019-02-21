@@ -1,5 +1,6 @@
 import React from 'react'
 import { Tab, Table } from "semantic-ui-react"
+import PropertiesView from "../PropertiesView"
 
 export default ({ task }) => (
   <Tab.Pane key={task.startTime.toLocaleString()} style={{ padding: '1em 0' }}>
@@ -16,7 +17,7 @@ export default ({ task }) => (
         {task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell>{result.labels.join(', ')}</Table.Cell>
-            <Table.Cell>{JSON.stringify(result.properties, null, 2)}</Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels}/></Table.Cell>
             <Table.Cell>{result.triangles}</Table.Cell>
             <Table.Cell>{result.coefficient}</Table.Cell>
           </Table.Row>

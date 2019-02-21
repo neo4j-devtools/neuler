@@ -1,11 +1,18 @@
 const NAME = 'SETTINGS'
 const SET = `${NAME}/SET`
+const LIMIT = `${NAME}/LIMIT`
 const HIDE_PROPERTY = `${NAME}/HIDE_PROPERTY`
 const RESET_LABELS = `${NAME}/RESET_LABELS`
 
 const initialState = {
-  hiddenProperties: {}
+  hiddenProperties: {},
+  limit: 50
 }
+
+export const limit = limit => ({
+  type: LIMIT,
+  limit
+})
 
 export const set = (key, value) => ({
   type: SET,
@@ -26,6 +33,11 @@ export const resetLabelsProperties = labels => ({
 
 export default (state = initialState, action) => {
   switch (action.type) {
+    case LIMIT:
+      return {
+        ...state,
+        limit: action.limit
+      }
     case SET:
       return {
         ...state,
@@ -59,4 +71,3 @@ export default (state = initialState, action) => {
       return state
   }
 }
-

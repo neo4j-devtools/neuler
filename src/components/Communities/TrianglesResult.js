@@ -1,5 +1,6 @@
 import React from 'react'
 import { Tab, Table } from "semantic-ui-react"
+import PropertiesView from "../PropertiesView"
 
 export default ({ task }) => (
   <Tab.Pane key={task.startTime.toLocaleString()} style={{ padding: '1em 0' }}>
@@ -11,7 +12,7 @@ export default ({ task }) => (
           <Table.HeaderCell>Node B Labels</Table.HeaderCell>
           <Table.HeaderCell>Node B Properties</Table.HeaderCell>
           <Table.HeaderCell>Node C Labels</Table.HeaderCell>
-          <Table.HeaderCell>Node CS Properties</Table.HeaderCell>
+          <Table.HeaderCell>Node C Properties</Table.HeaderCell>
 
         </Table.Row>
       </Table.Header>
@@ -19,11 +20,11 @@ export default ({ task }) => (
         {task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell>{result.nodeALabels.join(', ')}</Table.Cell>
-            <Table.Cell>{JSON.stringify(result.nodeAProperties, null, 2)}</Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.nodeAProperties} labels={result.nodeALabels}/></Table.Cell>
             <Table.Cell>{result.nodeBLabels.join(', ')}</Table.Cell>
-            <Table.Cell>{JSON.stringify(result.nodeBProperties, null, 2)}</Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.nodeBProperties} labels={result.nodeBLabels}/></Table.Cell>
             <Table.Cell>{result.nodeCLabels.join(', ')}</Table.Cell>
-            <Table.Cell>{JSON.stringify(result.nodeCProperties, null, 2)}</Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.nodeCProperties} labels={result.nodeCLabels}/></Table.Cell>
 
           </Table.Row>
         )}
