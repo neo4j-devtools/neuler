@@ -1,6 +1,6 @@
 {
   "short_name": "NEuler",
-  "name": "Neo4j Graph Algorithms",
+  "name": "Graph Algorithms Playground",
   "icons": [
     {
       "src": "favicon.ico",

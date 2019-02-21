@@ -16,6 +16,9 @@
   ],
   "main": "index.js",
   "homepage": ".",
+  "publishConfig": {
+    "registry": "https://neo.jfrog.io/neo/api/npm/npm-local"
+  },
   "dependencies": {
     "graph-app-kit": "^1.0.4",
     "neo4j-driver": "^1.7.2",
@@ -31,7 +34,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build && mv build dist",
+    "build": "rm neuler*.tgz && rm -rf dist && react-scripts build && mv build dist",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
