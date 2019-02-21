@@ -34,7 +34,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "rm neuler*.tgz && rm -rf dist && react-scripts build && mv build dist",
+    "buildLocal": "rm neuler*.tgz && rm -rf dist && react-scripts build && mv build dist",
+    "build": "react-scripts build && mv build dist",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
