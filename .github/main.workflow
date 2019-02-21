@@ -1,9 +1,15 @@
 workflow "Build" {
   on = "push"
-  resolves = ["GitHub Action for npm"]
+  resolves = ["Buikd"]
 }
 
-action "GitHub Action for npm" {
+action "Install dependencies" {
   uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
-  runs = "npm run build"
+  runs = "install"
+}
+
+action "Buikd" {
+  uses = "actions/npm@59b64a598378f31e49cb76f27d6f3312b582f680"
+  needs = ["Install dependencies"]
+  runs = "build"
 }
