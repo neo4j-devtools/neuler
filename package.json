@@ -1,7 +1,21 @@
 {
   "name": "neuler",
   "version": "0.1.0",
+  "description": "Playground for Neo4j Graph Algorithms",
+  "author": "Neo4j Labs",
   "private": true,
+  "neo4jDesktop": {
+    "apiVersion": "^1.2.0",
+    "licenseRequired": false
+  },
+  "icons": [
+    {
+      "src": "NeulerTrans.png",
+      "type": "png"
+    }
+  ],
+  "main": "index.js",
+  "homepage": ".",
   "dependencies": {
     "graph-app-kit": "^1.0.4",
     "neo4j-driver": "^1.7.2",
@@ -17,7 +31,7 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && mv build dist",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },

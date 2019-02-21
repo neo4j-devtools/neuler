@@ -1,6 +1,5 @@
 import * as neo4j from 'neo4j-driver'
-import * as vis from 'vis/dist/vis-network.min.js'
-import 'vis/dist/vis-network.min.css'
+import * as vis from 'vis'
 import { defaults } from './defaults'
 
 
