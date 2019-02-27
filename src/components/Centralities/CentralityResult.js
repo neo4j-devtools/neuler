@@ -2,6 +2,9 @@ import React from 'react'
 import { Tab, Table } from "semantic-ui-react"
 import PropertiesView from '../PropertiesView'
 
+import { Loader } from 'semantic-ui-react'
+const LoaderExampleInlineCentered = () => <Loader active inline='centered'>Algorithm running</Loader>
+
 export default ({ task }) => (
   <Tab.Pane key={task.startTime.toLocaleString()} style={{ padding: '1em 0' }}>
     <Table color='green'>
@@ -13,13 +16,21 @@ export default ({ task }) => (
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {task.result && task.result.map((result, idx) =>
+      { task.result ?
+        task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell>{result.labels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels}/></Table.Cell>
             <Table.Cell>{result.score}</Table.Cell>
           </Table.Row>
-        )}
+        )
+          :
+        <Table.Row key="loading-centrality-result">
+          <Table.Cell colSpan={3}>
+            <LoaderExampleInlineCentered />
+          </Table.Cell>
+        </Table.Row>
+      }
       </Table.Body>
     </Table>
   </Tab.Pane>
