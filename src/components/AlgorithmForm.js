@@ -40,8 +40,13 @@ class Algorithms extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if (this.props.metadata !== nextProps.metadata) {
-      console.log('metadata changed')
+    if(this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
+      const { activeGroup, activeAlgorithm } = nextProps
+      const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+      this.setState({ parameters })
+    }
+
+    if (this.props.metadata !== nextProps.metadata) {      
       this.loadMetadata(nextProps.metadata)
     }
   }
