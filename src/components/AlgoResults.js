@@ -45,12 +45,14 @@ const getAlgoPanes = (task) => [{
     </div>
   )
 }, {
-  menuItem: `Vis`,
-  render: () => <div style={tabContentStyle}>
-    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label}
-                     relationshipType={task.parameters.relationshipType}
-                     writeProperty={task.parameters.writeProperty}/>
-  </div>
+  menuItem: `Visualisation`,
+  render: () => (
+    <div style={tabContentStyle}>
+      <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label}
+                       relationshipType={task.parameters.relationshipType}
+                       writeProperty={task.parameters.writeProperty}/>
+    </div>
+  )
 }]
 
 const HorizontalAlgoTab = ({ task, prevResult, nextResult, currentPage, totalPages }) => (

@@ -1,6 +1,6 @@
 {
   "name": "neuler",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Playground for Neo4j Graph Algorithms",
   "author": "Neo4j Labs",
   "neo4jDesktop": {
