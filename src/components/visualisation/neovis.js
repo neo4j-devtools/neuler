@@ -79,7 +79,7 @@ export default class NeoVis {
             record.forEach(function(v,k,r) {
               if (typeof v === "number") {
                 self._addNode({id: node['id'], value: v});
-              } else if (v.constructor.name === "Integer") {
+              } else if (neo4j.v1.isInt(v)) {
                 self._addNode({id: node['id'], value: v.toNumber()})
               }
             })
@@ -96,7 +96,7 @@ export default class NeoVis {
       if (sizeProp && typeof sizeProp === "number") {
         // propety value is a number, OK to use
         node['value'] = sizeProp;
-      } else if (sizeProp && typeof sizeProp === "object" && sizeProp.constructor.name === "Integer") {
+      } else if (sizeProp && typeof sizeProp === "object" && neo4j.v1.isInt(sizeProp)) {
         // property value might be a Neo4j Integer, check if we can call toNumber on it:
         if (sizeProp.inSafeRange()) {
           node['value'] = sizeProp.toNumber();
@@ -216,7 +216,7 @@ export default class NeoVis {
           record.forEach(function(v, k, r) {
             console.log("Constructor:");
             console.log(v.constructor.name);
-            if (v.constructor.name === "Node") {
+            if (v instanceof neo4j.v1.types.Node) {
               let node = self.buildNodeVisObject(v);
 
               try {
@@ -226,7 +226,7 @@ export default class NeoVis {
               }
 
             }
-            else if (v.constructor.name === "Relationship") {
+            else if (v instanceof neo4j.v1.types.Relationship) {
 
               let edge = self.buildEdgeVisObject(v);
 
@@ -237,7 +237,7 @@ export default class NeoVis {
               }
 
             }
-            else if (v.constructor.name === "Path") {
+            else if (v instanceof neo4j.v1.types.Path) {
               console.log("PATH");
               console.log(v);
               let n1 = self.buildNodeVisObject(v.start);
@@ -254,11 +254,11 @@ export default class NeoVis {
               });
 
             }
-            else if (v.constructor.name === "Array") {
+            else if (Array.isArray(v)) {
               v.forEach(function(obj) {
                 console.log("Array element constructor:");
                 console.log(obj.constructor.name);
-                if (obj.constructor.name === "Node") {
+                if (v instanceof neo4j.v1.types.Node) {
                   let node = self.buildNodeVisObject(obj);
 
                   try {
@@ -267,7 +267,7 @@ export default class NeoVis {
                     console.log(e);
                   }
                 }
-                else if (obj.constructor.name === "Relationship") {
+                else if (v instanceof neo4j.v1.types.Relationship) {
                   let edge = self.buildEdgeVisObject(obj);
 
                   try {
@@ -338,7 +338,7 @@ export default class NeoVis {
 
           }
 
-          console.log(self._data.nodes);
+          console.log("NODES", self._data.nodes);
           console.log(self._data.edges);
 
           // Create duplicate node for any self reference relationships
