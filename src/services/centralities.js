@@ -12,6 +12,20 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
   }
 }
 
+export const degree = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {
+  console.log(limit)
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "degree"
+  }
+
+  return runAlgorithm(degreeStreamCypher, degreeStoreCypher, getFetchCypher(baseParameters.label),
+                      {...baseParams, ...extraParams}, persist)
+}
+
 export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
   console.log(limit)
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
@@ -226,6 +240,31 @@ const pageRankStoreCypher = `
   CALL algo.pageRank($label, $relationshipType, {
     iterations: $iterations,
     dampingFactor: $dampingFactor,
+    concurrency: $concurrency,
+    direction: $direction,
+    write: true,
+    writeProperty: $writeProperty,
+    weightProperty: $weightProperty,
+    defaultValue: $defaultValue,
+    concurrency: $concurrency
+    })
+  `
+
+const degreeStreamCypher = `CALL algo.degree.stream($label, $relationshipType, {
+  direction: $direction,
+  weightProperty: $weightProperty,
+  defaultValue: $defaultValue,
+  concurrency: $concurrency
+  })
+YIELD nodeId, score
+
+WITH algo.getNodeById(nodeId) AS node, score
+RETURN node, score
+ORDER BY score DESC
+LIMIT $limit`
+
+const degreeStoreCypher = `
+  CALL algo.pageRank($label, $relationshipType, {
     concurrency: $concurrency,
     direction: $direction,
     write: true,
