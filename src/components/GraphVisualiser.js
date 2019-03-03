@@ -118,11 +118,19 @@ return path`
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if(nextProps.taskId !== this.props.taskId) {
-      console.log('componentWillReceiveProps CHANGED', this.props.taskId, nextProps.taskId)
+    if (nextProps.taskId !== this.props.taskId || nextProps.results !== this.props.results) {
       this.dataUpdated(nextProps)
 
       this.vis && this.vis.clearNetwork()
+    } else if (nextProps.active !== this.props.active) {
+      if (nextProps.active) {
+        if (this.height && this.width) {
+          this.vis.setSize(this.width, this.height)
+        }
+      } else {
+        this.height = this.visContainer.current.clientHeight
+        this.width = this.visContainer.current.clientWidth
+      }
     }
   }
 

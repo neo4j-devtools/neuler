@@ -397,6 +397,15 @@ export default class NeoVis {
 
   };
 
+  setSize(width, height) {
+    this._network.setSize(width, height)
+    this._network.redraw()
+  }
+
+  redraw() {
+    this._network.redraw()
+  }
+
   /**
    * Stabilize the visuzliation
    */
