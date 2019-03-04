@@ -264,7 +264,7 @@ ORDER BY score DESC
 LIMIT $limit`
 
 const degreeStoreCypher = `
-  CALL algo.pageRank($label, $relationshipType, {
+  CALL algo.degree($label, $relationshipType, {
     concurrency: $concurrency,
     direction: $direction,
     write: true,
