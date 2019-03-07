@@ -41,7 +41,7 @@ export default {
         direction: 'Both',
         persist: true,
         writeProperty: "louvain",
-        defaultValue: 1
+        defaultValue: 1.0
       },
       description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at
         different scales`
@@ -54,7 +54,7 @@ export default {
         direction: 'Both',
         persist: true,
         writeProperty: "lpa",
-        defaultValue: 1
+        defaultValue: 1.0
       },
       description: "a fast algorithm for finding communities in a graph"
     },

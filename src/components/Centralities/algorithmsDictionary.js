@@ -28,9 +28,9 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         direction: 'Incoming',
-        persist: false,
+        persist: true,
         writeProperty: "degree",
-        defaultValue: 1
+        defaultValue: 1.0
       },
       description: `detects the number of direct connections a node has`
     },
@@ -44,7 +44,7 @@ export default {
         writeProperty: "pagerank",
         dampingFactor: 0.85,
         iterations: 20,
-        defaultValue: 1
+        defaultValue: 1.0
       },
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of
         nodes</div>
@@ -59,7 +59,7 @@ export default {
         writeProperty: "articlerank",
         dampingFactor: 0.85,
         iterations: 20,
-        defaultValue: 1
+        defaultValue: 1.0
       },
       description: `a variant of the PageRank algorithm`
     },
