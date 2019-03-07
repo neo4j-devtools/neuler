@@ -40,7 +40,7 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         direction: 'Outgoing',
-        persist: false,
+        persist: true,
         writeProperty: "pagerank",
         dampingFactor: 0.85,
         iterations: 20,
@@ -55,7 +55,7 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         direction: 'Outgoing',
-        persist: false,
+        persist: true,
         writeProperty: "articlerank",
         dampingFactor: 0.85,
         iterations: 20,
@@ -69,7 +69,7 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         direction: 'Outgoing',
-        persist: false,
+        persist: true,
         writeProperty: "betweenness"
       },
       description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
@@ -80,7 +80,8 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         strategy: "random",
-        direction: "Outgoing"
+        direction: "Outgoing",
+        persist: true
       },
       description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
     },
@@ -88,14 +89,14 @@ export default {
       Form: ClosenessCentralityForm,
       service: closeness,
       ResultView: CentralityResult,
-      parameters: {},
+      parameters: { persist: true},
       description: `detect nodes that are able to spread information very efficiently through a graph`
     },
     "Harmonic": {
       Form: HarmonicCentralityForm,
       service: harmonic,
       ResultView: CentralityResult,
-      parameters: {},
+      parameters: { persist: true},
       description: `a variant of closeness centrality, that was invented to solve the problem the original
 -                  formula had when dealing with unconnected graphs.`
     }

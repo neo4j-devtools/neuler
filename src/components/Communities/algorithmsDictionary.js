@@ -38,8 +38,8 @@ export default {
       service: louvain,
       ResultView: LouvainResult,
       parameters: {
-        direction: 'Outgoing',
-        persist: false,
+        direction: 'Both',
+        persist: true,
         writeProperty: "louvain",
         defaultValue: 1
       },
@@ -51,8 +51,8 @@ export default {
       service: lpa,
       ResultView: CommunityResult,
       parameters: {
-        direction: 'Outgoing',
-        persist: false,
+        direction: 'Both',
+        persist: true,
         writeProperty: "lpa",
         defaultValue: 1
       },
@@ -62,35 +62,35 @@ export default {
       Form: ConnectedComponentsForm,
       service: connectedComponents,
       ResultView: CommunityResult,
-      parameters: {},
+      parameters: { persist: true},
       description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
     },
     "Strongly Connected Components": {
       Form: StronglyConnectedComponentsForm,
       service: stronglyConnectedComponents,
       ResultView: CommunityResult,
-      parameters: {},
+      parameters: { persist: true},
       description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"
     },
     "Triangles": {
       Form: TrianglesForm,
       service: triangles,
       ResultView: TrianglesResult,
-      parameters: {},
+      parameters: { persist: true},
       description: "finds set of three nodes, where each node has a relationship to all other nodes"
     },
     "Triangle Count": {
       Form: TriangleCountForm,
       service: triangleCount,
       ResultView: TriangleCountResult,
-      parameters: {},
+      parameters: { },
       description: "finds set of three nodes, where each node has a relationship to all other nodes"
     },
     "Balanced Triads": {
       Form: BalancedTriadsForm,
       service: balancedTriads,
       ResultView: BalancedTriadsResult,
-      parameters: {},
+      parameters: { persist: true},
       description: "used to evaluate structural balance of the graph"
     }
   }
