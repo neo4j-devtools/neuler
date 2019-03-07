@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
-import { Grid, Form, Button, Icon, Select } from "semantic-ui-react"
+import { Grid, Form, Button, Icon, Select, Loader } from "semantic-ui-react"
 import NeoVis from "./visualisation/neovis"
 import { getDriver } from "../services/stores/neoStore"
+
+const captionCandidates = ['name', 'title']
 
 export default class extends Component {
   state = {
@@ -12,8 +14,11 @@ export default class extends Component {
   }
 
   constructor(props) {
+    console.log('CONSTRUCTOR')
     super(props)
     this.visContainer = React.createRef()
+
+    this.networks = {}
 
     this.config = {
       container_id: "viz",
@@ -23,7 +28,8 @@ export default class extends Component {
       labels: {
         "Person": {
           caption: "name",
-          size: "pagerank"
+          size: "pagerank",
+          community: "louvain"
         }
       },
       initial_cypher: `match (n:Person)
@@ -32,44 +38,69 @@ export default class extends Component {
     }
   }
 
-  onConfigChange(reload) {
+  getVis() {
+    return this.networks[this.props.taskId]
+  }
+
+  onConfigChange(props) {
     const { captions, cypher } = this.state
+    const { taskId, writeProperty, relationshipType } = props
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
         caption: captions[label],
-        size: this.props.writeProperty
+        size: writeProperty,
+        community: "louvain"
       }
       return labelConfig
     }, {})
 
-    this.config.initial_cypher = this.state.cypher
-    this.config.container_id = 'div_'+ this.state.taskId
-
-    const {relationshipType} = this.props
+    this.config.initial_cypher = cypher
+    this.config.container_id = 'div_' + taskId
 
     if(relationshipType) {
       this.config.relationships = {
         [relationshipType]: {
-          caption: false
+          caption: false,
+          thickness: "weight"
         }
       }
     }
 
-   /* if (reload === true) {
-      this.vis.renderWithCypher(cypher)
-    } else {*/
-      this.vis = new NeoVis(this.config, getDriver());
-      this.vis.render();
-    //}
+    const initVis = (taskId, config, driver) => {
+      this.setState({ rendering: true })
+      const neovis = new NeoVis(config, driver);
+      console.log('RENDERING')
+      neovis.render(() => {
+        console.log('RENDERING DONE')
+        this.setState({ rendering: false })
+      });
+      this.networks[taskId] = neovis
+    }
+
+    if (this.networks[taskId]) {
+      // CLEAR CANVAS? REASSING IT??
+      if (this.networks[taskId]._config.labels !== this.config.labels) {
+        this.networks[taskId].setContainerId(this.config.container_id)
+      } else {
+       initVis(taskId, this.config, getDriver())
+      }
+    } else {
+      initVis(taskId, this.config, getDriver())
+    }
   }
 
-  generateCypher(label, relationshipType, writeProperty) {
-    return `match path = (n${label ? ':'+label : ''})
+  generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
+    if (hideLonelyNodes) {
+      return `match path = (n${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
+return path`
+    } else {
+      return `match path = (n${label ? ':' + label : ''})
 where not(n["${writeProperty}"] is null)
 return path
 union
 match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()
 return path`
+    }
   }
 
   dataUpdated(props) {
@@ -85,11 +116,16 @@ return path`
               labelsMap[label] = new Set()
             }
             Object.keys(result.properties).forEach((prop, idx) => {
-              if (idx === 0) {
+              if (captionCandidates.includes(prop)) {
                 captions[label] = prop
               }
+
               labelsMap[label].add(prop)
             })
+
+            if (!captions[label]) {
+              captions[label] = labelsMap[label][0]
+            }
           })
         }
 
@@ -97,7 +133,7 @@ return path`
       }, {})
 
       this.setState({
-        cypher: this.generateCypher(label, relationshipType, writeProperty),
+        cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
         labels: labelProperties, captions,
         taskId
       })
@@ -113,21 +149,49 @@ return path`
     this.setState({ captions })
   }
 
-  componentDidMount() {
-    this.dataUpdated(this.props)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.taskId !== this.props.taskId
+      || nextProps.results !== this.props.results
+      || nextProps.active !== this.props.active) {
+      this.dataUpdated(nextProps)
+    }
+
+    if (!nextProps.active && this.getVis()) {
+
+      const height = this.visContainer.current.clientHeight
+      const width = this.visContainer.current.clientWidth
+
+      if (height > 100 && width > 100) {
+        this.width = width
+        this.height = height
+        console.log(`Set size to ${this.width} x ${this.height}`)
+      }
+    }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    if(nextProps.taskId !== this.props.taskId) {
-      console.log('componentWillReceiveProps CHANGED', this.props.taskId, nextProps.taskId)
-      this.dataUpdated(nextProps)
+  componentDidUpdate(prevProps) {
+    if (this.props.active && (prevProps.taskId !== this.props.taskId || prevProps.results !== this.props.results)) {
+      this.onConfigChange(this.props)
+    }
 
-      this.vis && this.vis.clearNetwork()
+    if (this.props.active !== prevProps.active) {
+      if (this.props.active) {
+        const vis = this.getVis()
+
+        if (vis) {
+          if (this.height && this.width) {
+            console.log(`Restoring size to ${this.width} x ${this.height}`)
+            this.getVis().setSize(this.width, this.height)
+          }
+        } else {
+          this.onConfigChange(this.props)
+        }
+      }
     }
   }
 
   render() {
-    const { labels } = this.state
+    const { labels,rendering } = this.state
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{ marginLeft: '1em' }}>
@@ -144,7 +208,7 @@ return path`
               </Form.Field>
             )}
             <Form.Field inline>
-              <Button basic icon labelPosition='right' onClick={this.onConfigChange.bind(this)}>
+              <Button basic icon labelPosition='right' onClick={this.onConfigChange.bind(this, this.props)}>
                 Refresh
                 <Icon name='refresh'/>
               </Button>
@@ -153,8 +217,11 @@ return path`
         </Form>
       </Grid.Row>
       <Grid.Row>
-        <div style={{ width: '100%', height: '100%' }} id={'div_' + this.state.taskId} ref={this.visContainer}/>
+         <LoaderExampleInlineCentered active={rendering}/>
+        <div style={{ width: '100%', height: '100%' }} id={'div_' + this.props.taskId} ref={this.visContainer}/>
       </Grid.Row>
     </Grid>
   }
 }
+
+const LoaderExampleInlineCentered = ({active}) => <Loader active={active} inline='centered'>Rendering</Loader>

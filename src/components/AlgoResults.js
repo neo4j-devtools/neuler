@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Tab, Header, Icon, Segment } from 'semantic-ui-react'
+import { Button, Tab, Header, Icon, Segment, Menu } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
@@ -10,73 +10,110 @@ const tabContentStyle = {
   overflowX: 'hidden'
 }
 
-const getAlgoPanes = (task) => [{
-  menuItem: `Table`,
-  render: () => {
-    const { ResultView } = getAlgorithmDefinitions(task.group, task.algorithm)
-    return <div style={tabContentStyle}>
-      <ResultView task={task}/>
-    </div>
-  }
-}, {
-  menuItem: `Code`,
-  render: () => (
-    <div style={tabContentStyle}>
-      {
-        task.parameters
-          ? <Segment>
+const TableView = ({ task }) => {
+  const { ResultView } = getAlgorithmDefinitions(task.group, task.algorithm)
+  return <div style={tabContentStyle}>
+    <ResultView task={task}/>
+  </div>
+}
 
-            {
-              Object.keys(task.parameters).map(key =>
-                <pre key={key}>:param {key} =>
-                  {task.parameters[key]
-                    ? (typeof task.parameters[key] === 'string'
-                      ? ` '${task.parameters[key]}'`
-                      : ` ${task.parameters[key]}`)
-                    : ' null'};
+const CodeView = ({ task }) => (
+  <div style={tabContentStyle}>
+    {
+      task.parameters
+        ? <Segment>
+
+          {
+            Object.keys(task.parameters).map(key =>
+              <pre key={key}>:param {key} =>
+                {task.parameters[key]
+                  ? (typeof task.parameters[key] === 'string'
+                    ? ` '${task.parameters[key]}'`
+                    : ` ${task.parameters[key]}`)
+                  : ' null'};
                 </pre>
-              )}
-          </Segment>
-          : null
-      }
+            )}
+        </Segment>
+        : null
+    }
 
 
-      <Segment><pre>{task.query && task.query.replace('\n  ', '\n')}</pre></Segment>
-    </div>
-  )
-}, {
-  menuItem: `Visualisation`,
-  render: () => (
-    <div style={tabContentStyle}>
-      <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label}
-                       relationshipType={task.parameters.relationshipType}
-                       writeProperty={task.parameters.writeProperty}/>
-    </div>
-  )
-}]
-
-const HorizontalAlgoTab = ({ task, prevResult, nextResult, currentPage, totalPages }) => (
-  <div style={{ paddingTop: '1em' }}>
-    <Tab menu={{ vertical: false, tabular: true }} panes={getAlgoPanes(task)}/>
-    <div style={{
-      position: 'absolute',
-      top: '1.5em',
-      left: '30em',
-      display: 'flex',
-      alignItems: 'center'
-    }}>
-      <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-        <Icon name='angle left'/>
-      </Button>
-      <Header as='h3' style={{ margin: '0 1em' }}>
-        {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-      </Header>
-      <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-        <Icon name='angle right'/>
-      </Button>
-    </div>
+    <Segment>
+      <pre>{task.query && task.query.replace('\n  ', '\n')}</pre>
+    </Segment>
   </div>
 )
+
+const VisView = ({ task, active }) => (
+  <div style={tabContentStyle}>
+    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active} algorithm={task.algorithm}
+                     relationshipType={task.parameters.relationshipType}
+                     writeProperty={task.parameters.writeProperty}/>
+  </div>
+)
+
+class HorizontalAlgoTab extends Component {
+  state = {
+    activeItem: 'Table'
+  }
+
+  handleMenuItemClick = (e, { name }) => this.setState({ activeItem: name })
+
+  render() {
+    const { task, prevResult, nextResult, currentPage, totalPages } = this.props
+    const { activeItem } = this.state
+
+    const getStyle = name => name === activeItem
+      ? ({
+        display: ''
+      })
+      : ({
+        display: 'none'
+      })
+
+    return (
+      <div style={{ paddingTop: '1em' }}>
+        <Menu attached='top' tabular>
+          <Menu.Item name='Table' active={activeItem === 'Table'}
+                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+          <Menu.Item name='Code' active={activeItem === 'Code'}
+                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+          <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+        </Menu>
+        <Segment attached='bottom'>
+          <div style={getStyle('Table')}>
+            <TableView task={task}/>
+          </div>
+          <div style={getStyle('Code')}>
+            <CodeView task={task}/>
+          </div>
+          <div style={getStyle('Visualisation')}>
+            <VisView task={task} active={activeItem === 'Visualisation'}/>
+          </div>
+        </Segment>
+
+        <div style={{
+          position: 'absolute',
+          top: '1.5em',
+          left: '30em',
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+            <Icon name='angle left'/>
+          </Button>
+          <Header as='h3' style={{ margin: '0 1em' }}>
+            {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
+          </Header>
+          <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+            <Icon name='angle right'/>
+          </Button>
+        </div>
+      </div>
+    )
+  }
+}
 
 class TabExampleVerticalTabular extends Component {
   state = {

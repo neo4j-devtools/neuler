@@ -20,7 +20,7 @@ export const louvain = ({ label, relationshipType, direction, persist, writeProp
     writeProperty: writeProperty || "louvain",
     includeIntermediateCommunities: intermediateCommunities || false,
     intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || "louvainIntermediate",
-    communityProperty: communityProperty || "louvain"
+    communityProperty: communityProperty || ""
   }
 
   return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchLouvainCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
