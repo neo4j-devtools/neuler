@@ -19,6 +19,7 @@
     "registry": "https://neo.jfrog.io/neo/api/npm/npm-local"
   },
   "dependencies": {
+    "@nivo/bar": "^0.52.1",
     "graph-app-kit": "^1.0.4",
     "neo4j-driver": "^1.7.2",
     "react": "^16.7.0",

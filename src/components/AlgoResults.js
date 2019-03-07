@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
-import { Button, Tab, Header, Icon, Segment, Menu } from 'semantic-ui-react'
+import { Button, Tab, Header, Icon, Segment, Menu, Loader } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
+import Chart from './visualisation/Chart'
 
 const tabContentStyle = {
   height: '85vh',
@@ -52,6 +53,20 @@ const VisView = ({ task, active }) => (
   </div>
 )
 
+const LoaderExampleInlineCentered = ({ active }) => <Loader active={active} inline='centered'>Fetching Data</Loader>
+
+
+const ChartView = ({ task }) => {
+  if (task.result && task.result.length > 0) {
+    return <Chart data={task.result.map(result => ({
+      name: result.properties.name || 'Node',
+      score: result.score
+    }))}/>
+  } else {
+    return <LoaderExampleInlineCentered active={true}/>
+  }
+}
+
 class HorizontalAlgoTab extends Component {
   state = {
     activeItem: 'Table'
@@ -80,6 +95,8 @@ class HorizontalAlgoTab extends Component {
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
           <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+          <Menu.Item name='Chart' active={activeItem === 'Chart'}
+                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
         </Menu>
         <Segment attached='bottom'>
           <div style={getStyle('Table')}>
@@ -90,6 +107,9 @@ class HorizontalAlgoTab extends Component {
           </div>
           <div style={getStyle('Visualisation')}>
             <VisView task={task} active={activeItem === 'Visualisation'}/>
+          </div>
+          <div style={getStyle('Chart')}>
+            <ChartView task={task} active={activeItem === 'Chart'}/>
           </div>
         </Segment>
 
