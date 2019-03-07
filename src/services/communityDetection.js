@@ -279,7 +279,7 @@ const connectedComponentsStreamCypher = `
   LIMIT $limit`
 
 const connectedComponentsStoreCypher = `
-  CALL algo.unionFind($label, $relationshipType, $direction, {
+  CALL algo.unionFind($label, $relationshipType,  {
      direction: $direction,
      write: true,
      partitionProperty: $writeProperty
