@@ -1,7 +1,8 @@
 import PageRankForm from './PageRankForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../../services/centralities"
+import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic, degree } from "../../services/centralities"
 import ArticleRankForm from "./ArticleRankForm"
 import BetweennesForm from "./BetweennesForm"
+import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
 import { Card } from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
@@ -12,6 +13,7 @@ import HarmonicCentralityForm from "./HarmonicCentralityForm"
 
 export default {
   algorithmList: [
+    "Degree",
     "Page Rank",
     "Article Rank",
     "Betweenness",
@@ -20,6 +22,18 @@ export default {
     "Harmonic"
   ],
   algorithmDefinitions: {
+    "Degree": {
+      Form: DegreeForm,
+      service: degree,
+      ResultView: CentralityResult,
+      parameters: {
+        direction: 'Incoming',
+        persist: false,
+        writeProperty: "degree",
+        defaultValue: 1
+      },
+      description: `detects the number of direct connections a node has`
+    },
     "Page Rank": {
       Form: PageRankForm,
       service: pageRank,
