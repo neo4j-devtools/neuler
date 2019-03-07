@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
-import { Grid, Form, Button, Icon, Select } from "semantic-ui-react"
+import { Grid, Form, Button, Icon, Select, Loader } from "semantic-ui-react"
 import NeoVis from "./visualisation/neovis"
 import { getDriver } from "../services/stores/neoStore"
+
+const captionCandidates = ['name', 'title']
 
 export default class extends Component {
   state = {
@@ -26,7 +28,8 @@ export default class extends Component {
       labels: {
         "Person": {
           caption: "name",
-          size: "pagerank"
+          size: "pagerank",
+          community: "louvain"
         }
       },
       initial_cypher: `match (n:Person)
@@ -45,7 +48,8 @@ export default class extends Component {
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
         caption: captions[label],
-        size: writeProperty
+        size: writeProperty,
+        community: "louvain"
       }
       return labelConfig
     }, {})
@@ -56,14 +60,20 @@ export default class extends Component {
     if(relationshipType) {
       this.config.relationships = {
         [relationshipType]: {
-          caption: false
+          caption: false,
+          thickness: "weight"
         }
       }
     }
 
     const initVis = (taskId, config, driver) => {
+      this.setState({ rendering: true })
       const neovis = new NeoVis(config, driver);
-      neovis.render();
+      console.log('RENDERING')
+      neovis.render(() => {
+        console.log('RENDERING DONE')
+        this.setState({ rendering: false })
+      });
       this.networks[taskId] = neovis
     }
 
@@ -79,13 +89,18 @@ export default class extends Component {
     }
   }
 
-  generateCypher(label, relationshipType, writeProperty) {
-    return `match path = (n${label ? ':'+label : ''})
+  generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
+    if (hideLonelyNodes) {
+      return `match path = (n${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
+return path`
+    } else {
+      return `match path = (n${label ? ':' + label : ''})
 where not(n["${writeProperty}"] is null)
 return path
 union
 match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()
 return path`
+    }
   }
 
   dataUpdated(props) {
@@ -101,11 +116,16 @@ return path`
               labelsMap[label] = new Set()
             }
             Object.keys(result.properties).forEach((prop, idx) => {
-              if (idx === 0) {
+              if (captionCandidates.includes(prop)) {
                 captions[label] = prop
               }
+
               labelsMap[label].add(prop)
             })
+
+            if (!captions[label]) {
+              captions[label] = labelsMap[label][0]
+            }
           })
         }
 
@@ -113,7 +133,7 @@ return path`
       }, {})
 
       this.setState({
-        cypher: this.generateCypher(label, relationshipType, writeProperty),
+        cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
         labels: labelProperties, captions,
         taskId
       })
@@ -171,7 +191,7 @@ return path`
   }
 
   render() {
-    const { labels } = this.state
+    const { labels,rendering } = this.state
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{ marginLeft: '1em' }}>
@@ -197,8 +217,11 @@ return path`
         </Form>
       </Grid.Row>
       <Grid.Row>
+         <LoaderExampleInlineCentered active={rendering}/>
         <div style={{ width: '100%', height: '100%' }} id={'div_' + this.props.taskId} ref={this.visContainer}/>
       </Grid.Row>
     </Grid>
   }
 }
+
+const LoaderExampleInlineCentered = ({active}) => <Loader active={active} inline='centered'>Rendering</Loader>

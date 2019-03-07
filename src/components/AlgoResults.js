@@ -46,7 +46,7 @@ const CodeView = ({ task }) => (
 
 const VisView = ({ task, active }) => (
   <div style={tabContentStyle}>
-    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
+    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active} algorithm={task.algorithm}
                      relationshipType={task.parameters.relationshipType}
                      writeProperty={task.parameters.writeProperty}/>
   </div>

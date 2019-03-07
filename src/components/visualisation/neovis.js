@@ -170,17 +170,18 @@ export default class NeoVis {
 
     // set relationship thickness
     if (weightKey && typeof weightKey === "string") {
-      edge['value'] = r.properties[weightKey];
+      edge['value'] = r.properties[weightKey] * 0.2;
     } else if (weightKey && typeof weightKey === "number") {
-      edge['value'] = weightKey;
+      edge['value'] = weightKey * 0.2;
     } else {
-      edge['value'] = 1.0;
+      edge['value'] = 0.2;
     }
 
     // set caption
 
+    edge['label'] = "";
 
-    if (typeof captionKey === "boolean") {
+   /* if (typeof captionKey === "boolean") {
       if (!captionKey) {
         edge['label'] = "";
       } else {
@@ -190,14 +191,14 @@ export default class NeoVis {
       edge['label']  = r.properties[captionKey] || "";
     } else {
       edge['label'] = r.type;
-    }
+    }*/
 
     return edge;
   }
 
   // public API
 
-  render() {
+  render(onDone) {
 
     // connect to Neo4j instance
     // run query
@@ -209,7 +210,6 @@ export default class NeoVis {
       .run(this._query, {limit: 30})
       .subscribe({
         onNext: function (record) {
-          console.log(record);
 
           record.forEach(function(v, k, r) {
             if (v instanceof neo4j.v1.types.Node) {
@@ -234,8 +234,6 @@ export default class NeoVis {
 
             }
             else if (v instanceof neo4j.v1.types.Path) {
-              console.log("PATH");
-              console.log(v);
               let n1 = self.buildNodeVisObject(v.start);
               let n2 = self.buildNodeVisObject(v.end);
 
@@ -351,6 +349,12 @@ export default class NeoVis {
           // );
 
           self._network = new vis.Network(container, self._data, self._options);
+
+          self._network.on("afterDrawing", () => {
+            console.log("afterDrawing");
+            onDone && onDone()
+          })
+
           console.log("completed");
           setTimeout(() => { self._network.stopSimulation(); }, 10000);
 
