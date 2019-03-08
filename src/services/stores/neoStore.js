@@ -10,15 +10,8 @@ export const getDriver = () => {
 }
 
 export const onNewConnection = credentials => {
-  /*
-       encrypted:false
-       host:"bolt://localhost:7687"
-       password
-       username
-        */
-
   neoDriver = neo.driver(credentials.host || 'bolt://localhost:7687',
-    neo.auth.basic(credentials.username, credentials.password))
+    neo.auth.basic(credentials.username, credentials.password), { encrypted: credentials.encrypted })
 }
 
 export const onDisconnected = () => {
