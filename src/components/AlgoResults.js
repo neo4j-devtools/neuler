@@ -83,7 +83,6 @@ class HorizontalAlgoTab extends Component {
         <Menu attached='top' tabular>
           <Menu.Item name='Table' active={activeItem === 'Table'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-
           {activeGroup === 'Centralities' ?
           <Menu.Item name='Chart' active={activeItem === 'Chart'}
                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
@@ -93,8 +92,6 @@ class HorizontalAlgoTab extends Component {
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
           <Menu.Item name='Code' active={activeItem === 'Code'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-
-
         </Menu>
         <Segment attached='bottom'>
           <div style={getStyle('Table')}>
