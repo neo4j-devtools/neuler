@@ -37,7 +37,8 @@
     "buildLocal": "rm neuler*.tgz && rm -rf dist && react-scripts build && mv build dist",
     "build": "react-scripts build && mv build dist",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "test": "react-scripts test --env=jsdom"
   },
   "eslintConfig": {
     "extends": "react-app"
