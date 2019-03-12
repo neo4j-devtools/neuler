@@ -34,19 +34,19 @@ class Algorithms extends Component {
 
   componentDidMount() {
     const { activeGroup, activeAlgorithm, metadata } = this.props
-    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
-    this.setState({ parameters })
+    const { parameters, streamQuery, storeQuery } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+    this.setState({ parameters, streamQuery, storeQuery })
     this.loadMetadata(metadata)
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     if(this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
       const { activeGroup, activeAlgorithm } = nextProps
-      const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
-      this.setState({ parameters })
+      const { parameters, streamQuery, storeQuery } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+      this.setState({ parameters, streamQuery, storeQuery })
     }
 
-    if (this.props.metadata !== nextProps.metadata) {      
+    if (this.props.metadata !== nextProps.metadata) {
       this.loadMetadata(nextProps.metadata)
     }
   }
@@ -87,7 +87,9 @@ class Algorithms extends Component {
     if (service) {
       service({
         taskId,
-        ...this.state.parameters
+        ...this.state.parameters,
+        streamQuery: this.state.streamQuery,
+        storeQuery: this.state.storeQuery
       }).then(result => {
         console.log(result)
         this.props.completeTask(taskId, result)

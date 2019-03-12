@@ -9,14 +9,14 @@ export default ({ onChange, labelOptions, relationshipTypeOptions, direction, pe
       <label style={{ 'width': '8em' }}>Strategy</label>
       <Form.Radio
         label='Degree'
-        name='radioGroup'
+        name='radioGroupStrategy'
         value='degree'
         checked={strategy === 'degree'}
         onChange={() => onChange('strategy', 'degree')}
       />
       <Form.Radio
         label='Random'
-        name='radioGroup'
+        name='radioGroupStrategy'
         value='random'
         checked={strategy === 'random'}
         onChange={() => onChange('strategy', 'random')}

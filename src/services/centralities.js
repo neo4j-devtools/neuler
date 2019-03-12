@@ -1,6 +1,7 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 import { parseProperties } from "./resultMapper"
+import { streamQueryOutline } from './queries'
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -13,6 +14,22 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
     }
   }
 }
+
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {  
+  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
+  const extraParams = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "degree"
+  }
+
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
+  return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
+}
+
 
 export const degree = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
@@ -157,12 +174,7 @@ const parseResultStream = result => {
   }
 }
 
-const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
-WITH algo.getNodeById(nodeId) AS node, score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit
-`
+
 
 const betweennessStreamCypher = streamQueryOutline(`
 CALL algo.betweenness.stream($label, $relationshipType, $config)
