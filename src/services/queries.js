@@ -10,6 +10,26 @@ RETURN node, node[$config.writeProperty] AS score
 ORDER BY score DESC
 LIMIT $limit`
 
+export const communityParams = (label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+
+  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
+  const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
+
+  const config = {
+    weightProperty: weightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: writeProperty || "louvain",
+    includeIntermediateCommunities: includeIntermediateCommunities || false,
+    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || "louvainIntermediate",
+    communityProperty: communityProperty || ""
+  }
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
 export const centralityParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
@@ -34,6 +54,7 @@ export const centralityParams = (label, relationshipType, direction, writeProper
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
+
 
 export const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   const allowedDirections = ["Incoming", "Outgoing", "Both"]

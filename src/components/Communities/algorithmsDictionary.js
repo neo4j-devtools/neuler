@@ -7,7 +7,8 @@ import {
   lpa,
   stronglyConnectedComponents,
   triangleCount,
-  triangles
+  triangles,
+  executeAlgorithm
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
 import LabelPropagationForm from "./LabelPropagationForm"
@@ -35,16 +36,28 @@ export default {
   algorithmDefinitions: {
     "Louvain": {
       Form: LouvainForm,
-      service: louvain,
+      service: executeAlgorithm,
       ResultView: LouvainResult,
       parameters: {
         direction: 'Both',
         persist: true,
         writeProperty: "louvain",
-        defaultValue: 1.0
+        defaultValue: 1.0,
+        includeIntermediateCommunities: false,
+        intermediateCommunitiesWriteProperty: "louvainIntermediate",
+        defaultValue: 0.99,
+        weightProperty: null,
+        communityProperty: null,
+        concurrency: 8
       },
-      description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at
-        different scales`
+      streamQuery: `CALL algo.louvain.stream($label, $relationshipType, $config)
+      YIELD nodeId, community, communities
+      WITH algo.getNodeById(nodeId) AS node, community, communities
+      RETURN node, community, communities
+      ORDER BY community
+      LIMIT $limit`,
+      storeQuery: `CALL algo.louvain($label, $relationshipType, $config)`,
+      description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
     },
     "Label Propagation": {
       Form: LabelPropagationForm,

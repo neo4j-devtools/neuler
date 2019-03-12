@@ -1,5 +1,6 @@
 import { runCypher } from "./stores/neoStore"
 import { parseProperties } from "./resultMapper"
+import { communityParams } from './queries'
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -11,19 +12,9 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
   }
 }
 
-export const louvain = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "louvain",
-    includeIntermediateCommunities: intermediateCommunities || false,
-    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || "louvainIntermediate",
-    communityProperty: communityProperty || ""
-  }
-
-  return runAlgorithm(louvainStreamCypher, louvainStoreCypher, getFetchLouvainCypher(baseParameters.label), {...baseParams, ...extraParams}, persist)
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties }) => {
+  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties)
+  return runAlgorithm(streamQuery, storeQuery, getFetchLouvainCypher(params.label), params, persist)
 }
 
 export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit}) => {
@@ -208,8 +199,8 @@ RETURN node, node[$writeProperty] AS community
 LIMIT $limit`
 
 const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$writeProperty] is null)
-RETURN node, node[$writeProperty] AS community, node[$intermediateCommunitiesWriteProperty] as communities
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
 LIMIT $limit`
 
 const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
@@ -223,30 +214,6 @@ WHERE not(node[$balancedProperty] is null) AND not(node[$unbalancedProperty] is 
 RETURN node, node[$balancedProperty] AS balanced, node[$unbalancedProperty] AS unbalanced
 ORDER BY balanced DESC
 LIMIT $limit`
-
-
-const louvainStreamCypher = `
-  CALL algo.louvain.stream($label, $relationshipType, {
-     direction: $direction,
-     includeIntermediateCommunities: $includeIntermediateCommunities,
-     communityProperty: $communityProperty
-    })
-  YIELD nodeId, community, communities
-
-  WITH algo.getNodeById(nodeId) AS node, community AS community, communities
-  RETURN node, community, communities
-  ORDER BY community
-  LIMIT $limit`
-
-const louvainStoreCypher = `
-  CALL algo.louvain($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     writeProperty: $writeProperty,
-     includeIntermediateCommunities: $includeIntermediateCommunities,
-     intermediateCommunitiesWriteProperty: $intermediateCommunitiesWriteProperty,
-     communityProperty: $communityProperty
-    })`
 
 const lpaStreamCypher = `
   CALL algo.labelPropagation.stream($label, $relationshipType, {
