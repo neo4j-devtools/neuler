@@ -58,6 +58,9 @@ export const articleRank = ({ label, relationshipType, direction, persist, write
     writeProperty: writeProperty || "articlerank"
   }
 
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
   return runAlgorithm(articleRankStreamCypher, articleRankStoreCypher, getFetchCypher(baseParameters.label),
                       {...baseParams, ...extraParams}, persist)
 }
@@ -268,34 +271,17 @@ CALL algo.degree($label, $relationshipType, $config)
 `
 
 const articleRankStreamCypher = `
-  CALL algo.articleRank.stream($label, $relationshipType, {
-    iterations: $iterations,
-    dampingFactor: $dampingFactor,
-    direction: $direction,
-    weightProperty: $weightProperty,
-    defaultValue: $defaultValue,
-    concurrency: $concurrency
-    })
-  YIELD nodeId, score
+CALL algo.articleRank.stream($label, $relationshipType, $config)
+YIELD nodeId, score
 
-  WITH algo.getNodeById(nodeId) AS node, score
-  RETURN node, score
-  ORDER BY score DESC
-  LIMIT $limit`
+WITH algo.getNodeById(nodeId) AS node, score
+RETURN node, score
+ORDER BY score DESC
+LIMIT $limit`
 
 const articleRankStoreCypher = `
-  CALL algo.articleRank($label, $relationshipType, {
-    iterations: $iterations,
-    dampingFactor: $dampingFactor,
-    concurrency: $concurrency,
-    direction: $direction,
-    write: true,
-    writeProperty: $writeProperty,
-    weightProperty: $weightProperty,
-    defaultValue: $defaultValue,
-    concurrency: $concurrency
-    })
-  `
+CALL algo.articleRank($label, $relationshipType, $config)
+`
 
 
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
