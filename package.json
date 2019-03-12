@@ -29,6 +29,7 @@
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "semantic-ui-react": "^0.84.0",
+    "stringify-object": "^3.3.0",
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
   },
@@ -36,9 +37,8 @@
     "start": "react-scripts start",
     "buildLocal": "rm neuler*.tgz && rm -rf dist && react-scripts build && mv build dist",
     "build": "react-scripts build && mv build dist",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "test": "react-scripts test --env=jsdom"
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"

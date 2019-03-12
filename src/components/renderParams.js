@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import stringifyObject from 'stringify-object';
 
 export const renderParams = (parameters) => {
   return Object.keys(parameters).map(key =>
@@ -6,7 +7,7 @@ export const renderParams = (parameters) => {
       {parameters[key]
         ? (typeof parameters[key] === 'string'
           ? ` '${parameters[key]}'`
-          : (typeof parameters[key] === "object" ? JSON.stringify(parameters[key], null, 2) : ` ${parameters[key]}`))
+          : (typeof parameters[key] === "object" ? ` ${stringifyObject(parameters[key], {indent: "  "})}` : ` ${parameters[key]}`))
         : ' null'};
       </pre>
   )

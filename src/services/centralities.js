@@ -273,7 +273,6 @@ CALL algo.degree($label, $relationshipType, $config)
 const articleRankStreamCypher = `
 CALL algo.articleRank.stream($label, $relationshipType, $config)
 YIELD nodeId, score
-
 WITH algo.getNodeById(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
