@@ -1,19 +1,7 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 import { parseProperties } from "./resultMapper"
-import { streamQueryOutline, getFetchCypher } from './queries'
-
-const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
-  return {
-    label: label || null,
-    relationshipType: relationshipType || null,
-    limit: parseInt(limit) || 50,
-    config: {
-      concurrency: parseInt(concurrency) || null,
-      direction: direction || 'Outgoing'
-    }
-  }
-}
+import { streamQueryOutline, getFetchCypher, baseParameters, filterParameters } from './queries'
 
 export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
@@ -29,21 +17,11 @@ export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipT
     writeProperty: writeProperty
   }
 
-  const raw = {...params.config, ...config}
-  params.config = filterMap(raw, requiredProperties)
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
 }
 
-const filterMap = (raw, allowed) => {
-  return Object.keys(raw)
-  .filter(key => allowed.includes(key))
-  .reduce((obj, key) => {
-    return {
-      ...obj,
-      [key]: raw[key]
-    };
-  }, {});
-}
+
 
 const handleException = error => {
   console.error(error)
