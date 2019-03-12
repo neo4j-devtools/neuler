@@ -15,35 +15,28 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
   }
 }
 
-export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, limit, requiredProperties }) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+  const config = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
+    dampingFactor: parseFloat(dampingFactor),
+    iterations: parseInt(iterations),
     write: true,
     writeProperty: writeProperty || "degree"
   }
 
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
+  const raw = {...params.config, ...config}
+  params.config = Object.keys(raw)
+  .filter(key => requiredProperties.includes(key))
+  .reduce((obj, key) => {
+    return {
+      ...obj,
+      [key]: raw[key]
+    };
+  }, {});
 
   return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
-}
-
-
-export const degree = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "degree"
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(degreeStreamCypher, degreeStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {

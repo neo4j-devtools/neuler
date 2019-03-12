@@ -89,7 +89,8 @@ class Algorithms extends Component {
         taskId,
         ...this.state.parameters,
         streamQuery: this.state.streamQuery,
-        storeQuery: this.state.storeQuery
+        storeQuery: this.state.storeQuery,
+        requiredProperties: Object.keys(this.state.parameters)
       }).then(result => {
         console.log(result)
         this.props.completeTask(taskId, result)

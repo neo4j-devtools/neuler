@@ -41,7 +41,7 @@ export default {
     },
     "Page Rank": {
       Form: PageRankForm,
-      service: pageRank,
+      service: executeAlgorithm,
       ResultView: CentralityResult,
       parameters: {
         direction: 'Outgoing',
@@ -50,8 +50,11 @@ export default {
         dampingFactor: 0.85,
         iterations: 20,
         defaultValue: 0.99,
-        concurrency: 8
+        concurrency: 8,
+        weightProperty: null
       },
+      streamQuery: streamQueryOutline(`CALL algo.pageRank.stream($label, $relationshipType, $config) YIELD nodeId, score`),
+      storeQuery: `CALL algo.pageRank($label, $relationshipType, $config)`,
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
     'Article Rank': {
