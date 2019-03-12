@@ -184,12 +184,11 @@ const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persis
   }
 }
 
-const parseResultStream = result => {
+export const parseResultStream = (result) => {
   if (result.records) {
     return result.records.map(record => {
       const { properties, labels } = record.get('node')
       const communities = record.has("communities") ? record.get("communities") : null
-
       return {
         properties: parseProperties(properties),
         labels: labels,
