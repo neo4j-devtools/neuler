@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
+import React from 'react'
 import stringifyObject from 'stringify-object';
 
-export const renderParams = (parameters) => {
+export const RenderParams = ({parameters = {}}) => {
   return Object.keys(parameters).map(key =>
     <pre key={key}>:param {key} =>
       {parameters[key]

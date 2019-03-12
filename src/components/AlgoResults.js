@@ -5,7 +5,7 @@ import GraphVisualiser from './GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 
-import {renderParams} from './renderParams'
+import {RenderParams} from './renderParams'
 
 const tabContentStyle = {
   height: '85vh',
@@ -25,8 +25,7 @@ const CodeView = ({ task }) => (
     {
       task.parameters
         ? <Segment>
-
-          {renderParams(task.parameters)}
+          <RenderParams parameters={task.parameters} />
         </Segment>
         : null
     }

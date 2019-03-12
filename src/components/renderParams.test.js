@@ -1,8 +1,30 @@
-import {renderParams} from './renderParams';
-import { v1 as neo } from "neo4j-driver"
-import React, { Component } from 'react'
+import { RenderParams } from './renderParams';
+import { render } from 'react-testing-library'
+import React from 'react'
 
-test('strings', () => {
-  // expect(renderParams({"myKey": "value"})).toEqual([<pre key={'myKey'}>:param myKey => 'value';</pre>])
-  expect(2).toEqual(2)
-});
+describe("Parameter renderer should", () => {
+
+  it('renders empty with nothing provided', () => {
+    const { container } = render(<RenderParams/>)
+    expect(container.getElementsByTagName('div')).toHaveLength(0)
+    expect(container.getElementsByTagName('pre')).toHaveLength(0)
+  })
+
+  it('renders with a simple obbject', () => {
+    const { container, getByText } = render(<RenderParams parameters={{ prop: 'value' }}/>)
+    expect(container.getElementsByTagName('pre')).toHaveLength(1)
+    expect(getByText(/^:param.*prop.*value.*$/)).toBeTruthy()
+  })
+
+  it('renders with a complext obbject', () => {
+    const { container, getByText } = render(<RenderParams parameters={{
+      prop: 'value',
+      secondProp: 123,
+      thirdProp: [1, 2, 3]
+    }}/>)
+    expect(container.getElementsByTagName('pre')).toHaveLength(3)
+    expect(getByText(/^:param.*prop.*value.*$/)).toBeTruthy()
+    expect(getByText(/^:param.*secondProp.*123.*$/)).toBeTruthy()
+    expect(getByText(/^:param.*thirdProp.*\[.*1, 2, 3.*\].*$/)).toBeTruthy()
+  })
+})
