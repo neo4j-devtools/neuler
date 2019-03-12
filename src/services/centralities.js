@@ -45,32 +45,6 @@ const filterMap = (raw, allowed) => {
   }, {});
 }
 
-export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    write: true,
-    writeProperty: writeProperty || "closeness"
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(closenessStreamCypher, closenessStoreCypher, getFetchCypher(params.label), params, persist)
-}
-
-export const harmonic = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    write: true,
-    writeProperty: writeProperty || "harmonic"
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(harmonicStreamCypher, harmonicStoreCypher, getFetchCypher(params.label), params, persist)
-}
-
 const handleException = error => {
   console.error(error)
   throw new Error(error)
@@ -109,20 +83,6 @@ const parseResultStream = result => {
     throw new Error(result.error)
   }
 }
-
-const closenessStreamCypher = streamQueryOutline(`
-CALL algo.closeness.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality AS score`)
-
-const closenessStoreCypher = `
-CALL algo.closeness($label, $relationshipType, $config)`
-
-const harmonicStreamCypher = streamQueryOutline(`
-CALL algo.closeness.harmonic.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality AS score`)
-
-const harmonicStoreCypher = `
-CALL algo.closeness.harmonic($label, $relationshipType, $config)`
 
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
