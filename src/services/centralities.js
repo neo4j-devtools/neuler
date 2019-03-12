@@ -6,8 +6,6 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
   return {
     label: label || null,
     relationshipType: relationshipType || null,
-    direction: direction || 'Outgoing',
-    concurrency: parseInt(concurrency) || null,
     limit: parseInt(limit) || 50,
     config: {
       concurrency: parseInt(concurrency) || null,
@@ -28,8 +26,7 @@ export const degree = ({ label, relationshipType, direction, persist, writePrope
   const params = baseParams
   params.config = {...baseParams.config, ...extraParams}
 
-  return runAlgorithm(degreeStreamCypher, degreeStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(degreeStreamCypher, degreeStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
@@ -43,8 +40,10 @@ export const pageRank = ({ label, relationshipType, direction, persist, writePro
     writeProperty: writeProperty || "pagerank"
   }
 
-  return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
+  return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const articleRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
@@ -61,8 +60,7 @@ export const articleRank = ({ label, relationshipType, direction, persist, write
   const params = baseParams
   params.config = {...baseParams.config, ...extraParams}
 
-  return runAlgorithm(articleRankStreamCypher, articleRankStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(articleRankStreamCypher, articleRankStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
@@ -72,8 +70,10 @@ export const betweenness = ({ label, relationshipType, direction, concurrency, p
     writeProperty: writeProperty || "betweenness"
   }
 
-  return runAlgorithm(betweennessStreamCypher, betweennessStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
+  return runAlgorithm(betweennessStreamCypher, betweennessStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth, probability, strategy, limit }) => {
@@ -86,8 +86,10 @@ export const approxBetweenness = ({ label, relationshipType, direction, concurre
     strategy: strategy || null
   }
 
-  return runAlgorithm(approxBetweennessStreamCypher, approxBetweennessStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
+  return runAlgorithm(approxBetweennessStreamCypher, approxBetweennessStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
@@ -97,8 +99,10 @@ export const closeness = ({ label, relationshipType, direction, concurrency, per
     writeProperty: writeProperty || "closeness"
   }
 
-  return runAlgorithm(closenessStreamCypher, closenessStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
+  return runAlgorithm(closenessStreamCypher, closenessStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const harmonic = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
@@ -108,8 +112,10 @@ export const harmonic = ({ label, relationshipType, direction, concurrency, pers
     writeProperty: writeProperty || "harmonic"
   }
 
-  return runAlgorithm(harmonicStreamCypher, harmonicStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  const params = baseParams
+  params.config = {...baseParams.config, ...extraParams}
+
+  return runAlgorithm(harmonicStreamCypher, harmonicStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 const handleException = error => {
@@ -152,113 +158,65 @@ const parseResultStream = result => {
 }
 
 const betweennessStreamCypher = `
-  CALL algo.betweenness.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, centrality
-
-  WITH algo.getNodeById(nodeId) AS node, centrality AS score
-  RETURN node, score
-  ORDER BY score DESC
-  LIMIT $limit`
+CALL algo.betweenness.stream($label, $relationshipType, $config)
+YIELD nodeId, centrality
+WITH algo.getNodeById(nodeId) AS node, centrality AS score
+RETURN node, score
+ORDER BY score DESC
+LIMIT $limit`
 
 const betweennessStoreCypher = `
-  CALL algo.betweenness($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     writeProperty: $writeProperty
-    })`
+CALL algo.betweenness($label, $relationshipType, $config)`
 
 const closenessStreamCypher = `
-  CALL algo.closeness.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, centrality
-
-  WITH algo.getNodeById(nodeId) AS node, centrality AS score
-  RETURN node, score
-  ORDER BY score DESC
-  LIMIT $limit`
+CALL algo.closeness.stream($label, $relationshipType, $config)
+YIELD nodeId, centrality
+WITH algo.getNodeById(nodeId) AS node, centrality AS score
+RETURN node, score
+ORDER BY score DESC
+LIMIT $limit`
 
 const closenessStoreCypher = `
-  CALL algo.closeness($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     writeProperty: $writeProperty
-    })`
+CALL algo.closeness($label, $relationshipType, $config)`
 
 const harmonicStreamCypher = `
-  CALL algo.closeness.harmonic.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, centrality
+CALL algo.closeness.harmonic.stream($label, $relationshipType, $config)
+YIELD nodeId, centrality
 
-  WITH algo.getNodeById(nodeId) AS node, centrality AS score
-  RETURN node, score
-  ORDER BY score DESC
-  LIMIT $limit`
+WITH algo.getNodeById(nodeId) AS node, centrality AS score
+RETURN node, score
+ORDER BY score DESC
+LIMIT $limit`
 
 const harmonicStoreCypher = `
-  CALL algo.closeness.harmonic($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     writeProperty: $writeProperty
-    })`
+CALL algo.closeness.harmonic($label, $relationshipType, $config)`
 
 const approxBetweennessStreamCypher = `
-  CALL algo.betweenness.sampled.stream($label, $relationshipType, {
-     direction: $direction,
-     maxDepth: $maxDepth,
-     probability: $probability,
-     strategy: $strategy
-    })
-  YIELD nodeId, centrality
+CALL algo.betweenness.sampled.stream($label, $relationshipType, $config)
+YIELD nodeId, centrality
 
-  WITH algo.getNodeById(nodeId) AS node, centrality AS score
-  RETURN node, score
-  ORDER BY score DESC
-  LIMIT $limit`
+WITH algo.getNodeById(nodeId) AS node, centrality AS score
+RETURN node, score
+ORDER BY score DESC
+LIMIT $limit`
 
 const approxBetweennessStoreCypher = `
-  CALL algo.betweenness.sampled($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     writeProperty: $writeProperty,
-     maxDepth: $maxDepth,
-     probability: $probability,
-     strategy: $strategy
-    })`
+CALL algo.betweenness.sampled($label, $relationshipType, $config)`
 
-const pageRankStreamCypher = `CALL algo.pageRank.stream($label, $relationshipType, {
-  iterations: $iterations,
-  dampingFactor: $dampingFactor,
-  direction: $direction,
-  weightProperty: $weightProperty,
-  defaultValue: $defaultValue,
-  concurrency: $concurrency
-  })
+const pageRankStreamCypher = `
+CALL algo.pageRank.stream($label, $relationshipType, $config)
 YIELD nodeId, score
-
 WITH algo.getNodeById(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
 LIMIT $limit`
 
 const pageRankStoreCypher = `
-  CALL algo.pageRank($label, $relationshipType, {
-    iterations: $iterations,
-    dampingFactor: $dampingFactor,
-    concurrency: $concurrency,
-    direction: $direction,
-    write: true,
-    writeProperty: $writeProperty,
-    weightProperty: $weightProperty,
-    defaultValue: $defaultValue,
-    concurrency: $concurrency
-    })
-  `
+CALL algo.pageRank($label, $relationshipType, $config)
+`
 
-const degreeStreamCypher = `CALL algo.degree.stream($label, $relationshipType, $config)
+const degreeStreamCypher = `
+CALL algo.degree.stream($label, $relationshipType, $config)
 YIELD nodeId, score
 
 WITH algo.getNodeById(nodeId) AS node, score
@@ -282,9 +240,8 @@ const articleRankStoreCypher = `
 CALL algo.articleRank($label, $relationshipType, $config)
 `
 
-
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$writeProperty] is null)
-RETURN node, node[$writeProperty] AS score
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS score
 ORDER BY score DESC
 LIMIT $limit`
