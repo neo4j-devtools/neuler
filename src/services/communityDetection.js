@@ -49,7 +49,7 @@ export const stronglyConnectedComponents = ({ label, relationshipType, direction
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: writeProperty || "scc"
+    partitionProperty: writeProperty || "scc"
   }
 
   return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
@@ -126,8 +126,6 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
     balancedProperty: balancedProperty || "balanced",
     unbalancedProperty: unbalancedProperty || "unbalanced"
   }
-
-  console.log(balancedTriadsStreamCypher, extraParams)
 
   return runAlgorithm(balancedTriadsStreamCypher, balancedTriadsStoreCypher, getFetchBalancedTriadsCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
     if (result.records) {

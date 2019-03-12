@@ -9,7 +9,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipTypeOptions, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, relationshipTypeOptions, weightProperty, balancedProperty, unbalancedProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -29,7 +29,7 @@ export default class extends Component {
             <Form.Group>
             <Form.Field>
               <label>Balanced Property</label>
-              <input placeholder='Balanced Property' onChange={evt => onChange('balancedProperty', evt.target.value)}/>
+              <input placeholder='Balanced Property' value={balancedProperty} onChange={evt => onChange('balancedProperty', evt.target.value)}/>
             </Form.Field>
 
               </Form.Group>
@@ -41,7 +41,7 @@ export default class extends Component {
             <Form.Group>
             <Form.Field>
               <label>Unbalanced Property</label>
-              <input placeholder='Unbalanced Property' onChange={evt => onChange('unbalancedProperty', evt.target.value)}/>
+              <input placeholder='Unbalanced Property' value={unbalancedProperty} onChange={evt => onChange('unbalancedProperty', evt.target.value)}/>
             </Form.Field>
 
               </Form.Group>

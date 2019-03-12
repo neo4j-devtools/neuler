@@ -75,14 +75,14 @@ export default {
       Form: ConnectedComponentsForm,
       service: connectedComponents,
       ResultView: CommunityResult,
-      parameters: { persist: true},
+      parameters: { persist: true, writeProperty: "unionFind"},
       description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
     },
     "Strongly Connected Components": {
       Form: StronglyConnectedComponentsForm,
       service: stronglyConnectedComponents,
       ResultView: CommunityResult,
-      parameters: { persist: true},
+      parameters: { persist: true, writeProperty: "scc"},
       description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"
     },
     "Triangles": {
@@ -96,14 +96,14 @@ export default {
       Form: TriangleCountForm,
       service: triangleCount,
       ResultView: TriangleCountResult,
-      parameters: { },
+      parameters: { persist: true, writeProperty: "trianglesCount" },
       description: "finds set of three nodes, where each node has a relationship to all other nodes"
     },
     "Balanced Triads": {
       Form: BalancedTriadsForm,
       service: balancedTriads,
       ResultView: BalancedTriadsResult,
-      parameters: { persist: true},
+      parameters: { persist: true, balancedProperty: "balanced", unbalancedProperty: "unbalanced"},
       description: "used to evaluate structural balance of the graph"
     }
   }
