@@ -3,7 +3,7 @@ import { v1 } from 'neo4j-driver'
 import { parseProperties } from "./resultMapper"
 import { streamQueryOutline, getFetchCypher, baseParameters, filterParameters } from './queries'
 
-export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
+const constructParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
   const config = {
     weightProperty: weightProperty,
@@ -18,10 +18,13 @@ export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipT
   }
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
-  return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
+  return params
 }
 
-
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
+  const params = constructParams(label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties)
+  return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
+}
 
 const handleException = error => {
   console.error(error)
