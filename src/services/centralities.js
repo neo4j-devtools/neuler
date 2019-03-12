@@ -157,84 +157,61 @@ const parseResultStream = result => {
   }
 }
 
-const betweennessStreamCypher = `
-CALL algo.betweenness.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality
-WITH algo.getNodeById(nodeId) AS node, centrality AS score
+const streamQueryOutline = (callAlgorithm) => `
+${callAlgorithm}
+WITH algo.getNodeById(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
-LIMIT $limit`
+LIMIT $limit
+`
+
+const betweennessStreamCypher = streamQueryOutline(`
+CALL algo.betweenness.stream($label, $relationshipType, $config)
+YIELD nodeId, centrality AS score`)
 
 const betweennessStoreCypher = `
 CALL algo.betweenness($label, $relationshipType, $config)`
 
-const closenessStreamCypher = `
+const closenessStreamCypher = streamQueryOutline(`
 CALL algo.closeness.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality
-WITH algo.getNodeById(nodeId) AS node, centrality AS score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit`
+YIELD nodeId, centrality AS score`)
 
 const closenessStoreCypher = `
 CALL algo.closeness($label, $relationshipType, $config)`
 
-const harmonicStreamCypher = `
+const harmonicStreamCypher = streamQueryOutline(`
 CALL algo.closeness.harmonic.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality
-
-WITH algo.getNodeById(nodeId) AS node, centrality AS score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit`
+YIELD nodeId, centrality AS score`)
 
 const harmonicStoreCypher = `
 CALL algo.closeness.harmonic($label, $relationshipType, $config)`
 
-const approxBetweennessStreamCypher = `
+const approxBetweennessStreamCypher = streamQueryOutline(`
 CALL algo.betweenness.sampled.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality
-
-WITH algo.getNodeById(nodeId) AS node, centrality AS score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit`
+YIELD nodeId, centrality AS score`)
 
 const approxBetweennessStoreCypher = `
 CALL algo.betweenness.sampled($label, $relationshipType, $config)`
 
-const pageRankStreamCypher = `
+const pageRankStreamCypher = streamQueryOutline(`
 CALL algo.pageRank.stream($label, $relationshipType, $config)
-YIELD nodeId, score
-WITH algo.getNodeById(nodeId) AS node, score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit`
+YIELD nodeId, score`)
 
 const pageRankStoreCypher = `
 CALL algo.pageRank($label, $relationshipType, $config)
 `
 
-const degreeStreamCypher = `
+const degreeStreamCypher = streamQueryOutline(`
 CALL algo.degree.stream($label, $relationshipType, $config)
-YIELD nodeId, score
-
-WITH algo.getNodeById(nodeId) AS node, score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit`
+YIELD nodeId, score`)
 
 const degreeStoreCypher = `
 CALL algo.degree($label, $relationshipType, $config)
 `
 
-const articleRankStreamCypher = `
+const articleRankStreamCypher = streamQueryOutline(`
 CALL algo.articleRank.stream($label, $relationshipType, $config)
-YIELD nodeId, score
-WITH algo.getNodeById(nodeId) AS node, score
-RETURN node, score
-ORDER BY score DESC
-LIMIT $limit`
+YIELD nodeId, score`)
 
 const articleRankStoreCypher = `
 CALL algo.articleRank($label, $relationshipType, $config)
