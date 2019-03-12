@@ -22,14 +22,18 @@ export default class extends Component {
             style={{ 'width': '10em' }}
           />
         </Form.Field>
-        <Form.Field inline>
-          <label style={{ 'width': '8em' }}>Default weight</label>
-          <input
-            value={defaultValue}
-            onChange={evt => onChange('defaultValue', evt.target.value)}
-            style={{ 'width': '7em' }}
-          />
-          </Form.Field>
+        {
+          weightProperty ?
+            <Form.Field inline>
+              <label style={{ 'width': '8em' }}>Default weight</label>
+              <input
+                value={defaultValue}
+                onChange={evt => onChange('defaultValue', evt.target.value)}
+                style={{ 'width': '7em' }}
+              />
+            </Form.Field>
+            : null
+        }
         <Form.Field inline>
           <label style={{ 'width': '8em' }}>Iterations</label>
           <input

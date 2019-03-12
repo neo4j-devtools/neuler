@@ -50,7 +50,7 @@ export default {
         dampingFactor: 0.85,
         iterations: 20,
         defaultValue: 1.0,
-        concurrency: 8,
+        concurrency: 8
       },
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
@@ -88,7 +88,8 @@ export default {
       parameters: {
         strategy: "random",
         direction: "Outgoing",
-        persist: true
+        persist: true,
+        concurrency: 8
       },
       description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
     },
