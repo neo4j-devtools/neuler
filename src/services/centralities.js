@@ -13,7 +13,6 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
 }
 
 export const degree = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {
-  console.log(limit)
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
@@ -27,7 +26,6 @@ export const degree = ({ label, relationshipType, direction, persist, writePrope
 }
 
 export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
-  console.log(limit)
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     iterations: parseInt(iterations) || 20,
