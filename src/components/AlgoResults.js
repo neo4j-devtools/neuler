@@ -68,7 +68,7 @@ class HorizontalAlgoTab extends Component {
 
   render() {
     const { task, prevResult, nextResult, currentPage, totalPages } = this.props
-    const { activeItem } = this.state
+    const { activeItem, activeGroup } = this.state
 
     const getStyle = name => name === activeItem
       ? ({
@@ -83,8 +83,12 @@ class HorizontalAlgoTab extends Component {
         <Menu attached='top' tabular>
           <Menu.Item name='Table' active={activeItem === 'Table'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-         <Menu.Item name='Chart' active={activeItem === 'Chart'}
+
+          {activeGroup === 'Centralities' ?
+          <Menu.Item name='Chart' active={activeItem === 'Chart'}
                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+          : null}
+
           <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
           <Menu.Item name='Code' active={activeItem === 'Code'}
@@ -102,9 +106,10 @@ class HorizontalAlgoTab extends Component {
           <div style={getStyle('Visualisation')}>
             <VisView task={task} active={activeItem === 'Visualisation'}/>
           </div>
+         { activeGroup === 'Centralities' ?
           <div style={getStyle('Chart')}>
             <ChartView task={task} active={activeItem === 'Chart'}/>
-          </div>
+          </div> : null}
         </Segment>
 
         <div style={{
