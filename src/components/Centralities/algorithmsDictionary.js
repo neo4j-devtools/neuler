@@ -77,7 +77,7 @@ export default {
     },
     'Betweenness': {
       Form: BetweennesForm,
-      service: betweenness,
+      service: executeAlgorithm,
       ResultView: CentralityResult,
       parameters: {
         direction: 'Outgoing',
@@ -85,18 +85,25 @@ export default {
         writeProperty: "betweenness",
         concurrency: 8
       },
+      streamQuery: streamQueryOutline(`CALL algo.betweenness.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL algo.betweenness($label, $relationshipType, $config)`,
       description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
     },
     'Approx Betweenness': {
       Form: ApproxBetweennessForm,
-      service: approxBetweenness,
+      service: executeAlgorithm,
       ResultView: CentralityResult,
       parameters: {
         strategy: "random",
         direction: "Outgoing",
         persist: true,
-        concurrency: 8
+        concurrency: 8,
+        maxDepth: null,
+        probability: null,
+        writeProperty: "approxBetweenness"
       },
+      streamQuery: streamQueryOutline(`CALL algo.betweenness.sampled.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL algo.betweenness.sampled($label, $relationshipType, $config)`,
       description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
     },
     "Closeness": {

@@ -15,20 +15,22 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
   }
 }
 
-export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, limit, requiredProperties }) => {
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
   const config = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
+    weightProperty: weightProperty,
+    defaultValue: parseFloat(defaultValue),
     dampingFactor: parseFloat(dampingFactor),
     iterations: parseInt(iterations),
+    maxDepth: parseInt(maxDepth) || null,
+    probability: parseFloat(probability) || null,
+    strategy: strategy,
     write: true,
-    writeProperty: writeProperty || "degree"
+    writeProperty: writeProperty
   }
 
-const raw = {...params.config, ...config}
+  const raw = {...params.config, ...config}
   params.config = filterMap(raw, requiredProperties)
-
   return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
 }
 
@@ -41,35 +43,6 @@ const filterMap = (raw, allowed) => {
       [key]: raw[key]
     };
   }, {});
-}
-
-export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    write: true,
-    writeProperty: writeProperty || "betweenness"
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(betweennessStreamCypher, betweennessStoreCypher, getFetchCypher(params.label), params, persist)
-}
-
-export const approxBetweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, maxDepth, probability, strategy, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    write: true,
-    writeProperty: writeProperty || "approxBetweenness",
-    maxDepth: parseInt(maxDepth) || null,
-    probability: parseFloat(probability) || null,
-    strategy: strategy || null
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(approxBetweennessStreamCypher, approxBetweennessStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const closeness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
@@ -137,15 +110,6 @@ const parseResultStream = result => {
   }
 }
 
-
-
-const betweennessStreamCypher = streamQueryOutline(`
-CALL algo.betweenness.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality AS score`)
-
-const betweennessStoreCypher = `
-CALL algo.betweenness($label, $relationshipType, $config)`
-
 const closenessStreamCypher = streamQueryOutline(`
 CALL algo.closeness.stream($label, $relationshipType, $config)
 YIELD nodeId, centrality AS score`)
@@ -159,13 +123,6 @@ YIELD nodeId, centrality AS score`)
 
 const harmonicStoreCypher = `
 CALL algo.closeness.harmonic($label, $relationshipType, $config)`
-
-const approxBetweennessStreamCypher = streamQueryOutline(`
-CALL algo.betweenness.sampled.stream($label, $relationshipType, $config)
-YIELD nodeId, centrality AS score`)
-
-const approxBetweennessStoreCypher = `
-CALL algo.betweenness.sampled($label, $relationshipType, $config)`
 
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
