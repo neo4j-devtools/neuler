@@ -1,5 +1,6 @@
 import PageRankForm from './PageRankForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic, degree } from "../../services/centralities"
+import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic, degree, executeAlgorithm } from "../../services/centralities"
+import { streamQueryOutline } from '../../services/queries'
 import ArticleRankForm from "./ArticleRankForm"
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
@@ -24,14 +25,18 @@ export default {
   algorithmDefinitions: {
     "Degree": {
       Form: DegreeForm,
-      service: degree,
+      service: executeAlgorithm,
       ResultView: CentralityResult,
       parameters: {
         direction: 'Incoming',
         persist: true,
         writeProperty: "degree",
-        defaultValue: 1.0
+        defaultValue: 1.0,
+        concurrency: 8,
+        weightProperty: null
       },
+      streamQuery: streamQueryOutline(`CALL algo.degree.stream($label, $relationshipType, $config) YIELD nodeId, score`),
+      storeQuery: `CALL algo.degree($label, $relationshipType, $config)`,
       description: `detects the number of direct connections a node has`
     },
     "Page Rank": {
@@ -44,10 +49,10 @@ export default {
         writeProperty: "pagerank",
         dampingFactor: 0.85,
         iterations: 20,
-        defaultValue: 1.0
+        defaultValue: 1.0,
+        concurrency: 8,
       },
-      description: <div>Measures the <strong>transitive</strong> influence or connectivity of
-        nodes</div>
+      description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
     'Article Rank': {
       Form: ArticleRankForm,
@@ -59,7 +64,8 @@ export default {
         writeProperty: "articlerank",
         dampingFactor: 0.85,
         iterations: 20,
-        defaultValue: 1.0
+        defaultValue: 1.0,
+        concurrency: 8
       },
       description: `a variant of the PageRank algorithm`
     },
@@ -70,7 +76,8 @@ export default {
       parameters: {
         direction: 'Outgoing',
         persist: true,
-        writeProperty: "betweenness"
+        writeProperty: "betweenness",
+        concurrency: 8
       },
       description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
     },
@@ -89,14 +96,14 @@ export default {
       Form: ClosenessCentralityForm,
       service: closeness,
       ResultView: CentralityResult,
-      parameters: { persist: true},
+      parameters: { persist: true, writeProperty: "closeness", concurrency: 8, direction:"Outgoing"},
       description: `detect nodes that are able to spread information very efficiently through a graph`
     },
     "Harmonic": {
       Form: HarmonicCentralityForm,
       service: harmonic,
       ResultView: CentralityResult,
-      parameters: { persist: true},
+      parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Outgoing"},
       description: `a variant of closeness centrality, that was invented to solve the problem the original
 -                  formula had when dealing with unconnected graphs.`
     }

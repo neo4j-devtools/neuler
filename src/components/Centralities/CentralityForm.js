@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, Dropdown } from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency, label, labelOptions, relationshipTypeOptions}) => (
+export default ({onChange, direction, persist, writeProperty, weightProperty, concurrency, label, labelOptions, relationshipTypeOptions}) => (
   <React.Fragment>
     <Form.Field>
       <label>Label</label>
@@ -39,14 +39,13 @@ export default ({onChange, direction, persist, concurrency, label, labelOptions,
       <Form.Field inline>
         <label style={{ 'width': '8em' }}>Store results</label>
         <input type='checkbox' checked={persist} onChange={evt => {
-          console.log(evt.target, evt)
           onChange('persist', evt.target.checked)
         }}/>
       </Form.Field>
       {
         persist ?
           <Form.Field inline>
-            <Input size='mini' basic="true" placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
+            <Input size='mini' basic="true" value={writeProperty} placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
           </Form.Field>
           : null
       }

@@ -8,11 +8,11 @@ export default class extends Component {
   }
 
   render() {
-    const { labelOptions, relationshipTypeOptions, onChange, iterations, dampingFactor, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { labelOptions, relationshipTypeOptions, writeProperty, onChange, iterations, dampingFactor, weightProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
-        <CentralityForm onChange={onChange} direction={direction} persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
+        <CentralityForm onChange={onChange} direction={direction} writeProperty={writeProperty} weightProperty={weightProperty}  persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
         <Form.Field inline>
           <label style={{ 'width': '8em' }}>Weight Property</label>
           <input
