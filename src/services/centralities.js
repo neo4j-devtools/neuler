@@ -1,7 +1,7 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 import { parseProperties } from "./resultMapper"
-import { streamQueryOutline } from './queries'
+import { streamQueryOutline, getFetchCypher } from './queries'
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -83,9 +83,3 @@ const parseResultStream = result => {
     throw new Error(result.error)
   }
 }
-
-const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS score
-ORDER BY score DESC
-LIMIT $limit`
