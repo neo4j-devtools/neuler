@@ -26,51 +26,21 @@ export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipT
     writeProperty: writeProperty || "degree"
   }
 
-  const raw = {...params.config, ...config}
-  params.config = Object.keys(raw)
-  .filter(key => requiredProperties.includes(key))
+const raw = {...params.config, ...config}
+  params.config = filterMap(raw, requiredProperties)
+
+  return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
+}
+
+const filterMap = (raw, allowed) => {
+  return Object.keys(raw)
+  .filter(key => allowed.includes(key))
   .reduce((obj, key) => {
     return {
       ...obj,
       [key]: raw[key]
     };
   }, {});
-
-  return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
-}
-
-export const pageRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    iterations: parseInt(iterations) || 20,
-    dampingFactor: parseFloat(dampingFactor) || 0.85,
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "pagerank"
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(pageRankStreamCypher, pageRankStoreCypher, getFetchCypher(params.label), params, persist)
-}
-
-export const articleRank = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, iterations, dampingFactor, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    iterations: parseInt(iterations) || 20,
-    dampingFactor: parseFloat(dampingFactor) || 0.85,
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "articlerank"
-  }
-
-  const params = baseParams
-  params.config = {...baseParams.config, ...extraParams}
-
-  return runAlgorithm(articleRankStreamCypher, articleRankStoreCypher, getFetchCypher(params.label), params, persist)
 }
 
 export const betweenness = ({ label, relationshipType, direction, concurrency, persist, writeProperty, limit }) => {
@@ -196,30 +166,6 @@ YIELD nodeId, centrality AS score`)
 
 const approxBetweennessStoreCypher = `
 CALL algo.betweenness.sampled($label, $relationshipType, $config)`
-
-const pageRankStreamCypher = streamQueryOutline(`
-CALL algo.pageRank.stream($label, $relationshipType, $config)
-YIELD nodeId, score`)
-
-const pageRankStoreCypher = `
-CALL algo.pageRank($label, $relationshipType, $config)
-`
-
-const degreeStreamCypher = streamQueryOutline(`
-CALL algo.degree.stream($label, $relationshipType, $config)
-YIELD nodeId, score`)
-
-const degreeStoreCypher = `
-CALL algo.degree($label, $relationshipType, $config)
-`
-
-const articleRankStreamCypher = streamQueryOutline(`
-CALL algo.articleRank.stream($label, $relationshipType, $config)
-YIELD nodeId, score`)
-
-const articleRankStoreCypher = `
-CALL algo.articleRank($label, $relationshipType, $config)
-`
 
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)

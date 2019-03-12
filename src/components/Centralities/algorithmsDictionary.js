@@ -59,7 +59,7 @@ export default {
     },
     'Article Rank': {
       Form: ArticleRankForm,
-      service: articleRank,
+      service: executeAlgorithm,
       ResultView: CentralityResult,
       parameters: {
         direction: 'Outgoing',
@@ -68,8 +68,11 @@ export default {
         dampingFactor: 0.85,
         iterations: 20,
         defaultValue: 0.99,
-        concurrency: 8
+        concurrency: 8,
+        weightProperty: null
       },
+      streamQuery: streamQueryOutline(`CALL algo.articleRank.stream($label, $relationshipType, $config) YIELD nodeId, score`),
+      storeQuery: `CALL algo.articleRank($label, $relationshipType, $config)`,
       description: `a variant of the PageRank algorithm`
     },
     'Betweenness': {
