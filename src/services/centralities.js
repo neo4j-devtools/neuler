@@ -15,7 +15,7 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
   }
 }
 
-export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {  
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, limit }) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
