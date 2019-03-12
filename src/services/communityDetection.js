@@ -49,7 +49,7 @@ export const stronglyConnectedComponents = ({ label, relationshipType, direction
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    partitionProperty: writeProperty || "scc"
+    writeProperty: writeProperty || "scc"
   }
 
   return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
@@ -261,7 +261,7 @@ const stronglyConnectedComponentsStreamCypher = `
   LIMIT $limit`
 
 const stronglyConnectedComponentsStoreCypher = `
-  CALL algo.scc($label, $relationshipType, $direction, {
+  CALL algo.scc($label, $relationshipType, {
      direction: $direction,
      write: true,
      partitionProperty: $writeProperty

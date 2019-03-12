@@ -67,7 +67,8 @@ export default {
         direction: 'Both',
         persist: true,
         writeProperty: "lpa",
-        defaultValue: 1.0
+        defaultValue: 0.99,
+        concurrency: 8
       },
       description: "a fast algorithm for finding communities in a graph"
     },
@@ -75,35 +76,35 @@ export default {
       Form: ConnectedComponentsForm,
       service: connectedComponents,
       ResultView: CommunityResult,
-      parameters: { persist: true, writeProperty: "unionFind"},
+      parameters: { persist: true, writeProperty: "unionFind", concurrency: 8, defaultValue: 0.99, direction: 'Both',},
       description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
     },
     "Strongly Connected Components": {
       Form: StronglyConnectedComponentsForm,
       service: stronglyConnectedComponents,
       ResultView: CommunityResult,
-      parameters: { persist: true, writeProperty: "scc"},
+      parameters: { persist: true, writeProperty: "scc", concurrency: 8, defaultValue: 0.99, direction: 'Both',},
       description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"
     },
     "Triangles": {
       Form: TrianglesForm,
       service: triangles,
       ResultView: TrianglesResult,
-      parameters: { persist: true},
+      parameters: { persist: true, direction: 'Both'},
       description: "finds set of three nodes, where each node has a relationship to all other nodes"
     },
     "Triangle Count": {
       Form: TriangleCountForm,
       service: triangleCount,
       ResultView: TriangleCountResult,
-      parameters: { persist: true, writeProperty: "trianglesCount" },
+      parameters: { persist: true, writeProperty: "trianglesCount", concurrency: 8, direction: "Both" },
       description: "finds set of three nodes, where each node has a relationship to all other nodes"
     },
     "Balanced Triads": {
       Form: BalancedTriadsForm,
       service: balancedTriads,
       ResultView: BalancedTriadsResult,
-      parameters: { persist: true, balancedProperty: "balanced", unbalancedProperty: "unbalanced"},
+      parameters: { persist: true, balancedProperty: "balanced", unbalancedProperty: "unbalanced", concurrency: 8, direction: 'Both'},
       description: "used to evaluate structural balance of the graph"
     }
   }
