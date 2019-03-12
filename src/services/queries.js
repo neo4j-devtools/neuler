@@ -10,7 +10,7 @@ RETURN node, node[$config.writeProperty] AS score
 ORDER BY score DESC
 LIMIT $limit`
 
-export const constructCentralityParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties) => {
+export const centralityParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
   const parsedProbability = parseFloat(probability)
