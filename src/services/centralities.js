@@ -1,28 +1,10 @@
 import { runCypher } from "./stores/neoStore"
 import { v1 } from 'neo4j-driver'
 import { parseProperties } from "./resultMapper"
-import { streamQueryOutline, getFetchCypher, baseParameters, filterParameters } from './queries'
-
-const constructParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const config = {
-    weightProperty: weightProperty,
-    defaultValue: parseFloat(defaultValue),
-    dampingFactor: parseFloat(dampingFactor),
-    iterations: parseInt(iterations),
-    maxDepth: parseInt(maxDepth) || null,
-    probability: parseFloat(probability) || null,
-    strategy: strategy,
-    write: true,
-    writeProperty: writeProperty
-  }
-
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
-  return params
-}
+import { streamQueryOutline, getFetchCypher, centralityParams, filterParameters } from './queries'
 
 export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
-  const params = constructParams(label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties)
+  const params = centralityParams(label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties)
   return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
 }
 
