@@ -37,7 +37,7 @@ test('single community', () => {
   expect(parseResultStream({records: [record]})).toEqual(expected)
 });
 
-test('mutliple communities', () => {
+test('multiple communities', () => {
   const labels = ["Person"]
   const properties = {"name": "Mark"}
   const community = 2
