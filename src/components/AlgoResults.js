@@ -5,6 +5,8 @@ import GraphVisualiser from './GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 
+import {renderParams} from './renderParams'
+
 const tabContentStyle = {
   height: '85vh',
   overflowY: 'auto',
@@ -24,16 +26,7 @@ const CodeView = ({ task }) => (
       task.parameters
         ? <Segment>
 
-          {
-            Object.keys(task.parameters).map(key =>
-              <pre key={key}>:param {key} =>
-                {task.parameters[key]
-                  ? (typeof task.parameters[key] === 'string'
-                    ? ` '${task.parameters[key]}'`
-                    : ` ${task.parameters[key]}`)
-                  : ' null'};
-                </pre>
-            )}
+          {renderParams(task.parameters)}
         </Segment>
         : null
     }

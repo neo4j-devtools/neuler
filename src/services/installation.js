@@ -19,7 +19,7 @@ WHERE name STARTS WITH "algo"
 RETURN count(*) AS count
 `
 
-const parseResultStream = result => {
+export const parseResultStream = result => {
   if (result.records) {
     return result.records[0].get("count").toNumber() > 0
   } else {
