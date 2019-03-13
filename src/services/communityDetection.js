@@ -17,17 +17,10 @@ export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipT
   return runAlgorithm(streamQuery, storeQuery, getFetchLouvainCypher(params.label), params, persist)
 }
 
-export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit}) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "lpa"
-  }
+export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
 
-  return runAlgorithm(lpaStreamCypher, lpaStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(lpaStreamCypher, lpaStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
 }
 
 export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
@@ -191,6 +184,11 @@ export const parseResultStream = (result) => {
   }
 }
 
+const getNewFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS community
+LIMIT $limit`
+
 const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS community
@@ -214,22 +212,15 @@ ORDER BY balanced DESC
 LIMIT $limit`
 
 const lpaStreamCypher = `
-  CALL algo.labelPropagation.stream($label, $relationshipType, {
-     direction: $direction
-    })
+  CALL algo.labelPropagation.stream($label, $relationshipType, $config)
   YIELD nodeId, label
-
   WITH algo.getNodeById(nodeId) AS node, label AS community
   RETURN node, community
   ORDER BY community
   LIMIT $limit`
 
 const lpaStoreCypher = `
-  CALL algo.labelPropagation($label, $relationshipType, $direction, {
-     direction: $direction,
-     write: true,
-     partitionProperty: $writeProperty
-    })`
+  CALL algo.labelPropagation($label, $relationshipType, $config)`
 
 const connectedComponentsStreamCypher = `
   CALL algo.unionFind.stream($label, $relationshipType, {
