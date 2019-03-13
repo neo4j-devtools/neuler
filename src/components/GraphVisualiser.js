@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Grid, Form, Button, Icon, Select, Loader } from "semantic-ui-react"
+import { Grid, Form, Button, Icon, Select, Loader, Input } from "semantic-ui-react"
 import NeoVis from "./visualisation/neovis"
 import { getDriver } from "../services/stores/neoStore"
 
@@ -10,6 +10,9 @@ export default class extends Component {
     taskId: null,
     labels: {},
     captions: {},
+    nodeSize: null,
+    nodeColour: null,
+    relationshipThickness: null,
     cypher: null
   }
 
@@ -43,12 +46,15 @@ export default class extends Component {
   }
 
   onConfigChange(props) {
-    const { captions, cypher } = this.state
+    const { captions, cypher, nodeSize } = this.state
     const { taskId, writeProperty, relationshipType } = props
+
+    this.setState({nodeSize: writeProperty})
+
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
         caption: captions[label],
-        size: writeProperty,
+        size: nodeSize,
         community: "louvain"
       }
       return labelConfig
@@ -134,19 +140,23 @@ return path`
 
       this.setState({
         cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
-        labels: labelProperties, captions,
+        labels: labelProperties,
+        nodeSize: writeProperty,
+        captions,
         taskId
       })
     }
   }
 
   updateCaption(label, prop) {
-    console.log(label, prop.value)
-
     const captions = { ...this.state.captions }
     captions[label] = prop.value
 
     this.setState({ captions })
+  }
+
+  updateNodeSize(nodeSize) {
+    this.setState({ nodeSize })
   }
 
   componentWillReceiveProps(nextProps) {
@@ -191,7 +201,7 @@ return path`
   }
 
   render() {
-    const { labels,rendering } = this.state
+    const { labels,rendering, nodeSize } = this.state
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{ marginLeft: '1em' }}>
@@ -207,6 +217,16 @@ return path`
                 />
               </Form.Field>
             )}
+
+            <Form.Field inline key='nodeSize'>
+              <label>Node Size</label>
+              <Input placeholder='Node Size'
+                      value={nodeSize}
+                      onChange={(evt) => this.updateNodeSize(evt.target.value)}
+              />
+            </Form.Field>
+
+
             <Form.Field inline>
               <Button basic icon labelPosition='right' onClick={this.onConfigChange.bind(this, this.props)}>
                 Refresh
