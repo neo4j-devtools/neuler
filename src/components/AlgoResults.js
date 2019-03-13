@@ -148,6 +148,12 @@ class TabExampleVerticalTabular extends Component {
     this.setState(({ page }) => ({ page: Math.min(length - 1, page + 1) }))
   }
 
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.tasks.length !== this.props.tasks.length) {
+      this.setState({ page: 0 })
+    }
+  }
+
   render() {
     const tasks = this.props.tasks
     const page = this.state.page
