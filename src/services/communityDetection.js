@@ -58,17 +58,11 @@ export const triangles = ({ label, relationshipType, direction, writeProperty, w
   })
 }
 
-export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "triangles",
-    clusteringCoefficientProperty: "clusteringCoefficient"
-  }
+export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
+  const params = communityParams(label, relationshipType, direction, false, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
+  params.config.clusteringCoefficientProperty = "clusteringCoefficient"
 
-  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchTriangleCountCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
+  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchTriangleCountCypher(baseParameters.label), params, persist, result => {
     if (result.records) {
       return result.records.map(record => {
         const { properties, labels } = record.get('node')
@@ -177,8 +171,8 @@ RETURN node, node[$config.writeProperty] AS community, node[$config.intermediate
 LIMIT $limit`
 
 const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$writeProperty] is null) AND not(node[$clusteringCoefficientProperty] is null)
-RETURN node, node[$writeProperty] AS triangles, node[$clusteringCoefficientProperty] AS coefficient
+WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
+RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCoefficientProperty] AS coefficient
 ORDER BY triangles DESC
 LIMIT $limit`
 
@@ -228,23 +222,15 @@ RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.
 LIMIT $limit`
 
 const triangleCountStreamCypher = `
-  CALL algo.triangleCount.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, triangles, coefficient
-
-  WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
-  RETURN node, triangles, coefficient
-  ORDER BY triangles DESC
-  LIMIT $limit`
+CALL algo.triangleCount.stream($label, $relationshipType, $config)
+YIELD nodeId, triangles, coefficient
+WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
+RETURN node, triangles, coefficient
+ORDER BY triangles DESC
+LIMIT $limit`
 
 const triangleCountStoreCypher = `
-  CALL algo.triangleCount($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     writeProperty: $writeProperty,
-     clusteringCoefficientProperty: $clusteringCoefficientProperty
-    })`
+CALL algo.triangleCount($label, $relationshipType, $config)`
 
 const balancedTriadsStreamCypher = `
   CALL algo.balancedTriads.stream($label, $relationshipType, {
