@@ -24,21 +24,13 @@ export const lpa = ({ label, relationshipType, direction, persist, writeProperty
 
 export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
   const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-
   return runAlgorithm(connectedComponentsStreamCypher, connectedComponentsStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
 }
 
-export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "scc"
-  }
+export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
+  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
 
-  return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
 }
 
 export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
@@ -204,15 +196,15 @@ ORDER BY balanced DESC
 LIMIT $limit`
 
 const lpaStreamCypher = `
-  CALL algo.labelPropagation.stream($label, $relationshipType, $config)
-  YIELD nodeId, label
-  WITH algo.getNodeById(nodeId) AS node, label AS community
-  RETURN node, community
-  ORDER BY community
-  LIMIT $limit`
+CALL algo.labelPropagation.stream($label, $relationshipType, $config)
+YIELD nodeId, label
+WITH algo.getNodeById(nodeId) AS node, label AS community
+RETURN node, community
+ORDER BY community
+LIMIT $limit`
 
 const lpaStoreCypher = `
-  CALL algo.labelPropagation($label, $relationshipType, $config)`
+CALL algo.labelPropagation($label, $relationshipType, $config)`
 
 const connectedComponentsStreamCypher = `
 CALL algo.unionFind.stream($label, $relationshipType, $config)
@@ -226,22 +218,15 @@ const connectedComponentsStoreCypher = `
 CALL algo.unionFind($label, $relationshipType, $config)`
 
 const stronglyConnectedComponentsStreamCypher = `
-  CALL algo.scc.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, partition
-
-  WITH algo.getNodeById(nodeId) AS node, partition AS community
-  RETURN node, community
-  ORDER BY community
-  LIMIT $limit`
+CALL algo.scc.stream($label, $relationshipType, $config)
+YIELD nodeId, partition
+WITH algo.getNodeById(nodeId) AS node, partition AS community
+RETURN node, community
+ORDER BY community
+LIMIT $limit`
 
 const stronglyConnectedComponentsStoreCypher = `
-  CALL algo.scc($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     partitionProperty: $writeProperty
-    })`
+CALL algo.scc($label, $relationshipType, $config)`
 
 const trianglesStreamCypher = `
   CALL algo.triangle.stream($label, $relationshipType, {
