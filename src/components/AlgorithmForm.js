@@ -92,7 +92,6 @@ class Algorithms extends Component {
         storeQuery: this.state.storeQuery,
         requiredProperties: Object.keys(this.state.parameters)
       }).then(result => {
-        console.log(result)
         this.props.completeTask(taskId, result)
         this.setState({ collapsed: true })
       })
