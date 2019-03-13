@@ -12,7 +12,7 @@ export default class extends Component {
     captions: {},
     nodeSize: null,
     nodeColour: null,
-    relationshipThickness: null,
+    relationshipThickness: "weight",
     cypher: null
   }
 
@@ -46,16 +46,14 @@ export default class extends Component {
   }
 
   onConfigChange(props) {
-    const { captions, cypher, nodeSize } = this.state
-    const { taskId, writeProperty, relationshipType } = props
-
-    // this.setState({nodeSize: writeProperty})
+    const { captions, cypher, nodeSize, nodeColor } = this.state
+    const { taskId, relationshipType } = props
 
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
         caption: captions[label],
         size: nodeSize,
-        community: "louvain"
+        community: nodeColor
       }
       return labelConfig
     }, {})
@@ -158,9 +156,15 @@ return path`
     this.setState({ nodeSize })
   }
 
+  updateNodeColor(nodeColor) {
+    this.setState({ nodeColor })
+  }
+
+
   componentWillReceiveProps(nextProps) {
     if (this.props.writeProperty !== nextProps.writeProperty && nextProps.writeProperty) {
       this.updateNodeSize(nextProps.writeProperty)
+      this.updateNodeColor(nextProps.writeProperty)
     }
 
     if (nextProps.taskId !== this.props.taskId
@@ -204,7 +208,7 @@ return path`
   }
 
   render() {
-    const { labels,rendering, nodeSize } = this.state
+    const { labels,rendering, nodeSize, nodeColor } = this.state
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{ marginLeft: '1em' }}>
@@ -226,6 +230,14 @@ return path`
               <Input placeholder='Node Size'
                       value={nodeSize}
                       onChange={(evt) => this.updateNodeSize(evt.target.value)}
+              />
+            </Form.Field>
+
+            <Form.Field inline key='nodeColor'>
+              <label>Node Color</label>
+              <Input placeholder='Node Color'
+                     value={nodeColor}
+                     onChange={(evt) => this.updateNodeColor(evt.target.value)}
               />
             </Form.Field>
 
