@@ -31,7 +31,7 @@ export default {
     "Strongly Connected Components",
     "Triangles",
     "Triangle Count",
-    "Balanced Triads"
+    // "Balanced Triads"
   ],
   algorithmDefinitions: {
     "Louvain": {
@@ -42,7 +42,6 @@ export default {
         direction: 'Both',
         persist: true,
         writeProperty: "louvain",
-        defaultValue: 1.0,
         includeIntermediateCommunities: false,
         intermediateCommunitiesWriteProperty: "louvainIntermediate",
         defaultValue: 0.99,
@@ -99,13 +98,13 @@ export default {
       ResultView: TriangleCountResult,
       parameters: { persist: true, writeProperty: "trianglesCount", concurrency: 8, direction: "Both" },
       description: "finds set of three nodes, where each node has a relationship to all other nodes"
-    },
+    }/*,
     "Balanced Triads": {
       Form: BalancedTriadsForm,
       service: balancedTriads,
       ResultView: BalancedTriadsResult,
       parameters: { persist: true, balancedProperty: "balanced", unbalancedProperty: "unbalanced", concurrency: 8, direction: 'Both'},
       description: "used to evaluate structural balance of the graph"
-    }
+    }*/
   }
 }
