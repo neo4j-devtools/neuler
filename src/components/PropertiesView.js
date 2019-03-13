@@ -15,6 +15,9 @@ const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
     }
     return hiddenProperties
   }, new Set())
+
+  hiddenPropertiesMap['_ALL_NEULER_'].forEach(prop => hiddenProps.add(prop))
+
   return Array.from(hiddenProps)
 }
 
