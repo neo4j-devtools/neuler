@@ -29,20 +29,13 @@ export const connectedComponents = ({ label, relationshipType, direction, persis
 
 export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
   const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-
   return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
 }
 
-export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "scc"
-  }
+export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
+  const params = communityParams(label, relationshipType, direction, false, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
 
-  return runStreamingAlgorithm(trianglesStreamCypher, {...baseParams, ...extraParams}, result => {
+  return runStreamingAlgorithm(trianglesStreamCypher, params, result => {
     if (result.records) {
       return result.records.map(record => {
         const nodeA = record.get('nodeA')
@@ -229,13 +222,10 @@ const stronglyConnectedComponentsStoreCypher = `
 CALL algo.scc($label, $relationshipType, $config)`
 
 const trianglesStreamCypher = `
-  CALL algo.triangle.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeA, nodeB, nodeC
-
-  RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
-  LIMIT $limit`
+CALL algo.triangle.stream($label, $relationshipType, $config)
+YIELD nodeA, nodeB, nodeC
+RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
+LIMIT $limit`
 
 const triangleCountStreamCypher = `
   CALL algo.triangleCount.stream($label, $relationshipType, {
