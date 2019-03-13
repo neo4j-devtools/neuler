@@ -68,8 +68,8 @@ class HorizontalAlgoTab extends Component {
 
   render() {
     const { task, prevResult, nextResult, currentPage, totalPages } = this.props
-    const { activeItem, activeGroup } = this.state
-
+    const { activeItem } = this.state
+    const activeGroup  = task.group
     const getStyle = name => name === activeItem
       ? ({
         display: ''
