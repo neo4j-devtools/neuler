@@ -49,7 +49,7 @@ export default class extends Component {
     const { captions, cypher, nodeSize } = this.state
     const { taskId, writeProperty, relationshipType } = props
 
-    this.setState({nodeSize: writeProperty})
+    // this.setState({nodeSize: writeProperty})
 
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
@@ -110,7 +110,7 @@ return path`
   }
 
   dataUpdated(props) {
-    const {results, label, relationshipType, writeProperty, taskId} = props
+    const { results, label, relationshipType, taskId, writeProperty } = props
 
     let captions = {}
     if (results && results.length > 0) {
@@ -141,7 +141,6 @@ return path`
       this.setState({
         cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
         labels: labelProperties,
-        nodeSize: writeProperty,
         captions,
         taskId
       })
@@ -160,6 +159,10 @@ return path`
   }
 
   componentWillReceiveProps(nextProps) {
+    if (this.props.writeProperty !== nextProps.writeProperty && nextProps.writeProperty) {
+      this.updateNodeSize(nextProps.writeProperty)
+    }
+
     if (nextProps.taskId !== this.props.taskId
       || nextProps.results !== this.props.results
       || nextProps.active !== this.props.active) {
