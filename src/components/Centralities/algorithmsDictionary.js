@@ -1,13 +1,12 @@
 import PageRankForm from './PageRankForm'
-import { executeAlgorithm } from "../../services/centralities"
-import { streamQueryOutline } from '../../services/queries'
+import {executeAlgorithm} from "../../services/centralities"
+import {streamQueryOutline} from '../../services/queries'
 import EigenvectorForm from './EigenvectorForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic, degree, eigenvector } from "../../services/centralities"
 import ArticleRankForm from "./ArticleRankForm"
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
-import { Card } from "semantic-ui-react/dist/commonjs/views/Card"
+import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
