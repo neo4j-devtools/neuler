@@ -8,7 +8,7 @@ export default class extends Component {
   }
 
   render() {
-    const { labelOptions, relationshipTypeOptions, onChange, iterations,  weightProperty, defaultValue, concurrency, direction, persist, normalization } = this.props
+    const { labelOptions, relationshipTypeOptions, onChange, iterations, writeProperty,  weightProperty, defaultValue, concurrency, direction, persist, normalization } = this.props
 
     const normalizationOptions = [
       { key: "none", value: "none", text: "None" },
@@ -19,7 +19,7 @@ export default class extends Component {
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
-        <CentralityForm onChange={onChange} direction={direction} normalization={normalization} persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
+        <CentralityForm onChange={onChange} direction={direction} writeProperty={writeProperty} normalization={normalization} persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
         <Form.Group inline>
           <label style={{ 'width': '8em' }}>Normalization</label>
            <Dropdown placeholder='Normalization' fluid selection options={normalizationOptions} onChange={(evt, data) => onChange('normalization', data.value)} />

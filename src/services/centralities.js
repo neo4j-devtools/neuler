@@ -2,8 +2,8 @@ import {runCypher} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 import {centralityParams, getFetchCypher} from './queries'
 
-export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
-  const params = centralityParams(label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties)
+export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties }) => {
+  const params = centralityParams(label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties)
   return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
 }
 

@@ -91,46 +91,46 @@ test('direction defaults to outgoing if invalid value provided', () => {
 });
 
 test('probability defaults to null if invalid', () => {
-  const params = centralityParams(null, null, null, null, null, null, null, null, null, null, -0.1, null, null, ["probability"])
+  const params = centralityParams(null, null, null, null, null, null, null, null, null, null, -0.1, null, null, null, ["probability"])
   expect(params.config).toEqual({probability: null})
 });
 
 test('probability passed through if positive', () => {
-  const params = centralityParams(null, null, null, null, null, null, null, null, null, null, 0.7, null, null, ["probability"])
+  const params = centralityParams(null, null, null, null, null, null, null, null, null, null, 0.7, null, null, null,["probability"])
   expect(params.config).toEqual({probability: 0.7})
 });
 
 test('maxDepth defaults to null if invalid', () => {
-  const params = centralityParams(null, null, null, null, null, null, null, null, null, -1, null, null, null, ["maxDepth"])
+  const params = centralityParams(null, null, null, null, null, null, null, null, null, -1, null, null, null, null,["maxDepth"])
   expect(params.config).toEqual({maxDepth: null})
 });
 
 test('maxDepth passed through if positive', () => {
-  const params = centralityParams(null, null, null, null, null, null, null, null, null, 7, null, null, null, ["maxDepth"])
+  const params = centralityParams(null, null, null, null, null, null, null, null, null, 7, null, null, null, null,["maxDepth"])
   expect(params.config).toEqual({maxDepth: 7})
 });
 
 test('default weight defaults to null if invalid', () => {
-  const params = centralityParams(null, null, null, null, null, "", null, null, null, null, null, null, null, ["defaultValue"])
+  const params = centralityParams(null, null, null, null, null, "", null, null, null, null, null, null, null, null,["defaultValue"])
   expect(params.config).toEqual({defaultValue: null})
 });
 
 test('damping factor defaults to null if invalid', () => {
-  const params = centralityParams(null, null, null, null, null, null, null, "", null, null, null, null, null, ["dampingFactor"])
+  const params = centralityParams(null, null, null, null, null, null, null, "", null, null, null, null, null, null,["dampingFactor"])
   expect(params.config).toEqual({dampingFactor: null})
 });
 
 test('iterations must be > 0', () => {
-  const params = centralityParams(null, null, null, null, null, null, null, null, -1, null, null, null, null, ["iterations"])
+  const params = centralityParams(null, null, null, null, null, null, null, null, -1, null, null, null, null, null,["iterations"])
   expect(params.config).toEqual({iterations: null})
 });
 
 test('empty writeProperty defaults to null', () => {
-  const params = centralityParams(null, null, null, " ", null, null, null, null, -1, null, null, null, null, ["writeProperty"])
+  const params = centralityParams(null, null, null, " ", null, null, null, null, -1, null, null, null, null, null,["writeProperty"])
   expect(params.config).toEqual({writeProperty: null})
 });
 
 test('empty weightProperty defaults to null', () => {
-  const params = centralityParams(null, null, null, null, " ", null, null, null, -1, null, null, null, null, ["weightProperty"])
+  const params = centralityParams(null, null, null, null, " ", null, null, null, -1, null, null, null, null, null,["weightProperty"])
   expect(params.config).toEqual({weightProperty: null})
 });

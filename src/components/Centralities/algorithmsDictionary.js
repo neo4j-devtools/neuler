@@ -50,7 +50,8 @@ export default {
         persist: true,
         writeProperty: "eigenvector",
         iterations: 20,
-        defaultValue: 0.99
+        defaultValue: 0.99,
+        normalization: "none"
       },
       streamQuery: streamQueryOutline(`CALL algo.eigenvector.stream($label, $relationshipType, $config) YIELD nodeId, score`),
       storeQuery: `CALL algo.eigenvector($label, $relationshipType, $config)`,
