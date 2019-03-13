@@ -19,21 +19,13 @@ export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipT
 
 export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-
   return runAlgorithm(lpaStreamCypher, lpaStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
 }
 
-export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    writeProperty: writeProperty || "connectedComponents"
-  }
+export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
+  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
 
-  return runAlgorithm(connectedComponentsStreamCypher, connectedComponentsStoreCypher, getFetchCypher(baseParameters.label),
-                      {...baseParams, ...extraParams}, persist)
+  return runAlgorithm(connectedComponentsStreamCypher, connectedComponentsStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
 }
 
 export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit }) => {
@@ -223,22 +215,15 @@ const lpaStoreCypher = `
   CALL algo.labelPropagation($label, $relationshipType, $config)`
 
 const connectedComponentsStreamCypher = `
-  CALL algo.unionFind.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, setId
-
-  WITH algo.getNodeById(nodeId) AS node, setId AS community
-  RETURN node, community
-  ORDER BY community
-  LIMIT $limit`
+CALL algo.unionFind.stream($label, $relationshipType, $config)
+YIELD nodeId, setId
+WITH algo.getNodeById(nodeId) AS node, setId AS community
+RETURN node, community
+ORDER BY community
+LIMIT $limit`
 
 const connectedComponentsStoreCypher = `
-  CALL algo.unionFind($label, $relationshipType,  {
-     direction: $direction,
-     write: true,
-     partitionProperty: $writeProperty
-    })`
+CALL algo.unionFind($label, $relationshipType, $config)`
 
 const stronglyConnectedComponentsStreamCypher = `
   CALL algo.scc.stream($label, $relationshipType, {
