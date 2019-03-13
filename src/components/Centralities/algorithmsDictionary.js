@@ -1,11 +1,12 @@
 import PageRankForm from './PageRankForm'
-import { executeAlgorithm } from "../../services/centralities"
-import { streamQueryOutline } from '../../services/queries'
+import {executeAlgorithm} from "../../services/centralities"
+import {streamQueryOutline} from '../../services/queries'
+import EigenvectorForm from './EigenvectorForm'
 import ArticleRankForm from "./ArticleRankForm"
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
-import { Card } from "semantic-ui-react/dist/commonjs/views/Card"
+import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
@@ -15,6 +16,7 @@ import HarmonicCentralityForm from "./HarmonicCentralityForm"
 export default {
   algorithmList: [
     "Degree",
+    "Eigenvector",
     "Page Rank",
     "Article Rank",
     "Betweenness",
@@ -38,6 +40,21 @@ export default {
       streamQuery: streamQueryOutline(`CALL algo.degree.stream($label, $relationshipType, $config) YIELD nodeId, score`),
       storeQuery: `CALL algo.degree($label, $relationshipType, $config)`,
       description: `detects the number of direct connections a node has`
+    },
+    "Eigenvector": {
+      Form: EigenvectorForm,
+      service: executeAlgorithm,
+      ResultView: CentralityResult,
+      parameters: {
+        direction: 'Outgoing',
+        persist: true,
+        writeProperty: "eigenvector",
+        iterations: 20,
+        defaultValue: 0.99
+      },
+      streamQuery: streamQueryOutline(`CALL algo.eigenvector.stream($label, $relationshipType, $config) YIELD nodeId, score`),
+      storeQuery: `CALL algo.eigenvector($label, $relationshipType, $config)`,
+      description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
     "Page Rank": {
       Form: PageRankForm,

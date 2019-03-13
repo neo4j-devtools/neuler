@@ -1,7 +1,6 @@
-import { runCypher } from "./stores/neoStore"
-import { v1 } from 'neo4j-driver'
-import { parseProperties } from "./resultMapper"
-import { getFetchCypher, centralityParams } from './queries'
+import {runCypher} from "./stores/neoStore"
+import {parseProperties} from "./resultMapper"
+import {centralityParams, getFetchCypher} from './queries'
 
 export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties }) => {
   const params = centralityParams(label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, requiredProperties)
