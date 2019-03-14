@@ -110,7 +110,9 @@ class Algorithms extends Component {
     const containerStyle = {
       display: 'flex',
       width: '96%',
-      overflow: 'hidden'
+      overflow: 'hidden',
+      height: '100%',
+      alignItems: 'flex-start'
     }
 
     let toggleIcon = 'angle double up'

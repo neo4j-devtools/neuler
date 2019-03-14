@@ -6,7 +6,7 @@ import AlgoResults from './AlgoResults'
 class MainContent extends Component {
   render() {
     const {limit} = this.props
-    return   (<Grid columns={2}>
+    return   (<Grid columns={2} style={{height: '90%'}}>
         <Grid.Row style={{margin: '0', padding: '0'}}>
           <Grid.Column width={4} style={{minWidth: '25em'}}>
             <AlgorithmForm limit={limit} />
