@@ -1,5 +1,11 @@
 # Neuler Release Notes
 
+## 0.1.8
+
+- Eigenvector Centrality Algorithm
+- Make visualisation node size and color configurable
+- Initial unit and component testing
+
 ## 0.1.7
 
 - Degree Centrality Algorithm
