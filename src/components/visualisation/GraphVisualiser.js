@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
 import { Grid, Form, Button, Icon, Select, Loader, Input } from "semantic-ui-react"
-import NeoVis from "./visualisation/neovis"
-import { getDriver } from "../services/stores/neoStore"
+import NeoVis from "./neovis"
+import { getDriver } from "../../services/stores/neoStore"
+import VisConfigurationBar from './VisConfigurationBar'
 
 const captionCandidates = ['name', 'title']
 
@@ -45,7 +46,7 @@ export default class extends Component {
     return this.networks[this.props.taskId]
   }
 
-  onConfigChange(props) {
+  onUpdateConfig(props) {
     const { captions, cypher, nodeSize, nodeColor } = this.state
     const { taskId, relationshipType } = props
 
@@ -188,7 +189,7 @@ return path`
 
   componentDidUpdate(prevProps) {
     if (this.props.active && (prevProps.taskId !== this.props.taskId || prevProps.results !== this.props.results)) {
-      this.onConfigChange(this.props)
+      this.onUpdateConfig(this.props)
     }
 
     if (this.props.active !== prevProps.active) {
@@ -201,55 +202,22 @@ return path`
             this.getVis().setSize(this.width, this.height)
           }
         } else {
-          this.onConfigChange(this.props)
+          this.onUpdateConfig(this.props)
         }
       }
     }
   }
 
   render() {
-    const { labels,rendering, nodeSize, nodeColor } = this.state
+    const { labels, rendering, nodeSize, nodeColor, captions } = this.state
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{ marginLeft: '1em' }}>
-        <Form>
-          <Form.Group inline>
-            {Object.keys(labels).map(label =>
-              <Form.Field inline key={label}>
-                <label>Caption for {label}</label>
-                <Select placeholder='Select caption'
-                        value={this.state.captions[label]}
-                        options={Array.from(labels[label]).map(prop => ({ key: prop, value: prop, text: prop }))}
-                        onChange={(evt, data) => this.updateCaption(label, data)}
-                />
-              </Form.Field>
-            )}
-
-            <Form.Field inline key='nodeSize'>
-              <label>Node Size</label>
-              <Input placeholder='Node Size'
-                      value={nodeSize}
-                      onChange={(evt) => this.updateNodeSize(evt.target.value)}
-              />
-            </Form.Field>
-
-            <Form.Field inline key='nodeColor'>
-              <label>Node Color</label>
-              <Input placeholder='Node Color'
-                     value={nodeColor}
-                     onChange={(evt) => this.updateNodeColor(evt.target.value)}
-              />
-            </Form.Field>
-
-
-            <Form.Field inline>
-              <Button basic icon labelPosition='right' onClick={this.onConfigChange.bind(this, this.props)}>
-                Refresh
-                <Icon name='refresh'/>
-              </Button>
-            </Form.Field>
-          </Form.Group>
-        </Form>
+        <VisConfigurationBar labels={labels} captions={captions} nodeSize={nodeSize} nodeColor={nodeColor}
+                             updateCaption={this.updateCaption.bind(this)}
+                             updateNodeSize={this.updateNodeSize.bind(this)}
+                             updateNodeColor={this.updateNodeColor.bind(this)}
+                             onUpdateConfig={this.onUpdateConfig.bind(this, this.props)}/>
       </Grid.Row>
       <Grid.Row>
          <LoaderExampleInlineCentered active={rendering}/>

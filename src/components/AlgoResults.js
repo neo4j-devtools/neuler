@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { Button, Tab, Header, Icon, Segment, Menu, Loader } from 'semantic-ui-react'
 import { connect } from "react-redux"
-import GraphVisualiser from './GraphVisualiser'
+import GraphVisualiser from './visualisation/GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 
