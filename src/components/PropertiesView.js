@@ -8,15 +8,16 @@ const cellStyle = {
   overflow: 'hidden'
 }
 
-const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
-  const hiddenProps = Object.keys(hiddenPropertiesMap).reduce((hiddenProperties, label) => {
+export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
+  const keys = Object.keys(hiddenPropertiesMap);
+  const hiddenProps = keys.reduce((hiddenProperties, label) => {
     if (labels.includes(label)) {
       hiddenPropertiesMap[label].forEach(propertyKey => hiddenProperties.add(propertyKey))
     }
     return hiddenProperties
-  }, new Set())
+  }, new Set());
 
-  hiddenPropertiesMap['_ALL_NEULER_'].forEach(prop => hiddenProps.add(prop))
+  (hiddenPropertiesMap['_ALL_NEULER_'] || []).forEach(prop => hiddenProps.add(prop))
 
   return Array.from(hiddenProps)
 }
