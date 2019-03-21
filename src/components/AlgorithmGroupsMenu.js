@@ -14,6 +14,11 @@ const menuStyle = {
 }
 
 const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) => <Menu vertical={true} inverted style={menuStyle}>
+  <Menu.Item active={activeGroup === 'Dashboard'} as='a' onClick={() => selectGroup('Dashboard')}
+             style={menuItemStyle}>
+    <Icon name='sun'/>
+    Home
+  </Menu.Item>
   <Menu.Item active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
              style={menuItemStyle}>
     <Icon name='sun'/>
