@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from "react-redux"
 import { Card, Segment, Grid, Button, Image, Dropdown } from 'semantic-ui-react'
+import { v4 as generateTaskId } from 'uuid'
 
 import DashboardItem from './Dashboard/DashboardItem'
 import { addItem, completeItem } from "../ducks/dashboard"
@@ -50,7 +51,7 @@ const Dashboard = ({ items, onSuperNodes }) => <Grid style={{ margin: '1em' }}>
     </Grid.Column>
   </Grid>
   {
-    items.map(item => <DashboardItem key={item.name} {...item}/>)
+    items.map(item => <DashboardItem key={item.id} {...item}/>)
   }
 </Grid>
 
@@ -60,9 +61,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
   onSuperNodes: (name, mode) => {
-    dispatch(addItem(name, mode, null))
+    const id = generateTaskId()
+    dispatch(addItem(id, name, mode, null))
     getSuperNodes().then(result => {
-      dispatch(completeItem(name, result))
+      dispatch(completeItem(id, result))
     })
   }
 })
