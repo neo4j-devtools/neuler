@@ -15,7 +15,7 @@ export const selectAlgorithm = algorithm => ({
 })
 
 const initialState = {
-  group: 'Centralities',
+  group: 'Dashboard',
   algorithm: 'Degree'
 }
 
@@ -23,7 +23,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SELECT_GROUP:
       return {
-        algorithm: getAlgorithms(action.group)[0],
+        algorithm: action.group === 'Dashboard' ? '' : getAlgorithms(action.group)[0],
         group: action.group
       }
     case SELECT_ALGORITHM:
