@@ -1,4 +1,4 @@
-import { Button, Form, Icon, Input, Select } from "semantic-ui-react"
+import { Button, Form, Icon, Select } from "semantic-ui-react"
 import React from "react"
 
 export default ({ labels, captions, nodeSize, nodeColor, updateCaption, updateNodeSize, updateNodeColor, onUpdateConfig }) => {
@@ -21,6 +21,7 @@ export default ({ labels, captions, nodeSize, nodeColor, updateCaption, updateNo
         <Form.Field inline key='nodeSize'>
           <label>Node Size</label>
           <Select placeholder='Select node size'
+                  test-id='nodeSizeComponent'
                   value={nodeSize}
                   options={allProps.map(prop => ({ key: prop, value: prop, text: prop }))}
                   onChange={(evt, data) => updateNodeSize(data.value)}

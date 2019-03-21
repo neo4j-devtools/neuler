@@ -1,15 +1,16 @@
 import React from 'react'
 import { ResponsiveBarCanvas } from '@nivo/bar'
 
-export default ({ data }) => {
+export default ({ data, style }) => {
+  console.log('rendering with data', data)
   data.reverse()
-  return <div style={{ height: '50em' }}>
+  return <div style={style || { height: '50em' }}>
     <ResponsiveBarCanvas
       data={data}
       keys={['score']}
       indexBy="name"
       margin={{
-        "top": 50,
+        "top": 10,
         "right": 60,
         "bottom": 50,
         "left": 60
@@ -20,8 +21,9 @@ export default ({ data }) => {
       labelTextColor="inherit:darker(1.6)"
       isInteractive={true}
       layout="horizontal"
-      colors="red_grey"
+      colors="accent"
       colorBy="score"
+      padding='0.3'
     />
   </div>
 }
