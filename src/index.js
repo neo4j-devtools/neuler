@@ -15,7 +15,7 @@ import rootReducer from './ducks'
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['settings']
+  whitelist: ['settings', 'dashboard']
 }
 
 const persistedReducer = persistReducer(persistConfig, rootReducer)

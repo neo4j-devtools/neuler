@@ -23,7 +23,7 @@ export default ({ data, style }) => {
       layout="horizontal"
       colors="accent"
       colorBy="score"
-      padding='0.3'
+      padding={0.3}
     />
   </div>
 }
