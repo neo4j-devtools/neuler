@@ -7,6 +7,15 @@ export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipT
   return runAlgorithm(streamQuery, storeQuery, getFetchCypher(params.label), params, persist)
 }
 
+export const getSuperNodes = () => {
+  const query = `call algo.degree.stream() yield nodeId, score
+with nodeId, score order by score desc limit 10
+MATCH (n) where ID(n) = nodeId
+return n as node, score`
+
+  return runAlgorithm(query, false, false, {}, false)
+}
+
 const handleException = error => {
   console.error(error)
   throw new Error(error)
