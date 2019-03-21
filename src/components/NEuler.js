@@ -7,6 +7,7 @@ import MainContent from './MainContent'
 import { connect } from "react-redux"
 import { Form, Input, Dropdown } from "semantic-ui-react"
 import { limit } from "../ducks/settings"
+import Dashboard from './Dashboard'
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -24,6 +25,8 @@ class NEuler extends Component {
 
   render() {
     const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
+
+    const mainContent = activeGroup === 'Dashboard' ? <Dashboard/> : <MainContent limit={limit} />
 
     return (
       <Container fluid style={{ display: 'flex' }}>
@@ -48,7 +51,7 @@ class NEuler extends Component {
           <Segment basic inverted vertical={false}
                    style={{ height: '5em', display: 'flex', justifyContent: 'space-between' }}>
             <Menu inverted>
-              {getAlgorithms(activeGroup).map(algorithm =>
+              {activeGroup === 'Dashboard' ? null : getAlgorithms(activeGroup).map(algorithm =>
                 <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm} onClick={() => selectAlgorithm(algorithm)}>
                   {algorithm}
                 </Menu.Item>)}
@@ -58,7 +61,7 @@ class NEuler extends Component {
             </Header>
           </Segment>
 
-          <MainContent limit={limit} />
+         {mainContent}
         </div>
       </Container>
     )
