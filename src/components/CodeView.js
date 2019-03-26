@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { Button, Segment } from "semantic-ui-react"
 import { RenderParams } from "./renderParams"
 import { v4 as generateId } from 'uuid'
@@ -31,7 +31,7 @@ const constructPayload = (parameters, query, guid) => ({
 })
 
 const stringfyParam = value => {
-  if(!value) {
+  if (!value) {
     return 'null'
   }
 
@@ -42,43 +42,32 @@ const stringfyParam = value => {
   }
 }
 
-export default class extends Component {
-  componentWillReceiveProps(nextProps, nextContext) {
-    console.log("CODE VIEW", this.props.task.query, nextProps.task.query)
-  }
-
-  onOpenBrowser() {
-    const { parameters, query } = this.props.task
-    generateGuide(parameters, query)
-      .then(guideId => {
-        window.open(`neo4j://graphapps/neo4j-browser?cmd=play&arg=neuler/${guideId}.html`, '_self')
-      })
-  }
-
-  render() {
-    const { task } = this.props
-    return (
-      <div style={{
-        height: '85vh',
-        overflowY: 'auto',
-        overflowX: 'hidden'
-      }}>
-        {
-          task.parameters
-            ? <Segment>
-              <RenderParams parameters={task.parameters}/>
-            </Segment>
-            : null
-        }
-
-
-        <Segment>
-          <pre>{task.query && task.query.replace('\n  ', '\n')}</pre>
-        </Segment>
-        <Segment>
-          <Button basic color='green' icon='play' content='Send to Neo4j Browser' onClick={this.onOpenBrowser.bind(this)}/>
-        </Segment>
-      </div>
-    )
-  }
+const openBrowser = ({ parameters, query }) => {
+  generateGuide(parameters, query)
+    .then(guideId => {
+      window.open(`neo4j://graphapps/neo4j-browser?cmd=play&arg=neuler/${guideId}.html`, '_self')
+    })
 }
+
+export default ({ task }) => (
+  <div style={{
+    height: '85vh',
+    overflowY: 'auto',
+    overflowX: 'hidden'
+  }}>
+    {
+      task.parameters
+        ? <Segment>
+          <RenderParams parameters={task.parameters}/>
+        </Segment>
+        : null
+    }
+
+    <Segment>
+      <pre>{task.query && task.query.replace('\n  ', '\n')}</pre>
+    </Segment>
+    <Segment>
+      <Button basic color='green' icon='play' content='Send to Neo4j Browser' onClick={() => openBrowser(task)}/>
+    </Segment>
+  </div>
+)
