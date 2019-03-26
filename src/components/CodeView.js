@@ -9,15 +9,10 @@ const generateGuide = (parameters, query) => {
 
   return fetch('https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide', {
     method: "POST",
-    mode: "no-cors", // no-cors, cors, *same-origin
-    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-    // credentials: "same-origin", // include, *same-origin, omit
+    mode: "no-cors",
     headers: {
       "Content-Type": "application/json",
-      // "Content-Type": "application/x-www-form-urlencoded",
     },
-    redirect: "follow", // manual, *follow, error
-    referrer: "no-referrer", // no-referrer, *client
     body: JSON.stringify(payload)
   })
     .then(response => {
@@ -46,12 +41,6 @@ const stringfyParam = value => {
     return JSON.stringify(value)
   }
 }
-
-/*
-{ "uuid": "1234999",
-  "params": ":param label => \"Character\";\n:param relationshipType => \"INTERACTS_SEASON2\";\n:param limit => 20;\n:param config => {concurrency: 8,direction: \"Both\",weightProperty: null,defaultValue: 0.99, writeProperty: \"degree\"};",
-  "query": "CALL algo.degree($label, $relationshipType, $config)"
-}*/
 
 export default class extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
