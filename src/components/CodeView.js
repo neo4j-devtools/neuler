@@ -3,11 +3,13 @@ import { Button, Segment } from "semantic-ui-react"
 import { RenderParams } from "./renderParams"
 import { v4 as generateId } from 'uuid'
 
+const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
+
 const generateGuide = (parameters, query) => {
   const guid = generateId()
   const payload = constructPayload(parameters, query, guid)
 
-  return fetch('https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide', {
+  return fetch(generateGuidesUrl, {
     method: "POST",
     mode: "no-cors",
     headers: {
