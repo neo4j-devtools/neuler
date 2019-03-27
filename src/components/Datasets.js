@@ -38,6 +38,13 @@ class Datasets extends Component {
                     runCypher(constraintsQuery).then(() => runCypher(charactersQuery).then(() => runCypher(interactionsQuery))).catch(handleException)
                 }
             },
+            {
+                name: "Football Network",
+                description: "Totally cool football stuff",
+                loadData: () => {
+                    console.log("do football things")
+                }
+            },
         ]
 
         return (<div style={containerStyle}><CardGroup>
