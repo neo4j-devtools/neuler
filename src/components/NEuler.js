@@ -4,8 +4,9 @@ import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-re
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
 import { getAlgorithms } from "./algorithmsLibrary"
 import MainContent from './MainContent'
+import Datasets from './Datasets'
 import { connect } from "react-redux"
-import { Form, Input, Dropdown } from "semantic-ui-react"
+import { Form, Input, Dropdown, Button } from "semantic-ui-react"
 import { limit } from "../ducks/settings"
 
 class NEuler extends Component {
@@ -24,6 +25,7 @@ class NEuler extends Component {
 
   render() {
     const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
+    console.log(activeGroup)
 
     return (
       <Container fluid style={{ display: 'flex' }}>
@@ -58,7 +60,10 @@ class NEuler extends Component {
             </Header>
           </Segment>
 
-          <MainContent limit={limit} />
+          {activeGroup !== "Load datasets" ? <MainContent limit={limit} /> : <Datasets />}
+
+
+
         </div>
       </Container>
     )
