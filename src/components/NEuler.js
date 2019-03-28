@@ -60,7 +60,7 @@ class NEuler extends Component {
             </Header>
           </Segment>
 
-          {activeGroup !== "Load datasets" ? <MainContent limit={limit} /> : <Datasets />}
+          {activeGroup !== "Sample Graphs" ? <MainContent limit={limit} /> : <Datasets />}
 
 
 

@@ -24,10 +24,10 @@ const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) => <Menu ve
     <Icon name='group'/>
     Community Detection
   </Menu.Item>
-  <Menu.Item active={activeGroup === 'Load datasets'} as='a' onClick={() => selectGroup('Load datasets')}
+  <Menu.Item active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
              style={menuItemStyle}>
-    <Icon name='group'/>
-    Load datasets
+    <Icon name='database'/>
+    Sample Graphs
   </Menu.Item>
   <Menu.Item>
   {children}
