@@ -8,6 +8,8 @@ import Datasets from './Datasets'
 import { connect } from "react-redux"
 import { Form, Input, Dropdown, Button } from "semantic-ui-react"
 import { limit } from "../ducks/settings"
+import { loadMetadata } from "../services/metadata"
+import { setLabels, setRelationshipTypes } from "../ducks/metadata"
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -21,6 +23,13 @@ class NEuler extends Component {
 
   handleMenuClick (content) {
     this.setState({content})
+  }
+
+  onComplete() {
+    loadMetadata().then(metadata => {
+      this.props.setLabels(metadata.labels)
+      this.props.setRelationshipTypes(metadata.relationships)
+    })
   }
 
   render() {
@@ -59,11 +68,7 @@ class NEuler extends Component {
               NEuler
             </Header>
           </Segment>
-
-          {activeGroup !== "Sample Graphs" ? <MainContent limit={limit} /> : <Datasets />}
-
-
-
+          {activeGroup !== "Sample Graphs" ? <MainContent limit={limit} /> : <Datasets onComplete={this.onComplete.bind(this)} />}
         </div>
       </Container>
     )
@@ -75,7 +80,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateLimit: value => dispatch(limit(value))
+  updateLimit: value => dispatch(limit(value)),
+  setLabels: labels => dispatch(setLabels(labels)),
+  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NEuler)

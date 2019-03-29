@@ -1,50 +1,56 @@
-import {Button, Card, CardGroup, Icon, Container, Header, Modal, Image, Segment} from "semantic-ui-react"
+import {
+    Button,
+    Card,
+    CardGroup,
+    Icon,
+    Container,
+    Header,
+    Modal,
+    Loader,
+    Segment,
+    Dimmer,
+    Message
+} from "semantic-ui-react"
 import React, {Component} from 'react'
 import {runCypher} from "../services/stores/neoStore"
 
 
 class Datasets extends Component {
-    state = {open: false, selectedDataset: "Game of Thrones"}
+    state = {
+        open: false,
+        selectedDataset: "Game of Thrones",
+        currentQueryIndex: -1,
+        completedQueryIndexes: {},
+        completed: false
+    }
 
     show = (dimmer, datasetName) => () => this.setState({dimmer, open: true, selectedDataset: datasetName})
     close = () => this.setState({open: false})
 
     loadDataset() {
-        const {selectedDataset} = this.state
-        const queries = this.getSampleGraphs()[selectedDataset].queries;
-        queries.reduce((promiseChain, query) => {
-            return promiseChain.then(chainResults =>
-                runCypher(query).then(currentResult =>
-                    [ ...chainResults, currentResult ]
-                )
+        const { selectedDataset } = this.state
+        const queries = sampleGraphs[selectedDataset].queries;
+        queries.reduce((promiseChain, query, qIndex) => {
+            return promiseChain.then(chainResults => {
+                  this.setState({ currentQueryIndex: qIndex })
+                  return runCypher(query).then(currentResult => {
+                      this.setState({
+                          completedQueryIndexes: { ...this.state.completedQueryIndexes, [qIndex]: true }
+                      })
+                      return [...chainResults, currentResult]
+                  })
+              }
             );
-        }, Promise.resolve([])).then(results => {
-            console.log(results)
-            this.close()
-        });
+        }, Promise.resolve([]))
+          .then(results => {
+              this.setState({
+                  currentQueryIndex: -1,
+                  completed: true
+              })
 
-    }
-
-    getSampleGraphs() {
-        return {
-            "Game of Thrones": {
-                name: "Game of Thrones",
-                description: "GoT dataset",
-                queries: [
-                    `CREATE CONSTRAINT ON (c:Character) ASSERT c.id IS UNIQUE`,
-                    `UNWIND range(1,7) AS season
-                     LOAD CSV WITH HEADERS FROM "https://github.com/mneedham/gameofthrones/raw/master/data/got-s" + season + "-nodes.csv" AS row
-                     MERGE (c:Character {id: row.Id})
-                     ON CREATE SET c.name = row.Label`,
-                    `UNWIND range(1,7) AS season
-                     LOAD CSV WITH HEADERS FROM "https://github.com/mneedham/gameofthrones/raw/master/data/got-s" + season + "-edges.csv" AS row
-                     MATCH (source:Character {id: row.Source})
-                     MATCH (target:Character {id: row.Target})
-                     CALL apoc.merge.relationship(source, "INTERACTS_SEASON" + season, {}, {}, target) YIELD rel
-                     SET rel.weight = toInteger(row.Weight)`
-                ]
-            }
-        }
+              console.log(results)
+              this.props.onComplete()
+          })
     }
 
     render() {
@@ -52,8 +58,7 @@ class Datasets extends Component {
             "marginLeft": "10px"
         }
 
-        const {open, dimmer, selectedDataset} = this.state
-        const sampleGraphs = this.getSampleGraphs()
+        const { open, dimmer, selectedDataset, currentQueryIndex, completedQueryIndexes, completed } = this.state
 
         return (<div style={containerStyle}>
                 <Container fluid>
@@ -94,32 +99,45 @@ class Datasets extends Component {
                         <Modal.Content >
                             <Modal.Description>
                                 <Header>{sampleGraphs[selectedDataset].name}</Header>
-                                <p>
-                                    Pressing the 'Yes, load it!' button below will run the following Cypher statements:
-                                </p>
-                                <p>
+                                <Message warning>
+                                    <Message.Header>ACHTUNG!</Message.Header>
+                                    <p>Pressing the 'Yes, load it!' button below will run the following Cypher
+                                        statements:</p>
+                                </Message>
+                                <div>
 
-                                    {sampleGraphs[selectedDataset].queries.map(query => (
-                                        <Segment><pre>{query}</pre></Segment>
+                                    {sampleGraphs[selectedDataset].queries.map((query, queryIndex) => (
+                                      <Segment>
+                                          {completedQueryIndexes[queryIndex] ? <Icon color='green' name='check'/> : null}
+                                          <pre style={{ whiteSpace: 'pre-wrap' }}>{query}</pre>
+                                          <Dimmer active={queryIndex === currentQueryIndex}>
+                                              <Loader>Running</Loader>
+                                          </Dimmer>
+                                      </Segment>
                                     ))}
 
-                                </p>
+                                </div>
 
                             </Modal.Description>
                         </Modal.Content>
                         <Modal.Actions>
-                            <Button
-                                positive
-                                color='green'
-                                content="Yes, load it!"
-                                onClick={this.loadDataset.bind(this)}
-                            />
-                            <Button color='black' onClick={this.close}>
-                                No, get me outta here!
-                            </Button>
-
-
-
+                            {completed
+                              ? <Button positive
+                                        content="Done"
+                                        onClick={this.close}/>
+                              : <div>
+                                  <Button
+                                    disabled={currentQueryIndex >= 0}
+                                    positive
+                                    color='green'
+                                    content="Yes, load it!"
+                                    onClick={this.loadDataset.bind(this)}
+                                  />
+                                  <Button disabled={currentQueryIndex >= 0} color='black' onClick={this.close}>
+                                      No, get me outta here!
+                                  </Button>
+                              </div>
+                            }
                         </Modal.Actions>
                     </Modal>
 
@@ -127,6 +145,26 @@ class Datasets extends Component {
             </div>
         )
 
+    }
+}
+
+const sampleGraphs = {
+    "Game of Thrones": {
+        name: "Game of Thrones",
+        description: "GoT dataset",
+        queries: [
+            `CREATE CONSTRAINT ON (c:Character) ASSERT c.id IS UNIQUE`,
+            `UNWIND range(1,7) AS season
+LOAD CSV WITH HEADERS FROM "https://github.com/mneedham/gameofthrones/raw/master/data/got-s" + season + "-nodes.csv" AS row
+MERGE (c:Character {id: row.Id})
+ON CREATE SET c.name = row.Label`,
+            `UNWIND range(1,7) AS season
+LOAD CSV WITH HEADERS FROM "https://github.com/mneedham/gameofthrones/raw/master/data/got-s" + season + "-edges.csv" AS row
+MATCH (source:Character {id: row.Source})
+MATCH (target:Character {id: row.Target})
+CALL apoc.merge.relationship(source, "INTERACTS_SEASON" + season, {}, {}, target) YIELD rel
+SET rel.weight = toInteger(row.Weight)`
+        ]
     }
 }
 
