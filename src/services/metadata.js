@@ -1,19 +1,23 @@
 import { runCypher } from "./stores/neoStore"
-import { v1 } from 'neo4j-driver'
 
 export const loadLabels = () => {
-
   return runCypher("CALL db.labels()", {})
     .then(parseLabelsResultStream)
     .catch(handleException)
 }
 
 export const loadRelationshipTypes = () => {
-
   return runCypher("CALL db.relationshipTypes()", {})
     .then(parseRelTypesResultStream)
     .catch(handleException)
 }
+
+export const loadMetadata = () => loadLabels().then(labels => {
+  return loadRelationshipTypes().then(relationships => ({
+    labels,
+    relationships
+  }))
+})
 
 const parseLabelsResultStream = result => {
   if (result.records) {

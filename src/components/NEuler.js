@@ -4,9 +4,12 @@ import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-re
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
 import { getAlgorithms } from "./algorithmsLibrary"
 import MainContent from './MainContent'
+import Datasets from './Datasets'
 import { connect } from "react-redux"
-import { Form, Input, Dropdown } from "semantic-ui-react"
+import { Form, Input, Dropdown, Button } from "semantic-ui-react"
 import { limit } from "../ducks/settings"
+import { loadMetadata } from "../services/metadata"
+import { setLabels, setRelationshipTypes } from "../ducks/metadata"
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -22,8 +25,16 @@ class NEuler extends Component {
     this.setState({content})
   }
 
+  onComplete() {
+    loadMetadata().then(metadata => {
+      this.props.setLabels(metadata.labels)
+      this.props.setRelationshipTypes(metadata.relationships)
+    })
+  }
+
   render() {
     const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
+    console.log(activeGroup)
 
     return (
       <Container fluid style={{ display: 'flex' }}>
@@ -57,8 +68,7 @@ class NEuler extends Component {
               NEuler
             </Header>
           </Segment>
-
-          <MainContent limit={limit} />
+          {activeGroup !== "Sample Graphs" ? <MainContent limit={limit} /> : <Datasets onComplete={this.onComplete.bind(this)} />}
         </div>
       </Container>
     )
@@ -70,7 +80,9 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  updateLimit: value => dispatch(limit(value))
+  updateLimit: value => dispatch(limit(value)),
+  setLabels: labels => dispatch(setLabels(labels)),
+  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NEuler)

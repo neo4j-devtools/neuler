@@ -6,6 +6,6 @@ const algorithmGroups = {
   "Community Detection": communitiesDictionary
 }
 
-export const getAlgorithms = group => algorithmGroups[group].algorithmList
+export const getAlgorithms = group => (algorithmGroups[group]  || {algorithmList: []}).algorithmList
 
 export const getAlgorithmDefinitions = (group, algorithm) => algorithmGroups[group].algorithmDefinitions[algorithm]

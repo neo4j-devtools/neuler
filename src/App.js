@@ -14,7 +14,7 @@ import MainContent from './components/MainContent'
 import { ConnectModal } from './components/ConnectModal';
 
 import { setDriver } from "./services/stores/neoStore"
-import { loadLabels, loadRelationshipTypes } from "./services/metadata"
+import { loadLabels, loadMetadata, loadRelationshipTypes } from "./services/metadata"
 import { setLabels, setRelationshipTypes } from "./ducks/metadata"
 import { setConnected, setDisconnected, CONNECTED, CONNECTING, DISCONNECTED, INITIAL } from "./ducks/connection"
 import { initializeConnection, tryConnect } from "./services/connections"
@@ -41,8 +41,10 @@ class App extends Component {
   }
 
   onConnected() {
-    loadLabels().then(this.props.setLabels)
-    loadRelationshipTypes().then(this.props.setRelationshipTypes)
+    loadMetadata().then(metadata => {
+      this.props.setLabels(metadata.labels)
+      this.props.setRelationshipTypes(metadata.relationships)
+    })
   }
 
   render() {
