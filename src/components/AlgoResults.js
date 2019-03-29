@@ -4,6 +4,7 @@ import { connect } from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
+import CodeView from './CodeView'
 
 import {RenderParams} from './renderParams'
 
@@ -19,23 +20,6 @@ const TableView = ({ task }) => {
     <ResultView task={task}/>
   </div>
 }
-
-const CodeView = ({ task }) => (
-  <div style={tabContentStyle}>
-    {
-      task.parameters
-        ? <Segment>
-          <RenderParams parameters={task.parameters} />
-        </Segment>
-        : null
-    }
-
-
-    <Segment>
-      <pre>{task.query && task.query.replace('\n  ', '\n')}</pre>
-    </Segment>
-  </div>
-)
 
 const VisView = ({ task, active }) => (
   <div style={tabContentStyle}>
