@@ -8,7 +8,6 @@ import {
     stronglyConnectedComponents,
     triangleCount,
     triangles,
-    executeAlgorithm,
     runAlgorithm
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
@@ -115,13 +114,21 @@ LIMIT $limit`,
         },
         "Triangles": {
             Form: TrianglesForm,
+            parametersBuilder: communityParams,
             service: triangles,
             ResultView: TrianglesResult,
-            parameters: {persist: true, direction: 'Both'},
+            parameters: {persist: false, direction: 'Both'},
+            streamQuery: `CALL algo.triangle.stream($label, $relationshipType, $config)
+YIELD nodeA, nodeB, nodeC
+RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
+LIMIT $limit`,
+            storeQuery: ``,
+            getFetchQuery: (label) => ``,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
         },
         "Triangle Count": {
             Form: TriangleCountForm,
+            parametersBuilder: communityParams,
             service: triangleCount,
             ResultView: TriangleCountResult,
             parameters: {persist: true, writeProperty: "trianglesCount", concurrency: 8, direction: "Both"},

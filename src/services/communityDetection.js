@@ -29,30 +29,8 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
   }
 }
 
-export const executeAlgorithm = ({ streamQuery, storeQuery, label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties }) => {
-  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties)
-  return runAlgorithm(streamQuery, storeQuery, getFetchLouvainCypher(params.label), params, persist)
-}
-
-export const lpa = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties}) => {
-  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-  return runAlgorithm(lpaStreamCypher, lpaStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
-}
-
-export const connectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
-  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-  return runAlgorithm(connectedComponentsStreamCypher, connectedComponentsStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
-}
-
-export const stronglyConnectedComponents = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
-  const params = communityParams(label, relationshipType, direction, persist, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-  return runAlgorithm(stronglyConnectedComponentsStreamCypher, stronglyConnectedComponentsStoreCypher, getNewFetchCypher(baseParameters.label), params, persist)
-}
-
-export const triangles = ({ label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
-  const params = communityParams(label, relationshipType, direction, false, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-
-  return runStreamingAlgorithm(trianglesStreamCypher, params, result => {
+export const triangles = ({streamCypher, parameters}) => {
+  return runStreamingAlgorithm(streamCypher, parameters, result => {
     if (result.records) {
       return result.records.map(record => {
         const nodeA = record.get('nodeA')
