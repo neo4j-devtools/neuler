@@ -34,6 +34,30 @@ RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCo
 ORDER BY triangles DESC
 LIMIT $limit`
 
+export const pathFindingParams = ({startNodeId, endNodeId, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+  params.startNodeId = parseInt(startNodeId)
+  params.endNodeId = parseInt(endNodeId)
+
+  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
+  const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
+
+  const config = {
+    nodeQuery: label || null,
+    relationshipQuery: relationshipType || null,
+    weightProperty: parsedWeightProperty || null,
+    defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    writeProperty: parsedWriteProperty || null,
+    propertyKeyLat: propertyKeyLat,
+    propertyKeyLon: propertyKeyLon
+
+  }
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
 export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 

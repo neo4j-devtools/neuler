@@ -1,6 +1,5 @@
-import { runCypher } from "./stores/neoStore"
-import { parseProperties } from "./resultMapper"
-import {communityParams, getFetchLouvainCypher} from './queries'
+import {runCypher} from "./stores/neoStore"
+import {parseProperties} from "./resultMapper"
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -157,3 +156,6 @@ const balancedTriadsStoreCypher = `
      balancedProperty: $balancedProperty,
      unbalancedProperty: $unbalancedProperty
     })`
+
+export class stronglyConnectedComponents {
+}
