@@ -23,7 +23,13 @@ import TrianglesResult from "./TrianglesResult"
 import LouvainResult from "./LouvainResult"
 import TriangleCountResult from "./TriangleCountResult"
 import BalancedTriadsResult from "./BalancedTriadsResult"
-import {communityParams, getFetchCypher, getFetchLouvainCypher} from "../../services/queries";
+import {
+    communityParams,
+    communityStreamQueryOutline,
+    getCommunityFetchCypher,
+    getFetchCypher,
+    getFetchLouvainCypher
+} from "../../services/queries";
 
 export default {
     algorithmList: [
@@ -38,6 +44,7 @@ export default {
     algorithmDefinitions: {
         "Louvain": {
             Form: LouvainForm,
+            parametersBuilder: communityParams,
             service: runAlgorithm,
             ResultView: LouvainResult,
             parameters: {
@@ -51,20 +58,20 @@ export default {
                 communityProperty: null,
                 concurrency: 8
             },
-            parametersBuilder: communityParams,
             streamQuery: `CALL algo.louvain.stream($label, $relationshipType, $config)
-                          YIELD nodeId, community, communities
-                          WITH algo.getNodeById(nodeId) AS node, community, communities
-                          RETURN node, community, communities
-                          ORDER BY community
-                          LIMIT $limit`,
+YIELD nodeId, community, communities
+WITH algo.getNodeById(nodeId) AS node, community, communities
+RETURN node, community, communities
+ORDER BY community
+LIMIT $limit`,
             storeQuery: `CALL algo.louvain($label, $relationshipType, $config)`,
             getFetchQuery: getFetchLouvainCypher,
             description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
         },
         "Label Propagation": {
             Form: LabelPropagationForm,
-            service: lpa,
+            parametersBuilder: communityParams,
+            service: runAlgorithm,
             ResultView: CommunityResult,
             parameters: {
                 direction: 'Both',
@@ -73,11 +80,15 @@ export default {
                 defaultValue: 0.99,
                 concurrency: 8
             },
+            streamQuery: communityStreamQueryOutline(`CALL algo.labelPropagation.stream($label, $relationshipType, $config) YIELD nodeId, label AS community`),
+            storeQuery: `CALL algo.labelPropagation($label, $relationshipType, $config)`,
+            getFetchQuery: getCommunityFetchCypher,
             description: "a fast algorithm for finding communities in a graph"
         },
         "Connected Components": {
             Form: ConnectedComponentsForm,
-            service: connectedComponents,
+            parametersBuilder: communityParams,
+            service: runAlgorithm,
             ResultView: CommunityResult,
             parameters: {
                 persist: true,
@@ -86,13 +97,20 @@ export default {
                 defaultValue: 0.99,
                 direction: 'Both',
             },
+            streamQuery: communityStreamQueryOutline(`CALL algo.unionFind.stream($label, $relationshipType, $config) YIELD nodeId, setId AS community`),
+            storeQuery: `CALL algo.unionFind($label, $relationshipType, $config)`,
+            getFetchQuery: getCommunityFetchCypher,
             description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
         },
         "Strongly Connected Components": {
             Form: StronglyConnectedComponentsForm,
-            service: stronglyConnectedComponents,
+            parametersBuilder: communityParams,
+            service: runAlgorithm,
             ResultView: CommunityResult,
             parameters: {persist: true, writeProperty: "scc", concurrency: 8, defaultValue: 0.99, direction: 'Both',},
+            streamQuery: communityStreamQueryOutline(`CALL algo.scc.stream($label, $relationshipType, $config) YIELD nodeId, partition AS community`),
+            storeQuery: `CALL algo.scc($label, $relationshipType, $config)`,
+            getFetchQuery: getCommunityFetchCypher,
             description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"
         },
         "Triangles": {

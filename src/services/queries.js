@@ -4,6 +4,14 @@ RETURN node, score
 ORDER BY score DESC
 LIMIT $limit
 `
+
+export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
+WITH algo.getNodeById(nodeId) AS node, community
+RETURN node, community
+ORDER BY community DESC
+LIMIT $limit
+`
+
 export const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
 RETURN node, node[$config.writeProperty] AS score
@@ -13,6 +21,11 @@ LIMIT $limit`
 export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
 RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
+LIMIT $limit`
+
+export const getCommunityFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS community
 LIMIT $limit`
 
 export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
