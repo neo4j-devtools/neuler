@@ -133,79 +133,11 @@ export const parseResultStream = (result) => {
   }
 }
 
-const getNewFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS community
-LIMIT $limit`
-
-const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$writeProperty] is null)
-RETURN node, node[$writeProperty] AS community
-LIMIT $limit`
-
-
-
-const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
-RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCoefficientProperty] AS coefficient
-ORDER BY triangles DESC
-LIMIT $limit`
-
 const getFetchBalancedTriadsCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$balancedProperty] is null) AND not(node[$unbalancedProperty] is null)
 RETURN node, node[$balancedProperty] AS balanced, node[$unbalancedProperty] AS unbalanced
 ORDER BY balanced DESC
 LIMIT $limit`
-
-const lpaStreamCypher = `
-CALL algo.labelPropagation.stream($label, $relationshipType, $config)
-YIELD nodeId, label
-WITH algo.getNodeById(nodeId) AS node, label AS community
-RETURN node, community
-ORDER BY community
-LIMIT $limit`
-
-const lpaStoreCypher = `
-CALL algo.labelPropagation($label, $relationshipType, $config)`
-
-const connectedComponentsStreamCypher = `
-CALL algo.unionFind.stream($label, $relationshipType, $config)
-YIELD nodeId, setId
-WITH algo.getNodeById(nodeId) AS node, setId AS community
-RETURN node, community
-ORDER BY community
-LIMIT $limit`
-
-const connectedComponentsStoreCypher = `
-CALL algo.unionFind($label, $relationshipType, $config)`
-
-const stronglyConnectedComponentsStreamCypher = `
-CALL algo.scc.stream($label, $relationshipType, $config)
-YIELD nodeId, partition
-WITH algo.getNodeById(nodeId) AS node, partition AS community
-RETURN node, community
-ORDER BY community
-LIMIT $limit`
-
-const stronglyConnectedComponentsStoreCypher = `
-CALL algo.scc($label, $relationshipType, $config)`
-
-const trianglesStreamCypher = `
-CALL algo.triangle.stream($label, $relationshipType, $config)
-YIELD nodeA, nodeB, nodeC
-RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
-LIMIT $limit`
-
-const triangleCountStreamCypher = `
-CALL algo.triangleCount.stream($label, $relationshipType, $config)
-YIELD nodeId, triangles, coefficient
-WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
-RETURN node, triangles, coefficient
-ORDER BY triangles DESC
-LIMIT $limit`
-
-const triangleCountStoreCypher = `
-CALL algo.triangleCount($label, $relationshipType, $config)`
 
 const balancedTriadsStreamCypher = `
   CALL algo.balancedTriads.stream($label, $relationshipType, {
