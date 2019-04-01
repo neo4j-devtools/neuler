@@ -34,6 +34,7 @@ RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCo
 ORDER BY triangles DESC
 LIMIT $limit`
 
+
 export const pathFindingParams = ({startNodeId, endNodeId, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
   params.startNodeId = parseInt(startNodeId)
