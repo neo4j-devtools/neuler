@@ -48,7 +48,6 @@ class Datasets extends Component {
                   completed: true
               })
 
-              console.log(results)
               this.props.onComplete()
           })
     }
