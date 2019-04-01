@@ -1,5 +1,6 @@
-import {runCypher} from "./stores/neoStore"
-import {parseProperties} from "./resultMapper"
+import { runCypher } from "./stores/neoStore"
+import { parseProperties } from "./resultMapper"
+import {communityParams, getFetchLouvainCypher} from './queries'
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -54,22 +55,22 @@ export const triangles = ({streamCypher, parameters}) => {
 
 export const triangleCount = ({streamCypher, storeCypher, fetchCypher, parameters, persisted }) => {
   return runAlgorithm({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
-    if (result.records) {
-      return result.records.map(record => {
-        const { properties, labels } = record.get('node')
+      if (result.records) {
+        return result.records.map(record => {
+          const { properties, labels } = record.get('node')
 
-        return {
-          properties: parseProperties(properties),
-          labels: labels,
-          triangles: record.get('triangles').toNumber(),
-          coefficient: record.get('coefficient'),
-        }
-      })
-    } else {
-      console.error(result.error)
-      throw new Error(result.error)
-    }
-  }})
+          return {
+            properties: parseProperties(properties),
+            labels: labels,
+            triangles: record.get('triangles').toNumber(),
+            coefficient: record.get('coefficient'),
+          }
+        })
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
+    }})
 }
 
 export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit }) => {
@@ -108,8 +109,8 @@ const handleException = error => {
 
 const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn=parseResultStream) => {
   return runCypher(streamCypher, parameters)
-    .then(result => parseResultStreamFn(result))
-    .catch(handleException)
+      .then(result => parseResultStreamFn(result))
+      .catch(handleException)
 }
 
 
@@ -156,6 +157,3 @@ const balancedTriadsStoreCypher = `
      balancedProperty: $balancedProperty,
      unbalancedProperty: $unbalancedProperty
     })`
-
-export class stronglyConnectedComponents {
-}
