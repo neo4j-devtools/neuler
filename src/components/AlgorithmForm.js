@@ -1,21 +1,14 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Button, Card, Icon, Header } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Button, Card, Icon} from 'semantic-ui-react'
 
-import PageRankForm from './Centralities/PageRankForm'
-import BetweennesForm from './Centralities/BetweennesForm'
-import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
-import ClosenessCentralityForm from './Centralities/ClosenessCentralityForm'
-import HarmonicCentralityForm from './Centralities/HarmonicCentralityForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../services/centralities"
-import { loadLabels, loadRelationshipTypes } from "../services/metadata"
-
-import { v4 as generateTaskId } from 'uuid'
-import { addTask, completeTask } from "../ducks/tasks"
-import { getAlgorithmDefinitions } from "./algorithmsLibrary"
-import { getCurrentAlgorithm } from "../ducks/algorithms"
+import {v4 as generateTaskId} from 'uuid'
+import {addTask, completeTask} from "../ducks/tasks"
+import {getAlgorithmDefinitions} from "./algorithmsLibrary"
+import {getCurrentAlgorithm} from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
+
 class Algorithms extends Component {
   constructor(props, context) {
     super(props, context);
@@ -34,16 +27,16 @@ class Algorithms extends Component {
 
   componentDidMount() {
     const { activeGroup, activeAlgorithm, metadata } = this.props
-    const { parameters, streamQuery, storeQuery } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
-    this.setState({ parameters, streamQuery, storeQuery })
+    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+    this.setState({ parameters })
     this.loadMetadata(metadata)
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     if(this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
       const { activeGroup, activeAlgorithm } = nextProps
-      const { parameters, streamQuery, storeQuery } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
-      this.setState({ parameters, streamQuery, storeQuery })
+      const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+      this.setState({ parameters })
     }
 
     if (this.props.metadata !== nextProps.metadata) {
@@ -80,23 +73,30 @@ class Algorithms extends Component {
   onRunAlgo() {
     const taskId = generateTaskId()
 
-    const { service } = this.props.currentAlgorithm
+    const { service, parametersBuilder, storeQuery, streamQuery, getFetchQuery } = this.props.currentAlgorithm
     const { activeGroup, activeAlgorithm, limit } = this.props
     this.state.parameters.limit = limit
 
     if (service) {
-      service({
-        taskId,
+      const parameters = parametersBuilder({
         ...this.state.parameters,
-        streamQuery: this.state.streamQuery,
-        storeQuery: this.state.storeQuery,
         requiredProperties: Object.keys(this.state.parameters)
+      })
+      const fetchCypher = getFetchQuery(parameters.label)
+      const persisted = this.state.parameters.persist
+      service({
+        streamCypher: streamQuery,
+        storeCypher: storeQuery,
+        fetchCypher,
+        parameters,
+        persisted
       }).then(result => {
         this.props.completeTask(taskId, result)
         this.setState({ collapsed: true })
       })
 
-      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...this.state.parameters })
+      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters },
+        persisted ? [storeQuery, fetchCypher] : [streamQuery])
     }
   }
 
@@ -168,12 +168,13 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addTask: (taskId, group, algorithm, parameters) => {
+  addTask: (taskId, group, algorithm, parameters, query) => {
     const task = {
       group,
       algorithm,
       taskId,
       parameters,
+      query,
       startTime: new Date()
     }
     dispatch(addTask({ ...task }))

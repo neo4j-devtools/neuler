@@ -4,13 +4,37 @@ RETURN node, score
 ORDER BY score DESC
 LIMIT $limit
 `
+
+export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
+WITH algo.getNodeById(nodeId) AS node, community
+RETURN node, community
+ORDER BY community DESC
+LIMIT $limit
+`
+
 export const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
 RETURN node, node[$config.writeProperty] AS score
 ORDER BY score DESC
 LIMIT $limit`
 
-export const communityParams = (label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties) => {
+export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
+LIMIT $limit`
+
+export const getCommunityFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS community
+LIMIT $limit`
+
+export const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
+RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCoefficientProperty] AS coefficient
+ORDER BY triangles DESC
+LIMIT $limit`
+
+export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
@@ -20,9 +44,10 @@ export const communityParams = (label, relationshipType, direction, persist, wri
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: writeProperty || "louvain",
+    writeProperty: writeProperty || null,
+    clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
-    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || "louvainIntermediate",
+    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
     communityProperty: communityProperty || ""
   }
 
@@ -30,7 +55,7 @@ export const communityParams = (label, relationshipType, direction, persist, wri
   return params
 }
 
-export const centralityParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties) => {
+export const centralityParams = ({label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
   const parsedProbability = parseFloat(probability)

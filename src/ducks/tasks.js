@@ -2,13 +2,14 @@ const NAME = 'TASKS'
 const ADD_TASK = `${NAME}/ADD_TASK`
 const COMPLETE_TASK = `${NAME}/COMPLETE_TASK`
 
-export const addTask = ({taskId, group, algorithm, startTime, parameters}) => ({
+export const addTask = ({taskId, group, algorithm, startTime, parameters, query}) => ({
   type: ADD_TASK,
   taskId,
   group,
   algorithm,
   startTime,
-  parameters
+  parameters,
+  query
 })
 
 export const completeTask = ({taskId, result}) => ({
@@ -28,6 +29,7 @@ export default (state = [], action) => {
         startTime: action.startTime,
         result: action.result,
         parameters: action.parameters,
+        query: action.query,
         completed: false
       })
       return newState
@@ -35,9 +37,7 @@ export default (state = [], action) => {
       const tasks = [...state]
       const task = tasks.find(task => task.taskId === action.taskId)
       if (task) {
-        task.result = action.result.rows
-        task.query = action.result.query
-        task.parameters = action.result.parameters
+        task.result = action.result
         task.completed = true
         return tasks
       } else {

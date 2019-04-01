@@ -12,17 +12,17 @@ const handleException = error => {
   throw new Error(error)
 }
 
-const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted) => {
+export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
   if (!persisted) {
     return runCypher(streamCypher, parameters)
-      .then(result => ({rows: parseResultStream(result), query: streamCypher, parameters: parameters}))
+      .then(result => parseResultStream(result))
       .catch(handleException)
   } else {
     return new Promise((resolve, reject) => {
       runCypher(storeCypher, parameters)
         .then(() => {
           runCypher(fetchCypher, parameters)
-            .then(result => resolve({rows: parseResultStream(result), query: storeCypher, parameters: parameters}))
+            .then(result => resolve(parseResultStream(result)))
             .catch(reject)
         })
         .catch(handleException)
