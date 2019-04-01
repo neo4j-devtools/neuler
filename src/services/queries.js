@@ -34,7 +34,7 @@ RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCo
 ORDER BY triangles DESC
 LIMIT $limit`
 
-export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
@@ -44,9 +44,10 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: writeProperty || "louvain",
+    writeProperty: writeProperty || null,
+    clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
-    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || "louvainIntermediate",
+    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
     communityProperty: communityProperty || ""
   }
 

@@ -128,7 +128,13 @@ LIMIT $limit`,
             parametersBuilder: communityParams,
             service: triangleCount,
             ResultView: TriangleCountResult,
-            parameters: {persist: true, writeProperty: "trianglesCount", concurrency: 8, direction: "Both"},
+            parameters: {
+                persist: true,
+                writeProperty: "trianglesCount",
+                clusteringCoefficientProperty: "clusteringCoefficient",
+                concurrency: 8,
+                direction: "Both"
+            },
             streamQuery: `CALL algo.triangleCount.stream($label, $relationshipType, $config)
 YIELD nodeId, triangles, coefficient
 WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
