@@ -8,7 +8,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipTypeOptions,  weightProperty, writeProperty, communityProperty, intermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, relationshipTypeOptions,  weightProperty, writeProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -45,11 +45,11 @@ export default class extends Component {
         </Form.Field>
           <Form.Field inline>
             <label style={{ 'width': '10em' }}>Intermediate Communities?</label>
-            <input type='checkbox' checked={intermediateCommunities} onChange={evt => {
-              onChange('intermediateCommunities', evt.target.checked)
+            <input type='checkbox' checked={includeIntermediateCommunities} onChange={evt => {
+              onChange('includeIntermediateCommunities', evt.target.checked)
             }}/>
           </Form.Field>
-          { intermediateCommunities ?
+          { includeIntermediateCommunities ?
           <Form.Field inline>
             <label style={{ 'width': '10em' }}>Intermediate Communities Write Property</label>
             <input

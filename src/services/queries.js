@@ -10,7 +10,12 @@ RETURN node, node[$config.writeProperty] AS score
 ORDER BY score DESC
 LIMIT $limit`
 
-export const communityParams = (label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties) => {
+export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null)
+RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
+LIMIT $limit`
+
+export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty

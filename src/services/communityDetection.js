@@ -1,6 +1,6 @@
 import { runCypher } from "./stores/neoStore"
 import { parseProperties } from "./resultMapper"
-import { communityParams } from './queries'
+import {communityParams, getFetchLouvainCypher} from './queries'
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -9,6 +9,23 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
     direction: direction || 'Outgoing',
     concurrency: parseInt(concurrency) || null,
     limit: parseInt(limit) || 50
+  }
+}
+
+
+export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn=parseResultStream}) => {
+  if (!persisted) {
+    return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
+  } else {
+    return new Promise((resolve, reject) => {
+      runCypher(storeCypher, parameters)
+          .then(() => {
+            runCypher(fetchCypher, parameters)
+                .then(result => resolve(parseResultStreamFn(result)))
+                .catch(reject)
+          })
+          .catch(handleException)
+    })
   }
 }
 
@@ -117,25 +134,11 @@ const handleException = error => {
 
 const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn=parseResultStream) => {
   return runCypher(streamCypher, parameters)
-    .then(result => ({rows: parseResultStreamFn(result), query: streamCypher, parameters: parameters}))
+    .then(result => parseResultStreamFn(result))
     .catch(handleException)
 }
 
-const runAlgorithm = (streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn=parseResultStream) => {
-  if (!persisted) {
-    return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
-  } else {
-    return new Promise((resolve, reject) => {
-      runCypher(storeCypher, parameters)
-        .then(() => {
-          runCypher(fetchCypher, parameters)
-            .then(result => resolve({rows: parseResultStreamFn(result), query: storeCypher, parameters: parameters}))
-            .catch(reject)
-        })
-        .catch(handleException)
-    })
-  }
-}
+
 
 export const parseResultStream = (result) => {
   if (result.records) {
@@ -165,10 +168,7 @@ WHERE not(node[$writeProperty] is null)
 RETURN node, node[$writeProperty] AS community
 LIMIT $limit`
 
-const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
-LIMIT $limit`
+
 
 const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
