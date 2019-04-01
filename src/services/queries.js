@@ -41,10 +41,10 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    weightProperty: weightProperty || null,
+    weightProperty: parsedWeightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: writeProperty || null,
+    writeProperty: parsedWriteProperty || null,
     clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
     intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
