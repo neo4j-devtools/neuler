@@ -30,7 +30,7 @@ export const communityParams = (label, relationshipType, direction, persist, wri
   return params
 }
 
-export const centralityParams = (label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties) => {
+export const centralityParams = ({label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 
   const parsedProbability = parseFloat(probability)

@@ -161,6 +161,12 @@ return path`
     this.setState({ nodeColor })
   }
 
+  componentDidMount() {
+    if (this.props.writeProperty) {
+      this.updateNodeSize(this.props.writeProperty)
+      this.updateNodeColor(this.props.writeProperty)
+    }
+  }
 
   componentWillReceiveProps(nextProps) {
     if (this.props.writeProperty !== nextProps.writeProperty && nextProps.writeProperty) {
