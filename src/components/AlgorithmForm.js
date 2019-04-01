@@ -1,22 +1,14 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Button, Card, Icon, Header } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Button, Card, Icon} from 'semantic-ui-react'
 
-import PageRankForm from './Centralities/PageRankForm'
-import BetweennesForm from './Centralities/BetweennesForm'
-import ApproxBetweennessForm from './Centralities/ApproxBetweennessForm'
-import ClosenessCentralityForm from './Centralities/ClosenessCentralityForm'
-import HarmonicCentralityForm from './Centralities/HarmonicCentralityForm'
-import { pageRank, articleRank, betweenness, approxBetweenness, closeness, harmonic } from "../services/centralities"
-import { loadLabels, loadRelationshipTypes } from "../services/metadata"
-
-import { v4 as generateTaskId } from 'uuid'
-import { addTask, completeTask } from "../ducks/tasks"
-import { getAlgorithmDefinitions } from "./algorithmsLibrary"
-import { getCurrentAlgorithm } from "../ducks/algorithms"
+import {v4 as generateTaskId} from 'uuid'
+import {addTask, completeTask} from "../ducks/tasks"
+import {getAlgorithmDefinitions} from "./algorithmsLibrary"
+import {getCurrentAlgorithm} from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
-import { getFetchCypher } from "../services/queries"
+
 class Algorithms extends Component {
   constructor(props, context) {
     super(props, context);
@@ -104,7 +96,7 @@ class Algorithms extends Component {
       })
 
       this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters },
-        persisted ? storeQuery : streamQuery)
+        persisted ? [storeQuery, fetchCypher] : [streamQuery])
     }
   }
 
@@ -185,7 +177,6 @@ const mapDispatchToProps = dispatch => ({
       query,
       startTime: new Date()
     }
-    console.log('query', task.query)
     dispatch(addTask({ ...task }))
   },
   completeTask: (taskId, result) => {

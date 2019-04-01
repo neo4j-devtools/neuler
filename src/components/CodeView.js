@@ -29,7 +29,7 @@ const generateGuide = (parameters, query) => {
 const constructPayload = (parameters, query, guid) => ({
   uuid: guid,
   params: Object.keys(parameters).map(key => `:param ${key} => ${stringfyParam(parameters[key])};`).join('\n'),
-  query
+  query: query[0]
 })
 
 const stringfyParam = value => {
@@ -65,9 +65,12 @@ export default ({ task }) => (
         : null
     }
 
-    <Segment>
-      <pre>{task.query && task.query.replace('\n  ', '\n')}</pre>
-    </Segment>
+
+      {task.query.map(query => {
+        return <Segment><pre>{query && query.replace('\n  ', '\n')}</pre></Segment>
+      })}
+
+
     <Segment>
       <Button basic color='green' icon='play' content='Send to Neo4j Browser' onClick={() => openBrowser(task)}/>
     </Segment>

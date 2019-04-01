@@ -53,11 +53,8 @@ export const triangles = ({streamCypher, parameters}) => {
   })
 }
 
-export const triangleCount = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, limit, requiredProperties }) => {
-  const params = communityParams(label, relationshipType, direction, false, writeProperty, weightProperty, null, null, null, defaultValue, concurrency, limit, requiredProperties)
-  params.config.clusteringCoefficientProperty = "clusteringCoefficient"
-
-  return runAlgorithm(triangleCountStreamCypher, triangleCountStoreCypher, getFetchTriangleCountCypher(baseParameters.label), params, persist, result => {
+export const triangleCount = ({streamCypher, storeCypher, fetchCypher, parameters, persisted }) => {
+  return runAlgorithm({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
     if (result.records) {
       return result.records.map(record => {
         const { properties, labels } = record.get('node')
@@ -73,7 +70,7 @@ export const triangleCount = ({ label, relationshipType, direction, persist, wri
       console.error(result.error)
       throw new Error(result.error)
     }
-  })
+  }})
 }
 
 export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit }) => {

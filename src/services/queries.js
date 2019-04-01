@@ -28,6 +28,12 @@ WHERE not(node[$config.writeProperty] is null)
 RETURN node, node[$config.writeProperty] AS community
 LIMIT $limit`
 
+export const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
+WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
+RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCoefficientProperty] AS coefficient
+ORDER BY triangles DESC
+LIMIT $limit`
+
 export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
 

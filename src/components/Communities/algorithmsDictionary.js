@@ -1,14 +1,13 @@
 import React from "react"
 import LouvainForm from "./LouvainForm"
 import {
-    balancedTriads,
     connectedComponents,
     louvain,
     lpa,
+    runAlgorithm,
     stronglyConnectedComponents,
     triangleCount,
-    triangles,
-    runAlgorithm
+    triangles
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
 import LabelPropagationForm from "./LabelPropagationForm"
@@ -17,17 +16,15 @@ import ConnectedComponentsForm from "./ConnectedComponentsForm"
 import StronglyConnectedComponentsForm from "./StronglyConnectedComponentsForm"
 import TrianglesForm from "./TrianglesForm"
 import TriangleCountForm from "./TriangleCountForm"
-import BalancedTriadsForm from "./BalancedTriadsForm"
 import TrianglesResult from "./TrianglesResult"
 import LouvainResult from "./LouvainResult"
 import TriangleCountResult from "./TriangleCountResult"
-import BalancedTriadsResult from "./BalancedTriadsResult"
 import {
     communityParams,
     communityStreamQueryOutline,
     getCommunityFetchCypher,
-    getFetchCypher,
-    getFetchLouvainCypher
+    getFetchLouvainCypher,
+    getFetchTriangleCountCypher
 } from "../../services/queries";
 
 export default {
@@ -123,7 +120,7 @@ YIELD nodeA, nodeB, nodeC
 RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
 LIMIT $limit`,
             storeQuery: ``,
-            getFetchQuery: (label) => ``,
+            getFetchQuery: () => ``,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
         },
         "Triangle Count": {
@@ -132,6 +129,14 @@ LIMIT $limit`,
             service: triangleCount,
             ResultView: TriangleCountResult,
             parameters: {persist: true, writeProperty: "trianglesCount", concurrency: 8, direction: "Both"},
+            streamQuery: `CALL algo.triangleCount.stream($label, $relationshipType, $config)
+YIELD nodeId, triangles, coefficient
+WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
+RETURN node, triangles, coefficient
+ORDER BY triangles DESC
+LIMIT $limit`,
+            storeQuery: `CALL algo.triangleCount($label, $relationshipType, $config)`,
+            getFetchQuery: getFetchTriangleCountCypher,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
         }/*,
     "Balanced Triads": {
