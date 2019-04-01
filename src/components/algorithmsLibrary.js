@@ -3,7 +3,8 @@ import communitiesDictionary from './Communities/algorithmsDictionary'
 
 const algorithmGroups = {
   "Centralities": centralitiesDictionary,
-  "Community Detection": communitiesDictionary
+  "Community Detection": communitiesDictionary,
+  "Path Finding": communitiesDictionary
 }
 
 export const getAlgorithms = group => (algorithmGroups[group]  || {algorithmList: []}).algorithmList

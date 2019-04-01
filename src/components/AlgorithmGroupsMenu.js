@@ -34,6 +34,12 @@ const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) =>
         <Icon name='group'/>
         Community Detection
       </Menu.Item>
+      <Menu.Item active={activeGroup === 'Path Finding'} as='a'
+                 onClick={() => selectGroup('Path Finding')}
+                 style={menuItemStyle}>
+        <Icon name='snowflake'/>
+        Path Finding
+      </Menu.Item>
     </div>
     <div>
       <Menu.Item active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
