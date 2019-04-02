@@ -35,7 +35,7 @@ ORDER BY triangles DESC
 LIMIT $limit`
 
 
-export const pathFindingParams = ({startNodeId, endNodeId, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+export const pathFindingParams = ({startNodeId, endNodeId, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit)
   params.startNodeId = parseInt(startNodeId)
   params.endNodeId = parseInt(endNodeId)
@@ -51,7 +51,8 @@ export const pathFindingParams = ({startNodeId, endNodeId, propertyKeyLat, prope
     write: true,
     writeProperty: parsedWriteProperty || null,
     propertyKeyLat: propertyKeyLat,
-    propertyKeyLon: propertyKeyLon
+    propertyKeyLon: propertyKeyLon,
+    delta: delta
 
   }
 

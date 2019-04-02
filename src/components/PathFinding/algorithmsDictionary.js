@@ -5,11 +5,13 @@ import {pathFindingParams} from "../../services/queries";
 import PathFindingResult from "./PathFindingResult";
 import ShortestPathForm from "./ShortestPathForm";
 import AStarForm from "./AStarForm";
+import SingleSourceShortestPathForm from "./SingleSourceShortestPathForm";
 
 export default {
     algorithmList: [
         "Shortest Path",
-        "A*"
+        "A*",
+        "Single Source Shortest Path"
         // "Balanced Triads"
     ],
     algorithmDefinitions: {
@@ -57,6 +59,30 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
 CALL algo.shortestPath.astar.stream(start, end, $config.weightProperty, $config.propertyKeyLat, $config.propertyKeyLon, $config)
 YIELD nodeId, cost
 RETURN algo.getNodeById(nodeId) AS node, cost`,
+            storeQuery: ``,
+            getFetchQuery: () => "",
+            description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
+        },
+        "Single Source Shortest Path": {
+            Form: SingleSourceShortestPathForm,
+            parametersBuilder: pathFindingParams,
+            service: runAlgorithm,
+            ResultView: PathFindingResult,
+            parameters: {
+                nodeQuery: null,
+                relationshipQuery: null,
+                direction: 'Both',
+                persist: false,
+                defaultValue: 0.99,
+                weightProperty: "weight",
+                concurrency: 8,
+                delta: 3.0
+            },
+            streamQuery: `WITH algo.getNodeById($startNodeId) AS start
+CALL algo.shortestPath.deltaStepping.stream(start, $config.weightProperty, $config.delta, $config)
+YIELD nodeId, distance AS cost
+RETURN algo.getNodeById(nodeId) AS node, cost
+LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
