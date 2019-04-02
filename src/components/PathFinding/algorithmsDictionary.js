@@ -1,5 +1,5 @@
 import React from "react"
-import {runAlgorithm, runAllPairsShortestPathAlgorithm, runStreamingAlgorithm} from "../../services/pathFinding"
+import {runAllPairsShortestPathAlgorithm, runStreamingAlgorithm} from "../../services/pathFinding"
 import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import {pathFindingParams} from "../../services/queries";
 import PathFindingResult from "./PathFindingResult";
