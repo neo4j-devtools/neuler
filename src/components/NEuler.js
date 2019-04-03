@@ -10,6 +10,7 @@ import { Form, Input, Dropdown, Button } from "semantic-ui-react"
 import { limit } from "../ducks/settings"
 import { loadMetadata } from "../services/metadata"
 import { setLabels, setRelationshipTypes } from "../ducks/metadata"
+import Home from "./Home";
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -32,9 +33,21 @@ class NEuler extends Component {
     })
   }
 
+  selectComponent(activeGroup) {
+    switch (activeGroup) {
+      case "Sample Graphs":
+        return <Datasets onComplete={this.onComplete.bind(this)}/>
+      case  "Home":
+        return <Home/>
+      default:
+        return <MainContent limit={limit}/>
+    }
+  }
+
   render() {
     const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
-    console.log(activeGroup)
+
+    const component = this.selectComponent(activeGroup)
 
     return (
       <Container fluid style={{ display: 'flex' }}>
@@ -68,7 +81,7 @@ class NEuler extends Component {
               NEuler
             </Header>
           </Segment>
-          {activeGroup !== "Sample Graphs" ? <MainContent limit={limit} /> : <Datasets onComplete={this.onComplete.bind(this)} />}
+          {component}
         </div>
       </Container>
     )

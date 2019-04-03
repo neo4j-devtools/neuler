@@ -15,8 +15,8 @@ export const selectAlgorithm = algorithm => ({
 })
 
 const initialState = {
-  group: 'Centralities',
-  algorithm: 'Degree'
+  group: 'Home',
+  algorithm: ''
 }
 
 export default (state = initialState, action) => {

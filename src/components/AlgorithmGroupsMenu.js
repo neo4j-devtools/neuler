@@ -22,7 +22,11 @@ const topBarStyle = {
 const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) =>
   <Menu vertical={true} inverted style={menuStyle}>
     <div style={topBarStyle}>
-
+      <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
+                 style={menuItemStyle}>
+        <Icon name='sun'/>
+        Home
+      </Menu.Item>
       <Menu.Item active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
                  style={menuItemStyle}>
         <Icon name='sun'/>
