@@ -16,7 +16,12 @@ class Home extends Component {
 
         return (<div style={containerStyle}>
                 <Container fluid>
-                    <Header as='h2'>Graph Algorithms Playground</Header>
+                    <Header as={"h3"}>
+                        Algorithm Categories
+                    </Header>
+                    <p>
+                        The Neo4j Graph Algorithms Library supports the following categories of algorithms.
+                    </p>
 
                     <CardGroup>
                         <Card key={"centralities"}>
@@ -32,7 +37,7 @@ class Home extends Component {
                             <Card.Content extra>
                                 <div className='ui two buttons'>
                                     <Button basic color='green' onClick={() => selectGroup('Centralities')}>
-                                        Go
+                                        Select
                                     </Button>
                                 </div>
                             </Card.Content>
@@ -52,7 +57,7 @@ class Home extends Component {
                             <Card.Content extra>
                                 <div className='ui two buttons'>
                                     <Button basic color='green' onClick={() => selectGroup('Community Detection')}>
-                                        Go
+                                        Select
                                     </Button>
                                 </div>
                             </Card.Content>

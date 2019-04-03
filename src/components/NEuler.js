@@ -36,18 +36,18 @@ class NEuler extends Component {
   selectComponent(activeGroup) {
     switch (activeGroup) {
       case "Sample Graphs":
-        return <Datasets onComplete={this.onComplete.bind(this)}/>
+        return {header: "Sample Graphs", view: <Datasets onComplete={this.onComplete.bind(this)}/> }
       case  "Home":
-        return <Home/>
+        return {header: "Graph Algorithms Playground", view: <Home/> }
       default:
-        return <MainContent limit={limit}/>
+        return {header: "", view: <MainContent limit={limit}/> }
     }
   }
 
   render() {
     const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
 
-    const component = this.selectComponent(activeGroup)
+    const {header, view} = this.selectComponent(activeGroup)
 
     return (
       <Container fluid style={{ display: 'flex' }}>
@@ -71,6 +71,9 @@ class NEuler extends Component {
         <div style={{width: '100%'}}>
           <Segment basic inverted vertical={false}
                    style={{ height: '5em', display: 'flex', justifyContent: 'space-between' }}>
+            {header ? <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
+              {header}
+            </Header> : null}
             <Menu inverted>
               {getAlgorithms(activeGroup).map(algorithm =>
                 <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm} onClick={() => selectAlgorithm(algorithm)}>
@@ -81,7 +84,7 @@ class NEuler extends Component {
               NEuler
             </Header>
           </Segment>
-          {component}
+          {view}
         </div>
       </Container>
     )

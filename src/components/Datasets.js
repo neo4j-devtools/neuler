@@ -61,7 +61,6 @@ class Datasets extends Component {
 
         return (<div style={containerStyle}>
                 <Container fluid>
-                    <Header as='h2'>Sample Graphs</Header>
                     <p>
                         Below are some sample graphs that are useful for learning how to use the graph algorithms
                         library.
