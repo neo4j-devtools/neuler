@@ -1,30 +1,14 @@
 import {runCypher} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 
-export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn=parseResultStream}) => {
-    if (!persisted) {
-        return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
-    } else {
-        return new Promise((resolve, reject) => {
-            runCypher(storeCypher, parameters)
-                .then(() => {
-                    runCypher(fetchCypher, parameters)
-                        .then(result => resolve(parseResultStreamFn(result)))
-                        .catch(reject)
-                })
-                .catch(handleException)
-        })
-    }
-}
-
-export const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn=parseResultStream) => {
+export const runStreamingAlgorithm = ({streamCypher, parameters, parseResultStreamFn=parseResultStream}) => {
     return runCypher(streamCypher, parameters)
         .then(result => parseResultStreamFn(result))
         .catch(handleException)
 }
 
 export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => {
-    return runStreamingAlgorithm(streamCypher, parameters, result => {
+    return runStreamingAlgorithm({streamCypher, parameters, parseResultStreamFn: result => {
         if (result.records) {
             return result.records.map(record => {
                 const source = record.get('source')
@@ -42,7 +26,7 @@ export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => 
             console.error(result.error)
             throw new Error(result.error)
         }
-    })
+    }})
 }
 
 

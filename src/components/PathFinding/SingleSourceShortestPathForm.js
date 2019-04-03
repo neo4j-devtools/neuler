@@ -9,14 +9,14 @@ export default class extends Component {
     }
 
     render() {
-        const { onChange, labelOptions, relationshipTypeOptions, startNodeId, endNodeId, weightProperty, defaultValue, propertyKeyLat, propertyKeyLon, concurrency, direction, persist } = this.props
+        const { onChange, labelOptions, relationshipTypeOptions, startNode, startNodeId, endNodeId, weightProperty, defaultValue, propertyKeyLat, propertyKeyLon, concurrency, direction, persist } = this.props
 
         return (
             <Form size='mini' style={{ marginBottom: '1em' }}>
                 <Form.Group inline>
-                    <label style={{ 'width': '8em' }}>Start Node ID</label>
+                    <label style={{ 'width': '8em' }}>Start Node</label>
                     <Form.Field inline>
-                        <Input size='mini' basic="true" value = {startNodeId} placeholder='Start Node ID' onChange={evt => onChange('startNodeId', evt.target.value)}/>
+                        <Input size='mini' basic="true" value = {startNode} placeholder='Start Node' onChange={evt => onChange('startNode', evt.target.value)}/>
                     </Form.Field>
                 </Form.Group>
 

@@ -14,7 +14,7 @@ export default {
         "Shortest Path",
         "A*",
         "Single Source Shortest Path",
-        "All Pairs Shortest Path"
+        "All Pairs Shortest Path",
         // "Balanced Triads"
     ],
     algorithmDefinitions: {
@@ -33,7 +33,12 @@ export default {
                 weightProperty: "weight",
                 concurrency: 8
             },
-            streamQuery: `WITH algo.getNodeById($startNodeId) AS start, algo.getNodeById($endNodeId) AS end
+            streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
+WITH start
+LIMIT 1
+CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
+WITH start, end
+LIMIT 1            
 CALL algo.shortestPath.stream(start, end, $config.weightProperty, $config)
 YIELD nodeId, cost
 RETURN algo.getNodeById(nodeId) AS node, cost`,
@@ -58,7 +63,12 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
                 propertyKeyLon: "longitude",
                 concurrency: 8
             },
-            streamQuery: `WITH algo.getNodeById($startNodeId) AS start, algo.getNodeById($endNodeId) AS end
+            streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
+WITH start
+LIMIT 1
+CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
+WITH start, end
+LIMIT 1 
 CALL algo.shortestPath.astar.stream(start, end, $config.weightProperty, $config.propertyKeyLat, $config.propertyKeyLon, $config)
 YIELD nodeId, cost
 RETURN algo.getNodeById(nodeId) AS node, cost`,
@@ -81,7 +91,10 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
                 concurrency: 8,
                 delta: 3.0
             },
-            streamQuery: `WITH algo.getNodeById($startNodeId) AS start
+            streamQuery: `CALL db.propertyKeys() YIELD propertyKey
+MATCH (start) WHERE start[propertyKey] contains $startNode
+WITH start
+LIMIT 1
 CALL algo.shortestPath.deltaStepping.stream(start, $config.weightProperty, $config.delta, $config)
 YIELD nodeId, distance AS cost
 RETURN algo.getNodeById(nodeId) AS node, cost
@@ -103,10 +116,8 @@ LIMIT $limit`,
                 defaultValue: 0.99,
                 weightProperty: "weight",
                 concurrency: 8,
-                delta: 3.0
             },
-            streamQuery: `WITH algo.getNodeById($startNodeId) AS start
-CALL algo.allShortestPaths.stream($config.weightProperty, $config)
+            streamQuery: `CALL algo.allShortestPaths.stream($config.weightProperty, $config)
 YIELD sourceNodeId, targetNodeId, distance AS cost
 RETURN algo.getNodeById(sourceNodeId) AS source, algo.getNodeById(targetNodeId) AS target, cost
 LIMIT $limit`,
