@@ -15,6 +15,7 @@ export default {
         "A*",
         "Single Source Shortest Path",
         "All Pairs Shortest Path",
+        // "Yen’s K-shortest paths"
         // "Balanced Triads"
     ],
     algorithmDefinitions: {
@@ -125,5 +126,36 @@ LIMIT $limit`,
             getFetchQuery: () => "",
             description: `The All Pairs Shortest Path (APSP) calculates the shortest (weighted) path between all pairs of nodes.`
         },
+
+//         "Yen’s K-shortest paths": {
+//             Form: ShortestPathForm,
+//             parametersBuilder: pathFindingParams,
+//             service: runStreamingAlgorithm,
+//             ResultView: PathFindingResult,
+//             parameters: {
+//                 nodeQuery: null,
+//                 relationshipQuery: null,
+//                 direction: 'Both',
+//                 persist: false,
+//                 writeProperty: "louvain",
+//                 defaultValue: 0.99,
+//                 weightProperty: "weight",
+//                 k: 3,
+//                 concurrency: 8
+//             },
+//             streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
+// WITH start
+// LIMIT 1
+// CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
+// WITH start, end
+// LIMIT 1
+// CALL algo.kShortestPaths.stream(start, end, $config.k, $config.weightProperty, $config)
+// YIELD index, nodeIds, costs
+// RETURN algo.getNodesById(nodeIds), costs`,
+//             storeQuery: ``,
+//             getFetchQuery: () => "",
+//             description: `Yen’s K-shortest paths algorithm computes single-source K-shortest loopless paths for a graph with non-negative relationship weights.`
+//         },
+
     }
 }
