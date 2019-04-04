@@ -23,7 +23,8 @@ const TableView = ({ task }) => {
 
 const VisView = ({ task, active }) => (
   <div style={tabContentStyle}>
-    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active} algorithm={task.algorithm}
+    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
+                     algorithm={task.algorithm}
                      relationshipType={task.parameters.relationshipType}
                      writeProperty={(task.parameters.config || {}).writeProperty}/>
   </div>
@@ -53,7 +54,7 @@ class HorizontalAlgoTab extends Component {
   render() {
     const { task, prevResult, nextResult, currentPage, totalPages } = this.props
     const { activeItem } = this.state
-    const activeGroup  = task.group
+    const activeGroup = task.group
     const getStyle = name => name === activeItem
       ? ({
         display: ''
@@ -68,12 +69,14 @@ class HorizontalAlgoTab extends Component {
           <Menu.Item name='Table' active={activeItem === 'Table'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
           {activeGroup === 'Centralities' ?
-          <Menu.Item name='Chart' active={activeItem === 'Chart'}
-                    onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-          : null}
-
-          <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
-                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+            <Menu.Item name='Chart' active={activeItem === 'Chart'}
+                       onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+            : null}
+          {activeGroup !== 'Path Finding' ?
+            <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                       onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+            : null
+          }
           <Menu.Item name='Code' active={activeItem === 'Code'}
                      onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
         </Menu>
@@ -84,13 +87,14 @@ class HorizontalAlgoTab extends Component {
           <div style={getStyle('Code')}>
             <CodeView task={task}/>
           </div>
-          <div style={getStyle('Visualisation')}>
-            <VisView task={task} active={activeItem === 'Visualisation'}/>
-          </div>
-         { activeGroup === 'Centralities' ?
-          <div style={getStyle('Chart')}>
-            <ChartView task={task} active={activeItem === 'Chart'}/>
-          </div> : null}
+          {activeGroup !== 'Path Finding' ?
+            <div style={getStyle('Visualisation')}>
+              <VisView task={task} active={activeItem === 'Visualisation'}/>
+            </div> : null}
+          {activeGroup === 'Centralities' ?
+            <div style={getStyle('Chart')}>
+              <ChartView task={task} active={activeItem === 'Chart'}/>
+            </div> : null}
         </Segment>
 
         <div style={{
