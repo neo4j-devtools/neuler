@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Tab, Header, Icon, Segment, Menu, Loader } from 'semantic-ui-react'
+import { Button, Header, Icon, Segment, Menu, Loader } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView from './CodeView'
 
-import {RenderParams} from './renderParams'
+import { ADDED, completeTask, runTask } from "../ducks/tasks"
 
 const tabContentStyle = {
   height: '85vh',
@@ -136,7 +136,29 @@ class TabExampleVerticalTabular extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     if (nextProps.tasks.length !== this.props.tasks.length) {
       this.setState({ page: 0 })
+      const task = nextProps.tasks[0]
+      if (task.status === ADDED) {
+        this.onRunAlgo(task)
+      }
     }
+  }
+
+  onRunAlgo(task) {
+    const { taskId, group, algorithm, parameters, persisted } = task
+    const { service, storeQuery, streamQuery, getFetchQuery } = getAlgorithmDefinitions(group, algorithm)
+    const fetchCypher = getFetchQuery(parameters.label)
+
+    service({
+      streamCypher: streamQuery,
+      storeCypher: storeQuery,
+      fetchCypher,
+      parameters: { ...parameters, limit: this.props.limit },
+      persisted
+    }).then(result => {
+      this.props.completeTask(taskId, result)
+    })
+
+    this.props.runTask(taskId)
   }
 
   render() {
@@ -157,8 +179,18 @@ class TabExampleVerticalTabular extends Component {
   }
 }
 
-const mapStateProps = state => ({
-  tasks: state.tasks
+const mapStateToProps = state => ({
+  tasks: state.tasks,
+  limit: state.settings.limit
 })
 
-export default connect(mapStateProps, null)(TabExampleVerticalTabular)
+const mapDispatchToProps = dispatch => ({
+  runTask: taskId => {
+    dispatch(runTask({ taskId }))
+  },
+  completeTask: (taskId, result) => {
+    dispatch(completeTask({ taskId, result }))
+  }
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(TabExampleVerticalTabular)

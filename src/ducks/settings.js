@@ -30,7 +30,7 @@ const getInitialState = () => {
     hiddenProperties: {
       '_ALL_NEULER_': getBlacklist()
     },
-    limit: 50
+    limit: 42
   }
 }
 

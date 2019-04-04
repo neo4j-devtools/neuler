@@ -62,7 +62,7 @@ class NEuler extends Component {
                 max={1000}
                 step={1}
                 value={limit}
-                onChange={evt => this.props.updateLimit(evt.target.value)}
+                onChange={evt => this.props.updateLimit(parseInt(evt.target.value))}
                 style={{ 'width': '10em' }}
               />
             </Form.Field>

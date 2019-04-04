@@ -74,8 +74,7 @@ class Algorithms extends Component {
     const taskId = generateTaskId()
 
     const { service, parametersBuilder, storeQuery, streamQuery, getFetchQuery } = this.props.currentAlgorithm
-    const { activeGroup, activeAlgorithm, limit } = this.props
-    this.state.parameters.limit = limit
+    const { activeGroup, activeAlgorithm } = this.props
 
     if (service) {
       const parameters = parametersBuilder({
@@ -84,19 +83,10 @@ class Algorithms extends Component {
       })
       const fetchCypher = getFetchQuery(parameters.label)
       const persisted = this.state.parameters.persist
-      service({
-        streamCypher: streamQuery,
-        storeCypher: storeQuery,
-        fetchCypher,
-        parameters,
-        persisted
-      }).then(result => {
-        this.props.completeTask(taskId, result)
-        this.setState({ collapsed: true })
-      })
+
 
       this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters },
-        persisted ? [storeQuery, fetchCypher] : [streamQuery])
+        persisted ? [storeQuery, fetchCypher] : [streamQuery], persisted)
     }
   }
 
@@ -168,19 +158,17 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addTask: (taskId, group, algorithm, parameters, query) => {
+  addTask: (taskId, group, algorithm, parameters, query, persisted) => {
     const task = {
       group,
       algorithm,
       taskId,
       parameters,
       query,
+      persisted,
       startTime: new Date()
     }
     dispatch(addTask({ ...task }))
-  },
-  completeTask: (taskId, result) => {
-    dispatch(completeTask({ taskId, result }))
   }
 })
 
