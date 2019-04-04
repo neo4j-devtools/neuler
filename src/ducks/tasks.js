@@ -44,7 +44,8 @@ export default (state = [], action) => {
         parameters: action.parameters,
         query: action.query,
         status: ADDED,
-        completed: false
+        completed: false,
+        persisted: action.persisted
       })
       return newState
     case RUN_TASK:

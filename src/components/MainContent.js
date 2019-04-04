@@ -4,6 +4,12 @@ import AlgorithmForm from './AlgorithmForm'
 import AlgoResults from './AlgoResults'
 
 class MainContent extends Component {
+
+  componentDidCatch(error, info) {
+    // You can also log the error to an error reporting service
+    console.log("ERROORRRRRRRRR", error, info)
+  }
+
   render() {
     const {limit} = this.props
     return   (<Grid columns={2} style={{height: '90%'}}>

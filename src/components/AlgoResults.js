@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { Button, Header, Icon, Segment, Menu, Loader } from 'semantic-ui-react'
+import { Button, Header, Icon, Segment, Menu, Loader, Message } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView from './CodeView'
 
-import { ADDED, completeTask, runTask } from "../ducks/tasks"
+import { ADDED, completeTask, FAILED, runTask } from "../ducks/tasks"
 
 const tabContentStyle = {
   height: '85vh',
@@ -46,14 +46,29 @@ const ChartView = ({ task }) => {
 
 class HorizontalAlgoTab extends Component {
   state = {
-    activeItem: 'Table'
+    activeItem: this.props.error ? 'Error' : 'Table'
   }
 
   handleMenuItemClick = (e, { name }) => this.setState({ activeItem: name })
 
+  componentDidMount() {
+    if (this.props.task.error) {
+      this.setState({ activeItem: 'Error' })
+    }
+  }
+
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (nextProps.task.error) {
+      this.setState({ activeItem: 'Error' })
+    } else if (this.state.activeItem === 'Error') {
+      this.setState({ activeItem: 'Table' })
+    }
+  }
+
   render() {
     const { task, prevResult, nextResult, currentPage, totalPages } = this.props
-    const { activeItem } = this.state
+    let activeItem = this.state.activeItem
+
     const activeGroup = task.group
     const getStyle = name => name === activeItem
       ? ({
@@ -65,38 +80,61 @@ class HorizontalAlgoTab extends Component {
 
     return (
       <div style={{ paddingTop: '1em' }}>
-        <Menu attached='top' tabular>
-          <Menu.Item name='Table' active={activeItem === 'Table'}
-                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-          {activeGroup === 'Centralities' ?
-            <Menu.Item name='Chart' active={activeItem === 'Chart'}
-                       onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-            : null}
-          {activeGroup !== 'Path Finding' ?
-            <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
-                       onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-            : null
-          }
-          <Menu.Item name='Code' active={activeItem === 'Code'}
-                     onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-        </Menu>
-        <Segment attached='bottom'>
-          <div style={getStyle('Table')}>
-            <TableView task={task}/>
-          </div>
-          <div style={getStyle('Code')}>
-            <CodeView task={task}/>
-          </div>
-          {activeGroup !== 'Path Finding' ?
-            <div style={getStyle('Visualisation')}>
-              <VisView task={task} active={activeItem === 'Visualisation'}/>
-            </div> : null}
-          {activeGroup === 'Centralities' ?
-            <div style={getStyle('Chart')}>
-              <ChartView task={task} active={activeItem === 'Chart'}/>
-            </div> : null}
-        </Segment>
-
+        {task.completed && task.status === FAILED ? (
+            <div>
+              <Menu attached='top' tabular>
+                <Menu.Item name='Error' active={activeItem === 'Error'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                <Menu.Item name='Code' active={activeItem === 'Code'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+              </Menu>
+              <Segment attached='bottom'>
+                <div style={getStyle('Error')}>
+                  <Message warning>
+                    <Message.Header>Algorithm failed to complete</Message.Header>
+                    <p>{task.error}</p>
+                  </Message>
+                </div>
+                <div style={getStyle('Code')}>
+                  <CodeView task={task}/>
+                </div>
+              </Segment>
+            </div>
+          )
+          : <React.Fragment>
+            <Menu attached='top' tabular>
+              <Menu.Item name='Table' active={activeItem === 'Table'}
+                         onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+              {activeGroup === 'Centralities' ?
+                <Menu.Item name='Chart' active={activeItem === 'Chart'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                : null}
+              {activeGroup !== 'Path Finding' ?
+                <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                : null
+              }
+              <Menu.Item name='Code' active={activeItem === 'Code'}
+                         onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+            </Menu>
+            <Segment attached='bottom'>
+              <div style={getStyle('Table')}>
+                <TableView task={task}/>
+              </div>
+              <div style={getStyle('Code')}>
+                <CodeView task={task}/>
+              </div>
+              {activeGroup !== 'Path Finding' ?
+                <div style={getStyle('Visualisation')}>
+                  <VisView task={task} active={activeItem === 'Visualisation'}/>
+                </div> : null}
+              {activeGroup === 'Centralities' ?
+                <div style={getStyle('Chart')}>
+                  <ChartView task={task} active={activeItem === 'Chart'}/>
+                </div> : null}
+            </Segment>
+          </React.Fragment>
+        }
         <div style={{
           position: 'absolute',
           top: '1.5em',
@@ -157,6 +195,10 @@ class TabExampleVerticalTabular extends Component {
     }).then(result => {
       this.props.completeTask(taskId, result)
     })
+      .catch(exc => {
+        console.log('ERROR IN SERVICE', exc)
+        this.props.completeTask(taskId, [], exc.toString())
+      })
 
     this.props.runTask(taskId)
   }
@@ -188,8 +230,8 @@ const mapDispatchToProps = dispatch => ({
   runTask: taskId => {
     dispatch(runTask({ taskId }))
   },
-  completeTask: (taskId, result) => {
-    dispatch(completeTask({ taskId, result }))
+  completeTask: (taskId, result, error) => {
+    dispatch(completeTask({ taskId, result, error }))
   }
 })
 

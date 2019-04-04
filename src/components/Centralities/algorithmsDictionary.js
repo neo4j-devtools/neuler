@@ -153,7 +153,7 @@ export default {
       ResultView: CentralityResult,
       parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Outgoing"},
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.closeness.harmonic.stream($label, $relationshipType, $config YIELD nodeId, centrality AS score`),
+      streamQuery: streamQueryOutline(`CALL algo.closeness.harmonic.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
       storeQuery: `CALL algo.closeness.harmonic($label, $relationshipType, $config)`,
       getFetchQuery: getFetchCypher,
       description: `a variant of closeness centrality, that was invented to solve the problem the original

@@ -36,7 +36,12 @@ LIMIT $limit`
 
 
 export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+  const params = {  limit: parseInt(limit) || 50,
+    config: {
+      concurrency: parseInt(concurrency) || null
+    }
+  }
+
   params.startNodeId = parseInt(startNodeId)
   params.endNodeId = parseInt(endNodeId)
   params.startNode = startNode || null
