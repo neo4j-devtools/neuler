@@ -63,6 +63,25 @@ class Home extends Component {
                             </Card.Content>
                         </Card>
 
+                        <Card key={"pathFinding"}>
+                            <Card.Content>
+                                <Icon name='sitemap'/>
+                                <Card.Header>
+                                    Path Finding
+                                </Card.Header>
+                                <Card.Meta>
+                                    path finding algorithms help find the shortest path or evaluate the availability and quality of routes
+                                </Card.Meta>
+                            </Card.Content>
+                            <Card.Content extra>
+                                <div className='ui two buttons'>
+                                    <Button basic color='green' onClick={() => selectGroup("Path Finding")}>
+                                        Select
+                                    </Button>
+                                </div>
+                            </Card.Content>
+                        </Card>
+
                     </CardGroup>
 
                 </Container>
