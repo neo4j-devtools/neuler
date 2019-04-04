@@ -67,9 +67,12 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   return params
 }
 
-export const similarityParams = ({label, relationshipType, direction, persist, writeProperty, writeRelationshipType, concurrency, limit, requiredProperties}) => {
+export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, writeRelationshipType, similarityCutoff, concurrency, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
+    itemLabel: itemLabel || null,
+    relationshipType: relationshipType || null,
+    categoryLabel: categoryLabel || null,
     config: {
       concurrency: parseInt(concurrency) || null,
     }
@@ -78,6 +81,8 @@ export const similarityParams = ({label, relationshipType, direction, persist, w
   const config = {
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
+    similarityCutoff: similarityCutoff,
+    write: persist,
   }
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)

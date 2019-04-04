@@ -1,6 +1,5 @@
-import { runCypher } from "./stores/neoStore"
-import { parseProperties } from "./resultMapper"
-import {communityParams, getFetchLouvainCypher} from './queries'
+import {runCypher} from "./stores/neoStore"
+import {parseProperties} from "./resultMapper"
 
 const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
   return {
@@ -13,18 +12,18 @@ const baseParameters = (label, relationshipType, direction, concurrency, limit) 
 }
 
 
-export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn=parseResultStream}) => {
+export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn = parseResultStream}) => {
   if (!persisted) {
     return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
   } else {
     return new Promise((resolve, reject) => {
       runCypher(storeCypher, parameters)
-          .then(() => {
-            runCypher(fetchCypher, parameters)
-                .then(result => resolve(parseResultStreamFn(result)))
-                .catch(reject)
-          })
-          .catch(handleException)
+        .then(() => {
+          runCypher(fetchCypher, parameters)
+            .then(result => resolve(parseResultStreamFn(result)))
+            .catch(reject)
+        })
+        .catch(handleException)
     })
   }
 }
@@ -53,27 +52,29 @@ export const triangles = ({streamCypher, parameters}) => {
   })
 }
 
-export const triangleCount = ({streamCypher, storeCypher, fetchCypher, parameters, persisted }) => {
-  return runAlgorithm({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
-    if (result.records) {
-      return result.records.map(record => {
-        const { properties, labels } = record.get('node')
+export const triangleCount = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+  return runAlgorithm({
+    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
+      if (result.records) {
+        return result.records.map(record => {
+          const {properties, labels} = record.get('node')
 
-        return {
-          properties: parseProperties(properties),
-          labels: labels,
-          triangles: record.get('triangles').toNumber(),
-          coefficient: record.get('coefficient'),
-        }
-      })
-    } else {
-      console.error(result.error)
-      throw new Error(result.error)
+          return {
+            properties: parseProperties(properties),
+            labels: labels,
+            triangles: record.get('triangles').toNumber(),
+            coefficient: record.get('coefficient'),
+          }
+        })
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
     }
-  }})
+  })
 }
 
-export const balancedTriads = ({ label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit }) => {
+export const balancedTriads = ({label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit}) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {
     weightProperty: weightProperty || null,
@@ -86,7 +87,7 @@ export const balancedTriads = ({ label, relationshipType, direction, persist, ba
   return runAlgorithm(balancedTriadsStreamCypher, balancedTriadsStoreCypher, getFetchBalancedTriadsCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
     if (result.records) {
       return result.records.map(record => {
-        const { properties, labels } = record.get('node')
+        const {properties, labels} = record.get('node')
 
         return {
           properties: parseProperties(properties),
@@ -107,19 +108,18 @@ const handleException = error => {
   throw new Error(error)
 }
 
-const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn=parseResultStream) => {
+const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = parseResultStream) => {
   return runCypher(streamCypher, parameters)
 
-      .then(result => parseResultStreamFn(result))
-      .catch(handleException)
+    .then(result => parseResultStreamFn(result))
+    .catch(handleException)
 }
-
 
 
 export const parseResultStream = (result) => {
   if (result.records) {
     return result.records.map(record => {
-      const { properties, labels } = record.get('node')
+      const {properties, labels} = record.get('node')
       const communities = record.has("communities") ? record.get("communities") : null
       return {
         properties: parseProperties(properties),

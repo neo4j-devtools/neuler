@@ -85,8 +85,7 @@ class Algorithms extends Component {
       const persisted = this.state.parameters.persist
 
 
-      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters },
-        persisted ? [storeQuery, fetchCypher] : [streamQuery], persisted)
+      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters }, persisted)
     }
   }
 
@@ -158,13 +157,12 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  addTask: (taskId, group, algorithm, parameters, query, persisted) => {
+  addTask: (taskId, group, algorithm, parameters, persisted) => {
     const task = {
       group,
       algorithm,
       taskId,
       parameters,
-      query,
       persisted,
       startTime: new Date()
     }

@@ -10,24 +10,26 @@ export default ({ task }) => (
     <Table color='green'>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Labels</Table.HeaderCell>
-          <Table.HeaderCell>Properties</Table.HeaderCell>
-          <Table.HeaderCell>Community</Table.HeaderCell>
-          <Table.HeaderCell>Communities</Table.HeaderCell>
+          <Table.HeaderCell>From Labels</Table.HeaderCell>
+          <Table.HeaderCell>From Properties</Table.HeaderCell>
+          <Table.HeaderCell>To Labels</Table.HeaderCell>
+          <Table.HeaderCell>To Properties</Table.HeaderCell>
+          <Table.HeaderCell>Similarity</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {task.result ?
          task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
-            <Table.Cell>{result.labels.join(', ')}</Table.Cell>
-            <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels}/></Table.Cell>
-            <Table.Cell>{result.community}</Table.Cell>
-            <Table.Cell>{result.communities}</Table.Cell>
+            <Table.Cell>{result.fromLabels.join(', ')}</Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.fromProperties} labels={result.fromLabels}/></Table.Cell>
+            <Table.Cell>{result.toLabels.join(', ')}</Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.toProperties} labels={result.toLabels}/></Table.Cell>
+            <Table.Cell>{result.similarity}</Table.Cell>
           </Table.Row>
         ) :
         <Table.Row key="loading-centrality-result">
-          <Table.Cell colSpan={4}>
+          <Table.Cell colSpan={5}>
             <LoaderExampleInlineCentered />
           </Table.Cell>
         </Table.Row>

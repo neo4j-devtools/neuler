@@ -183,8 +183,20 @@ class TabExampleVerticalTabular extends Component {
 
   onRunAlgo(task) {
     const { taskId, group, algorithm, parameters, persisted } = task
-    const { service, storeQuery, streamQuery, getFetchQuery } = getAlgorithmDefinitions(group, algorithm)
-    const fetchCypher = getFetchQuery(parameters.label)
+    let algorithmDefinition = getAlgorithmDefinitions(group, algorithm);
+    const { service, getFetchQuery } = algorithmDefinition
+
+    let fetchCypher = getFetchQuery(parameters.label)
+
+    let streamQuery = algorithmDefinition.streamQuery
+    let storeQuery = algorithmDefinition.storeQuery
+
+    if(group === "Similarity") {
+      const {itemLabel, relationshipType, categoryLabel} = parameters
+      streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel)
+      storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel)
+      fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType)
+    }
 
     service({
       streamCypher: streamQuery,
@@ -200,7 +212,7 @@ class TabExampleVerticalTabular extends Component {
         this.props.completeTask(taskId, [], exc.toString())
       })
 
-    this.props.runTask(taskId)
+    this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
   }
 
   render() {
@@ -227,8 +239,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-  runTask: taskId => {
-    dispatch(runTask({ taskId }))
+  runTask: (taskId, query) => {
+    dispatch(runTask({ taskId, query }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
