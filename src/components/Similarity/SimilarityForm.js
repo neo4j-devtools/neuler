@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form, Input, Dropdown} from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency, writeProperty, writeRelationshipType, similarityCutoff, labelOptions, relationshipTypeOptions}) => (
+export default ({onChange, direction, persist, concurrency, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions}) => (
   <React.Fragment>
     <Form.Field>
       <label>Item Label</label>
@@ -32,7 +32,7 @@ export default ({onChange, direction, persist, concurrency, writeProperty, write
         persist ?
           <Form.Field>
             <label>Write Property</label>
-            <Input size='mini' basic="true" value={writeProperty} placeholder='Write Property'
+            <Input  basic="true" value={writeProperty} placeholder='Write Property'
                    onChange={evt => onChange('writeProperty', evt.target.value)}/>
           </Form.Field>
           : null
@@ -41,7 +41,7 @@ export default ({onChange, direction, persist, concurrency, writeProperty, write
         persist ?
           <Form.Field>
             <label>Write Relationship Type</label>
-            <Input size='mini' basic="true" value={writeRelationshipType} placeholder='Write Relationship Type'
+            <Input basic="true" value={writeRelationshipType} placeholder='Write Relationship Type'
                    onChange={evt => onChange('writeRelationshipType', evt.target.value)}/>
           </Form.Field>
           : null
@@ -67,6 +67,15 @@ export default ({onChange, direction, persist, concurrency, writeProperty, write
           onChange={evt => onChange('similarityCutoff', evt.target.value)}
           style={{ 'width': '7em' }}
         />
+    </Form.Field>
+    <Form.Field inline>
+
+      <label style={{ 'width': '10em' }}>Degree Cutoff</label>
+      <input
+        value={degreeCutoff}
+        onChange={evt => onChange('degreeCutoff', evt.target.value)}
+        style={{ 'width': '7em' }}
+      />
     </Form.Field>
 
   </React.Fragment>

@@ -50,6 +50,7 @@ export default {
         writeRelationshipType: "SIMILAR",
         concurrency: 8,
         similarityCutoff: 0.1,
+        degreeCutoff: 0,
         write: true
       },
       streamQuery: constructStreamingQueryGetter("CALL algo.similarity.jaccard.stream(data, $config)", constructMaps),

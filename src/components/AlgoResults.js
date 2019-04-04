@@ -206,8 +206,7 @@ class TabExampleVerticalTabular extends Component {
       persisted
     }).then(result => {
       this.props.completeTask(taskId, result)
-    })
-      .catch(exc => {
+    }).catch(exc => {
         console.log('ERROR IN SERVICE', exc)
         this.props.completeTask(taskId, [], exc.toString())
       })

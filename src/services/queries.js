@@ -1,3 +1,5 @@
+import { v1 as neo } from "neo4j-driver"
+
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH algo.getNodeById(nodeId) AS node, score
 RETURN node, score
@@ -67,7 +69,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   return params
 }
 
-export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, writeRelationshipType, similarityCutoff, concurrency, limit, requiredProperties}) => {
+export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
     itemLabel: itemLabel || null,
@@ -82,6 +84,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: similarityCutoff,
+    degreeCutoff: neo.int(degreeCutoff) ,
     write: persist,
   }
 
