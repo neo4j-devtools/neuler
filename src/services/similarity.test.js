@@ -2,7 +2,7 @@ import {constructMaps} from './similarity';
 
 test('allDefined', () => {
   const expected = `MATCH (item:\`Foo\`)-[:\`BAR\`]->(category:\`Baz\`)
-WITH {item:id(item), categories: collect(id(category))} as userData
+WITH {item:id(item), categories: collect(distinct id(category))} as userData
 WITH collect(userData) as data`
 
   expect(constructMaps("Foo", "BAR", "Baz")).toEqual(expected)
@@ -10,7 +10,7 @@ WITH collect(userData) as data`
 
 test('noneDefined', () => {
   const expected = `MATCH (item)-->(category)
-WITH {item:id(item), categories: collect(id(category))} as userData
+WITH {item:id(item), categories: collect(distinct id(category))} as userData
 WITH collect(userData) as data`
 
   expect(constructMaps(null, null, null)).toEqual(expected)
@@ -18,7 +18,7 @@ WITH collect(userData) as data`
 
 test('someDefined', () => {
   const expected = `MATCH (item:\`Item\`)-->(category)
-WITH {item:id(item), categories: collect(id(category))} as userData
+WITH {item:id(item), categories: collect(distinct id(category))} as userData
 WITH collect(userData) as data`
 
   expect(constructMaps("Item", null, null)).toEqual(expected)
