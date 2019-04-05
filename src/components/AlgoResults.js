@@ -78,6 +78,8 @@ class HorizontalAlgoTab extends Component {
         display: 'none'
       })
 
+
+
     return (
       <div style={{ paddingTop: '1em' }}>
         {task.completed && task.status === FAILED ? (
@@ -103,35 +105,45 @@ class HorizontalAlgoTab extends Component {
           )
           : <React.Fragment>
             <Menu attached='top' tabular>
+
               <Menu.Item name='Table' active={activeItem === 'Table'}
                          onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+
               {activeGroup === 'Centralities' ?
                 <Menu.Item name='Chart' active={activeItem === 'Chart'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
                 : null}
-              {activeGroup !== 'Path Finding' ?
+
+                {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity')  ?
                 <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
                 : null
               }
+
               <Menu.Item name='Code' active={activeItem === 'Code'}
                          onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+
             </Menu>
             <Segment attached='bottom'>
+
               <div style={getStyle('Table')}>
                 <TableView task={task}/>
               </div>
+
               <div style={getStyle('Code')}>
                 <CodeView task={task}/>
               </div>
-              {activeGroup !== 'Path Finding' ?
+
+              {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity') ?
                 <div style={getStyle('Visualisation')}>
                   <VisView task={task} active={activeItem === 'Visualisation'}/>
                 </div> : null}
+
               {activeGroup === 'Centralities' ?
                 <div style={getStyle('Chart')}>
                   <ChartView task={task} active={activeItem === 'Chart'}/>
                 </div> : null}
+
             </Segment>
           </React.Fragment>
         }

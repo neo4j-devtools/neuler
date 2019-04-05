@@ -23,7 +23,7 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
             .then(result => resolve(parseResultStreamFn(result)))
             .catch(reject)
         })
-        .catch(handleException)
+        .catch(reject)
     })
   }
 }

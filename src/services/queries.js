@@ -83,8 +83,8 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   const config = {
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
-    similarityCutoff: similarityCutoff,
-    degreeCutoff: neo.int(degreeCutoff) ,
+    similarityCutoff: parseFloat(similarityCutoff),
+    degreeCutoff: neo.int(degreeCutoff),
     write: persist,
   }
 

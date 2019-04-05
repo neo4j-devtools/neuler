@@ -56,6 +56,6 @@ export const constructMaps = (item, relationshipType, category) => {
   const categoryNode = category ? `(category:\`${category}\`)` : "(category)"
 
   return `MATCH ${itemNode}-${rel}->${categoryNode}
-WITH {item:id(item), categories: collect(id(category))} as userData
+WITH {item:id(item), categories: collect(distinct id(category))} as userData
 WITH collect(userData) as data`
 }
