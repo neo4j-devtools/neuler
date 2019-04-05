@@ -208,6 +208,10 @@ class TabExampleVerticalTabular extends Component {
       streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel)
       storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel)
       fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType)
+
+      delete parameters.itemLabel
+      delete parameters.relationshipType
+      delete parameters.categoryLabel
     }
 
     service({
