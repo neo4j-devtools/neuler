@@ -40,7 +40,7 @@ class NEuler extends Component {
       case  "Home":
         return {header: "Graph Algorithms Playground", view: <Home/> }
       default:
-        return {header: "", view: <MainContent limit={limit}/> }
+        return {header: "", view: <MainContent onComplete={this.onComplete.bind(this)} limit={limit}/> }
     }
   }
 

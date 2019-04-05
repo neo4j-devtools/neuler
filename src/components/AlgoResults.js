@@ -218,9 +218,13 @@ class TabExampleVerticalTabular extends Component {
       persisted
     }).then(result => {
       this.props.completeTask(taskId, result)
+      if(persisted) {
+        this.props.onComplete()
+      }
     }).catch(exc => {
         console.log('ERROR IN SERVICE', exc)
         this.props.completeTask(taskId, [], exc.toString())
+
       })
 
     this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
@@ -249,12 +253,15 @@ const mapStateToProps = state => ({
   limit: state.settings.limit
 })
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch, ownProps) => ({
   runTask: (taskId, query) => {
     dispatch(runTask({ taskId, query }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
+  },
+  onComplete: () => {
+    ownProps.onComplete()
   }
 })
 
