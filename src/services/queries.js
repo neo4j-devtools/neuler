@@ -69,12 +69,13 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   return params
 }
 
-export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
+export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
     itemLabel: itemLabel || null,
     relationshipType: relationshipType || null,
     categoryLabel: categoryLabel || null,
+    weightProperty: weightProperty || null,
     config: {
       concurrency: parseInt(concurrency) || null,
     }
@@ -84,7 +85,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: parseFloat(similarityCutoff),
-    degreeCutoff: neo.int(degreeCutoff),
+    degreeCutoff: parseInt(degreeCutoff),
     write: persist,
   }
 
