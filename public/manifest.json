@@ -11,5 +11,6 @@
   "start_url": ".",
   "display": "standalone",
   "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "background_color": "#ffffff",
+  "pluginDependencies": ["org.neo4j.procedure/apoc", "org.neo4j/graph-algorithms-algo"]
 }
