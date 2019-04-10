@@ -81,6 +81,7 @@ export default class extends Component {
         overflowY: 'auto',
         overflowX: 'hidden'
       }}>
+        <p>This algorithm run can be reproduced in the Neo4j Browser, by defining the following parameters:</p>
         {
           task.parameters
             ? <Segment>
@@ -89,9 +90,13 @@ export default class extends Component {
             : null
         }
 
+
         {task.query ?
 
+
           <div>
+            <p>And by running the following {task.query.length > 1 ? 'queries' : 'query'}:</p>
+
             {
               task.query.map(query => {
                 return <Segment>
@@ -99,6 +104,8 @@ export default class extends Component {
                 </Segment>
               })
             }
+
+            <p>We can also generate a Neo4j Browser guide containing all of the above:</p>
 
 
             <Segment>
