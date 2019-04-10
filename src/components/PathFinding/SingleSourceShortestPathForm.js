@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Form, Label, Input } from "semantic-ui-react"
+import {Form, Label, Input, Popup} from "semantic-ui-react"
 import PathFindingForm from './PathFindingForm'
 import StreamOnlyForm from "./StreamOnlyForm";
 
@@ -16,7 +16,7 @@ export default class extends Component {
                 <Form.Group inline>
                     <label style={{ 'width': '8em' }}>Start Node</label>
                     <Form.Field inline>
-                        <Input size='mini' basic="true" value = {startNode} placeholder='Start Node' onChange={evt => onChange('startNode', evt.target.value)}/>
+                      <Popup size="tiny" trigger={<Input size='mini' basic="true" value = {startNode} placeholder='Start Node' onChange={evt => onChange('startNode', evt.target.value)}/>} content='Populate this field with the value of any property on any node' />
                     </Form.Field>
                 </Form.Group>
 
