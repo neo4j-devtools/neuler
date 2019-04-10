@@ -1,4 +1,4 @@
-# Neuler Release Notes
+# Neuler: The Graph Algorithms Playground Release Notes
 
 ## 0.1.8
 
