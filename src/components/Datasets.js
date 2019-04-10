@@ -149,7 +149,7 @@ class Datasets extends Component {
 const sampleGraphs = {
     "Game of Thrones": {
         name: "Game of Thrones",
-        description: "GoT dataset",
+        description: `A dataset containing interactions between the characters across the first 7 seasons of the popular TV show.`,
         queries: [
             `CREATE CONSTRAINT ON (c:Character) ASSERT c.id IS UNIQUE`,
             `UNWIND range(1,7) AS season
