@@ -6,6 +6,7 @@ import SimilarityResult from "./SimilarityResult";
 import CosineForm from "./CosineForm";
 import PearsonForm from "./PearsonForm";
 import OverlapForm from "./OverlapForm";
+import EuclideanForm from "./EuclideanForm";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
@@ -44,6 +45,7 @@ export default {
     "Overlap",
     "Cosine",
     "Pearson",
+    "Euclidean"
 
   ],
   algorithmDefinitions: {
@@ -126,6 +128,27 @@ export default {
       storeQuery: constructStoreQueryGetter(`CALL algo.similarity.pearson(data, $config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `the covariance of the two n-dimensional vectors divided by the product of their standard deviations.`
+    },
+
+    "Euclidean": {
+      Form: EuclideanForm,
+      parametersBuilder: similarityParams,
+      service: runAlgorithm,
+      ResultView: SimilarityResult,
+      parameters: {
+        persist: true,
+        writeProperty: "score",
+        writeRelationshipType: "SIMILAR_EUCLIDEAN",
+        concurrency: 8,
+        similarityCutoff: 0.1,
+        degreeCutoff: 0,
+        write: true,
+        weightProperty: "weight"
+      },
+      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.euclidean.stream(data, $config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.euclidean(data, $config)`, constructWeightedSimilarityMaps),
+      getFetchQuery: constructFetchQuery,
+      description: `measures the straight line distance between two points in n-dimensional space.`
     },
 
   },
