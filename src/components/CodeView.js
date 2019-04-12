@@ -27,7 +27,7 @@ export default class extends Component {
     return {
       uuid: guid,
       params: Object.keys(parameters).map(key => `:param ${key} => ${stringfyParam(parameters[key])};`).join('\n'),
-      query: query[0]
+      query: query
     }
   }
 
@@ -46,7 +46,7 @@ export default class extends Component {
       body: JSON.stringify(payload)
     })
       .then(response => {
-        this.setState({browserGuide: {...this.state.browserGuide, [taskId]: `:play neuler/${guid}.html`}})
+        this.setState({browserGuide: {...this.state.browserGuide, [taskId]: `:play neuler/user-content-${guid}.html`}})
         return guid
       })
       .catch(err => {
