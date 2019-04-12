@@ -18,7 +18,7 @@ class MainContent extends Component {
             <AlgorithmForm limit={limit} />
           </Grid.Column>
           <Grid.Column width={12} style={{paddingLeft: '0'}}>
-            <AlgoResults/>
+            <AlgoResults onComplete={this.props.onComplete}  />
           </Grid.Column>
         </Grid.Row>
       </Grid>)

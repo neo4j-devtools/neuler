@@ -15,13 +15,13 @@ export const addTask = ({taskId, group, algorithm, startTime, parameters, query,
   algorithm,
   startTime,
   parameters,
-  query,
   persisted
 })
 
-export const runTask = taskId => ({
+export const runTask = ({taskId, query}) => ({
   type: RUN_TASK,
-  taskId
+  taskId,
+  query
 })
 
 export const completeTask = ({taskId, result, error}) => ({
@@ -42,7 +42,6 @@ export default (state = [], action) => {
         startTime: action.startTime,
         result: action.result,
         parameters: action.parameters,
-        query: action.query,
         status: ADDED,
         completed: false,
         persisted: action.persisted
@@ -53,6 +52,7 @@ export default (state = [], action) => {
       const theTask = existingTasks.find(task => task.taskId === action.taskId)
       if (theTask) {
         theTask.status = RUNNING
+        theTask.query = action.query
         return existingTasks
       } else {
         return state

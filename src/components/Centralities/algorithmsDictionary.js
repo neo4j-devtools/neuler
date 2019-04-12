@@ -33,7 +33,7 @@ export default {
         direction: 'Incoming',
         persist: true,
         writeProperty: "degree",
-        defaultValue: 0.99,
+        defaultValue: 1.0,
         concurrency: 8,
         weightProperty: null
       },
@@ -52,7 +52,7 @@ export default {
         persist: true,
         writeProperty: "eigenvector",
         iterations: 20,
-        defaultValue: 0.99,
+        defaultValue: 1.0,
         normalization: "none"
       },
       parametersBuilder: centralityParams,
@@ -71,7 +71,7 @@ export default {
         writeProperty: "pagerank",
         dampingFactor: 0.85,
         iterations: 20,
-        defaultValue: 0.99,
+        defaultValue: 1.0,
         concurrency: 8,
         weightProperty: null
       },
@@ -91,7 +91,7 @@ export default {
         writeProperty: "articlerank",
         dampingFactor: 0.85,
         iterations: 20,
-        defaultValue: 0.99,
+        defaultValue: 1.0,
         concurrency: 8,
         weightProperty: null
       },

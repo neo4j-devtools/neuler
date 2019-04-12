@@ -1,3 +1,5 @@
+import { v1 as neo } from "neo4j-driver"
+
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH algo.getNodeById(nodeId) AS node, score
 RETURN node, score
@@ -36,7 +38,8 @@ LIMIT $limit`
 
 
 export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
-  const params = {  limit: parseInt(limit) || 50,
+  const params = {
+    limit: parseInt(limit) || 50,
     config: {
       concurrency: parseInt(concurrency) || null
     }
@@ -60,7 +63,30 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
     propertyKeyLat: propertyKeyLat,
     propertyKeyLon: propertyKeyLon,
     delta: delta
+  }
 
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
+export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
+  const params = {
+    limit: parseInt(limit) || 50,
+    itemLabel: itemLabel || null,
+    relationshipType: relationshipType || null,
+    categoryLabel: categoryLabel || null,
+    weightProperty: weightProperty || null,
+    config: {
+      concurrency: parseInt(concurrency) || null,
+    }
+  }
+
+  const config = {
+    writeProperty: writeProperty || null,
+    writeRelationshipType: writeRelationshipType || null,
+    similarityCutoff: parseFloat(similarityCutoff),
+    degreeCutoff: parseInt(degreeCutoff),
+    write: persist,
   }
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
@@ -93,7 +119,7 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
 
   const parsedProbability = parseFloat(probability)
   const parsedMaxDepth = parseInt(maxDepth)
-  const parsedIterations =  parseInt(iterations)
+  const parsedIterations = parseInt(iterations)
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
@@ -131,11 +157,11 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
 
 export const filterParameters = (raw, allowed) => {
   return Object.keys(raw)
-  .filter(key => allowed.includes(key))
-  .reduce((obj, key) => {
-    return {
-      ...obj,
-      [key]: raw[key]
-    };
-  }, {});
+    .filter(key => allowed.includes(key))
+    .reduce((obj, key) => {
+      return {
+        ...obj,
+        [key]: raw[key]
+      };
+    }, {});
 }

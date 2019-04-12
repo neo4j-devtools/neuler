@@ -7,7 +7,10 @@ export const loadLabels = () => {
 }
 
 export const loadRelationshipTypes = () => {
-  return runCypher("CALL db.relationshipTypes()", {})
+  return runCypher(`CALL db.relationshipTypes() 
+YIELD relationshipType
+RETURN relationshipType
+ORDER BY relationshipType`, {})
     .then(parseRelTypesResultStream)
     .catch(handleException)
 }

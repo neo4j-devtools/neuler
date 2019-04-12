@@ -31,7 +31,7 @@ class Home extends Component {
                                     Centralities
                                 </Card.Header>
                                 <Card.Meta>
-                                    centrality algorithms determine the importance of distinct nodes in a network
+                                    These algorithms determine the importance of distinct nodes in a network
                                 </Card.Meta>
                             </Card.Content>
                             <Card.Content extra>
@@ -50,7 +50,7 @@ class Home extends Component {
                                     Community Detection
                                 </Card.Header>
                                 <Card.Meta>
-                                    community detection algorithms evaluate how a group is clustered or partitioned, as
+                                    These algorithms evaluate how a group is clustered or partitioned, as
                                     well as its tendency to strengthen or break apart
                                 </Card.Meta>
                             </Card.Content>
@@ -70,12 +70,31 @@ class Home extends Component {
                                     Path Finding
                                 </Card.Header>
                                 <Card.Meta>
-                                    path finding algorithms help find the shortest path or evaluate the availability and quality of routes
+                                    These algorithms help find the shortest path or evaluate the availability and quality of routes
                                 </Card.Meta>
                             </Card.Content>
                             <Card.Content extra>
                                 <div className='ui two buttons'>
                                     <Button basic color='green' onClick={() => selectGroup("Path Finding")}>
+                                        Select
+                                    </Button>
+                                </div>
+                            </Card.Content>
+                        </Card>
+
+                        <Card key={"similairty"}>
+                            <Card.Content>
+                                <Icon name='sitemap'/>
+                                <Card.Header>
+                                    Similarity
+                                </Card.Header>
+                                <Card.Meta>
+                                    These algorithms help calculate the similarity of nodes.
+                                </Card.Meta>
+                            </Card.Content>
+                            <Card.Content extra>
+                                <div className='ui two buttons'>
+                                    <Button basic color='green' onClick={() => selectGroup("Similarity")}>
                                         Select
                                     </Button>
                                 </div>

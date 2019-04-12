@@ -78,6 +78,8 @@ class HorizontalAlgoTab extends Component {
         display: 'none'
       })
 
+
+
     return (
       <div style={{ paddingTop: '1em' }}>
         {task.completed && task.status === FAILED ? (
@@ -103,35 +105,45 @@ class HorizontalAlgoTab extends Component {
           )
           : <React.Fragment>
             <Menu attached='top' tabular>
+
               <Menu.Item name='Table' active={activeItem === 'Table'}
                          onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+
               {activeGroup === 'Centralities' ?
                 <Menu.Item name='Chart' active={activeItem === 'Chart'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
                 : null}
-              {activeGroup !== 'Path Finding' ?
+
+                {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity')  ?
                 <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
                 : null
               }
+
               <Menu.Item name='Code' active={activeItem === 'Code'}
                          onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+
             </Menu>
             <Segment attached='bottom'>
+
               <div style={getStyle('Table')}>
                 <TableView task={task}/>
               </div>
+
               <div style={getStyle('Code')}>
                 <CodeView task={task}/>
               </div>
-              {activeGroup !== 'Path Finding' ?
+
+              {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity') ?
                 <div style={getStyle('Visualisation')}>
                   <VisView task={task} active={activeItem === 'Visualisation'}/>
                 </div> : null}
+
               {activeGroup === 'Centralities' ?
                 <div style={getStyle('Chart')}>
                   <ChartView task={task} active={activeItem === 'Chart'}/>
                 </div> : null}
+
             </Segment>
           </React.Fragment>
         }
@@ -183,8 +195,24 @@ class TabExampleVerticalTabular extends Component {
 
   onRunAlgo(task) {
     const { taskId, group, algorithm, parameters, persisted } = task
-    const { service, storeQuery, streamQuery, getFetchQuery } = getAlgorithmDefinitions(group, algorithm)
-    const fetchCypher = getFetchQuery(parameters.label)
+    let algorithmDefinition = getAlgorithmDefinitions(group, algorithm);
+    const { service, getFetchQuery } = algorithmDefinition
+
+    let fetchCypher = getFetchQuery(parameters.label)
+
+    let streamQuery = algorithmDefinition.streamQuery
+    let storeQuery = algorithmDefinition.storeQuery
+
+    if(group === "Similarity") {
+      const {itemLabel, relationshipType, categoryLabel} = parameters
+      streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel)
+      storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel)
+      fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType)
+
+      delete parameters.itemLabel
+      delete parameters.relationshipType
+      delete parameters.categoryLabel
+    }
 
     service({
       streamCypher: streamQuery,
@@ -194,13 +222,16 @@ class TabExampleVerticalTabular extends Component {
       persisted
     }).then(result => {
       this.props.completeTask(taskId, result)
-    })
-      .catch(exc => {
+      if(persisted) {
+        this.props.onComplete()
+      }
+    }).catch(exc => {
         console.log('ERROR IN SERVICE', exc)
         this.props.completeTask(taskId, [], exc.toString())
+
       })
 
-    this.props.runTask(taskId)
+    this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
   }
 
   render() {
@@ -226,12 +257,15 @@ const mapStateToProps = state => ({
   limit: state.settings.limit
 })
 
-const mapDispatchToProps = dispatch => ({
-  runTask: taskId => {
-    dispatch(runTask({ taskId }))
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  runTask: (taskId, query) => {
+    dispatch(runTask({ taskId, query }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
+  },
+  onComplete: () => {
+    ownProps.onComplete()
   }
 })
 
