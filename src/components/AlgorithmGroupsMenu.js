@@ -1,7 +1,8 @@
-import { Menu, Icon } from "semantic-ui-react"
+import { Menu, Icon, Dropdown, Header } from "semantic-ui-react"
 import React from "react"
 import { connect } from "react-redux"
 import { selectGroup } from "../ducks/algorithms"
+import { getAlgorithms } from "./algorithmsLibrary"
 
 const menuItemStyle = {
   padding: '2em'
@@ -19,15 +20,24 @@ const topBarStyle = {
   height: '100%'
 }
 
-const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) =>
-  <Menu vertical={true} inverted style={menuStyle}>
-    <div style={topBarStyle}>
-      <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
+const menuDivStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  margin: '0 0.5em'
+}
+
+const menuDDStyle = {
+  paddingLeft: 0
+}
+
+const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children, selectAlgorithm }) =>
+  <Menu inverted>
+      {/*<Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
                  style={menuItemStyle}>
         <Icon name='sun'/>
         Home
-      </Menu.Item>
-      <Menu.Item active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
+      </Menu.Item>*/}
+    {/*  <Menu.Item active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
                  style={menuItemStyle}>
         <Icon name='sun'/>
         Centralities
@@ -43,9 +53,47 @@ const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) =>
                  style={menuItemStyle}>
         <Icon name='snowflake'/>
         Path Finding
-      </Menu.Item>
+      </Menu.Item>*/}
+    <div style={menuDivStyle} onClick={() => selectGroup('Home')}>
+      <Header inverted> <Icon name='home'/> Home </Header>
     </div>
-    <div>
+    <div style={menuDivStyle}>
+      <Icon name='sun'/>
+      <Dropdown item text='Centralities' style={menuDDStyle}>
+        <Dropdown.Menu>
+          {getAlgorithms('Centralities').map(algorithm =>
+            <Dropdown.Item key={algorithm} as='a'
+                           onClick={() => selectAlgorithm(algorithm)}>
+              {algorithm}
+            </Dropdown.Item>)}
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
+    <div style={menuDivStyle}>
+      <Icon name='group'/>
+      <Dropdown item text='Community Detection' style={menuDDStyle}>
+        <Dropdown.Menu>
+          {getAlgorithms('Community Detection').map(algorithm =>
+            <Dropdown.Item key={algorithm} as='a'
+                           onClick={() => selectAlgorithm(algorithm)}>
+              {algorithm}
+            </Dropdown.Item>)}
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
+    <div style={menuDivStyle}>
+      <Icon name='snowflake'/>
+      <Dropdown item text='Path Finding' style={menuDDStyle}>
+        <Dropdown.Menu>
+          {getAlgorithms('Path Finding').map(algorithm =>
+            <Dropdown.Item key={algorithm} as='a'
+                           onClick={() => selectAlgorithm(algorithm)}>
+              {algorithm}
+            </Dropdown.Item>)}
+        </Dropdown.Menu>
+      </Dropdown>
+    </div>
+    {/*<div>
       <Menu.Item active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
                  style={menuItemStyle}>
         <Icon name='database'/>
@@ -54,7 +102,7 @@ const AlgorithmsGroupMenu = ({ activeGroup, selectGroup, children }) =>
       <Menu.Item>
         {children}
       </Menu.Item>
-    </div>
+    </div>*/}
   </Menu>
 
 
