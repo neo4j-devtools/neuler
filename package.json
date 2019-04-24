@@ -24,6 +24,7 @@
     "neo4j-driver": "^1.7.2",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
+    "react-force-graph-2d": "^1.5.7",
     "react-redux": "^6.0.0",
     "react-scripts": "2.1.1",
     "react-testing-library": "^6.0.0",

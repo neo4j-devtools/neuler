@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Button, Header, Icon, Segment, Menu, Loader, Message } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
+import GraphVisualiser2 from './visualisation/GraphVisualiser2'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView from './CodeView'
@@ -24,6 +25,15 @@ const TableView = ({ task }) => {
 const VisView = ({ task, active }) => (
   <div style={tabContentStyle}>
     <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
+                     algorithm={task.algorithm}
+                     relationshipType={task.parameters.relationshipType}
+                     writeProperty={(task.parameters.config || {}).writeProperty}/>
+  </div>
+)
+
+const VisView2 = ({ task, active }) => (
+  <div style={tabContentStyle}>
+    <GraphVisualiser2 taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
                      algorithm={task.algorithm}
                      relationshipType={task.parameters.relationshipType}
                      writeProperty={(task.parameters.config || {}).writeProperty}/>
@@ -120,6 +130,12 @@ class HorizontalAlgoTab extends Component {
                   : null
                 }
 
+                {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity')  ?
+                  <Menu.Item name='Viz2' active={activeItem === 'Viz2'}
+                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                  : null
+                }
+
                 <Menu.Item name='Code' active={activeItem === 'Code'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
               </div>
@@ -139,6 +155,7 @@ class HorizontalAlgoTab extends Component {
                   </Button>
                 </div>
 
+
             </Menu>
             <Segment attached='bottom'>
 
@@ -153,6 +170,11 @@ class HorizontalAlgoTab extends Component {
               {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                 <div style={getStyle('Visualisation')}>
                   <VisView task={task} active={activeItem === 'Visualisation'}/>
+                </div> : null}
+
+              {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity') ?
+                <div style={getStyle('Viz2')}>
+                  <VisView2 task={task} active={activeItem === 'Visualisation'}/>
                 </div> : null}
 
               {activeGroup === 'Centralities' ?

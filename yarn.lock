@@ -1029,6 +1029,11 @@
     "@svgr/core" "^2.4.1"
     loader-utils "^1.1.0"
 
+"@tweenjs/tween.js@^17.3.0":
+  version "17.3.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/@tweenjs/tween.js/-/tween.js-17.3.0.tgz#1cbea14b4b5baa292274c96766fd1b2a56b7ca9f"
+  integrity sha1-HL6hS0tbqikidMlnZv0bKla3yp8=
+
 "@types/istanbul-lib-coverage@^1.1.0":
   version "1.1.0"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/@types/istanbul-lib-coverage/-/istanbul-lib-coverage-1.1.0.tgz#2cc2ca41051498382b43157c8227fea60363f94a"
@@ -1409,6 +1414,11 @@ accepts@~1.3.4, accepts@~1.3.5:
   dependencies:
     mime-types "~2.1.18"
     negotiator "0.6.1"
+
+accessor-fn@^1.2.2:
+  version "1.2.2"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/accessor-fn/-/accessor-fn-1.2.2.tgz#dd52c271465388b29764ab79f2222dedd11e49b2"
+  integrity sha1-3VLCcUZTiLKXZKt58iIt7dEeSbI=
 
 acorn-dynamic-import@^3.0.0:
   version "3.0.0"
@@ -2056,6 +2066,11 @@ bcrypt-pbkdf@^1.0.0:
   dependencies:
     tweetnacl "^0.14.3"
 
+bezier-js@^2.3.2:
+  version "2.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/bezier-js/-/bezier-js-2.4.0.tgz#8fb65113e01c7d3e443aa9fd66921478befc24a0"
+  integrity sha1-j7ZRE+AcfT5EOqn9ZpIUeL78JKA=
+
 bfj@6.1.1:
   version "6.1.1"
   resolved "https://registry.yarnpkg.com/bfj/-/bfj-6.1.1.tgz#05a3b7784fbd72cfa3c22e56002ef99336516c48"
@@ -2419,6 +2434,11 @@ caniuse-lite@^1.0.0, caniuse-lite@^1.0.30000884, caniuse-lite@^1.0.30000887, can
   version "1.0.30000928"
   resolved "https://registry.yarnpkg.com/caniuse-lite/-/caniuse-lite-1.0.30000928.tgz#805e828dc72b06498e3683a32e61c7507fd67b88"
   integrity sha512-aSpMWRXL6ZXNnzm8hgE4QDLibG5pVJ2Ujzsuj3icazlIkxXkPXtL+BWnMx6FBkWmkZgBHGUxPZQvrbRw2ZTxhg==
+
+canvas-color-tracker@^1.0.1:
+  version "1.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/canvas-color-tracker/-/canvas-color-tracker-1.0.1.tgz#f1058153d4ba137c026888af7db8aeeea940ed77"
+  integrity sha1-8QWBU9S6E3wCaIivfbiu7qlA7Xc=
 
 capture-exit@^1.2.0:
   version "1.2.0"
@@ -3150,6 +3170,11 @@ d3-array@^1.2.0:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-array/-/d3-array-1.2.4.tgz#635ce4d5eea759f6f605863dbcfc30edc737f71f"
   integrity sha1-Y1zk1e6nWfb2BYY9vPww7cc39x8=
 
+d3-binarytree@~0.1:
+  version "0.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-binarytree/-/d3-binarytree-0.1.4.tgz#fa322096af6975b6bdf589eb7881aa54815f1a63"
+  integrity sha1-+jIglq9pdba99YnreIGqVIFfGmM=
+
 d3-collection@1:
   version "1.0.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-collection/-/d3-collection-1.0.7.tgz#349bd2aa9977db071091c13144d5e4f16b5b310e"
@@ -3159,6 +3184,35 @@ d3-color@1, d3-color@^1.0.3:
   version "1.2.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-color/-/d3-color-1.2.3.tgz#6c67bb2af6df3cc8d79efcc4d3a3e83e28c8048f"
   integrity sha1-bGe7KvbfPMjXnvzE06PoPijIBI8=
+
+d3-dispatch@1:
+  version "1.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-dispatch/-/d3-dispatch-1.0.5.tgz#e25c10a186517cd6c82dd19ea018f07e01e39015"
+  integrity sha1-4lwQoYZRfNbILdGeoBjwfgHjkBU=
+
+d3-drag@1, d3-drag@^1.2.3:
+  version "1.2.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-drag/-/d3-drag-1.2.3.tgz#46e206ad863ec465d88c588098a1df444cd33c64"
+  integrity sha1-RuIGrYY+xGXYjFiAmKHfREzTPGQ=
+  dependencies:
+    d3-dispatch "1"
+    d3-selection "1"
+
+d3-ease@1:
+  version "1.0.5"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-ease/-/d3-ease-1.0.5.tgz#8ce59276d81241b1b72042d6af2d40e76d936ffb"
+  integrity sha1-jOWSdtgSQbG3IELWry1A522Tb/s=
+
+d3-force-3d@^2.0.1:
+  version "2.0.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-force-3d/-/d3-force-3d-2.0.1.tgz#bf01a4361ed63f06b539ecc40e609988ff83f2e4"
+  integrity sha1-vwGkNh7WPwa1OezEDmCZiP+D8uQ=
+  dependencies:
+    d3-binarytree "~0.1"
+    d3-dispatch "1"
+    d3-octree "~0.1"
+    d3-quadtree "1"
+    d3-timer "1"
 
 d3-format@1, d3-format@^1.3.2:
   version "1.3.2"
@@ -3177,10 +3231,20 @@ d3-interpolate@1, d3-interpolate@^1.3.2:
   dependencies:
     d3-color "1"
 
+d3-octree@~0.1:
+  version "0.1.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-octree/-/d3-octree-0.1.4.tgz#c3d6daf84f6b78fb11b38623e53b393e3a9276b0"
+  integrity sha1-w9ba+E9rePsRs4Yj5Ts5PjqSdrA=
+
 d3-path@1:
   version "1.0.7"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-path/-/d3-path-1.0.7.tgz#8de7cd693a75ac0b5480d3abaccd94793e58aae8"
   integrity sha1-jefNaTp1rAtUgNOrrM2UeT5Yqug=
+
+d3-quadtree@1:
+  version "1.0.6"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-quadtree/-/d3-quadtree-1.0.6.tgz#d1ab2a95a7f27bbde88582c94166f6ae35f32056"
+  integrity sha1-0asqlafye73ohYLJQWb2rjXzIFY=
 
 d3-random@^1.0.3:
   version "1.1.2"
@@ -3220,6 +3284,11 @@ d3-scale@^2.1.2:
     d3-time "1"
     d3-time-format "2"
 
+d3-selection@1, d3-selection@^1.1.0, d3-selection@^1.4.0:
+  version "1.4.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-selection/-/d3-selection-1.4.0.tgz#ab9ac1e664cf967ebf1b479cc07e28ce9908c474"
+  integrity sha1-q5rB5mTPln6/G0ecwH4ozpkIxHQ=
+
 d3-shape@^1.0.6, d3-shape@^1.2.0:
   version "1.3.3"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-shape/-/d3-shape-1.3.3.tgz#b136e6caa9374034b5946bbd414aaa54a39087c3"
@@ -3246,10 +3315,38 @@ d3-time@1:
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-time/-/d3-time-1.0.10.tgz#8259dd71288d72eeacfd8de281c4bf5c7393053c"
   integrity sha1-glndcSiNcu6s/Y3igcS/XHOTBTw=
 
+d3-timer@1:
+  version "1.0.9"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-timer/-/d3-timer-1.0.9.tgz#f7bb8c0d597d792ff7131e1c24a36dd471a471ba"
+  integrity sha1-97uMDVl9eS/3Ex4cJKNt1HGkcbo=
+
+d3-transition@1:
+  version "1.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-transition/-/d3-transition-1.2.0.tgz#f538c0e21b2aa1f05f3e965f8567e81284b3b2b8"
+  integrity sha1-9TjA4hsqofBfPpZfhWfoEoSzsrg=
+  dependencies:
+    d3-color "1"
+    d3-dispatch "1"
+    d3-ease "1"
+    d3-interpolate "1"
+    d3-selection "^1.1.0"
+    d3-timer "1"
+
 d3-voronoi@^1.1.2:
   version "1.1.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-voronoi/-/d3-voronoi-1.1.4.tgz#dd3c78d7653d2bb359284ae478645d95944c8297"
   integrity sha1-3Tx412U9K7NZKErkeGRdlZRMgpc=
+
+d3-zoom@^1.7.3:
+  version "1.7.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/d3-zoom/-/d3-zoom-1.7.3.tgz#f444effdc9055c38077c4299b4df999eb1d47ccb"
+  integrity sha1-9ETv/ckFXDgHfEKZtN+ZnrHUfMs=
+  dependencies:
+    d3-dispatch "1"
+    d3-drag "1"
+    d3-interpolate "1"
+    d3-selection "1"
+    d3-transition "1"
 
 damerau-levenshtein@^1.0.4:
   version "1.0.4"
@@ -3276,6 +3373,11 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
   integrity sha1-6vQ5/U1ISK105cx9vvIAZyueNFs=
+
+debounce@^1.1.0:
+  version "1.2.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/debounce/-/debounce-1.2.0.tgz#44a540abc0ea9943018dc0eaa95cce87f65cd131"
+  integrity sha1-RKVAq8DqmUMBjcDqqVzOh/Zc0TE=
 
 debug@2.6.9, debug@^2.1.2, debug@^2.2.0, debug@^2.3.3, debug@^2.6.0, debug@^2.6.6, debug@^2.6.8, debug@^2.6.9:
   version "2.6.9"
@@ -4424,6 +4526,24 @@ for-own@^1.0.0:
   dependencies:
     for-in "^1.0.1"
 
+force-graph@^1.14.4:
+  version "1.14.4"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/force-graph/-/force-graph-1.14.4.tgz#5e99c0b822fe5b7ef569cfd1a542ddb6e20fae3a"
+  integrity sha1-XpnAuCL+W371ac/RpULdtuIPrjo=
+  dependencies:
+    "@tweenjs/tween.js" "^17.3.0"
+    accessor-fn "^1.2.2"
+    bezier-js "^2.3.2"
+    canvas-color-tracker "^1.0.1"
+    d3-drag "^1.2.3"
+    d3-force-3d "^2.0.1"
+    d3-scale-chromatic "^1.3.3"
+    d3-selection "^1.4.0"
+    d3-zoom "^1.7.3"
+    index-array-by "^1.2.2"
+    kapsule "^1.9.2"
+    lodash.throttle "^4.1.1"
+
 forever-agent@~0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/forever-agent/-/forever-agent-0.6.1.tgz#fbc71f0c41adeb37f96c577ad1ed42d8fdacca91"
@@ -5194,6 +5314,11 @@ imurmurhash@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/imurmurhash/-/imurmurhash-0.1.4.tgz#9218b9b2b928a238b13dc4fb6b6d576f231453ea"
   integrity sha1-khi5srkoojixPcT7a21XbyMUU+o=
+
+index-array-by@^1.2.2:
+  version "1.2.3"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/index-array-by/-/index-array-by-1.2.3.tgz#52a7025144f4184825c69f8e61ea9fa2a62501cc"
+  integrity sha1-UqcCUUT0GEglxp+OYeqfoqYlAcw=
 
 indexes-of@^1.0.1:
   version "1.0.1"
@@ -6280,6 +6405,13 @@ jsx-ast-utils@^2.0.1:
   dependencies:
     array-includes "^3.0.3"
 
+kapsule@^1.9.2:
+  version "1.10.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/kapsule/-/kapsule-1.10.0.tgz#0fe7fd8a98cc3c556912519dce464b4085e9a93f"
+  integrity sha1-D+f9ipjMPFVpElGdzkZLQIXpqT8=
+  dependencies:
+    debounce "^1.1.0"
+
 keyboard-key@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/keyboard-key/-/keyboard-key-1.0.2.tgz#212e14dde4c2059814336159bbc5acd0a348ca6b"
@@ -6493,6 +6625,11 @@ lodash.templatesettings@^4.0.0:
   integrity sha1-K01OlbpEDZFf8IvImeRVNmZxMxY=
   dependencies:
     lodash._reinterpolate "~3.0.0"
+
+lodash.throttle@^4.1.1:
+  version "4.1.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/lodash.throttle/-/lodash.throttle-4.1.1.tgz#c23e91b710242ac70c37f1e1cda9274cc39bf2f4"
+  integrity sha1-wj6RtxAkKscMN/HhzaknTMOb8vQ=
 
 lodash.uniq@^4.5.0:
   version "4.5.0"
@@ -8344,7 +8481,7 @@ prop-types@^15.5.10, prop-types@^15.5.7, prop-types@^15.6.2:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-prop-types@^15.5.8:
+prop-types@^15.5.8, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/prop-types/-/prop-types-15.7.2.tgz#52c41e75b8c87e72b9d9360e0206b99dcbffa6c5"
   integrity sha1-UsQedbjIfnK52TYOAga5ncv/psU=
@@ -8579,6 +8716,15 @@ react-error-overlay@^5.1.0:
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-5.1.2.tgz#888957b884d4b25b083a82ad550f7aad96585394"
   integrity sha512-7kEBKwU9R8fKnZJBRa5RSIfay4KJwnYvKB6gODGicUmDSAhQJ7Tdnll5S0RLtYrzRfMVXlqYw61rzrSpP4ThLQ==
 
+react-force-graph-2d@^1.5.7:
+  version "1.5.7"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-force-graph-2d/-/react-force-graph-2d-1.5.7.tgz#56c34332619c308132124c424882d6d242f9b964"
+  integrity sha1-VsNDMmGcMIEyEkxCSILW0kL5uWQ=
+  dependencies:
+    force-graph "^1.14.4"
+    prop-types "^15.7.2"
+    react-kapsule "^1.4.1"
+
 react-is@^16.3.2, react-is@^16.6.3:
   version "16.7.0"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-16.7.0.tgz#c1bd21c64f1f1364c6f70695ec02d69392f41bfa"
@@ -8588,6 +8734,11 @@ react-is@^16.8.1, react-is@^16.8.4:
   version "16.8.4"
   resolved "https://neo.jfrog.io/neo/api/npm/npm/react-is/-/react-is-16.8.4.tgz#90f336a68c3a29a096a3d648ab80e87ec61482a2"
   integrity sha1-kPM2pow6KaCWo9ZIq4DofsYUgqI=
+
+react-kapsule@^1.4.1:
+  version "1.4.1"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/react-kapsule/-/react-kapsule-1.4.1.tgz#4dfef562d0757f43933e9959f4b57e418881bd8a"
+  integrity sha1-Tf71YtB1f0OTPplZ9LV+QYiBvYo=
 
 react-measure@^2.0.2:
   version "2.2.4"
