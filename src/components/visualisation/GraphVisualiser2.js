@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Grid, Form, Button, Icon, Select, Loader, Input} from "semantic-ui-react"
-import NeoVis from "./neovis"
 import VisConfigurationBar from './VisConfigurationBar'
 import {getDriver, runCypher} from "../../services/stores/neoStore"
 import {parseProperties} from "../../services/resultMapper"
@@ -8,6 +7,14 @@ import {parseProperties} from "../../services/resultMapper"
 import ForceGraph2D from 'react-force-graph-2d';
 
 const captionCandidates = ['name', 'title']
+
+const scale = (min, max, value, scale = 5) => {
+  const diff = max / Math.max(min, 1)
+  console.log('DIFF', diff)
+  const newVal= Math.max(value / (diff / scale), 1)
+  console.log('VALUE', value, newVal)
+  return newVal
+}
 
 export default class extends Component {
   state = {
@@ -192,11 +199,20 @@ export default class extends Component {
   refreshData(rawData, nodeSize, nodeColour) {
     const data = {}
     data.links = rawData.links.map(value => ({source: value.source, target: value.target}))
+
+    let min = Number.MAX_SAFE_INTEGER
+    let max = 0
+    rawData.nodes.forEach(node => {
+      const size = node.properties[nodeSize]
+      min = Math.min(min, size)
+      max= Math.max(max, size)
+    })
+
     data.nodes = rawData.nodes.map(value => ({
       id: value.id,
       name: value.properties.name,
-      val: value.properties[nodeSize],
-      color: value.properties[nodeColour]
+      val: scale(min, max, value.properties[nodeSize]),
+      group: value.properties[nodeColour]
     }))
 
     console.log("refreshData:")
@@ -273,6 +289,8 @@ export default class extends Component {
             <ForceGraph2D
               graphData={data}
               nodeId="id"
+              nodeAutoColorBy='group'
+              nodeRelSize={3}
             /> : null}
       </Grid.Row>
     </Grid>
