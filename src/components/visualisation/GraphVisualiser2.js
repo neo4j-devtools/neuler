@@ -100,7 +100,7 @@ export default class extends Component {
 
   generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
     if (hideLonelyNodes) {
-      return `match path = (node1${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-(node2)
+      return `match path = (node1${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]->(node2)
               return node1, node2`
     } else {
       return `match path = (n${label ? ':' + label : ''})
@@ -154,7 +154,6 @@ export default class extends Component {
       if(cypher) {
         runCypher(cypher)
           .then(result => {
-            console.log(result)
             result.records.map(record => {
               const node1 = record.get("node1")
               const node1Properties = parseProperties(node1.properties)
@@ -162,24 +161,27 @@ export default class extends Component {
               const node2 = record.get("node2")
               const node2Properties = parseProperties(node2.properties)
 
-              nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), name:node1Properties.name, val: node1Properties[this.state.nodeSize]}))
-              nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), name:node2Properties.name, val: node2Properties[this.state.nodeSize]}))
+              // nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), name:node1Properties.name, val: node1Properties[this.state.nodeSize]}))
+              // nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), name:node2Properties.name, val: node2Properties[this.state.nodeSize]}))
+
+              nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
+              nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
 
               relationships.push({source: node1.identity.toNumber().toString(), target: node2.identity.toNumber().toString()})
             })
 
             const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
 
-            const data = {
+            const rawData = {
               nodes: nodes,
               links: relationships
             }
 
-            console.log(data)
+            this.refreshData(rawData, this.state.nodeSize, this.state.nodeColor)
 
             this.setState({
               cypher: cypher,
-              data: data,
+              rawData: rawData,
               labels: labelProperties,
               captions,
               taskId
@@ -191,6 +193,24 @@ export default class extends Component {
     }
   }
 
+  refreshData(rawData, nodeSize, nodeColour) {
+    const data = {}
+    data.links = rawData.links
+    data.nodes = rawData.nodes.map(value => ({
+      id: value.id,
+      name: value.properties.name,
+      val: value.properties[nodeSize],
+      color: value.properties[nodeColour]
+    }))
+
+    console.log("refreshData:")
+    console.log(data)
+
+    this.setState({
+      data: data
+    })
+  }
+
   updateCaption(label, prop) {
     const captions = {...this.state.captions}
     captions[label] = prop.value
@@ -200,10 +220,16 @@ export default class extends Component {
 
   updateNodeSize(nodeSize) {
     this.setState({nodeSize})
+    if(this.state.rawData) {
+      this.refreshData(this.state.rawData, nodeSize, this.state.nodeColor)
+    }
   }
 
   updateNodeColor(nodeColor) {
     this.setState({nodeColor})
+    if(this.state.rawData) {
+      this.refreshData(this.state.rawData, this.state.nodeSize, nodeColor)
+    }
   }
 
   componentDidMount() {
@@ -234,28 +260,8 @@ export default class extends Component {
   }
 
   render() {
+    // const {data, labels, rendering, nodeSize, nodeColor, captions} = this.state
     const {data, labels, rendering, nodeSize, nodeColor, captions} = this.state
-
-
-    // const data = {
-    //   nodes: [
-    //     {id: "id1", name: "Mark", val: 1},
-    //     {id: "id2", name: "Irfan", val: 2},
-    //     {id: "id3", name: "Eve", val: 3},
-    //     {id: "id4", name: "Peacey", val: 4},
-    //     {id: "id5", name: "Peacey", val: 4},
-    //     {id: "id6", name: "Peacey", val: 4},
-    //     {id: "id7", name: "Peacey", val: 4},
-    //     {id: "id8", name: "Peacey", val: 4}
-    //
-    //   ],
-    //   links: [
-    //     {source: "id1", target: "id2"},
-    //     {source: "id3", target: "id5"},
-    //     {source: "id4", target: "id6"},
-    //     {source: "id3", target: "id4"}
-    //   ]
-    // }
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{marginLeft: '1em'}}>
@@ -266,14 +272,12 @@ export default class extends Component {
                              onUpdateConfig={this.onUpdateConfig.bind(this, this.props)}/>
       </Grid.Row>
       <Grid.Row>
-        <LoaderExampleInlineCentered active={false}/>
-        <div style={{ width: '80%', height: '80%' }} id={'div_' + this.props.taskId}>
+        <LoaderExampleInlineCentered active={rendering}/>
           {data ?
             <ForceGraph2D
               graphData={data}
               nodeId="id"
             /> : null}
-        </div>
       </Grid.Row>
     </Grid>
   }
