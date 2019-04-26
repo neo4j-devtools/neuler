@@ -18,38 +18,33 @@ export default class extends Component {
     nodeColour: null,
     relationshipThickness: "weight",
     cypher: null,
-    data: null
+    data: null,
   }
-//
-//   constructor(props) {
-//     console.log('CONSTRUCTOR')
-//     super(props)
-//     this.visContainer = React.createRef()
-//
-//     this.networks = {}
-//
-//     this.config = {
-//       container_id: "viz",
-//       server_url: "bolt://localhost:7687",
-//       server_user: "neo4j",
-//       server_password: "neo",
-//       labels: {
-//         "Person": {
-//           caption: "name",
-//           size: "pagerank",
-//           community: "louvain"
-//         }
-//       },
-//       initial_cypher: `match (n:Person)
-//       where exists(n.pagerank)
-//       return n`
-//     }
-//   }
-//
-//   getVis() {
-//     return this.networks[this.props.taskId]
-//   }
-//
+
+  constructor(props) {
+    console.log('CONSTRUCTOR')
+    super(props)
+    this.networks = {}
+
+    this.config = {
+      container_id: "viz",
+      server_url: "bolt://localhost:7687",
+      server_user: "neo4j",
+      server_password: "neo",
+      labels: {
+        "Person": {
+          caption: "name",
+          size: "pagerank",
+          community: "louvain"
+        }
+      },
+    }
+  }
+
+  getVis() {
+    return this.networks[this.props.taskId]
+  }
+
   onUpdateConfig(props) {
     const {captions, cypher, nodeSize, nodeColor} = this.state
     const {taskId, relationshipType} = props
@@ -151,51 +146,52 @@ export default class extends Component {
       const nodesSet = new Set()
       const relationships = []
 
-      if(cypher) {
-        runCypher(cypher)
-          .then(result => {
-            result.records.map(record => {
-              const node1 = record.get("node1")
-              const node1Properties = parseProperties(node1.properties)
+      runCypher(cypher)
+        .then(result => {
+          result.records.map(record => {
+            const node1 = record.get("node1")
+            const node1Properties = parseProperties(node1.properties)
 
-              const node2 = record.get("node2")
-              const node2Properties = parseProperties(node2.properties)
+            const node2 = record.get("node2")
+            const node2Properties = parseProperties(node2.properties)
 
-              // nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), name:node1Properties.name, val: node1Properties[this.state.nodeSize]}))
-              // nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), name:node2Properties.name, val: node2Properties[this.state.nodeSize]}))
+            // nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), name:node1Properties.name, val: node1Properties[this.state.nodeSize]}))
+            // nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), name:node2Properties.name, val: node2Properties[this.state.nodeSize]}))
 
-              nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
-              nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
+            nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
+            nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
 
-              relationships.push({source: node1.identity.toNumber().toString(), target: node2.identity.toNumber().toString()})
+            relationships.push({
+              source: node1.identity.toNumber().toString(),
+              target: node2.identity.toNumber().toString()
             })
-
-            const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
-
-            const rawData = {
-              nodes: nodes,
-              links: relationships
-            }
-
-            this.refreshData(rawData, this.state.nodeSize, this.state.nodeColor)
-
-            this.setState({
-              cypher: cypher,
-              rawData: rawData,
-              labels: labelProperties,
-              captions,
-              taskId
-            })
-
           })
-          .catch(handleException)
-      }
+
+          const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
+
+          const rawData = {
+            nodes: nodes,
+            links: relationships
+          }
+
+          this.refreshData(rawData, this.state.nodeSize, this.state.nodeColor)
+
+          this.setState({
+            cypher: cypher,
+            rawData: rawData,
+            labels: labelProperties,
+            captions,
+            taskId
+          })
+
+        })
+        .catch(handleException)
     }
   }
 
   refreshData(rawData, nodeSize, nodeColour) {
     const data = {}
-    data.links = rawData.links
+    data.links = rawData.links.map(value => ({source: value.source, target: value.target}))
     data.nodes = rawData.nodes.map(value => ({
       id: value.id,
       name: value.properties.name,
