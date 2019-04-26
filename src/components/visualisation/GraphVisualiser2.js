@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
 import {Grid, Form, Button, Icon, Select, Loader, Input} from "semantic-ui-react"
 import NeoVis from "./neovis"
-import {getDriver} from "../../services/stores/neoStore"
 import VisConfigurationBar from './VisConfigurationBar'
+import {getDriver, runCypher} from "../../services/stores/neoStore"
+import {parseProperties} from "../../services/resultMapper"
 
 import ForceGraph2D from 'react-force-graph-2d';
 
@@ -16,38 +17,39 @@ export default class extends Component {
     nodeSize: null,
     nodeColour: null,
     relationshipThickness: "weight",
-    cypher: null
+    cypher: null,
+    data: null
   }
-
-  constructor(props) {
-    console.log('CONSTRUCTOR')
-    super(props)
-    this.visContainer = React.createRef()
-
-    this.networks = {}
-
-    this.config = {
-      container_id: "viz",
-      server_url: "bolt://localhost:7687",
-      server_user: "neo4j",
-      server_password: "neo",
-      labels: {
-        "Person": {
-          caption: "name",
-          size: "pagerank",
-          community: "louvain"
-        }
-      },
-      initial_cypher: `match (n:Person)
-      where exists(n.pagerank)
-      return n`
-    }
-  }
-
-  getVis() {
-    return this.networks[this.props.taskId]
-  }
-
+//
+//   constructor(props) {
+//     console.log('CONSTRUCTOR')
+//     super(props)
+//     this.visContainer = React.createRef()
+//
+//     this.networks = {}
+//
+//     this.config = {
+//       container_id: "viz",
+//       server_url: "bolt://localhost:7687",
+//       server_user: "neo4j",
+//       server_password: "neo",
+//       labels: {
+//         "Person": {
+//           caption: "name",
+//           size: "pagerank",
+//           community: "louvain"
+//         }
+//       },
+//       initial_cypher: `match (n:Person)
+//       where exists(n.pagerank)
+//       return n`
+//     }
+//   }
+//
+//   getVis() {
+//     return this.networks[this.props.taskId]
+//   }
+//
   onUpdateConfig(props) {
     const {captions, cypher, nodeSize, nodeColor} = this.state
     const {taskId, relationshipType} = props
@@ -73,40 +75,40 @@ export default class extends Component {
       }
     }
 
-    const initVis = (taskId, config, driver) => {
-      this.setState({rendering: true})
-      const neovis = new NeoVis(config, driver);
-      console.log('RENDERING')
-      neovis.render(() => {
-        console.log('RENDERING DONE')
-        this.setState({rendering: false})
-      });
-      this.networks[taskId] = neovis
-    }
-
-    if (this.networks[taskId]) {
-      // CLEAR CANVAS? REASSING IT??
-      if (this.networks[taskId]._config.labels !== this.config.labels) {
-        this.networks[taskId].setContainerId(this.config.container_id)
-      } else {
-        initVis(taskId, this.config, getDriver())
-      }
-    } else {
-      initVis(taskId, this.config, getDriver())
-    }
+    // const initVis = (taskId, config, driver) => {
+    //   this.setState({rendering: true})
+    //   const neovis = new NeoVis(config, driver);
+    //   console.log('RENDERING')
+    //   neovis.render(() => {
+    //     console.log('RENDERING DONE')
+    //     this.setState({rendering: false})
+    //   });
+    //   this.networks[taskId] = neovis
+    // }
+    //
+    // if (this.networks[taskId]) {
+    //   // CLEAR CANVAS? REASSING IT??
+    //   if (this.networks[taskId]._config.labels !== this.config.labels) {
+    //     this.networks[taskId].setContainerId(this.config.container_id)
+    //   } else {
+    //     initVis(taskId, this.config, getDriver())
+    //   }
+    // } else {
+    //   initVis(taskId, this.config, getDriver())
+    // }
   }
 
   generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
     if (hideLonelyNodes) {
-      return `match path = (n${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
-return path`
+      return `match path = (node1${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-(node2)
+              return node1, node2`
     } else {
       return `match path = (n${label ? ':' + label : ''})
-where not(n["${writeProperty}"] is null)
-return path
-union
-match path = ()-[${relationshipType ? ':' + relationshipType : ''}]-()
-return path`
+              where not(n["${writeProperty}"] is null)
+              return path
+              union
+              match path = ()-[${relationshipType ? ':' + relationshipType : ''}]-()
+              return path`
     }
   }
 
@@ -139,12 +141,53 @@ return path`
         return labelsMap
       }, {})
 
-      this.setState({
-        cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
-        labels: labelProperties,
-        captions,
-        taskId
-      })
+      const cypher = this.generateCypher(label, relationshipType, writeProperty);
+
+      const handleException = error => {
+        console.error(error)
+        throw new Error(error)
+      }
+
+      const nodesSet = new Set()
+      const relationships = []
+
+      if(cypher) {
+        runCypher(cypher)
+          .then(result => {
+            console.log(result)
+            result.records.map(record => {
+              const node1 = record.get("node1")
+              const node1Properties = parseProperties(node1.properties)
+
+              const node2 = record.get("node2")
+              const node2Properties = parseProperties(node2.properties)
+
+              nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), name:node1Properties.name, val: node1Properties[this.state.nodeSize]}))
+              nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), name:node2Properties.name, val: node2Properties[this.state.nodeSize]}))
+
+              relationships.push({source: node1.identity.toNumber().toString(), target: node2.identity.toNumber().toString()})
+            })
+
+            const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
+
+            const data = {
+              nodes: nodes,
+              links: relationships
+            }
+
+            console.log(data)
+
+            this.setState({
+              cypher: cypher,
+              data: data,
+              labels: labelProperties,
+              captions,
+              taskId
+            })
+
+          })
+          .catch(handleException)
+      }
     }
   }
 
@@ -181,18 +224,6 @@ return path`
       || nextProps.active !== this.props.active) {
       this.dataUpdated(nextProps)
     }
-
-    if (!nextProps.active && this.getVis()) {
-
-      const height = this.visContainer.current.clientHeight
-      const width = this.visContainer.current.clientWidth
-
-      if (height > 100 && width > 100) {
-        this.width = width
-        this.height = height
-        console.log(`Set size to ${this.width} x ${this.height}`)
-      }
-    }
   }
 
   componentDidUpdate(prevProps) {
@@ -200,37 +231,31 @@ return path`
       this.onUpdateConfig(this.props)
     }
 
-    if (this.props.active !== prevProps.active) {
-      if (this.props.active) {
-        const vis = this.getVis()
-
-        if (vis) {
-          if (this.height && this.width) {
-            console.log(`Restoring size to ${this.width} x ${this.height}`)
-            this.getVis().setSize(this.width, this.height)
-          }
-        } else {
-          this.onUpdateConfig(this.props)
-        }
-      }
-    }
   }
 
   render() {
-    const {labels, rendering, nodeSize, nodeColor, captions} = this.state
+    const {data, labels, rendering, nodeSize, nodeColor, captions} = this.state
 
-    const data = {
-      nodes: [
-        {id: "id1", name: "Mark", val: 1},
-        {id: "id2", name: "Irfan", val: 2},
-        {id: "id3", name: "Eve", val: 3},
-        {id: "id4", name: "Peacey", val: 4}
-      ],
-      links: [
-        {source: "id1", target: "id2"},
-        {source: "id3", target: "id4"}
-      ]
-    }
+
+    // const data = {
+    //   nodes: [
+    //     {id: "id1", name: "Mark", val: 1},
+    //     {id: "id2", name: "Irfan", val: 2},
+    //     {id: "id3", name: "Eve", val: 3},
+    //     {id: "id4", name: "Peacey", val: 4},
+    //     {id: "id5", name: "Peacey", val: 4},
+    //     {id: "id6", name: "Peacey", val: 4},
+    //     {id: "id7", name: "Peacey", val: 4},
+    //     {id: "id8", name: "Peacey", val: 4}
+    //
+    //   ],
+    //   links: [
+    //     {source: "id1", target: "id2"},
+    //     {source: "id3", target: "id5"},
+    //     {source: "id4", target: "id6"},
+    //     {source: "id3", target: "id4"}
+    //   ]
+    // }
 
     return <Grid divided='vertically' columns={1}>
       <Grid.Row style={{marginLeft: '1em'}}>
@@ -241,12 +266,13 @@ return path`
                              onUpdateConfig={this.onUpdateConfig.bind(this, this.props)}/>
       </Grid.Row>
       <Grid.Row>
-        <LoaderExampleInlineCentered active={rendering}/>
-        <div style={{ width: '100%', height: '100%' }} id={'div_' + this.props.taskId} >
-          <ForceGraph2D
-            graphData={data}
-            nodeId="id"
-          />
+        <LoaderExampleInlineCentered active={false}/>
+        <div style={{ width: '80%', height: '80%' }} id={'div_' + this.props.taskId}>
+          {data ?
+            <ForceGraph2D
+              graphData={data}
+              nodeId="id"
+            /> : null}
         </div>
       </Grid.Row>
     </Grid>
