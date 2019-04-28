@@ -38,7 +38,11 @@ class VisView2 extends Component {
   }
 
   render() {
-    const {task, active} = this.props
+    // Pass in the algorithm group and then we can choose what to pass through to the viz component
+
+    const {task, active, group} = this.props
+
+
     const cypher = this.generateCypher(task.parameters.label, task.parameters.relationshipType)
     return (
       <div style={tabContentStyle}>
@@ -46,6 +50,7 @@ class VisView2 extends Component {
                           algorithm={task.algorithm}
                           relationshipType={task.parameters.relationshipType}
                           cypher={cypher}
+                          group={group}
                           writeProperty={(task.parameters.config || {}).writeProperty}/>
       </div>
     )
@@ -150,6 +155,7 @@ class HorizontalAlgoTab extends Component {
 
                 <Menu.Item name='Code' active={activeItem === 'Code'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+
               </div>
 
                 <div style={{
@@ -184,9 +190,9 @@ class HorizontalAlgoTab extends Component {
                   <VisView task={task} active={activeItem === 'Visualisation'}/>
                 </div> : null}
 
-              {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity') ?
+              {activeGroup !== 'Similarity'  ?
                 <div style={getStyle('Viz2')}>
-                  <VisView2 task={task} active={activeItem === 'Visualisation'}/>
+                  <VisView2 task={task} active={activeItem === 'Visualisation'} group={activeGroup}/>
                 </div> : null}
 
               {activeGroup === 'Centralities' ?

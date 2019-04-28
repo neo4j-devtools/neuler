@@ -24,7 +24,7 @@ export default ({ task }) => (
             <Table.Cell>{result.cost}</Table.Cell>
           </Table.Row>) :
               (<Table.Row key={"no-results"}>
-            <Table.Cell colspan={3}>No results found</Table.Cell>
+            <Table.Cell colSpan={3}>No results found</Table.Cell>
           </Table.Row>)
          :
         <Table.Row key="loading-centrality-result">

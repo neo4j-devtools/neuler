@@ -3,6 +3,7 @@ import {Grid, Form, Button, Icon, Select, Loader, Input} from "semantic-ui-react
 import VisConfigurationBar from './VisConfigurationBar'
 import {getDriver, runCypher} from "../../services/stores/neoStore"
 import {parseProperties} from "../../services/resultMapper"
+import _ from 'lodash'
 
 import ForceGraph2D from 'react-force-graph-2d';
 
@@ -98,7 +99,9 @@ export default class extends Component {
   }
 
   dataUpdated(props) {
-    const {results, taskId, cypher} = props
+    const {results, taskId, cypher, group} = props
+
+    console.log("props:" + props)
 
     let captions = {}
     if (results && results.length > 0) {
@@ -126,51 +129,98 @@ export default class extends Component {
         return labelsMap
       }, {})
 
-      const handleException = error => {
-        console.error(error)
-        throw new Error(error)
+      if(group === "Path Finding") {
+        const nodesSet = new Set()
+        const relationships = []
+
+        const left = _.dropRight(results, 1)
+        const right = _.drop(results, 1)
+
+        _.forEach(_.zip(left,right), value => {
+          const node1 = value[0]
+          const node1Properties = parseProperties(node1.properties)
+
+          const node2 = value[1]
+          const node2Properties = parseProperties(node2.properties)
+
+          console.log(value)
+          console.log(node1, node2)
+
+          nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
+          nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
+
+          relationships.push({
+            source: node1.identity.toNumber().toString(),
+            target: node2.identity.toNumber().toString()
+          })
+        })
+
+        const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
+
+        const rawData = {
+          nodes: nodes,
+          links: relationships
+        }
+
+        this.refreshData(rawData, this.state.nodeSize, this.state.nodeColor)
+
+        this.setState({
+          cypher: cypher,
+          rawData: rawData,
+          labels: labelProperties,
+          captions,
+          taskId
+        })
+
+
+      } else {
+        const handleException = error => {
+          console.error(error)
+          throw new Error(error)
+        }
+
+        const nodesSet = new Set()
+        const relationships = []
+
+        runCypher(cypher)
+          .then(result => {
+            result.records.map(record => {
+              const node1 = record.get("node1")
+              const node1Properties = parseProperties(node1.properties)
+
+              const node2 = record.get("node2")
+              const node2Properties = parseProperties(node2.properties)
+
+              nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
+              nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
+
+              relationships.push({
+                source: node1.identity.toNumber().toString(),
+                target: node2.identity.toNumber().toString()
+              })
+            })
+
+            const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
+
+            const rawData = {
+              nodes: nodes,
+              links: relationships
+            }
+
+            this.refreshData(rawData, this.state.nodeSize, this.state.nodeColor)
+
+            this.setState({
+              cypher: cypher,
+              rawData: rawData,
+              labels: labelProperties,
+              captions,
+              taskId
+            })
+
+          })
+          .catch(handleException)
       }
 
-      const nodesSet = new Set()
-      const relationships = []
-
-      runCypher(cypher)
-        .then(result => {
-          result.records.map(record => {
-            const node1 = record.get("node1")
-            const node1Properties = parseProperties(node1.properties)
-
-            const node2 = record.get("node2")
-            const node2Properties = parseProperties(node2.properties)
-
-            nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
-            nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
-
-            relationships.push({
-              source: node1.identity.toNumber().toString(),
-              target: node2.identity.toNumber().toString()
-            })
-          })
-
-          const nodes = Array.from(nodesSet).map(_ => JSON.parse(_))
-
-          const rawData = {
-            nodes: nodes,
-            links: relationships
-          }
-
-          this.refreshData(rawData, this.state.nodeSize, this.state.nodeColor)
-
-          this.setState({
-            cypher: cypher,
-            rawData: rawData,
-            labels: labelProperties,
-            captions,
-            taskId
-          })
-
-        })
-        .catch(handleException)
     }
   }
 

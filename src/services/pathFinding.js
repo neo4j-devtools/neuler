@@ -34,8 +34,9 @@ export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => 
 export const parseResultStream = (result) => {
     if (result.records) {
         return result.records.map(record => {
-            const { properties, labels } = record.get('node')
+            const { properties, labels,identity } = record.get('node')
             return {
+                identity: identity,
                 properties: parseProperties(properties),
                 labels: labels,
                 cost: record.get('cost')
