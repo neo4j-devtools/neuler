@@ -190,7 +190,7 @@ export default class extends Component {
     }
   }
 
-  refreshData(rawData, nodeSize, nodeColour) {
+  refreshData(rawData, nodeSize, nodeColor) {
     const data = {}
     data.links = rawData.links.map(value => ({source: value.source, target: value.target}))
 
@@ -206,11 +206,9 @@ export default class extends Component {
       id: value.id,
       name: value.properties.name,
       val: scale(min, max, value.properties[nodeSize]),
-      group: value.properties[nodeColour]
+      group: value.properties[nodeColor]
     }))
 
-    console.log("refreshData:")
-    console.log(data)
 
     this.setState({
       data: data
@@ -266,7 +264,6 @@ export default class extends Component {
   }
 
   render() {
-    // const {data, labels, rendering, nodeSize, nodeColor, captions} = this.state
     const {data, labels, rendering, nodeSize, nodeColor, captions} = this.state
 
     return <Grid divided='vertically' columns={1}>
