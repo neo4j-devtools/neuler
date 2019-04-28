@@ -97,22 +97,8 @@ export default class extends Component {
     }
   }
 
-  generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
-    if (hideLonelyNodes) {
-      return `match path = (node1${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]->(node2)
-              return node1, node2`
-    } else {
-      return `match path = (n${label ? ':' + label : ''})
-              where not(n["${writeProperty}"] is null)
-              return path
-              union
-              match path = ()-[${relationshipType ? ':' + relationshipType : ''}]-()
-              return path`
-    }
-  }
-
   dataUpdated(props) {
-    const {results, label, relationshipType, taskId, writeProperty, cypher} = props
+    const {results, taskId, cypher} = props
 
     let captions = {}
     if (results && results.length > 0) {
@@ -139,8 +125,6 @@ export default class extends Component {
 
         return labelsMap
       }, {})
-
-      // const cypher = this.generateCypher(label, relationshipType, writeProperty);
 
       const handleException = error => {
         console.error(error)
