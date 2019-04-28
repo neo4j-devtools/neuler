@@ -10,10 +10,29 @@ const captionCandidates = ['name', 'title']
 
 const scale = (min, max, value, scale = 5) => {
   const diff = max / Math.max(min, 1)
-  console.log('DIFF', diff)
-  const newVal= Math.max(value / (diff / scale), 1)
-  console.log('VALUE', value, newVal)
+  // console.log('DIFF', diff)
+  const newVal = Math.max(value / (diff / scale), 1)
+  // console.log('VALUE', value, newVal)
   return newVal
+}
+
+// customScalingFunction: function (min, max, total, value) {
+//   if (max === min) {
+//     return 0.5;
+//   }
+//   else {
+//     let scale = 1 / (max - min);
+//     return Math.max(0, (value - min) * scale);
+//   }
+// }
+
+const scale2 = (min, max, value, scale = 5) => {
+  if (max === min) {
+    return 0.5
+  } else {
+    const scale = 1 / (max - min);
+    return Math.max(0, (value - min) * scale);
+  }
 }
 
 export default class extends Component {
@@ -76,28 +95,6 @@ export default class extends Component {
         }
       }
     }
-
-    // const initVis = (taskId, config, driver) => {
-    //   this.setState({rendering: true})
-    //   const neovis = new NeoVis(config, driver);
-    //   console.log('RENDERING')
-    //   neovis.render(() => {
-    //     console.log('RENDERING DONE')
-    //     this.setState({rendering: false})
-    //   });
-    //   this.networks[taskId] = neovis
-    // }
-    //
-    // if (this.networks[taskId]) {
-    //   // CLEAR CANVAS? REASSING IT??
-    //   if (this.networks[taskId]._config.labels !== this.config.labels) {
-    //     this.networks[taskId].setContainerId(this.config.container_id)
-    //   } else {
-    //     initVis(taskId, this.config, getDriver())
-    //   }
-    // } else {
-    //   initVis(taskId, this.config, getDriver())
-    // }
   }
 
   generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
@@ -162,9 +159,6 @@ export default class extends Component {
             const node2 = record.get("node2")
             const node2Properties = parseProperties(node2.properties)
 
-            // nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), name:node1Properties.name, val: node1Properties[this.state.nodeSize]}))
-            // nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), name:node2Properties.name, val: node2Properties[this.state.nodeSize]}))
-
             nodesSet.add(JSON.stringify({id: node1.identity.toNumber().toString(), properties: node1Properties}))
             nodesSet.add(JSON.stringify({id: node2.identity.toNumber().toString(), properties: node2Properties}))
 
@@ -205,7 +199,7 @@ export default class extends Component {
     rawData.nodes.forEach(node => {
       const size = node.properties[nodeSize]
       min = Math.min(min, size)
-      max= Math.max(max, size)
+      max = Math.max(max, size)
     })
 
     data.nodes = rawData.nodes.map(value => ({
@@ -232,14 +226,14 @@ export default class extends Component {
 
   updateNodeSize(nodeSize) {
     this.setState({nodeSize})
-    if(this.state.rawData) {
+    if (this.state.rawData) {
       this.refreshData(this.state.rawData, nodeSize, this.state.nodeColor)
     }
   }
 
   updateNodeColor(nodeColor) {
     this.setState({nodeColor})
-    if(this.state.rawData) {
+    if (this.state.rawData) {
       this.refreshData(this.state.rawData, this.state.nodeSize, nodeColor)
     }
   }
@@ -285,13 +279,13 @@ export default class extends Component {
       </Grid.Row>
       <Grid.Row>
         <LoaderExampleInlineCentered active={rendering}/>
-          {data ?
-            <ForceGraph2D
-              graphData={data}
-              nodeId="id"
-              nodeAutoColorBy='group'
-              nodeRelSize={3}
-            /> : null}
+        {data ?
+          <ForceGraph2D
+            graphData={data}
+            nodeId="id"
+            nodeAutoColorBy='group'
+            nodeRelSize={3}
+          /> : null}
       </Grid.Row>
     </Grid>
   }
