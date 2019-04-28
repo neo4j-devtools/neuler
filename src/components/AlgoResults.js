@@ -31,14 +31,26 @@ const VisView = ({ task, active }) => (
   </div>
 )
 
-const VisView2 = ({ task, active }) => (
-  <div style={tabContentStyle}>
-    <GraphVisualiser2 taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
-                     algorithm={task.algorithm}
-                     relationshipType={task.parameters.relationshipType}
-                     writeProperty={(task.parameters.config || {}).writeProperty}/>
-  </div>
-)
+class VisView2 extends Component {
+  generateCypher(label, relationshipType) {
+      return `match path = (node1${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]->(node2)
+              return node1, node2`
+  }
+
+  render() {
+    const {task, active} = this.props
+    const cypher = this.generateCypher(task.parameters.label, task.parameters.relationshipType)
+    return (
+      <div style={tabContentStyle}>
+        <GraphVisualiser2 taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
+                          algorithm={task.algorithm}
+                          relationshipType={task.parameters.relationshipType}
+                          cypher={cypher}
+                          writeProperty={(task.parameters.config || {}).writeProperty}/>
+      </div>
+    )
+  }
+}
 
 const LoaderExampleInlineCentered = ({ active }) => <Loader active={active} inline='centered'>Fetching Data</Loader>
 

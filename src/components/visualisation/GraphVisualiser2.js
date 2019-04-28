@@ -112,7 +112,7 @@ export default class extends Component {
   }
 
   dataUpdated(props) {
-    const {results, label, relationshipType, taskId, writeProperty} = props
+    const {results, label, relationshipType, taskId, writeProperty, cypher} = props
 
     let captions = {}
     if (results && results.length > 0) {
@@ -140,7 +140,7 @@ export default class extends Component {
         return labelsMap
       }, {})
 
-      const cypher = this.generateCypher(label, relationshipType, writeProperty);
+      // const cypher = this.generateCypher(label, relationshipType, writeProperty);
 
       const handleException = error => {
         console.error(error)
