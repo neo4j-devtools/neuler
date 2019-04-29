@@ -101,8 +101,6 @@ export default class extends Component {
   dataUpdated(props) {
     const {results, taskId, cypher, group} = props
 
-    console.log("props:" + props)
-
     let captions = {}
     if (results && results.length > 0) {
 

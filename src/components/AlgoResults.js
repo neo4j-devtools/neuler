@@ -105,6 +105,28 @@ class HorizontalAlgoTab extends Component {
         display: 'none'
       })
 
+    const showView = (group, algorithm, view) => {
+      if (group === "Path Finding") {
+        if (view === "Chart") {
+          return false
+        } else if (view === "Viz2" || view === "Visualisation") {
+          if (algorithm === "Single Source Shortest Path" || algorithm === "All Pairs Shortest Path") {
+            return false
+          }
+        }
+      } else if (group === "Similarity") {
+        if (view === "Chart" || view === "Viz2" || view === "Visualisation") {
+          return false
+        }
+      } else if (group === "Community Detection") {
+        if (view === "Chart") {
+          return false
+        }
+      }
+      return true
+    }
+
+    const { group, algorithm} = task
 
     return (
       <div>
@@ -136,25 +158,23 @@ class HorizontalAlgoTab extends Component {
                 <Menu.Item name='Table' active={activeItem === 'Table'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
 
-                {activeGroup === 'Centralities' ?
-                  <Menu.Item name='Chart' active={activeItem === 'Chart'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null}
+              {showView(group, algorithm, "Chart") ?
+                <Menu.Item name='Chart' active={activeItem === 'Chart'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item> : null}
 
-                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                  <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null
-                }
 
-                {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity')  ?
-                  <Menu.Item name='Viz2' active={activeItem === 'Viz2'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null
-                }
+              {showView(group, algorithm, "Visualisation") ?
+                <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                : null
+              }
+
+              {showView(group, algorithm, "Viz2") ?
+                <Menu.Item name='Viz2' active={activeItem === 'Viz2'}
+                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>  : null}
 
                 <Menu.Item name='Code' active={activeItem === 'Code'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                  onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
 
               </div>
 
@@ -185,17 +205,18 @@ class HorizontalAlgoTab extends Component {
                 <CodeView task={task}/>
               </div>
 
-              {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+
+              {showView(group, algorithm, "Visualisation") ?
                 <div style={getStyle('Visualisation')}>
                   <VisView task={task} active={activeItem === 'Visualisation'}/>
                 </div> : null}
 
-              {activeGroup !== 'Similarity'  ?
+              {showView(group, algorithm, "Viz2")  ?
                 <div style={getStyle('Viz2')}>
-                  <VisView2 task={task} active={activeItem === 'Visualisation'} group={activeGroup}/>
+                  <VisView2 task={task} active={activeItem === 'Viz2'} group={activeGroup}/>
                 </div> : null}
 
-              {activeGroup === 'Centralities' ?
+              {showView(group, algorithm, "Chart") ?
                 <div style={getStyle('Chart')}>
                   <ChartView task={task} active={activeItem === 'Chart'}/>
                 </div> : null}
