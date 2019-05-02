@@ -70,7 +70,7 @@ class NEuler extends Component {
         </AlgorithmsGroupMenu>
         <div style={{width: '100%'}}>
           <Segment basic inverted vertical={false}
-                   style={{ height: '5em', display: 'flex', justifyContent: 'space-between' }}>
+                   style={{ height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0' }}>
             {header ? <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
               {header}
             </Header> : null}

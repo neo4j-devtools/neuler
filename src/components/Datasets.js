@@ -54,19 +54,19 @@ class Datasets extends Component {
 
     render() {
         const containerStyle = {
-            "marginLeft": "10px"
+            margin: "1em",
         }
 
         const { open, dimmer, selectedDataset, currentQueryIndex, completedQueryIndexes, completed } = this.state
 
         return (<div style={containerStyle}>
                 <Container fluid>
-                    <p>
+                    <Message>
                         Below are some sample graphs that are useful for learning how to use the graph algorithms
                         library.
                         Note that clicking on Load will import data into your graph, so don't do this on a production
                         database.
-                    </p>
+                    </Message>
 
                     <CardGroup>
                         {Object.keys(sampleGraphs).map(key => (

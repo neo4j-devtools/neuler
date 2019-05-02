@@ -95,57 +95,73 @@ class Algorithms extends Component {
 
   render() {
     const { Form, description } = this.props.currentAlgorithm
+    const { collapsed } = this.state
 
     const containerStyle = {
       display: 'flex',
       width: '96%',
       overflow: 'hidden',
       height: '100%',
-      alignItems: 'flex-start'
+      alignItems: 'flex-start',
+      marginRight: '0'
     }
 
-    let toggleIcon = 'angle double up'
+    const contentStyle = {
+      display: 'flex',
+      padding: '0 0 0 1em'
+    }
 
-    if (this.state.collapsed) {
+    let toggleIcon = 'angle double left'
+
+    if (collapsed) {
       // containerStyle.height = '15em';
-      toggleIcon = 'angle double down'
+      toggleIcon = 'angle double right'
     }
 
-    return (
-      <div style={containerStyle}>
-        <Card>
-          <Card.Content>
-            <Icon name='sitemap'/>
-            <Card.Header>
-              {this.props.activeAlgorithm}
-            </Card.Header>
-            <Card.Meta>{description}
-            </Card.Meta>
-          </Card.Content>
-          <Card.Content extra>
-            <div>
-              <Form {...this.state.parameters} labelOptions={this.state.labelOptions}
-                    relationshipTypeOptions={this.state.relationshipTypeOptions}
-                    onChange={this.onChangeParam.bind(this)}/>
-            </div>
-            <div className='ui two buttons'>
-              <Button basic color='green' onClick={this.onRunAlgo.bind(this)}>
-                Run
-              </Button>
-              <Button basic color='red'>
-                Cancel
-              </Button>
-            </div>
-          </Card.Content>
-        </Card>
-       {/* <div style={{ height: '100%', width: '1em', textAlign: 'center', paddingTop: '1em' }}>
+    const collapseButton = <Button style={{height: collapsed ? '-webkit-fill-available' : null, borderRadius: '0'}} icon size='mini' onClick={this.toggleCollapse.bind(this)}>
+      <Icon name={toggleIcon}/>
+    </Button>
+
+    return collapsed
+      ? collapseButton
+      : (
+        <div style={containerStyle}>
+          <Card style={{ boxShadow: 'none' }}>
+            <Card.Content style={contentStyle}>
+              <div style={{paddingTop: '1em', paddingBottom: '1em'}}>
+                <Icon name='sitemap'/>
+                <Card.Header>
+                  {this.props.activeAlgorithm}
+                </Card.Header>
+                <Card.Meta>{description}
+                </Card.Meta>
+              </div>
+              {collapseButton}
+            </Card.Content>
+            <Card.Content extra>
+              <div>
+                <Form {...this.state.parameters} labelOptions={this.state.labelOptions}
+                      relationshipTypeOptions={this.state.relationshipTypeOptions}
+                      onChange={this.onChangeParam.bind(this)}/>
+              </div>
+              <div className='ui two buttons'>
+                <Button basic color='green' onClick={this.onRunAlgo.bind(this)}>
+                  Run
+                </Button>
+                <Button basic color='red'>
+                  Cancel
+                </Button>
+              </div>
+            </Card.Content>
+          </Card>
+          {/*{<div style={{ height: '100%', width: '1em', textAlign: 'center', paddingTop: '1em' }}>
           <Button icon size='mini' onClick={this.toggleCollapse.bind(this)}>
             <Icon name={toggleIcon}/>
           </Button>
-        </div>*/}
+        </div>}*/}
 
-      </div>
-    )
+        </div>
+      )
   }
 }
 

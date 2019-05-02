@@ -4,6 +4,9 @@ import AlgorithmForm from './AlgorithmForm'
 import AlgoResults from './AlgoResults'
 
 class MainContent extends Component {
+  state = {
+
+  }
 
   componentDidCatch(error, info) {
     // You can also log the error to an error reporting service
@@ -12,17 +15,32 @@ class MainContent extends Component {
 
   render() {
     const {limit} = this.props
-    return   (<Grid columns={2} style={{height: '90%'}}>
+
+    const mainStyle = {
+      display: 'flex'
+    }
+
+    return   (
+      <div style={mainStyle}>
+        <div>
+          <AlgorithmForm limit={limit} />
+        </div>
+        <div style={{width: '100%'}}>
+          <AlgoResults onComplete={this.props.onComplete}  />
+        </div>
+      </div>
+    )
+      /*
+      <Grid columns={2} style={{height: '90%'}}>
         <Grid.Row style={{margin: '0', padding: '0'}}>
           <Grid.Column width={4} style={{minWidth: '25em'}}>
-            <AlgorithmForm limit={limit} />
+
           </Grid.Column>
           <Grid.Column width={12} style={{paddingLeft: '0'}}>
-            <AlgoResults onComplete={this.props.onComplete}  />
+
           </Grid.Column>
         </Grid.Row>
-      </Grid>)
-
+      </Grid>)*/
   }
 }
 

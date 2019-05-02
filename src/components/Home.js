@@ -9,7 +9,7 @@ class Home extends Component {
 
     render() {
         const containerStyle = {
-            "marginLeft": "10px"
+            padding: '1em'
         }
 
         const {selectGroup} = this.props
