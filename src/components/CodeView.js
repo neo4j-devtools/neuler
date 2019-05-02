@@ -59,7 +59,7 @@ export default class extends Component {
     const {parameters, query, taskId} = task
     this.generateGuide(parameters, query, taskId)
       .then(guideId => {
-        window.open(`neo4j://graphapps/neo4j-browser?cmd=play&arg=neuler/${guideId}.html`, '_self')
+        window.open(`neo4j://graphapps/neo4j-browser?cmd=play&arg=neuler/user-content-${guideId}.html`, '_self')
       })
   }
 
