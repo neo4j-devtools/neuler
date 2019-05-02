@@ -53,8 +53,8 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
         </div>
         <div>
             <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
-                       style={defaultIconStyle}>
-                <Icon name='database' size='big'/>
+                       style={menuItemStyle}>
+                <Image size='mini' src='/images/datasetin.png' />
             </Menu.Item>
            {/* <Menu.Item>
                 {children}
