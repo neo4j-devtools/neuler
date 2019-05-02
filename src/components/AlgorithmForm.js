@@ -1,13 +1,14 @@
-import React, {Component} from 'react'
-import {connect} from 'react-redux'
-import {Button, Card, Icon} from 'semantic-ui-react'
+import React, { Component } from 'react'
+import { connect } from 'react-redux'
+import { Button, Card, Form, Icon } from 'semantic-ui-react'
 
-import {v4 as generateTaskId} from 'uuid'
-import {addTask, completeTask} from "../ducks/tasks"
-import {getAlgorithmDefinitions} from "./algorithmsLibrary"
-import {getCurrentAlgorithm} from "../ducks/algorithms"
+import { v4 as generateTaskId } from 'uuid'
+import { addTask, completeTask } from "../ducks/tasks"
+import { getAlgorithmDefinitions } from "./algorithmsLibrary"
+import { getCurrentAlgorithm } from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
+import { limit } from "../ducks/settings"
 
 class Algorithms extends Component {
   constructor(props, context) {
@@ -22,7 +23,7 @@ class Algorithms extends Component {
   }
 
   static contextTypes = {
-        driver: PropTypes.object
+    driver: PropTypes.object
   };
 
   componentDidMount() {
@@ -33,7 +34,7 @@ class Algorithms extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if(this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
+    if (this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
       const { activeGroup, activeAlgorithm } = nextProps
       const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
       this.setState({ parameters })
@@ -94,7 +95,7 @@ class Algorithms extends Component {
   }
 
   render() {
-    const { Form, description } = this.props.currentAlgorithm
+    const { Form: AlgoForm, description } = this.props.currentAlgorithm
     const { collapsed } = this.state
 
     const containerStyle = {
@@ -118,7 +119,8 @@ class Algorithms extends Component {
       toggleIcon = 'angle double right'
     }
 
-    const collapseButton = <Button style={{height: collapsed ? '-webkit-fill-available' : null, borderRadius: '0'}} icon size='mini' onClick={this.toggleCollapse.bind(this)}>
+    const collapseButton = <Button style={{ height: collapsed ? '-webkit-fill-available' : null, borderRadius: '0' }}
+                                   icon size='mini' onClick={this.toggleCollapse.bind(this)}>
       <Icon name={toggleIcon}/>
     </Button>
 
@@ -128,7 +130,7 @@ class Algorithms extends Component {
         <div style={containerStyle}>
           <Card style={{ boxShadow: 'none' }}>
             <Card.Content style={contentStyle}>
-              <div style={{paddingTop: '1em', paddingBottom: '1em'}}>
+              <div style={{ paddingTop: '1em', paddingBottom: '1em' }}>
                 <Icon name='sitemap'/>
                 <Card.Header>
                   {this.props.activeAlgorithm}
@@ -139,10 +141,24 @@ class Algorithms extends Component {
               {collapseButton}
             </Card.Content>
             <Card.Content extra>
-              <div>
-                <Form {...this.state.parameters} labelOptions={this.state.labelOptions}
+              <div style={{marginBottom: '1em'}}>
+                <AlgoForm {...this.state.parameters} labelOptions={this.state.labelOptions}
                       relationshipTypeOptions={this.state.relationshipTypeOptions}
                       onChange={this.onChangeParam.bind(this)}/>
+                <Form size='mini'>
+                  <Form.Field inline>
+                    <label style={{ 'width': '8em' }}>Rows to show</label>
+                    <input
+                      type='number'
+                      placeholder="Rows"
+                      min={1}
+                      max={1000}
+                      step={1}
+                      value={this.props.limit}
+                      onChange={evt => this.props.updateLimit(parseInt(evt.target.value))}
+                    />
+                  </Form.Field>
+                </Form>
               </div>
               <div className='ui two buttons'>
                 <Button basic color='green' onClick={this.onRunAlgo.bind(this)}>
@@ -169,10 +185,12 @@ const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
   activeAlgorithm: state.algorithms.algorithm,
   currentAlgorithm: getCurrentAlgorithm(state),
-  metadata: state.metadata
+  metadata: state.metadata,
+  limit: state.settings.limit
 })
 
 const mapDispatchToProps = dispatch => ({
+  updateLimit: value => dispatch(limit(value)),
   addTask: (taskId, group, algorithm, parameters, persisted) => {
     const task = {
       group,
