@@ -30,29 +30,29 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
                        style={defaultIconStyle}>
                 <Icon size='big' name='home' color='gray'/>
             </Menu.Item>
-            <Menu.Item active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
+            <Menu.Item title='Centralities' active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
                        style={menuItemStyle}>
                 <Image size='mini' src='/images/Centrality-Algo-Icon.png' />
             </Menu.Item>
-            <Menu.Item active={activeGroup === 'Community Detection'} as='a'
+            <Menu.Item title='Community Detection' active={activeGroup === 'Community Detection'} as='a'
                        onClick={() => selectGroup('Community Detection')}
                        style={menuItemStyle}>
                 <Image size='mini' src='/images/Community-Algo-Icon.png' />
             </Menu.Item>
-            <Menu.Item active={activeGroup === 'Path Finding'} as='a'
+            <Menu.Item title='Path Finding' active={activeGroup === 'Path Finding'} as='a'
                        onClick={() => selectGroup('Path Finding')}
                        style={menuItemStyle}>
                 <Image size='mini' src='/images/PathFinding-Algo-Icon.png' />
             </Menu.Item>
 
-            <Menu.Item active={activeGroup === 'Similarity'} as='a'
+            <Menu.Item title='Similarity' active={activeGroup === 'Similarity'} as='a'
                        onClick={() => selectGroup('Similarity')}
                        style={menuItemStyle}>
                 <Image size='mini' src='/images/Similarity-Algo-Icon.png' />
             </Menu.Item>
         </div>
         <div>
-            <Menu.Item active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
+            <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
                        style={defaultIconStyle}>
                 <Icon name='database' size='big'/>
             </Menu.Item>
