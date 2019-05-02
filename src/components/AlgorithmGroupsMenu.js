@@ -42,7 +42,7 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
             <Menu.Item title='Path Finding' active={activeGroup === 'Path Finding'} as='a'
                        onClick={() => selectGroup('Path Finding')}
                        style={menuItemStyle}>
-                <Image size='mini' src='/images/PathFinding-Algo-Icon.png' />
+                <Image size='mini' src='/images/Pathfinding-Algo-Icon.png' />
             </Menu.Item>
 
             <Menu.Item title='Similarity' active={activeGroup === 'Similarity'} as='a'
