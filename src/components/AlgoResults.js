@@ -79,9 +79,8 @@ class HorizontalAlgoTab extends Component {
       })
 
 
-
     return (
-      <div style={{ paddingTop: '1em' }}>
+      <div>
         {task.completed && task.status === FAILED ? (
             <div>
               <Menu attached='top' tabular>
@@ -104,24 +103,41 @@ class HorizontalAlgoTab extends Component {
             </div>
           )
           : <React.Fragment>
-            <Menu attached='top' tabular>
+            <Menu attached='top' tabular pointing secondary  style={{display: 'flex', justifyContent: 'space-between'}}>
+              <div style={{display: 'flex'}}>
 
-              <Menu.Item name='Table' active={activeItem === 'Table'}
-                         onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-
-              {activeGroup === 'Centralities' ?
-                <Menu.Item name='Chart' active={activeItem === 'Chart'}
+                <Menu.Item name='Table' active={activeItem === 'Table'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                : null}
 
-                {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity')  ?
-                <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                {activeGroup === 'Centralities' ?
+                  <Menu.Item name='Chart' active={activeItem === 'Chart'}
+                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                  : null}
+
+                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                  <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                  : null
+                }
+
+                <Menu.Item name='Code' active={activeItem === 'Code'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                : null
-              }
+              </div>
 
-              <Menu.Item name='Code' active={activeItem === 'Code'}
-                         onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+                    <Icon name='angle left'/>
+                  </Button>
+                  <Header as='h3' style={{ margin: '0 1em' }}>
+                    {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
+                  </Header>
+                  <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+                    <Icon name='angle right'/>
+                  </Button>
+                </div>
 
             </Menu>
             <Segment attached='bottom'>
@@ -134,7 +150,7 @@ class HorizontalAlgoTab extends Component {
                 <CodeView task={task}/>
               </div>
 
-              {!(activeGroup === 'Path Finding'  || activeGroup === 'Similarity') ?
+              {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                 <div style={getStyle('Visualisation')}>
                   <VisView task={task} active={activeItem === 'Visualisation'}/>
                 </div> : null}
@@ -147,23 +163,6 @@ class HorizontalAlgoTab extends Component {
             </Segment>
           </React.Fragment>
         }
-        <div style={{
-          position: 'absolute',
-          top: '1.5em',
-          left: '30em',
-          display: 'flex',
-          alignItems: 'center'
-        }}>
-          <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-            <Icon name='angle left'/>
-          </Button>
-          <Header as='h3' style={{ margin: '0 1em' }}>
-            {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-          </Header>
-          <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-            <Icon name='angle right'/>
-          </Button>
-        </div>
       </div>
     )
   }
@@ -203,8 +202,8 @@ class TabExampleVerticalTabular extends Component {
     let streamQuery = algorithmDefinition.streamQuery
     let storeQuery = algorithmDefinition.storeQuery
 
-    if(group === "Similarity") {
-      const {itemLabel, relationshipType, categoryLabel} = parameters
+    if (group === "Similarity") {
+      const { itemLabel, relationshipType, categoryLabel } = parameters
       streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel)
       storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel)
       fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType)
@@ -222,14 +221,14 @@ class TabExampleVerticalTabular extends Component {
       persisted
     }).then(result => {
       this.props.completeTask(taskId, result)
-      if(persisted) {
+      if (persisted) {
         this.props.onComplete()
       }
     }).catch(exc => {
-        console.log('ERROR IN SERVICE', exc)
-        this.props.completeTask(taskId, [], exc.toString())
+      console.log('ERROR IN SERVICE', exc)
+      this.props.completeTask(taskId, [], exc.toString())
 
-      })
+    })
 
     this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
   }
