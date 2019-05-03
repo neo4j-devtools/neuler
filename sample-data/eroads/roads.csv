@@ -1,0 +1,1251 @@
+road_number,origin_country_code,origin_reference_place,destination_country_code,destination_reference_place,distance,watercrossing
+E01,GB,Larne,GB,Belfast,36,false
+E01,GB,Belfast,IRL,Dublin,165,false
+E01,IRL,Dublin,IRL,Wexford,140,false
+E01,IRL,Wexford,IRL,Rosslare,19,false
+E01,IRL,Rosslare,E,La Coruña,1002,true
+E01,E,La Coruña,E,Pontevedra,128,false
+E01,E,Pontevedra,P,Valença do Minho,57,false
+E01,P,Valença do Minho,P,Porto,115,false
+E01,P,Porto,P,Aveiro,67,false
+E01,P,Aveiro,P,Coimbra,61,false
+E01,P,Coimbra,P,Lisboa,199,false
+E01,P,Lisboa,P,Setúbal,46,false
+E01,P,Setúbal,P,Faro,262,false
+E01,P,Faro,P,Vila Real de Santo António,57,false
+E01,P,Vila Real de Santo António,E,Huelva,62,false
+E01,E,Huelva,E,Sevilla,91,false
+E03,F,Cherbourg,F,Rennes,205,false
+E03,F,Rennes,F,Nantes,112,false
+E03,F,Nantes,F,La Rochelle,143,false
+E04,S,Helsingborg,S,Jönköping,241,false
+E04,S,Jönköping,S,Norrköping,170,false
+E04,S,Norrköping,S,Södertälje,130,false
+E04,S,Södertälje,S,Stockholm,32,false
+E04,S,Stockholm,S,Sundsvall,387,false
+E04,S,Sundsvall,S,Umeå,281,false
+E04,S,Umeå,S,Luleå,274,false
+E04,S,Luleå,S,Haparanda,134,false
+E04,S,Haparanda,FIN,Tornio,6,false
+E04,FIN,Tornio,FIN,Kemi,33,false
+E05,GB,Greenock,GB,Glasgow,40,false
+E05,GB,Glasgow,GB,Gretna,142,false
+E05,GB,Gretna,GB,Carlisle,16,false
+E05,GB,Carlisle,GB,Penrith,40,false
+E05,GB,Penrith,GB,Preston,109,false
+E05,GB,Preston,GB,Warrington,49,false
+E05,GB,Warrington,GB,Birmingham,128,false
+E05,GB,Birmingham,GB,Newbury,166,false
+E05,GB,Newbury,GB,Southampton,71,false
+E05,GB,Southampton,F,Le Havre,207,true
+E05,F,Le Havre,F,Paris,196,false
+E05,F,Paris,F,Orléans,134,false
+E05,F,Orléans,F,Tours,118,false
+E05,F,Tours,F,Poitiers,101,false
+E05,F,Poitiers,F,Bordeaux,256,false
+E05,F,Bordeaux,E,San Sebastián,243,false
+E05,E,San Sebastián,E,Burgos,246,false
+E05,E,Burgos,E,Madrid,250,false
+E05,E,Madrid,E,Cordóba,391,false
+E05,E,Cordóba,E,Sevilla,141,false
+E05,E,Sevilla,E,Cádiz,122,false
+E05,E,Cádiz,E,Algeciras,117,false
+E06,S,Trelleborg,S,Malmö,27,false
+E06,S,Malmö,S,Halmstad,140,false
+E06,S,Halmstad,S,Göteborg,136,false
+E06,S,Göteborg,N,Oslo,314,false
+E06,N,Oslo,N,Lillehammer,178,false
+E06,N,Lillehammer,N,Trondheim,352,false
+E06,N,Trondheim,N,Narvik,887,false
+E06,N,Narvik,N,Olderfjord,612,false
+E06,N,Olderfjord,N,Karasjok,138,false
+E06,N,Karasjok,N,Kirkenes,267,false
+E07,F,Pau,E,Jaça,115,false
+E07,E,Jaça,E,Huesca,73,false
+E07,E,Huesca,E,Zaragoza,72,false
+E08,N,Tromsø,N,Nordkjosbotn,70,false
+E08,N,Nordkjosbotn,N,Skibotn,48,false
+E08,N,Skibotn,FIN,Kilpisjärvi,44,false
+E08,FIN,Kilpisjärvi,FIN,Tornio,457,false
+E09,F,Orléans,F,Limoges,277,false
+E09,F,Limoges,F,Toulouse,299,false
+E09,F,Toulouse,E,Barcelona,391,false
+E10,N,Å,N,Narvik,400,false
+E10,N,Narvik,S,Kiruna,175,false
+E10,S,Kiruna,S,Luleå,350,false
+E105,N,Kirkenes,RUS,Murmansk,243,false
+E105,RUS,Murmansk,RUS,Petrozavodsk,948,false
+E105,RUS,Petrozavodsk,RUS,Sankt-Peterburg,415,false
+E105,RUS,Sankt-Peterburg,RUS,Moskva,717,false
+E105,RUS,Moskva,RUS,Orel,357,false
+E105,RUS,Orel,UA,Charkov,379,false
+E105,UA,Charkov,UA,Simferopol,649,false
+E105,UA,Simferopol,UA,Alushta,43,false
+E105,UA,Alushta,UA,Jalta,43,false
+E11,F,Vierzon,F,Montluçon,121,false
+E11,F,Montluçon,F,Clermont-Ferrand,114,false
+E11,F,Clermont-Ferrand,F,Montpellier,335,false
+E115,RUS,Moskva,RUS,Rostov-na-Donu,1066,false
+E115,RUS,Rostov-na-Donu,RUS,Stavropol,411,false
+E115,RUS,Stavropol,RUS,Machačkala,624,false
+E115,RUS,Machačkala,AZ,Baku,400,false
+E115,AZ,Baku, ,*Iran*,307,false
+E12,N,Mo i Rana,S,Umeå,475,false
+E12,S,Umeå,FIN,Vaasa,118,true
+E12,FIN,Vaasa,FIN,Tampere,240,false
+E12,FIN,Tampere,FIN,Helsinki,177,false
+E13,GB,Doncaster,GB,Sheffield,38,false
+E13,GB,Sheffield,GB,Nottingham,74,false
+E13,GB,Nottingham,GB,Leicester,43,false
+E13,GB,Leicester,GB,Northampton,63,false
+E13,GB,Northampton,GB,London,110,false
+E134,N,Haugesund,N,Haukeligrend,188,false
+E134,N,Haukeligrend,N,Drammen,214,false
+E136,N,Ålesund,N,Andalsnes,119,false
+E136,N,Andalsnes,N,Dombås,104,false
+E14,N,Trondheim,S,Storlien,103,false
+E14,S,Storlien,S,Ostersund,159,false
+E14,S,Ostersund,S,Sundsvall,186,false
+E15,GB,Inverness,GB,Perth,182,false
+E15,GB,Perth,GB,Edinburgh,68,false
+E15,GB,Edinburgh,GB,Newcastle upon Tyne,183,false
+E15,GB,Newcastle upon Tyne,GB,Scotch Corner,73,false
+E15,GB,Scotch Corner,GB,Doncaster,118,false
+E15,GB,Doncaster,GB,London,277,false
+E15,GB,London,GB,Folkestone,112,false
+E15,GB,Folkestone,GB,Dover,11,false
+E15,GB,Dover,F,Calais,42,true
+E15,F,Calais,F,Paris,291,false
+E15,F,Paris,F,Lyon,467,false
+E15,F,Lyon,F,Orange,204,false
+E15,F,Orange,F,Narbonne,191,false
+E15,F,Narbonne,E,Gerona,153,false
+E15,E,Gerona,E,Barcelona,102,false
+E15,E,Barcelona,E,Tarragona,112,false
+E15,E,Tarragona,E,Castellón de la Plana,188,false
+E15,E,Castellón de la Plana,E,Valencia,74,false
+E15,E,Valencia,E,Alicante,173,false
+E15,E,Alicante,E,Murcia,80,false
+E15,E,Murcia,E,Algeciras,525,false
+E16,GB,Londonderry,GB,Belfast,115,false
+E16,GB,Belfast,GB,Glasgow,239,true
+E16,GB,Glasgow,GB,Edinburgh,75,false
+E16,GB,Edinburgh,N,Bergen,702,true
+E16,N,Bergen,N,Fagernes,365,false
+E16,N,Fagernes,N,Oslo,182,false
+E17,B,Antwerpen,B,Gent,58,false
+E17,B,Gent,B,Kortrijk,49,false
+E17,B,Kortrijk,F,Cambrai,104,false
+E17,F,Cambrai,F,Reims,147,false
+E17,F,Reims,F,Beaune,339,false
+E18,GB,Craigavon,GB,Belfast,38,false
+E18,GB,Belfast,GB,Larne,36,false
+E18,GB,Larne,GB,Stranraer,70,true
+E18,GB,Stranraer,GB,Gretna,153,false
+E18,GB,Gretna,GB,Carlisle,16,false
+E18,GB,Carlisle,GB,Newcastle upon Tyne,114,false
+E18,GB,Newcastle upon Tyne,N,Kristiansand,684,true
+E18,N,Kristiansand,N,Oslo,323,false
+E18,N,Oslo,S,Örebro,336,false
+E18,S,Örebro,S,Arboga,42,false
+E18,S,Arboga,S,Västeras,57,false
+E18,S,Västeras,S,Stockholm,108,false
+E18,S,Stockholm,S,Kapellskär,93,false
+E18,S,Kapellskär,FIN,Mariehamn,65,true
+E18,FIN,Mariehamn,FIN,Naantali,154,true
+E18,FIN,Naantali,FIN,Turku,15,false
+E18,FIN,Turku,FIN,Helsinki,167,false
+E18,FIN,Helsinki,FIN,Vaalimaa,191,false
+E18,FIN,Vaalimaa,RUS,Sankt-Peterburg,205,false
+E19,NL,Amsterdam,NL,Den Haag,59,false
+E19,NL,Den Haag,NL,Rotterdam,26,false
+E19,NL,Rotterdam,NL,Breda,46,false
+E19,NL,Breda,B,Antwerpen,58,false
+E19,B,Antwerpen,B,Bruxelles,49,false
+E19,B,Bruxelles,B,Mons,66,false
+E19,B,Mons,F,Valenciennes,42,false
+E19,F,Valenciennes,F,Paris,206,false
+E20,IRL,Shannon,IRL,Limerick,22,false
+E20,IRL,Limerick,IRL,Portlaoise,110,false
+E20,IRL,Portlaoise,IRL,Dublin,89,false
+E20,IRL,Dublin,GB,Liverpool,264,true
+E20,GB,Liverpool,GB,Manchester,55,false
+E20,GB,Manchester,GB,Bradford,63,false
+E20,GB,Bradford,GB,Leeds,25,false
+E20,GB,Leeds,GB,Kingston upon Hull,104,false
+E20,GB,Kingston upon Hull,DK,Esbjerg,597,true
+E20,DK,Esbjerg,DK,Kolding,75,false
+E20,DK,Kolding,DK,Middelfart,30,false
+E20,DK,Middelfart,DK,Nyborg,77,false
+E20,DK,Nyborg,DK,Korsør,27,true
+E20,DK,Korsør,DK,Køge,74,false
+E20,DK,Køge,DK,København,45,false
+E20,DK,København,S,Malmö,38,true
+E20,S,Malmö,S,Helsingborg,66,false
+E20,S,Helsingborg,S,Halmstad,84,false
+E20,S,Halmstad,S,Göteborg,136,false
+E20,S,Göteborg,S,Örebro,287,false
+E20,S,Örebro,S,Arboga,42,false
+E20,S,Arboga,S,Eskilstuna,44,false
+E20,S,Eskilstuna,S,Södertälje,81,false
+E20,S,Södertälje,S,Stockholm,32,false
+E20,S,Stockholm,EST,Tallinn,333,true
+E20,EST,Tallinn,RUS,Sankt-Peterburg,367,false
+E201,IRL,Cork,IRL,Portlaoise,173,false
+E21,F,Metz,F,Nancy,58,false
+E21,F,Nancy,F,Dijon,213,false
+E21,F,Dijon,CH,Genève,186,false
+E22,GB,Holyhead,GB,Chester,139,false
+E22,GB,Chester,GB,Warrington,35,false
+E22,GB,Warrington,GB,Manchester,29,false
+E22,GB,Manchester,GB,Leeds,71,false
+E22,GB,Leeds,GB,Doncaster,55,false
+E22,GB,Doncaster,GB,Immingham,74,false
+E22,GB,Immingham,NL,Amsterdam,369,true
+E22,NL,Amsterdam,NL,Groningen,200,false
+E22,NL,Groningen,D,Oldenburg,131,false
+E22,D,Oldenburg,D,Bremen,51,false
+E22,D,Bremen,D,Hamburg,124,false
+E22,D,Hamburg,D,Lübeck,71,false
+E22,D,Lübeck,D,Rostock,131,false
+E22,D,Rostock,D,Stralsund,73,false
+E22,D,Stralsund,D,Saßnitz,51,false
+E22,D,Saßnitz,S,Trelleborg,111,true
+E22,S,Trelleborg,S,Malmö,27,false
+E22,S,Malmö,S,Kalmar,295,false
+E22,S,Kalmar,S,Norrköping,254,false
+E23,F,Metz,F,Nancy,58,false
+E23,F,Nancy,F,Besançon,199,false
+E23,F,Besançon,CH,Vallorbe,86,false
+E23,CH,Vallorbe,CH,Lausanne,48,false
+E231,NL,Amsterdam,NL,Amersfoort,54,false
+E232,NL,Amersfoort,NL,Hoogeveen,110,false
+E232,NL,Hoogeveen,NL,Groningen,62,false
+E233,NL,Hoogeveen,D,Haselünne,73,false
+E233,D,Haselünne,D,Cloppenburg,46,false
+E233,D,Cloppenburg,D,Bremen,70,false
+E234,D,Cuxhaven,D,Bremerhaven,41,false
+E234,D,Bremerhaven,D,Bremen,57,false
+E234,D,Bremen,D,Walsrode,68,false
+E24,GB,Birmingham,GB,Cambridge,163,false
+E24,GB,Cambridge,GB,Ipswich,91,false
+E25,NL,Hoek van Holland,NL,Rotterdam,33,false
+E25,NL,Rotterdam,NL,Gouda,25,false
+E25,NL,Gouda,NL,Utrecht,35,false
+E25,NL,Utrecht,NL,'s-Hertogenbosch,59,false
+E25,NL,'s-Hertogenbosch,NL,Eindhoven,38,false
+E25,NL,Eindhoven,NL,Maastricht,86,false
+E25,NL,Maastricht,B,Liège,40,false
+E25,B,Liège,B,Bastogne,90,false
+E25,B,Bastogne,B,Arlon,38,false
+E25,B,Arlon,L,Luxembourg,28,false
+E25,L,Luxembourg,F,Metz,63,false
+E25,F,Metz,F,Saint-Avold,49,false
+E25,F,Saint-Avold,F,Strasbourg,124,false
+E25,F,Strasbourg,F,Mulhouse,108,false
+E25,F,Mulhouse,CH,Basel,38,false
+E25,CH,Basel,CH,Olten,47,false
+E25,CH,Olten,CH,Bern,67,false
+E25,CH,Bern,CH,Lausanne,103,false
+E25,CH,Lausanne,CH,Genève,64,false
+E25,CH,Genève,F,Mont-Blanc,91,false
+E25,F,Mont-Blanc,I,Aosta,46,false
+E25,I,Aosta,I,Ivrea,70,false
+E25,I,Ivrea,I,Vercelli,59,false
+E25,I,Vercelli,I,Alessandria,55,false
+E25,I,Alessandria,I,Genova,90,false
+E251,D,Saßnitz,D,Stralsund,50,false
+E251,D,Stralsund,D,Neubrandenburg,99,false
+E251,D,Neubrandenburg,D,Berlin,136,false
+E26,D,Hamburg,D,Berlin,283,false
+E261,PL,Świecie,PL,Poznań,179,false
+E261,PL,Poznań,PL,Wrocław,183,false
+E27,F,Belfort,CH,Bern,133,false
+E27,CH,Bern,CH,Martigny,129,false
+E27,CH,Martigny,CH,Grand-Saint-Bernard,39,false
+E27,CH,Grand-Saint-Bernard,I,Aosta,27,false
+E271,LT,Klaipéda,LT,Kaunas,213,false
+E271,LT,Kaunas,LT,Vilnius,103,false
+E271,LT,Vilnius,BY,Minsk,184,false
+E271,BY,Minsk,BY,Gomel',318,false
+E272,LT,Klaipéda,LT,Palanga,28,false
+E272,LT,Palanga,LT,Siauliai,147,false
+E272,LT,Siauliai,LT,Panevėžys,79,false
+E272,LT,Panevėžys,LT,Ukmergé,64,false
+E272,LT,Ukmergé,LT,Vilnius,73,false
+E28,D,Berlin,PL,Szczecin,153,false
+E28,PL,Szczecin,PL,Goleniów,38,false
+E28,PL,Goleniów,PL,Koszalin,117,false
+E28,PL,Koszalin,PL,Gdańsk,205,false
+E29,D,Köln,L,Luxembourg,207,false
+E29,L,Luxembourg,D,Saarbrücken,97,false
+E29,D,Saarbrücken,F,Sarreguemines,19,false
+E30,IRL,Cork,IRL,Waterford,135,false
+E30,IRL,Waterford,IRL,Wexford,61,false
+E30,IRL,Wexford,IRL,Rosslare,19,false
+E30,IRL,Rosslare,GB,Fishguard,113,true
+E30,GB,Fishguard,GB,Swansea,119,false
+E30,GB,Swansea,GB,Cardiff,65,false
+E30,GB,Cardiff,GB,Newport,23,false
+E30,GB,Newport,GB,Bristol,49,false
+E30,GB,Bristol,GB,London,192,false
+E30,GB,London,GB,Colchester,106,false
+E30,GB,Colchester,GB,Ipswich,32,false
+E30,GB,Ipswich,GB,Felixstowe,22,false
+E30,GB,Felixstowe,NL,Hoek van Holland,207,true
+E30,NL,Hoek van Holland,NL,Den Haag,27,false
+E30,NL,Den Haag,NL,Gouda,32,false
+E30,NL,Gouda,NL,Utrecht,35,false
+E30,NL,Utrecht,NL,Amersfoort,25,false
+E30,NL,Amersfoort,NL,Oldenzaal,116,false
+E30,NL,Oldenzaal,D,Osnabrück,83,false
+E30,D,Osnabrück,D,Bad Oeynhausen,60,false
+E30,D,Bad Oeynhausen,D,Hannover,80,false
+E30,D,Hannover,D,Braunschweig,67,false
+E30,D,Braunschweig,D,Magdeburg,101,false
+E30,D,Magdeburg,D,Berlin,160,false
+E30,D,Berlin,PL,Świebodzin,187,false
+E30,PL,Świebodzin,PL,Poznań,111,false
+E30,PL,Poznań,PL,Łowicz,229,false
+E30,PL,Łowicz,PL,Warszawa,81,false
+E30,PL,Warszawa,BY,Brėst,197,false
+E30,BY,Brėst,BY,Minsk,348,false
+E30,BY,Minsk,RUS,Smolensk,353,false
+E30,RUS,Smolensk,RUS,Moskva,401,false
+E30,RUS,Moskva,RUS,Rjazan,192,false
+E30,RUS,Rjazan,RUS,Penza,453,false
+E30,RUS,Penza,RUS,Samara,432,false
+E31,NL,Rotterdam,NL,Gorinchem,43,false
+E31,NL,Gorinchem,NL,Nijmegen,77,false
+E31,NL,Nijmegen,D,Goch,48,false
+E31,D,Goch,D,Krefeld,63,false
+E31,D,Krefeld,D,Köln,60,false
+E31,D,Köln,D,Koblenz,99,false
+E31,D,Koblenz,D,Bingen,66,false
+E31,D,Bingen,D,Ludwigshafen,82,false
+E311,NL,Breda,NL,Gorinchem,44,false
+E311,NL,Gorinchem,NL,Utrecht,40,false
+E312,NL,Vlissingen,NL,Breda,99,false
+E312,NL,Breda,NL,Eindhoven,68,false
+E313,B,Antwerpen,B,Liège,120,false
+E314,B,Leuven,B,Hasselt,59,false
+E314,B,Hasselt,NL,Heerlen,57,false
+E314,NL,Heerlen,D,Aachen,20,false
+E32,GB,Colchester,GB,Harwich,31,false
+E33,I,Parma,I,La Spezia,124,false
+E331,D,Dortmund,D,Kassel,185,false
+E34,B,Zeebrugge,B,Antwerpen,101,false
+E34,B,Antwerpen,NL,Eindhoven,86,false
+E34,NL,Eindhoven,NL,Venlo,57,false
+E34,NL,Venlo,D,Oberhausen,54,false
+E34,D,Oberhausen,D,Dortmund,50,false
+E34,D,Dortmund,D,Bad Oeynhausen,141,false
+E35,NL,Amsterdam,NL,Utrecht,46,false
+E35,NL,Utrecht,NL,Arnhem,70,false
+E35,NL,Arnhem,D,Emmerich,34,false
+E35,D,Emmerich,D,Oberhausen,72,false
+E35,D,Oberhausen,D,Köln,73,false
+E35,D,Köln,D,Frankfurt am Main,195,false
+E35,D,Frankfurt am Main,D,Heidelberg,88,false
+E35,D,Heidelberg,D,Karlsruhe,54,false
+E35,D,Karlsruhe,D,Offenburg,77,false
+E35,D,Offenburg,CH,Basel,126,false
+E35,CH,Basel,CH,Olten,47,false
+E35,CH,Olten,CH,Luzern,53,false
+E35,CH,Luzern,CH,Altdorf,43,false
+E35,CH,Altdorf,CH,San Gottardo,50,false
+E35,CH,San Gottardo,CH,Bellinzona,61,false
+E35,CH,Bellinzona,CH,Lugano,27,false
+E35,CH,Lugano,CH,Chiasso,25,false
+E35,CH,Chiasso,I,Como,6,false
+E35,I,Como,I,Milano,46,false
+E35,I,Milano,I,Piacenza,66,false
+E35,I,Piacenza,I,Parma,63,false
+E35,I,Parma,I,Modena,60,false
+E35,I,Modena,I,Firenze,138,false
+E35,I,Firenze,I,Arezzo,79,false
+E35,I,Arezzo,I,Roma,219,false
+E36,D,Berlin,D,Lübbenau,95,false
+E36,D,Lübbenau,D,Cottbus,36,false
+E36,D,Cottbus,PL,Legnica,152,false
+E37,D,Bremen,D,Osnabrück,121,false
+E37,D,Osnabrück,D,Dortmund,123,false
+E37,D,Dortmund,D,Köln,92,false
+E371,PL,Radom,PL,Rzeszów,194,false
+E371,PL,Rzeszów,PL,Barwinek,89,false
+E371,PL,Barwinek,SK,Vyšný Komárnik,4,false
+E371,SK,Vyšný Komárnik,SK,Svidnik,18,false
+E371,SK,Svidnik,SK,Prešov,54,false
+E372,PL,Warszawa,PL,Lublin,164,false
+E372,PL,Lublin,UA,L'vov,210,false
+E373,PL,Lublin,UA,Kovel,164,false
+E373,UA,Kovel,UA,Rovno,147,false
+E381,UA,Kiev,RUS,Orel,517,false
+E39,N,Trondheim,N,Ålesund,313,false
+E39,N,Ålesund,N,Bergen,389,false
+E39,N,Bergen,N,Stavanger,188,false
+E39,N,Stavanger,N,Kristiansand,240,false
+E39,N,Kristiansand,DK,Hirtshals,135,true
+E39,DK,Hirtshals,DK,Hjørring,18,false
+E39,DK,Hjørring,DK,Nørresundby,46,false
+E39,DK,Nørresundby,DK,Ålborg,1,false
+E40,F,Calais,B,Oostende,96,false
+E40,B,Oostende,B,Gent,64,false
+E40,B,Gent,B,Bruxelles,55,false
+E40,B,Bruxelles,B,Liège,94,false
+E40,B,Liège,D,Aachen,64,false
+E40,D,Aachen,D,Köln,72,false
+E40,D,Köln,D,Olpe,73,false
+E40,D,Olpe,D,Gießen,95,false
+E40,D,Gießen,D,Bad Hersfeld,98,false
+E40,D,Bad Hersfeld,D,Herleshausen,42,false
+E40,D,Herleshausen,D,Eisenach,15,false
+E40,D,Eisenach,D,Erfurt,63,false
+E40,D,Erfurt,D,Gera,88,false
+E40,D,Gera,D,Chemnitz,74,false
+E40,D,Chemnitz,D,Dresden,76,false
+E40,D,Dresden,D,Görlitz,109,false
+E40,D,Görlitz,PL,Legnica,101,false
+E40,PL,Legnica,PL,Wrocław,79,false
+E40,PL,Wrocław,PL,Opole,95,false
+E40,PL,Opole,PL,Gliwice,72,false
+E40,PL,Gliwice,PL,Kraków,109,false
+E40,PL,Kraków,PL,Przemyśl,246,false
+E40,PL,Przemyśl,UA,L'vov,95,false
+E40,UA,L'vov,UA,Rovno,208,false
+E40,UA,Rovno,UA,Žitomir,184,false
+E40,UA,Žitomir,UA,Kiev,146,false
+E40,UA,Kiev,UA,Charkov,471,false
+E40,UA,Charkov,RUS,Rostov-na-Donu,479,false
+E401,F,Saint-Brieuc,F,Caen,233,false
+E402,F,Calais,F,Rouen,216,false
+E402,F,Rouen,F,Le Mans,200,false
+E403,B,Zeebrugge,B,Brugge,16,false
+E403,B,Brugge,B,Kortrijk,52,false
+E403,B,Kortrijk,B,Tournai,28,false
+E404,B,Jabbeke,B,Zeebrugge,24,false
+E41,D,Dortmund,D,Gießen,166,false
+E41,D,Gießen,D,Aschaffenburg,99,false
+E41,D,Aschaffenburg,D,Würzburg,79,false
+E41,D,Würzburg,D,Stuttgart,145,false
+E41,D,Stuttgart,CH,Schaffhausen,170,false
+E41,CH,Schaffhausen,CH,Winterthur,26,false
+E41,CH,Winterthur,CH,Zürich,25,false
+E41,CH,Zürich,CH,Altdorf,78,false
+E411,B,Bruxelles,B,Namur,65,false
+E411,B,Namur,B,Arlon,129,false
+E411,B,Arlon,F,Longwy,24,false
+E411,F,Longwy,F,Metz,62,false
+E42,F,Dunkerque,F,Lille,71,false
+E42,F,Lille,B,Mons,77,false
+E42,B,Mons,B,Charleroi,51,false
+E42,B,Charleroi,B,Namur,41,false
+E42,B,Namur,B,Liège,61,false
+E42,B,Liège,B,Sankt-Vith,87,false
+E42,B,Sankt-Vith,D,Wittlich,85,false
+E42,D,Wittlich,D,Bingen,91,false
+E42,D,Bingen,D,Wiesbaden,33,false
+E42,D,Wiesbaden,D,Frankfurt am Main,41,false
+E42,D,Frankfurt am Main,D,Aschaffenburg,41,false
+E420,B,Nivelles,B,Charleroi,29,false
+E420,B,Charleroi,F,Reims,158,false
+E421,D,Aachen,B,Sankt-Vith,84,false
+E421,B,Sankt-Vith,L,Luxembourg,88,false
+E422,D,Trier,D,Saarbrücken,95,false
+E429,B,Tournai,B,Halle,75,false
+E43,D,Würzburg,D,Ulm,195,false
+E43,D,Ulm,D,Lindau,119,false
+E43,D,Lindau,A,Bregenz,9,false
+E43,A,Bregenz,CH,Sankt Margrethen,13,false
+E43,CH,Sankt Margrethen,CH,Buchs,37,false
+E43,CH,Buchs,CH,Chur,44,false
+E43,CH,Chur,CH,San Bernardino,70,false
+E43,CH,San Bernardino,CH,Bellinzona,43,false
+E44,F,Le Havre,F,Amiens,178,false
+E44,F,Amiens,F,Charleville-Mézières,198,false
+E44,F,Charleville-Mézières,L,Luxembourg,153,false
+E44,L,Luxembourg,D,Trier,46,false
+E44,D,Trier,D,Koblenz,126,false
+E44,D,Koblenz,D,Gießen,106,false
+E441,D,Chemnitz,D,Plauen,76,false
+E442,CZ,Karlovy Vary,CZ,Teplice,96,false
+E442,CZ,Teplice,CZ,Turnov,128,false
+E442,CZ,Turnov,CZ,Hradec Králové,76,false
+E442,CZ,Hradec Králové,CZ,Olomouc,144,false
+E442,CZ,Olomouc,SK,Žilina,139,false
+E45,S,Göteborg,DK,Frederikshavn,90,true
+E45,DK,Frederikshavn,DK,Ålborg,65,false
+E45,DK,Ålborg,DK,Århus,121,false
+E45,DK,Århus,DK,Vejle,69,false
+E45,DK,Vejle,DK,Kolding,31,false
+E45,DK,Kolding,DK,Frøslev,80,false
+E45,DK,Frøslev,D,Flensburg,8,false
+E45,D,Flensburg,D,Hamburg,158,false
+E45,D,Hamburg,D,Hannover,157,false
+E45,D,Hannover,D,Göttingen,124,false
+E45,D,Göttingen,D,Kassel,46,false
+E45,D,Kassel,D,Fulda,110,false
+E45,D,Fulda,D,Würzburg,110,false
+E45,D,Würzburg,D,Nürnberg,118,false
+E45,D,Nürnberg,D,München,165,false
+E45,D,München,D,Rosenheim,72,false
+E45,D,Rosenheim,A,Wörgl,53,false
+E45,A,Wörgl,A,Innsbruck,60,false
+E45,A,Innsbruck,A,Brennerpaß,36,false
+E45,A,Brennerpaß,I,Passo di Brennero,0,false
+E45,I,Passo di Brennero,I,Fortezza,45,false
+E45,I,Fortezza,I,Bolzano,50,false
+E45,I,Bolzano,I,Trento,57,false
+E45,I,Trento,I,Verona,99,false
+E45,I,Verona,I,Modena,103,false
+E45,I,Modena,I,Bologna,42,false
+E45,I,Bologna,I,Cesena,95,false
+E45,I,Cesena,I,Perugia,154,false
+E45,I,Perugia,I,Fiano Romana,148,false
+E45,I,Fiano Romana,I,San Cesareo,64,false
+E45,I,San Cesareo,I,Napoli,200,false
+E45,I,Napoli,I,Salerno,57,false
+E45,I,Salerno,I,Sicignano degli Alburni,65,false
+E45,I,Sicignano degli Alburni,I,Cosenza,222,false
+E45,I,Cosenza,I,Villa San Giovanni,177,false
+E45,I,Villa San Giovanni,I,Messina,8,true
+E45,I,Messina,I,Catánia,98,false
+E45,I,Catánia,I,Siracusa,66,false
+E45,I,Siracusa,I,Gela,154,false
+E451,D,Gießen,D,Frankfurt am Main,67,false
+E451,D,Frankfurt am Main,D,Mannheim,84,false
+E46,F,Cherbourg,F,Caen,122,false
+E46,F,Caen,F,Rouen,122,false
+E46,F,Rouen,F,Reims,244,false
+E46,F,Reims,F,Charleville-Mézières,87,false
+E46,F,Charleville-Mézières,B,Liège,178,false
+E461,CZ,Svitavy,CZ,Brno,72,false
+E461,CZ,Brno,A,Wien,141,false
+E462,CZ,Brno,CZ,Olomouc,81,false
+E462,CZ,Olomouc,CZ,Česky Tĕšin,114,false
+E462,CZ,Česky Tĕšin,PL,Kraków,129,false
+E47,S,Helsingborg,DK,Helsingør,9,true
+E47,DK,Helsingør,DK,København,47,false
+E47,DK,København,DK,Køge,45,false
+E47,DK,Køge,DK,Vordingborg,60,false
+E47,DK,Vordingborg,DK,Farø,11,false
+E47,DK,Farø,DK,Rødby,53,false
+E47,DK,Rødby,D,Lübeck,117,true
+E471,UA,Mukačevo,UA,L'vov,207,false
+E48,D,Schweinfurt,D,Bayreuth,121,false
+E48,D,Bayreuth,D,Marktredwitz,49,false
+E48,D,Marktredwitz,CZ,Cheb,26,false
+E48,CZ,Cheb,CZ,Karlovy Vary,43,false
+E48,CZ,Karlovy Vary,CZ,Praha,126,false
+E49,D,Magdeburg,D,Halle,86,false
+E49,D,Halle,D,Plauen,161,false
+E49,D,Plauen,D,Schönberg,44,false
+E49,D,Schönberg,CZ,Vojtanov,3,false
+E49,CZ,Vojtanov,CZ,Karlovy Vary,52,false
+E49,CZ,Karlovy Vary,CZ,Plzeň,73,false
+E49,CZ,Plzeň,CZ,České Budějovice,137,false
+E49,CZ,České Budějovice,CZ,Třeboň,27,false
+E49,CZ,Třeboň,CZ,Halámky,25,false
+E49,CZ,Halámky,A,Wien,151,false
+E50,F,Brest,F,Rennes,245,false
+E50,F,Rennes,F,Le Mans,151,false
+E50,F,Le Mans,F,Paris,203,false
+E50,F,Paris,F,Reims,145,false
+E50,F,Reims,F,Metz,190,false
+E50,F,Metz,D,Saarbrücken,71,false
+E50,D,Saarbrücken,D,Mannheim,135,false
+E50,D,Mannheim,D,Heilbronn,80,false
+E50,D,Heilbronn,D,Nürnberg,166,false
+E50,D,Nürnberg,CZ,Rozvadov,134,false
+E50,CZ,Rozvadov,CZ,Plzeň,65,false
+E50,CZ,Plzeň,CZ,Praha,93,false
+E50,CZ,Praha,CZ,Jihlava,126,false
+E50,CZ,Jihlava,CZ,Brno,90,false
+E50,CZ,Brno,SK,Trencin,135,false
+E50,SK,Trencin,SK,Prešov,299,false
+E50,SK,Prešov,SK,Košice,35,false
+E50,SK,Košice,SK,Vyšné Nemecké,89,false
+E50,SK,Vyšné Nemecké,UA,Užgorod,6,false
+E50,UA,Užgorod,UA,Mukačevo,41,false
+E501,F,Le Mans,F,Angers,97,false
+E502,F,Le Mans,F,Tours,82,false
+E51,D,Berlin,D,Leipzig,191,false
+E51,D,Leipzig,D,Gera,68,false
+E51,D,Gera,D,Hirschberg,66,false
+E51,D,Hirschberg,D,Hof,14,false
+E51,D,Hof,D,Bayreuth,54,false
+E51,D,Bayreuth,D,Nürnberg,87,false
+E511,F,Courtenay,F,Troyes,133,false
+E512,F,Remiremont,F,Mulhouse,77,false
+E52,F,Strasbourg,D,Appenweier,22,false
+E52,D,Appenweier,D,Karlsruhe,69,false
+E52,D,Karlsruhe,D,Stuttgart,80,false
+E52,D,Stuttgart,D,Ulm,91,false
+E52,D,Ulm,D,München,143,false
+E52,D,München,A,Salzburg,149,false
+E53,CZ,Plzeň,D,Bayerisch Eisenstein,84,false
+E53,D,Bayerisch Eisenstein,D,Deggendorf,55,false
+E53,D,Deggendorf,D,München,146,false
+E531,D,Offenburg,D,Donaueschingen,96,false
+E532,D,Memmingen,D,Füssen,71,false
+E533,D,München,D,Garmisch-Partenkirchen,89,false
+E533,D,Garmisch-Partenkirchen,D,Mittenwald,18,false
+E533,D,Mittenwald,A,Seefeld in Tirol,15,false
+E533,A,Seefeld in Tirol,A,Innsbruck,23,false
+E54,F,Paris,F,Chaumont,265,false
+E54,F,Chaumont,F,Mulhouse,226,false
+E54,F,Mulhouse,CH,Basel,38,false
+E54,CH,Basel,D,Waldshut,54,false
+E54,D,Waldshut,D,Lindau,144,false
+E54,D,Lindau,D,München,180,false
+E55,S,Helsingborg,DK,Helsingør,9,true
+E55,DK,Helsingør,DK,København,47,false
+E55,DK,København,DK,Køge,45,false
+E55,DK,Køge,DK,Vordingborg,60,false
+E55,DK,Vordingborg,DK,Farø,11,false
+E55,DK,Farø,DK,Nykøbing Falster,25,false
+E55,DK,Nykøbing Falster,DK,Gedser,23,false
+E55,DK,Gedser,D,Rostock,45,true
+E55,D,Rostock,D,Berlin,230,false
+E55,D,Berlin,D,Lübbenau,94,false
+E55,D,Lübbenau,D,Dresden,105,false
+E55,D,Dresden,CZ,Teplice,63,false
+E55,CZ,Teplice,CZ,Praha,95,false
+E55,CZ,Praha,CZ,Tábor,86,false
+E55,CZ,Tábor,CZ,České Budějovice,57,false
+E55,CZ,České Budějovice,CZ,Dolní Dvořiště,42,false
+E55,CZ,Dolní Dvořiště,A,Linz,58,false
+E55,A,Linz,A,Salzburg,130,false
+E55,A,Salzburg,A,Villach,194,false
+E55,A,Villach,I,Tarvisio,32,false
+E55,I,Tarvisio,I,Udine,96,false
+E55,I,Udine,I,Palmanova,24,false
+E55,I,Palmanova,I,Venézia-Mestre,103,false
+E55,I,Venézia-Mestre,I,Ravenna,135,false
+E55,I,Ravenna,I,Cesena,35,false
+E55,I,Cesena,I,Rimini,38,false
+E55,I,Rimini,I,Fano,53,false
+E55,I,Fano,I,Ancona,58,false
+E55,I,Ancona,I,Pescara,158,false
+E55,I,Pescara,I,Canosa di Puglia,236,false
+E55,I,Canosa di Puglia,I,Bari,74,false
+E55,I,Bari,I,Brindisi,119,false
+E55,I,Brindisi,GR,Igoumenítsa,252,true
+E55,GR,Igoumenítsa,GR,Préveza,92,false
+E55,GR,Préveza,GR,Mesolóngi,126,false
+E55,GR,Mesolóngi,GR,Río,38,false
+E55,GR,Río,GR,Pátra,10,false
+E55,GR,Pátra,GR,Pírgos,95,false
+E55,GR,Pírgos,GR,Kalámata,111,false
+E551,CZ,České Budějovice,CZ,Humpolec,109,false
+E552,D,München,A,Braunau am Inn,130,false
+E552,A,Braunau am Inn,A,Wels,86,false
+E552,A,Wels,A,Linz,32,false
+E56,D,Nürnberg,D,Regensburg,104,false
+E56,D,Regensburg,D,Passau,127,false
+E56,D,Passau,A,Wels,88,false
+E56,A,Wels,A,Sattledt,11,false
+E57,A,Sattledt,A,Liezen,79,false
+E57,A,Liezen,A,Sankt Michael in Obersteiermark,73,false
+E57,A,Sankt Michael in Obersteiermark,A,Graz,59,false
+E57,A,Graz,SLO,Maribor,67,false
+E57,SLO,Maribor,SLO,Ljubljana,133,false
+E571,SK,Bratislava,SK,Zvolen,193,false
+E571,SK,Zvolen,SK,Košice,209,false
+E572,SK,Trencin,SK,Žiar nad Hronom,103,false
+E573,H,Püspökladány,H,Nyiregyháza,104,false
+E573,H,Nyiregyháza,UA,Čop,75,false
+E573,UA,Čop,UA,Užgorod,25,false
+E574,RO,Bacău,RO,Braşov,166,false
+E574,RO,Braşov,RO,Piteşti,125,false
+E575,SK,Bratislava,SK,Dunajská Streda,55,false
+E575,SK,Dunajská Streda,SK,Medved'ov,25,false
+E575,SK,Medved'ov,H,Vámószabadi,6,false
+E575,H,Vámószabadi,H,Györ,8,false
+E576,RO,Cluj-Napoca,RO,Dej,58,false
+E576,RO,Dej,RO,Bistriţa,61,false
+E576,RO,Bistriţa,RO,Suceava,182,false
+E58,A,Wien,SK,Bratislava,65,false
+E581,RO,Mărăşeşti,RO,Tecuci,21,false
+E581,RO,Tecuci,RO,Albiţa,132,false
+E581,RO,Albiţa,MD,Leušeny,5,false
+E581,MD,Leušeny,MD,Chişinău,72,false
+E581,MD,Chişinău,UA,Odessa,177,false
+E583,RO,Roman,RO,Iaşi,84,false
+E583,RO,Iaşi,RO,Sculeni,22,false
+E59,CZ,Praha,CZ,Jihlava,126,false
+E59,CZ,Jihlava,A,Wien,171,false
+E59,A,Wien,A,Graz,201,false
+E59,A,Graz,A,Spielfeld,47,false
+E59,A,Spielfeld,SLO,Maribor,21,false
+E59,SLO,Maribor,HR,Zagreb,115,false
+E60,F,Brest,F,Nantes,304,false
+E60,F,Nantes,F,Tours,220,false
+E60,F,Tours,F,Orléans,118,false
+E60,F,Orléans,F,Courtenay,99,false
+E60,F,Courtenay,F,Beaune,204,false
+E60,F,Beaune,F,Besançon,108,false
+E60,F,Besançon,F,Belfort,93,false
+E60,F,Belfort,F,Mulhouse,44,false
+E60,F,Mulhouse,CH,Basel,38,false
+E60,CH,Basel,CH,Zürich,90,false
+E60,CH,Zürich,CH,Winterthur,25,false
+E60,CH,Winterthur,CH,Sankt Gallen,58,false
+E60,CH,Sankt Gallen,CH,Sankt Margrethen,25,false
+E60,CH,Sankt Margrethen,A,Lauterach,12,false
+E60,A,Lauterach,A,Feldkirch,32,false
+E60,A,Feldkirch,A,Imst,106,false
+E60,A,Imst,A,Innsbruck,58,false
+E60,A,Innsbruck,A,Wörgl,60,false
+E60,A,Wörgl,D,Rosenheim,53,false
+E60,D,Rosenheim,A,Salzburg,89,false
+E60,A,Salzburg,A,Linz,130,false
+E60,A,Linz,A,Wien,181,false
+E60,A,Wien,A,Nickelsdorf,71,false
+E60,A,Nickelsdorf,H,Mosonmagyaróvár,24,false
+E60,H,Mosonmagyaróvár,H,Györ,40,false
+E60,H,Györ,H,Budapest,119,false
+E60,H,Budapest,H,Püspökladány,198,false
+E60,H,Püspökladány,RO,Oradea,73,false
+E60,RO,Oradea,RO,Cluj-Napoca,146,false
+E60,RO,Cluj-Napoca,RO,Turda,29,false
+E60,RO,Turda,RO,Tîrgu Mureş,78,false
+E60,RO,Tîrgu Mureş,RO,Braşov,166,false
+E60,RO,Braşov,RO,Ploieşti,102,false
+E60,RO,Ploieşti,RO,Bucureşti,59,false
+E60,RO,Bucureşti,RO,Urziceni,57,false
+E60,RO,Urziceni,RO,Slobozia,63,false
+E60,RO,Slobozia,RO,Hîrşova,56,false
+E60,RO,Hîrşova,RO,Constanta,83,false
+E601,F,Niort,F,La Rochelle,62,false
+E602,F,La Rochelle,F,Saintes,68,false
+E603,F,Saintes,F,Angoulème,74,false
+E603,F,Angoulème,F,Limoges,104,false
+E604,F,Tours,F,Vierzon,115,false
+E606,F,Angoulème,F,Bordeaux,129,false
+E607,F,Digoin,F,Chalon-sur-Saône,88,false
+E61,A,Villach,A,Karawanken Tunnel,22,false
+E61,A,Karawanken Tunnel,SLO,Predor Karavanke,7,false
+E61,SLO,Predor Karavanke,SLO,Naklo,37,false
+E61,SLO,Naklo,SLO,Ljubljana,34,false
+E61,SLO,Ljubljana,I,Trieste,96,false
+E61,I,Trieste,HR,Rijeka,73,false
+E611,F,Lyon,F,Pont-d'Ain,57,false
+E612,I,Ivrea,I,Torino,55,false
+E62,F,Nantes,F,Poitiers,186,false
+E62,F,Poitiers,F,Mâcon,415,false
+E62,F,Mâcon,CH,Genève,152,false
+E62,CH,Genève,CH,Lausanne,64,false
+E62,CH,Lausanne,CH,Martigny,71,false
+E62,CH,Martigny,CH,Sion,29,false
+E62,CH,Sion,CH,Simplon,83,false
+E62,CH,Simplon,I,Gravellona Toce,65,false
+E62,I,Gravellona Toce,I,Milano,95,false
+E62,I,Milano,I,Tortona,78,false
+E62,I,Tortona,I,Genova,69,false
+E63,FIN,Sodankylä,FIN,Kemijärvi,108,false
+E63,FIN,Kemijärvi,FIN,Kuusamo,141,false
+E63,FIN,Kuusamo,FIN,Kajaani,253,false
+E63,FIN,Kajaani,FIN,Kuopio,173,false
+E63,FIN,Kuopio,FIN,Jyväskylä,147,false
+E63,FIN,Jyväskylä,FIN,Tampere,146,false
+E63,FIN,Tampere,FIN,Turku,158,false
+E64,I,Torino,I,Milano,143,false
+E64,I,Milano,I,Brescia,103,false
+E641,A,Wörgl,A,Sankt Johann in Tirol,31,false
+E641,A,Sankt Johann in Tirol,A,Lofer,25,false
+E641,A,Lofer,A,Salzburg,49,false
+E65,S,Malmö,S,Ystad,57,false
+E65,S,Ystad,PL,Świnoujście,173,true
+E65,PL,Świnoujście,PL,Wolin,27,false
+E65,PL,Wolin,PL,Goleniów,41,false
+E65,PL,Goleniów,PL,Szczecin,38,false
+E65,PL,Szczecin,PL,Świebodzin,169,false
+E65,PL,Świebodzin,PL,Jelenia Góra,278,false
+E65,PL,Jelenia Góra,CZ,Harrachov,32,false
+E65,CZ,Harrachov,CZ,Zelezný Brod,27,false
+E65,CZ,Zelezný Brod,CZ,Turnov,13,false
+E65,CZ,Turnov,CZ,Mladá Boleslav,30,false
+E65,CZ,Mladá Boleslav,CZ,Praha,57,false
+E65,CZ,Praha,CZ,Jihlava,126,false
+E65,CZ,Jihlava,CZ,Brno,90,false
+E65,CZ,Brno,CZ,Břeclav,60,false
+E65,CZ,Břeclav,SK,Bratislava,85,false
+E65,SK,Bratislava,H,Rajka,20,false
+E65,H,Rajka,H,Mosonmagyaróvár,16,false
+E65,H,Mosonmagyaróvár,H,Csorna,37,false
+E65,H,Csorna,H,Szombathely,69,false
+E65,H,Szombathely,H,Körmend,25,false
+E65,H,Körmend,H,Zalaegerszeg,32,false
+E65,H,Zalaegerszeg,H,Nagykanizsa,49,false
+E65,H,Nagykanizsa,H,Letenye,23,false
+E65,H,Letenye,HR,Zagreb,117,false
+E65,HR,Zagreb,HR,Karlovac,53,false
+E65,HR,Karlovac,HR,Rijeka,127,false
+E65,HR,Rijeka,HR,Split,350,false
+E65,HR,Split,HR,Metković,131,false
+E65,HR,Metković,HR,Dubrovnik,92,false
+E65,HR,Dubrovnik,YU,Petrovac,143,false
+E65,YU,Petrovac,YU,Podgorica,48,false
+E65,YU,Podgorica,YU,Bijelo Polje,112,false
+E65,YU,Bijelo Polje,MK,Skopje,250,false
+E65,MK,Skopje,MK,Kicevo,113,false
+E65,MK,Kicevo,MK,Ohrid,62,false
+E65,MK,Ohrid,MK,Bitola,64,false
+E65,MK,Bitola,GR,Níki,16,false
+E65,GR,Níki,GR,Vévi,24,false
+E65,GR,Vévi,GR,Kozáni,64,false
+E65,GR,Kozáni,GR,Lárissa,119,false
+E65,GR,Lárissa,GR,Domokós,75,false
+E65,GR,Domokós,GR,Lamía,38,false
+E65,GR,Lamía,GR,Brálos,27,false
+E65,GR,Brálos,GR,Itéa,44,false
+E65,GR,Itéa,GR,Antirrio,91,false
+E65,GR,Antirrio,GR,Río,4,true
+E65,GR,Río,GR,Égio,29,false
+E65,GR,Égio,GR,Korinthos,99,false
+E65,GR,Korinthos,GR,Trípoli,81,false
+E65,GR,Trípoli,GR,Kalámata,90,false
+E65,GR,Kalámata,GR,Kissámos,326,true
+E65,GR,Kissámos,GR,Chaniá,37,false
+E651,A,Altenmarkt im Pongau,A,Liezen,72,false
+E652,A,Klagenfurt,A,Loibl Pass,29,false
+E652,A,Loibl Pass,SLO,Naklo,21,false
+E66,I,Fortezza,I,San Candido,62,false
+E66,I,San Candido,A,Spittal an der Drau,119,false
+E66,A,Spittal an der Drau,A,Villach,42,false
+E66,A,Villach,A,Klagenfurt,39,false
+E66,A,Klagenfurt,A,Graz,127,false
+E66,A,Graz,H,Veszprém,220,false
+E66,H,Veszprém,H,Székesfehérvár,44,false
+E661,H,Balatonkeresztúr,H,Nagyatád,59,false
+E661,H,Nagyatád,H,Barcs,37,false
+E661,H,Barcs,HR,Virovitica,16,false
+E661,HR,Virovitica,HR,Okučani,96,false
+E661,HR,Okučani,BIH,Banja Luka,71,false
+E661,BIH,Banja Luka,BIH,Jajce,76,false
+E661,BIH,Jajce,BIH,Donji Vakuf,31,false
+E661,BIH,Donji Vakuf,BIH,Zenica,64,false
+E662,YU,Subotica,YU,Sombor,57,false
+E662,YU,Sombor,HR,Osijek,74,false
+E67,FIN,Helsinki,EST,Tallinn,83,true
+E67,EST,Tallinn,LV,Riga,307,false
+E67,LV,Riga,LT,Panevėžys,154,false
+E67,LT,Panevėžys,LT,Kaunas,119,false
+E67,LT,Kaunas,PL,Warszawa,383,false
+E67,PL,Warszawa,PL,Piotrków Trybunalski,136,false
+E67,PL,Piotrków Trybunalski,PL,Wrocław,207,false
+E67,PL,Wrocław,PL,Kłodzko,93,false
+E67,PL,Kłodzko,CZ,Bĕloves,36,false
+E67,CZ,Bĕloves,CZ,Náchod,4,false
+E67,CZ,Náchod,CZ,Hradec Králové,41,false
+E67,CZ,Hradec Králové,CZ,Praha,109,false
+E671,RO,Timişoara,RO,Arad,53,false
+E671,RO,Arad,RO,Oradea,111,false
+E673,RO,Lugoj,RO,Deva,93,false
+E68,H,Szeged,RO,Arad,100,false
+E68,RO,Arad,RO,Deva,143,false
+E68,RO,Deva,RO,Sibiu,114,false
+E68,RO,Sibiu,RO,Braşov,142,false
+E69,N,Nordkapp,N,Olderfjord,111,false
+E70,E,La Coruña,E,Oviedo,295,false
+E70,E,Oviedo,E,Bilbao,280,false
+E70,E,Bilbao,E,San Sebastián,97,false
+E70,E,San Sebastián,F,Bordeaux,244,false
+E70,F,Bordeaux,F,Clermont-Ferrand,359,false
+E70,F,Clermont-Ferrand,F,Lyon,173,false
+E70,F,Lyon,F,Chambéry,97,false
+E70,F,Chambéry,I,Susa,157,false
+E70,I,Susa,I,Torino,59,false
+E70,I,Torino,I,Alessandria,88,false
+E70,I,Alessandria,I,Tortona,30,false
+E70,I,Tortona,I,Brescia,165,false
+E70,I,Brescia,I,Verona,76,false
+E70,I,Verona,I,Venézia-Mestre,112,false
+E70,I,Venézia-Mestre,I,Palmanova,102,false
+E70,I,Palmanova,I,Trieste,50,false
+E70,I,Trieste,SLO,Ljubljana,96,false
+E70,SLO,Ljubljana,HR,Zagreb,141,false
+E70,HR,Zagreb,HR,Đakovo,244,false
+E70,HR,Đakovo,YU,Beograd,209,false
+E70,YU,Beograd,YU,Vrsac,81,false
+E70,YU,Vrsac,RO,Timişoara,77,false
+E70,RO,Timişoara,RO,Caransebeş,103,false
+E70,RO,Caransebeş,RO,Drobeta-Turnu Severin,104,false
+E70,RO,Drobeta-Turnu Severin,RO,Craiova,110,false
+E70,RO,Craiova,RO,Piteşti,130,false
+E70,RO,Piteşti,RO,Bucureşti,114,false
+E70,RO,Bucureşti,RO,Giurgiu,65,false
+E70,RO,Giurgiu,BG,Ruse,14,false
+E70,BG,Ruse,BG,Razgrad,61,false
+E70,BG,Razgrad,BG,Šumen,46,false
+E70,BG,Šumen,BG,Varna,89,false
+E70,BG,Varna,TR,Samsun,721,true
+E70,TR,Samsun,TR,Ordu,150,false
+E70,TR,Ordu,TR,Giresun,47,false
+E70,TR,Giresun,TR,Trabzon,131,false
+E71,SK,Košice,H,Miskolc,84,false
+E71,H,Miskolc,H,Budapest,171,false
+E71,H,Budapest,H,Balatonaliga,93,false
+E71,H,Balatonaliga,H,Nagykanizsa,119,false
+E71,H,Nagykanizsa,HR,Zagreb,140,false
+E71,HR,Zagreb,HR,Karlovac,53,false
+E71,HR,Karlovac,BIH,Bihać,99,false
+E71,BIH,Bihać,HR,Knin,154,false
+E71,HR,Knin,HR,Split,103,false
+E711,F,Lyon,F,Grenoble,106,false
+E712,CH,Genève,F,Chambéry,85,false
+E712,F,Chambéry,F,Marseille,325,false
+E713,F,Valence,F,Grenoble,92,false
+E714,F,Orange,F,Marseille,116,false
+E717,I,Torino,I,Savona,134,false
+E72,F,Bordeaux,F,Toulouse,242,false
+E73,H,Budapest,H,Szekszárd,155,false
+E73,H,Szekszárd,H,Mohács,46,false
+E73,H,Mohács,HR,Osijek,56,false
+E73,HR,Osijek,HR,Đakovo,38,false
+E73,HR,Đakovo,BIH,Bosanski Samac,35,false
+E73,BIH,Bosanski Samac,BIH,Zenica,145,false
+E73,BIH,Zenica,BIH,Mostar,166,false
+E73,BIH,Mostar,HR,Metković,43,false
+E74,F,Nice,I,Cuneo,120,false
+E74,I,Cuneo,I,Asti,88,false
+E74,I,Asti,I,Alessandria,38,false
+E75,N,Vardø,FIN,Utsjoki,212,false
+E75,FIN,Utsjoki,FIN,Ivalo,161,false
+E75,FIN,Ivalo,FIN,Sodankylä,163,false
+E75,FIN,Sodankylä,FIN,Rovaniemi,128,false
+E75,FIN,Rovaniemi,FIN,Kemi,121,false
+E75,FIN,Kemi,FIN,Oulu,107,false
+E75,FIN,Oulu,FIN,Jyväskylä,338,false
+E75,FIN,Jyväskylä,FIN,Lahti,178,false
+E75,FIN,Lahti,FIN,Helsinki,103,false
+E75,FIN,Helsinki,PL,Gdańsk,744,true
+E75,PL,Gdańsk,PL,Świecie,126,false
+E75,PL,Świecie,PL,Krośniewice,163,false
+E75,PL,Krośniewice,PL,Łódź,60,false
+E75,PL,Łódź,PL,Piotrków Trybunalski,55,false
+E75,PL,Piotrków Trybunalski,PL,Katowice,154,false
+E75,PL,Katowice,CZ,Česky Tĕšin,74,false
+E75,CZ,Česky Tĕšin,SK,Žilina,72,false
+E75,SK,Žilina,SK,Bratislava,200,false
+E75,SK,Bratislava,H,Györ,75,false
+E75,H,Györ,H,Budapest,119,false
+E75,H,Budapest,H,Szeged,168,false
+E75,H,Szeged,YU,Beograd,221,false
+E75,YU,Beograd,YU,Niš,232,false
+E75,YU,Niš,MK,Kumanovo,161,false
+E75,MK,Kumanovo,MK,Skopje,40,false
+E75,MK,Skopje,MK,Gevgelija,155,false
+E75,MK,Gevgelija,GR,Évzoni,7,false
+E75,GR,Évzoni,GR,Thessaloníki,69,false
+E75,GR,Thessaloníki,GR,Lárissa,151,false
+E75,GR,Lárissa,GR,Almirós,215,false
+E75,GR,Almirós,GR,Lamía,76,false
+E75,GR,Lamía,GR,Athína,214,false
+E75,GR,Athína,GR,Chaniá,311,true
+E75,GR,Chaniá,GR,Iráklio,132,false
+E75,GR,Iráklio,GR,Ágios Nikólaos,63,false
+E75,GR,Ágios Nikólaos,GR,Sitía,70,false
+E751,HR,Rijeka,HR,Pula,106,false
+E751,HR,Pula,SLO,Koper,95,false
+E76,I,Migliarino,I,Firenze,88,false
+E761,BIH,Bihać,BIH,Jajce,157,false
+E761,BIH,Jajce,BIH,Donji Vakuf,31,false
+E761,BIH,Donji Vakuf,BIH,Zenica,64,false
+E761,BIH,Zenica,BIH,Sarajevo,73,false
+E761,BIH,Sarajevo,YU,Užice,168,false
+E761,YU,Užice,YU,Čačak,55,false
+E761,YU,Čačak,YU,Kraljevo,38,false
+E761,YU,Kraljevo,YU,Kruševac,60,false
+E761,YU,Kruševac,YU,Pojate,23,false
+E761,YU,Pojate,YU,Paraćin,17,false
+E761,YU,Paraćin,YU,Zajĕcar,87,false
+E762,BIH,Sarajevo,YU,Podgorica,209,false
+E762,YU,Podgorica, ,*Albania*,23,false
+E763,YU,Beograd,YU,Čačak,137,false
+E763,YU,Čačak,YU,Nova Varos,117,false
+E763,YU,Nova Varos,YU,Bijelo Polje,73,false
+E77,PL,Gdańsk,PL,Elblag,60,false
+E77,PL,Elblag,PL,Warszawa,279,false
+E77,PL,Warszawa,PL,Radom,114,false
+E77,PL,Radom,PL,Kraków,192,false
+E77,PL,Kraków,SK,Trstená,103,false
+E77,SK,Trstená,SK,Ružomberok,54,false
+E77,SK,Ružomberok,SK,Zvolen,72,false
+E77,SK,Zvolen,H,Budapest,145,false
+E771,RO,Drobeta-Turnu Severin,YU,Niš,228,false
+E772,BG,Jablanica,BG,Veliko Tarnovo,149,false
+E772,BG,Veliko Tarnovo,BG,Šumen,131,false
+E773,BG,Popovica,BG,Stara Zagora,64,false
+E773,BG,Stara Zagora,BG,Burgas,177,false
+E78,I,Grosseto,I,Arezzo,138,false
+E78,I,Arezzo,I,Sansepolcro,42,false
+E78,I,Sansepolcro,I,Fano,105,false
+E79,RO,Oradea,RO,Beius,57,false
+E79,RO,Beius,RO,Deva,116,false
+E79,RO,Deva,RO,Petroşani,86,false
+E79,RO,Petroşani,RO,Tirgu Jiu,48,false
+E79,RO,Tirgu Jiu,RO,Craiova,112,false
+E79,RO,Craiova,RO,Calafat,87,false
+E79,RO,Calafat,BG,Vidin,8,true
+E79,BG,Vidin,BG,Vraca,126,false
+E79,BG,Vraca,BG,Botevgrad,50,false
+E79,BG,Botevgrad,BG,Sofia,63,false
+E79,BG,Sofia,BG,Blagoevgrad,92,false
+E79,BG,Blagoevgrad,GR,Séres,124,false
+E79,GR,Séres,GR,Thessaloníki,81,false
+E80,P,Lisboa,P,Santarem,82,false
+E80,P,Santarem,P,Leiria,73,false
+E80,P,Leiria,P,Coimbra,74,false
+E80,P,Coimbra,P,Aveiro,61,false
+E80,P,Aveiro,P,Viseu,72,false
+E80,P,Viseu,P,Guarda,68,false
+E80,P,Guarda,P,Vilar Formoso,42,false
+E80,P,Vilar Formoso,E,Salamanca,116,false
+E80,E,Salamanca,E,Burgos,239,false
+E80,E,Burgos,E,San Sebastián,246,false
+E80,E,San Sebastián,F,Pau,157,false
+E80,F,Pau,F,Toulouse,195,false
+E80,F,Toulouse,F,Narbonne,154,false
+E80,F,Narbonne,F,Nîmes,142,false
+E80,F,Nîmes,F,Aix-en-Provence,106,false
+E80,F,Aix-en-Provence,F,Nice,175,false
+E80,F,Nice,I,Ventimiglia,34,false
+E80,I,Ventimiglia,I,Savona,111,false
+E80,I,Savona,I,Genova,48,false
+E80,I,Genova,I,La Spezia,102,false
+E80,I,La Spezia,I,Migliarino,71,false
+E80,I,Migliarino,I,Livorno,32,false
+E80,I,Livorno,I,Grosseto,135,false
+E80,I,Grosseto,I,Roma,182,false
+E80,I,Roma,I,Pescara,209,false
+E80,I,Pescara,HR,Dubrovnik,320,true
+E80,HR,Dubrovnik,YU,Petrovac,144,false
+E80,YU,Petrovac,YU,Podgorica,48,false
+E80,YU,Podgorica,YU,Priština,237,false
+E80,YU,Priština,YU,Niš,124,false
+E80,YU,Niš,YU,Dimitrovgrad,94,false
+E80,YU,Dimitrovgrad,BG,Sofia,59,false
+E80,BG,Sofia,BG,Plovdiv,140,false
+E80,BG,Plovdiv,BG,Svilengrad,140,false
+E80,BG,Svilengrad,TR,Edirne,34,false
+E80,TR,Edirne,TR,Babaeski,62,false
+E80,TR,Babaeski,TR,Silivri,123,false
+E80,TR,Silivri,TR,Istanbul,71,false
+E80,TR,Istanbul,TR,Izmit,107,false
+E80,TR,Izmit,TR,Adapazari,42,false
+E80,TR,Adapazari,TR,Bolu,111,false
+E80,TR,Bolu,TR,Gerede,66,false
+E80,TR,Gerede,TR,Ilgaz,142,false
+E80,TR,Ilgaz,TR,Amasya,229,false
+E80,TR,Amasya,TR,Niksar,111,false
+E80,TR,Niksar,TR,Refahiye,191,false
+E80,TR,Refahiye,TR,Erzincan,70,false
+E80,TR,Erzincan,TR,Askale,138,false
+E80,TR,Askale,TR,Erzurum,54,false
+E80,TR,Erzurum,TR,Ağri,185,false
+E80,TR,Ağri,TR,Gürbulak,129,false
+E80,TR,Gürbulak, ,*Iran*,6,false
+E801,P,Coimbra,P,Viseu,91,false
+E801,P,Viseu,P,Vila Real,101,false
+E801,P,Vila Real,P,Chaves,63,false
+E801,P,Chaves,E,Verín,26,false
+E802,P,Bragança,P,Guarda,192,false
+E802,P,Guarda,P,Castelo Branco,101,false
+E802,P,Castelo Branco,P,Portalegre,84,false
+E802,P,Portalegre,P,Évora,100,false
+E802,P,Évora,P,Beja,77,false
+E802,P,Beja,P,Ourique,65,false
+E803,E,Salamanca,E,Merida,278,false
+E803,E,Merida,E,Sevilla,194,false
+E804,E,Bilbao,E,Logroño,131,false
+E804,E,Logroño,E,Zaragoza,174,false
+E805,P,Famalicão,P,Chaves,377,false
+E806,P,Torres Novas,P,Abrantes,32,false
+E806,P,Abrantes,P,Castelo Branco,99,false
+E806,P,Castelo Branco,P,Guarda,101,false
+E81,RO,Halmeu,RO,Satu Mare,31,false
+E81,RO,Satu Mare,RO,Zalau,93,false
+E81,RO,Zalau,RO,Cluj-Napoca,77,false
+E81,RO,Cluj-Napoca,RO,Turda,29,false
+E81,RO,Turda,RO,Sebeş,81,false
+E81,RO,Sebeş,RO,Sibiu,52,false
+E81,RO,Sibiu,RO,Piteşti,145,false
+E82,P,Porto,P,Vila Real,93,false
+E82,P,Vila Real,P,Bragança,116,false
+E82,P,Bragança,E,Zamora,102,false
+E82,E,Zamora,E,Tordesillas,68,false
+E821,I,Roma,I,San Cesareo,36,false
+E83,BG,Bjala,BG,Pleven,95,false
+E83,BG,Pleven,BG,Jablanica,78,false
+E83,BG,Jablanica,BG,Botevgrad,29,false
+E83,BG,Botevgrad,BG,Sofia,63,false
+E84,TR,Keşan,TR,Tekirdag,93,false
+E84,TR,Tekirdag,TR,Silivri,70,false
+E841,I,Avellino,I,Salerno,36,false
+E842,I,Napoli,I,Avellino,56,false
+E842,I,Avellino,I,Benevento,28,false
+E842,I,Benevento,I,Canosa di Puglia,135,false
+E843,I,Bari,I,Taranto,94,false
+E844,I,Spezzano Albanese,I,Sibari,24,false
+E846,I,Cosenza,I,Crotone,117,false
+E847,I,Sicignano degli Alburni,I,Potenza,59,false
+E847,I,Potenza,I,Metaponto,111,false
+E848,I,Sant'Eufemia Lamezia,I,Catanzaro,37,false
+E85,LT,Klaipéda,LT,Kaunas,213,false
+E85,LT,Kaunas,LT,Vilnius,103,false
+E85,LT,Vilnius,BY,Lida,95,false
+E85,BY,Lida,BY,Slonim,97,false
+E85,BY,Slonim,BY,Kobrin,145,false
+E85,BY,Kobrin,UA,Luck,202,false
+E85,UA,Luck,UA,Černovcy,333,false
+E85,UA,Černovcy,RO,Siret,41,false
+E85,RO,Siret,RO,Suceava,40,false
+E85,RO,Suceava,RO,Roman,104,false
+E85,RO,Roman,RO,Bacău,42,false
+E85,RO,Bacău,RO,Mărăşeşti,85,false
+E85,RO,Mărăşeşti,RO,Buzău,93,false
+E85,RO,Buzău,RO,Urziceni,53,false
+E85,RO,Urziceni,RO,Bucureşti,57,false
+E85,RO,Bucureşti,RO,Giurgiu,65,false
+E85,RO,Giurgiu,BG,Ruse,14,false
+E85,BG,Ruse,BG,Bjala,49,false
+E85,BG,Bjala,BG,Veliko Tarnovo,52,false
+E85,BG,Veliko Tarnovo,BG,Stara Zagora,108,false
+E85,BG,Stara Zagora,BG,Haskovo,59,false
+E85,BG,Haskovo,BG,Svilengrad,68,false
+E85,BG,Svilengrad,GR,Orménio,17,false
+E85,GR,Orménio,GR,Kastanies,31,false
+E85,GR,Kastanies,GR,Didimoticho,38,false
+E85,GR,Didimoticho,GR,Alexandropoúli,110,false
+E851,YU,Petrovac, ,*Albania*,53,false
+E851, ,*Albania*, ,*Albania*,148,false
+E851, ,*Albania*,YU,Prizren,16,false
+E851,YU,Prizren,YU,Priština,78,false
+E852,MK,Ohrid, ,*Albania*,29,false
+E853,GR,Ioánnina, ,*Albania*,61,false
+E86,GR,Kristalopigí,GR,Flórina,45,false
+E86,GR,Flórina,GR,Vévi,21,false
+E86,GR,Vévi,GR,Géfira,111,false
+E87,RO,Tulcea,RO,Constanta,129,false
+E87,RO,Constanta,BG,Varna,156,false
+E87,BG,Varna,BG,Burgas,127,false
+E87,BG,Burgas,BG,Mičurin,62,false
+E87,BG,Mičurin,BG,Malko Tarnovo,41,false
+E87,BG,Malko Tarnovo,TR,Dereköy,15,false
+E87,TR,Dereköy,TR,Kirklareli,31,false
+E87,TR,Kirklareli,TR,Babaeski,37,false
+E87,TR,Babaeski,TR,Havza,27,false
+E87,TR,Havza,TR,Keşan,85,false
+E87,TR,Keşan,TR,Gelibolu,67,false
+E87,TR,Gelibolu,TR,Eceabat,43,false
+E87,TR,Eceabat,TR,Çanakkale,6,true
+E87,TR,Çanakkale,TR,Ayvalik,180,false
+E87,TR,Ayvalik,TR,Izmir,153,false
+E87,TR,Izmir,TR,Selçuk,81,false
+E87,TR,Selçuk,TR,Aydin,51,false
+E87,TR,Aydin,TR,Denizli,184,false
+E87,TR,Denizli,TR,Acipayam,57,false
+E87,TR,Acipayam,TR,Korkuteli,105,false
+E87,TR,Korkuteli,TR,Antalya,64,false
+E871,BG,Sofia,BG,Kjustendil,95,false
+E871,BG,Kjustendil,MK,Kumanovo,98,false
+E88,TR,Ankara,TR,Yozgat,213,false
+E88,TR,Yozgat,TR,Sivas,234,false
+E88,TR,Sivas,TR,Refahiye,174,false
+E89,TR,Gerede,TR,Kizilcahamam,64,false
+E89,TR,Kizilcahamam,TR,Ankara,83,false
+E90,P,Lisboa,P,Montijo,50,false
+E90,P,Montijo,P,Setúbal,23,false
+E90,P,Setúbal,P,Évora,99,false
+E90,P,Évora,P,Caia,98,false
+E90,P,Caia,E,Badajoz,57,false
+E90,E,Badajoz,E,Madrid,406,false
+E90,E,Madrid,E,Zaragoza,310,false
+E90,E,Zaragoza,E,Lérida,149,false
+E90,E,Lérida,E,Barcelona,178,false
+E90,E,Barcelona,I,Mazara del Vallo,986,true
+E90,I,Mazara del Vallo,I,Alcamo,79,false
+E90,I,Alcamo,I,Palermo,64,false
+E90,I,Palermo,I,Buonfornello,47,false
+E90,I,Buonfornello,I,Messina,184,false
+E90,I,Messina,I,Reggio di Calabria,19,true
+E90,I,Reggio di Calabria,I,Catanzaro,197,false
+E90,I,Catanzaro,I,Crotone,74,false
+E90,I,Crotone,I,Sibari,115,false
+E90,I,Sibari,I,Metaponto,195,false
+E90,I,Metaponto,I,Taranto,48,false
+E90,I,Taranto,I,Brindisi,70,false
+E90,I,Brindisi,GR,Igoumenítsa,252,true
+E90,GR,Igoumenítsa,GR,Ioánnina,92,false
+E90,GR,Ioánnina,GR,Kozáni,181,false
+E90,GR,Kozáni,GR,Thessaloníki,129,false
+E90,GR,Thessaloníki,GR,Alexandropoúli,343,false
+E90,GR,Alexandropoúli,TR,Ipsala,54,false
+E90,TR,Ipsala,TR,Keşan,31,false
+E90,TR,Keşan,TR,Gelibolu,67,false
+E90,TR,Gelibolu,TR,Lapseki,8,true
+E90,TR,Lapseki,TR,Bursa,224,false
+E90,TR,Bursa,TR,Eskişehir,151,false
+E90,TR,Eskişehir,TR,Sivrihisar,97,false
+E90,TR,Sivrihisar,TR,Ankara,148,false
+E90,TR,Ankara,TR,Aksaray,233,false
+E90,TR,Aksaray,TR,Adana,252,false
+E90,TR,Adana,TR,Toprakkale,89,false
+E90,TR,Toprakkale,TR,Gazi Antep,135,false
+E90,TR,Gazi Antep,TR,Sanli Urfa,140,false
+E90,TR,Sanli Urfa,TR,Nusaybin,230,false
+E90,TR,Nusaybin,TR,Cizre,95,false
+E90,TR,Cizre,TR,Habur,44,false
+E90,TR,Habur, ,*Iraq*,1,false
+E901,E,Madrid,E,Valencia,344,false
+E902,E,Jaén,E,Granada,88,false
+E902,E,Granada,E,Málaga,124,false
+E91,TR,Toprakkale,TR,Iskenderun,63,false
+E91,TR,Iskenderun,TR,Topboğazi,23,false
+E91,TR,Topboğazi,TR,Antakya,31,false
+E91,TR,Antakya,TR,Yayladaği,43,false
+E91,TR,Yayladaği, ,*Syria*,5,false
+E92,GR,Igoumenítsa,GR,Ioánnina,92,false
+E92,GR,Ioánnina,GR,Tríkala,139,false
+E92,GR,Tríkala,GR,Vólos,119,false
+E931,I,Mazara del Vallo,I,Gela,189,false
+E932,I,Buonfornello,I,Enna,86,false
+E932,I,Enna,I,Catánia,85,false
+E933,I,Alcamo,I,Trapani,57,false
+E94,GR,Korinthos,GR,Athína,83,false
+E95,RUS,Sankt-Peterburg,RUS,Pskov,282,false
+E95,RUS,Pskov,BY,Gomel',686,false
+E95,BY,Gomel',UA,Kiev,249,false
+E95,UA,Kiev,UA,Odessa,477,false
+E95,UA,Odessa,TR,Samsun,731,true
+E95,TR,Samsun,TR,Merzifon,103,false
+E951,GR,Ioánnina,GR,Árta,72,false
+E951,GR,Árta,GR,Agrínio,83,false
+E951,GR,Agrínio,GR,Mesolóngi,35,false
+E952,GR,Aktio,GR,Vónitsa,14,false
+E952,GR,Vónitsa,GR,Amfilochía,38,false
+E952,GR,Amfilochía,GR,Karpenísi,113,false
+E952,GR,Karpenísi,GR,Lamía,77,false
+E96,TR,Izmir,TR,Usak,211,false
+E96,TR,Usak,TR,Afyon,114,false
+E96,TR,Afyon,TR,Sivrihisar,121,false
+E961,GR,Trípoli,GR,Spárti,60,false
+E961,GR,Spárti,GR,Gíthio,44,false
+E962,GR,Elefsína,GR,Thíva,48,false
+E97,RUS,Rostov-na-Donu,RUS,Krasnodar,279,false
+E97,RUS,Krasnodar,RUS,Novorossijsk,141,false
+E97,RUS,Novorossijsk,RUS,Soči,233,false
+E97,RUS,Soči,GE,Batumi,372,false
+E97,GE,Batumi,TR,Trabzon,200,false
+E97,TR,Trabzon,TR,Gümüshane,91,false
+E97,TR,Gümüshane,TR,Askale,140,false
+E98,TR,Topboğazi,TR,Kirikhan,10,false
+E98,TR,Kirikhan,TR,Reyhanli,38,false
+E98,TR,Reyhanli,TR,Cilvegözü,14,false
+E98,TR,Cilvegözü, ,*Syria*,2,false
+E99,TR,Doğubayazit,TR,Muradiye,87,false
+E99,TR,Muradiye,TR,Bitlis,189,false
+E99,TR,Bitlis,TR,Diyarbakir,205,false
+E99,TR,Diyarbakir,TR,Sanli Urfa,186,false
