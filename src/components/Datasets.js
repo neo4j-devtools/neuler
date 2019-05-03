@@ -153,17 +153,38 @@ const sampleGraphs = {
         queries: [
             `CREATE CONSTRAINT ON (c:Character) ASSERT c.id IS UNIQUE`,
             `UNWIND range(1,7) AS season
-LOAD CSV WITH HEADERS FROM "https://github.com/mneedham/gameofthrones/raw/master/data/got-s" + season + "-nodes.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://github.com/neo4j-apps/neuler/raw/master/sample-data/got/got-s" + season + "-nodes.csv" AS row
 MERGE (c:Character {id: row.Id})
 ON CREATE SET c.name = row.Label`,
             `UNWIND range(1,7) AS season
-LOAD CSV WITH HEADERS FROM "https://github.com/mneedham/gameofthrones/raw/master/data/got-s" + season + "-edges.csv" AS row
+LOAD CSV WITH HEADERS FROM "https://github.com/neo4j-apps/neuler/raw/master/sample-data/got/got-s" + season + "-edges.csv" AS row
 MATCH (source:Character {id: row.Source})
 MATCH (target:Character {id: row.Target})
 CALL apoc.merge.relationship(source, "INTERACTS_SEASON" + season, {}, {}, target) YIELD rel
 SET rel.weight = toInteger(row.Weight)`
         ]
+    },
+
+    "European Roads": {
+        name: "European Roads",
+        description: `A dataset containing European Roads.`,
+        queries: [
+            `CREATE CONSTRAINT ON (p:Place) ASSERT p.name IS UNIQUE`,
+            `USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "https://github.com/neo4j-apps/neuler/raw/master/sample-data/eroads/roads.csv"
+AS row
+
+MERGE (origin:Place {name: row.origin_reference_place})
+SET origin.countryCode = row.origin_country_code
+
+MERGE (destination:Place {name: row.destination_reference_place})
+SET destination.countryCode = row.destination_country_code
+
+MERGE (origin)-[eroad:EROAD {road_number: row.road_number}]->(destination)
+SET eroad.distance = toInteger(row.distance), eroad.watercrossing = row.watercrossing`
+        ]
     }
+
 }
 
 export default Datasets
