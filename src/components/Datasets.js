@@ -77,8 +77,11 @@ class Datasets extends Component {
                                         {sampleGraphs[key].name}
                                     </Card.Header>
                                     <Card.Meta>
-                                        {sampleGraphs[key].description}
+                                        Author: <a target="_blank" href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
                                     </Card.Meta>
+                                    <Card.Description>
+                                        {sampleGraphs[key].description}
+                                    </Card.Description>
                                 </Card.Content>
                                 <Card.Content extra>
                                     <div className='ui two buttons'>
@@ -149,6 +152,8 @@ class Datasets extends Component {
 const sampleGraphs = {
     "Game of Thrones": {
         name: "Game of Thrones",
+        author: "Andrew Beveridge",
+        authorLink: "https://networkofthrones.wordpress.com/",
         description: `A dataset containing interactions between the characters across the first 7 seasons of the popular TV show.`,
         queries: [
             `CREATE CONSTRAINT ON (c:Character) ASSERT c.id IS UNIQUE`,
@@ -167,6 +172,8 @@ SET rel.weight = toInteger(row.Weight)`
 
     "European Roads": {
         name: "European Roads",
+        author: "Lasse Westh-Nielsen",
+        authorLink: "http://lassewesth.blogspot.com/2018/07/the-international-e-road-network-and.html",
         description: `A dataset containing European Roads.`,
         queries: [
             `CREATE CONSTRAINT ON (p:Place) ASSERT p.name IS UNIQUE`,
