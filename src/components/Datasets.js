@@ -190,6 +190,24 @@ SET destination.countryCode = row.destination_country_code
 MERGE (origin)-[eroad:EROAD {road_number: row.road_number}]->(destination)
 SET eroad.distance = toInteger(row.distance), eroad.watercrossing = row.watercrossing`
         ]
+    },
+    "Twitter": {
+        name: "Twitter",
+        author: "Mark Needham",
+        authorLink: "https://markhneedham.com/blog/",
+        description: `A dataset containing Twitter followers of the graph community`,
+        queries: [ `CREATE CONSTRAINT ON(u:User) ASSERT u.id IS unique`,
+            `CALL apoc.load.json("https://gist.github.com/mneedham/3c6a59fb5e7d87e20a2f5f1ae4fa2920/raw/9d7c57997c09b3a105556adb6c6f1819792a4db4/query.json")
+YIELD value
+MERGE (u:User {id: value.user.id })
+SET u += value.user
+FOREACH (following IN value.following |  
+  MERGE (f1:User {id: following})  
+  MERGE (u)-[:FOLLOWS]->(f1))
+FOREACH (follower IN value.followers |  
+  MERGE(f2:User {id: follower})  
+  MERGE (u)<-[:FOLLOWS]-(f2));`
+        ]
     }
 
 }
