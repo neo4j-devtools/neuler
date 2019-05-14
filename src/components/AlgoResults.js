@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Button, Header, Icon, Segment, Menu, Loader, Message } from 'semantic-ui-react'
+import {Button, Header, Icon, Segment, Menu, Loader, Message, Image} from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
@@ -7,6 +7,7 @@ import Chart from './visualisation/Chart'
 import CodeView from './CodeView'
 
 import { ADDED, completeTask, FAILED, runTask } from "../ducks/tasks"
+import html2canvas from "html2canvas";
 
 const tabContentStyle = {
   height: '85vh',
@@ -78,6 +79,8 @@ class HorizontalAlgoTab extends Component {
         display: 'none'
       })
 
+    const screenShotStyle = {marginBottom: '-0.6em'}
+
 
     return (
       <div>
@@ -122,6 +125,36 @@ class HorizontalAlgoTab extends Component {
 
                 <Menu.Item name='Code' active={activeItem === 'Code'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+
+                <Menu.Item active={activeItem === 'Printscreen'}
+                           onClick={() => html2canvas(document.body).then(function(canvas) {
+                             const base64ImageData = canvas.toDataURL("image/png")
+                             const contentType = 'image/png';
+
+                             const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
+                             const byteArrays = [];
+
+                             for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+                               const slice = byteCharacters.slice(offset, offset + 1024);
+
+                               const byteNumbers = new Array(slice.length);
+                               for (let i = 0; i < slice.length; i++) {
+                                 byteNumbers[i] = slice.charCodeAt(i);
+                               }
+
+                               const byteArray = new Uint8Array(byteNumbers);
+
+                               byteArrays.push(byteArray);
+                             }
+                             const blob = new Blob(byteArrays, {type: contentType});
+                             const blobUrl = URL.createObjectURL(blob);
+
+                             window.open(blobUrl, '_blank');
+
+                           })}>
+                  <Image size='mini' style={screenShotStyle} src='/images/Camera2.png' />
+
+                </Menu.Item>
               </div>
 
                 <div style={{
