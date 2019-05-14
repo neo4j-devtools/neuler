@@ -128,6 +128,7 @@ class HorizontalAlgoTab extends Component {
 
                 <Menu.Item active={activeItem === 'Printscreen'}
                            onClick={() => html2canvas(document.body).then(function(canvas) {
+                             // https://stackoverflow.com/a/54466127
                              const base64ImageData = canvas.toDataURL("image/png")
                              const contentType = 'image/png';
 
