@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Button, Header, Icon, Segment, Menu, Loader, Message, Image} from 'semantic-ui-react'
+import { Button, Header, Icon, Segment, Menu, Loader, Message, Image } from 'semantic-ui-react'
 import { connect } from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import { getAlgorithmDefinitions } from "./algorithmsLibrary"
@@ -46,6 +46,12 @@ const ChartView = ({ task }) => {
 }
 
 class HorizontalAlgoTab extends Component {
+  constructor(props) {
+    super(props);
+    this.panelRef = React.createRef()
+  }
+
+
   state = {
     activeItem: this.props.error ? 'Error' : 'Table'
   }
@@ -79,9 +85,6 @@ class HorizontalAlgoTab extends Component {
         display: 'none'
       })
 
-    const screenShotStyle = {marginBottom: '-0.6em'}
-
-
     return (
       <div>
         {task.completed && task.status === FAILED ? (
@@ -106,8 +109,9 @@ class HorizontalAlgoTab extends Component {
             </div>
           )
           : <React.Fragment>
-            <Menu attached='top' tabular pointing secondary  style={{display: 'flex', justifyContent: 'space-between'}}>
-              <div style={{display: 'flex'}}>
+            <Menu attached='top' tabular pointing secondary
+                  style={{ display: 'flex', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex' }}>
 
                 <Menu.Item name='Table' active={activeItem === 'Table'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
@@ -127,74 +131,49 @@ class HorizontalAlgoTab extends Component {
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
 
                 <Menu.Item active={activeItem === 'Printscreen'}
-                           onClick={() => html2canvas(document.body).then(function(canvas) {
-                             // https://stackoverflow.com/a/54466127
-                             const base64ImageData = canvas.toDataURL("image/png")
-                             const contentType = 'image/png';
-
-                             const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
-                             const byteArrays = [];
-
-                             for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-                               const slice = byteCharacters.slice(offset, offset + 1024);
-
-                               const byteNumbers = new Array(slice.length);
-                               for (let i = 0; i < slice.length; i++) {
-                                 byteNumbers[i] = slice.charCodeAt(i);
-                               }
-
-                               const byteArray = new Uint8Array(byteNumbers);
-
-                               byteArrays.push(byteArray);
-                             }
-                             const blob = new Blob(byteArrays, {type: contentType});
-                             const blobUrl = URL.createObjectURL(blob);
-
-                             window.open(blobUrl, '_blank');
-
-                           })}>
-                  <Image size='mini' style={screenShotStyle} src='/images/Camera2.png' />
+                           onClick={(() => printElement(this.panelRef.current)).bind(this)}>
+                  <Image src='/images/Camera2.png'/>
 
                 </Menu.Item>
               </div>
 
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
-                  <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-                    <Icon name='angle left'/>
-                  </Button>
-                  <Header as='h3' style={{ margin: '0 1em' }}>
-                    {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-                  </Header>
-                  <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-                    <Icon name='angle right'/>
-                  </Button>
-                </div>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center'
+              }}>
+                <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+                  <Icon name='angle left'/>
+                </Button>
+                <Header as='h3' style={{ margin: '0 1em' }}>
+                  {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
+                </Header>
+                <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+                  <Icon name='angle right'/>
+                </Button>
+              </div>
 
             </Menu>
-            <Segment attached='bottom'>
+            <div ref={this.panelRef}>
+              <Segment attached='bottom'>
+                <div style={getStyle('Table')}>
+                  <TableView task={task}/>
+                </div>
 
-              <div style={getStyle('Table')}>
-                <TableView task={task}/>
-              </div>
+                <div style={getStyle('Code')}>
+                  <CodeView task={task}/>
+                </div>
 
-              <div style={getStyle('Code')}>
-                <CodeView task={task}/>
-              </div>
+                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                  <div style={getStyle('Visualisation')}>
+                    <VisView task={task} active={activeItem === 'Visualisation'}/>
+                  </div> : null}
 
-              {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                <div style={getStyle('Visualisation')}>
-                  <VisView task={task} active={activeItem === 'Visualisation'}/>
-                </div> : null}
-
-              {activeGroup === 'Centralities' ?
-                <div style={getStyle('Chart')}>
-                  <ChartView task={task} active={activeItem === 'Chart'}/>
-                </div> : null}
-
-            </Segment>
+                {activeGroup === 'Centralities' ?
+                  <div style={getStyle('Chart')}>
+                    <ChartView task={task} active={activeItem === 'Chart'}/>
+                  </div> : null}
+              </Segment>
+            </div>
           </React.Fragment>
         }
       </div>
@@ -301,5 +280,34 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
     ownProps.onComplete()
   }
 })
+
+const printElement = element => {
+  html2canvas(element).then(function (canvas) {
+    // https://stackoverflow.com/a/54466127
+    const base64ImageData = canvas.toDataURL("image/png")
+    const contentType = 'image/png';
+
+    const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
+    const byteArrays = [];
+
+    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
+      const slice = byteCharacters.slice(offset, offset + 1024);
+
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+
+      const byteArray = new Uint8Array(byteNumbers);
+
+      byteArrays.push(byteArray);
+    }
+    const blob = new Blob(byteArrays, { type: contentType });
+    const blobUrl = URL.createObjectURL(blob);
+
+    window.open(blobUrl, '_blank');
+
+  })
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabExampleVerticalTabular)
