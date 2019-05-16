@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Form, Grid, Label, Icon } from 'semantic-ui-react'
+import {Form, Grid, Label, Icon, Button} from 'semantic-ui-react'
 import { hideProperty, resetLabelsProperties } from "../ducks/settings"
 import { connect } from 'react-redux'
 
@@ -7,6 +7,8 @@ const cellStyle = {
   maxWidth: '20em',
   overflow: 'hidden'
 }
+
+
 
 export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   const keys = Object.keys(hiddenPropertiesMap);
