@@ -197,7 +197,7 @@ SET eroad.distance = toInteger(row.distance), eroad.watercrossing = row.watercro
         authorLink: "https://markhneedham.com/blog/",
         description: `A dataset containing Twitter followers of the graph community`,
         queries: [ `CREATE CONSTRAINT ON(u:User) ASSERT u.id IS unique`,
-            `CALL apoc.load.json("https://gist.github.com/mneedham/3c6a59fb5e7d87e20a2f5f1ae4fa2920/raw/9d7c57997c09b3a105556adb6c6f1819792a4db4/query.json")
+            `CALL apoc.load.json("https://github.com/neo4j-apps/neuler/raw/master/sample-data/twitter/users.json")
 YIELD value
 MERGE (u:User {id: value.user.id })
 SET u += value.user
