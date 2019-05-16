@@ -8909,6 +8909,11 @@ regjsparser@^0.6.0:
   dependencies:
     jsesc "~0.5.0"
 
+reimg@^1.0.0:
+  version "1.0.0"
+  resolved "https://neo.jfrog.io/neo/api/npm/npm/reimg/-/reimg-1.0.0.tgz#edfd42358873ca7d26e9d8603b79f6070c5967a1"
+  integrity sha1-7f1CNYhzyn0m6dhgO3n2BwxZZ6E=
+
 relateurl@0.2.x:
   version "0.2.7"
   resolved "https://registry.yarnpkg.com/relateurl/-/relateurl-0.2.7.tgz#54dbf377e51440aca90a4cd274600d3ff2d888a9"

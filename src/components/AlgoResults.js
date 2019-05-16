@@ -8,6 +8,8 @@ import CodeView from './CodeView'
 
 import { ADDED, completeTask, FAILED, runTask } from "../ducks/tasks"
 import html2canvas from "html2canvas";
+import {ReImg } from 'reimg'
+import {v4 as generateId} from 'uuid'
 
 const tabContentStyle = {
   height: '85vh',
@@ -135,6 +137,7 @@ class HorizontalAlgoTab extends Component {
                   <Image src='/images/Camera2.png'/>
 
                 </Menu.Item>
+
               </div>
 
               <div style={{
@@ -283,30 +286,8 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
 
 const printElement = element => {
   html2canvas(element).then(function (canvas) {
-    // https://stackoverflow.com/a/54466127
-    const base64ImageData = canvas.toDataURL("image/png")
-    const contentType = 'image/png';
-
-    const byteCharacters = atob(base64ImageData.substr(`data:${contentType};base64,`.length));
-    const byteArrays = [];
-
-    for (let offset = 0; offset < byteCharacters.length; offset += 1024) {
-      const slice = byteCharacters.slice(offset, offset + 1024);
-
-      const byteNumbers = new Array(slice.length);
-      for (let i = 0; i < slice.length; i++) {
-        byteNumbers[i] = slice.charCodeAt(i);
-      }
-
-      const byteArray = new Uint8Array(byteNumbers);
-
-      byteArrays.push(byteArray);
-    }
-    const blob = new Blob(byteArrays, { type: contentType });
-    const blobUrl = URL.createObjectURL(blob);
-
-    window.open(blobUrl, '_blank');
-
+    const guid = generateId()
+    ReImg.fromCanvas(canvas).downloadPng(`neuler-${guid}.png`);
   })
 }
 
