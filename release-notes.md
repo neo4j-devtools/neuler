@@ -1,6 +1,6 @@
 # Neuler: The Graph Algorithms Playground Release Notes
 
-## 0.1.11
+## 0.1.11 (2019-05-17)
 
 - Redesign left menu to use icons 
 - Added European Roads and Twitter sample graphs
