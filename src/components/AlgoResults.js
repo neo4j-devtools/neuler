@@ -134,7 +134,7 @@ class HorizontalAlgoTab extends Component {
 
                 <Menu.Item active={activeItem === 'Printscreen'}
                            onClick={(() => printElement(this.panelRef.current)).bind(this)}>
-                  <Image src='/images/Camera2.png'/>
+                  <Image src='images/Camera2.png'/>
 
                 </Menu.Item>
 

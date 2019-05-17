@@ -32,29 +32,29 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
             </Menu.Item>
             <Menu.Item title='Centralities' active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
                        style={menuItemStyle}>
-                <Image size='mini' src='/images/Centrality-Algo-Icon.png' />
+                <Image size='mini' src='images/Centrality-Algo-Icon.png' />
             </Menu.Item>
             <Menu.Item title='Community Detection' active={activeGroup === 'Community Detection'} as='a'
                        onClick={() => selectGroup('Community Detection')}
                        style={menuItemStyle}>
-                <Image size='mini' src='/images/Community-Algo-Icon.png' />
+                <Image size='mini' src='images/Community-Algo-Icon.png' />
             </Menu.Item>
             <Menu.Item title='Path Finding' active={activeGroup === 'Path Finding'} as='a'
                        onClick={() => selectGroup('Path Finding')}
                        style={menuItemStyle}>
-                <Image size='mini' src='/images/Pathfinding-Algo-Icon.png' />
+                <Image size='mini' src='images/Pathfinding-Algo-Icon.png' />
             </Menu.Item>
 
             <Menu.Item title='Similarity' active={activeGroup === 'Similarity'} as='a'
                        onClick={() => selectGroup('Similarity')}
                        style={menuItemStyle}>
-                <Image size='mini' src='/images/Similarity-Algo-Icon.png' />
+                <Image size='mini' src='images/Similarity-Algo-Icon.png' />
             </Menu.Item>
         </div>
         <div>
             <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
                        style={menuItemStyle}>
-                <Image size='mini' src='/images/datasetin.png' />
+                <Image size='mini' src='images/datasetin.png' />
             </Menu.Item>
            {/* <Menu.Item>
                 {children}
