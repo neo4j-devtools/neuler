@@ -8,5 +8,6 @@
   "editor.formatOnSave": true,
   "javascript.validate.enable": false,
   "prettier.eslintIntegration": true,
-  "prettier.trailingComma": "es5"
+  "prettier.trailingComma": "es5",
+  "prettier.singleQuote": true
 }
