@@ -1,3 +1,7 @@
 node_modules
 neuler*.tgz
 .idea
+.DS_STORE
+.eslintcache
+*.swp
+*~

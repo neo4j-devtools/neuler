@@ -1,0 +1,13 @@
+{
+  "editor.rulers": [80],
+  "files.exclude": {
+    "**/.git": true,
+    "**/node_modules": true,
+    "**/build": true
+  },
+  "editor.formatOnSave": true,
+  "javascript.validate.enable": false,
+  "prettier.eslintIntegration": true,
+  "prettier.trailingComma": "es5",
+  "prettier.singleQuote": true
+}

@@ -36,6 +36,9 @@
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
   },
+  "devDependencies": {
+    "prettier": "^1.17.1"
+  },
   "scripts": {
     "start": "react-scripts start",
     "buildLocal": "rm neuler*.tgz && rm -rf dist && react-scripts build && mv build dist",
