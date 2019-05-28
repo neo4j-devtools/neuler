@@ -233,7 +233,7 @@ class TabExampleVerticalTabular extends Component {
       streamCypher: streamQuery,
       storeCypher: storeQuery,
       fetchCypher,
-      parameters: { ...parameters, limit: this.props.limit },
+      parameters,
       persisted
     }).then(result => {
       this.props.completeTask(taskId, result)

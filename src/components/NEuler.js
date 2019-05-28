@@ -51,23 +51,7 @@ class NEuler extends Component {
 
     return (
       <Container fluid style={{ display: 'flex' }}>
-          <AlgorithmsGroupMenu>
-            <Form>
-            <Form.Field>
-              <label style={{ 'width': '10em', 'color': 'white' }}>Rows to show</label>
-              <input
-                type='number'
-                placeholder="Rows"
-                min={1}
-                max={1000}
-                step={1}
-                value={limit}
-                onChange={evt => this.props.updateLimit(parseInt(evt.target.value))}
-                style={{ 'width': '10em' }}
-              />
-            </Form.Field>
-          </Form>
-        </AlgorithmsGroupMenu>
+          <AlgorithmsGroupMenu/>
         <div style={{width: '100%'}}>
           <Segment basic inverted vertical={false}
                    style={{ height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0' }}>

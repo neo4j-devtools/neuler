@@ -86,7 +86,7 @@ class Algorithms extends Component {
       const persisted = this.state.parameters.persist
 
 
-      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters }, persisted)
+      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters, limit: this.props.limit }, persisted)
     }
   }
 
