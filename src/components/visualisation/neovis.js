@@ -283,6 +283,14 @@ export default class NeoVis {
             }
           }
         });
+      } else {
+        let node = self.buildNodeVisObject(v);
+
+        try {
+          self._addNode(node);
+        } catch (e) {
+          console.log(e);
+        }
       }
 
     })

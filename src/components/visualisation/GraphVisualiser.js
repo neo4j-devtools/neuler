@@ -113,10 +113,12 @@ return path`
     return `MATCH (node${label ? ':' + label : ''})
 WHERE not(node["${writeProperty}"] is null) ${relationshipType ? `AND exists((node)-[${relationshipType ? ':' + relationshipType : ''}]-())` : ''}
 WITH collect(distinct node["${writeProperty}"]) AS allCommunities
-MATCH path = (node${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
-WHERE not(node["${writeProperty}"] is null)
-WITH allCommunities, node, node["${writeProperty}"] AS community, path
-return path, community, algo.ml.oneHotEncoding(allCommunities, [community]) as vector`
+MATCH path = (node${label ? ':' + label : ''})-[rel${relationshipType ? ':' + relationshipType : ''}]-(other)
+WHERE not(node["${writeProperty}"] is null) AND not(other["${writeProperty}"] is null)
+WITH allCommunities, node, node["${writeProperty}"] AS community, other, other["${writeProperty}"] AS otherCommunity, rel
+CALL apoc.create.vNode(labels(node), node {.*, vector: algo.ml.oneHotEncoding(allCommunities, [community])}) yield node as n
+CALL apoc.create.vNode(labels(other),  other {.*, vector: algo.ml.oneHotEncoding(allCommunities, [otherCommunity])}) yield node as o
+return n, o, rel`
   }
 
   dataUpdated(props) {
