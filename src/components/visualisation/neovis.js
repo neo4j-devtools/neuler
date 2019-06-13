@@ -140,9 +140,13 @@ export default class NeoVis {
     // set all properties as tooltip
     node['title'] = "";
     for (let key in n.properties) {
+      node[key] = n.properties[key]
       node['title'] += "<strong>" + key + ":</strong>" + " " + n.properties[key] + "<br>";
     }
-    return node;
+
+    node['id'] = n.properties['originalId'].toInt ? n.properties['originalId'].toInt() : n.properties['originalId']
+
+    return node
   }
 
   /**
@@ -355,6 +359,7 @@ export default class NeoVis {
     })
 
     console.log("completed");
+    // this._network.startSimulation();
     setTimeout(() => {
       this._network.stopSimulation();
     }, 10000);
