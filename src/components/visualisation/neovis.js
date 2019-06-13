@@ -144,7 +144,10 @@ export default class NeoVis {
       node['title'] += "<strong>" + key + ":</strong>" + " " + n.properties[key] + "<br>";
     }
 
-    node['id'] = n.properties['originalId'].toInt ? n.properties['originalId'].toInt() : n.properties['originalId']
+    const originalId = n.properties['originalId']
+    if (originalId) {
+      node['id'] = originalId.toInt ? originalId.toInt() : originalId
+    }
 
     return node
   }
