@@ -27,8 +27,11 @@ export default class NeoVis {
     this._config = config;
     this._encrypted = config.encrypted || defaults['neo4j']['encrypted'];
     this._trust = config.trust || defaults.neo4j.trust;
-    this._driver = driver || neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
-    this._query =   config.initial_cypher || defaults.neo4j.initialQuery;
+    this._driver = driver || neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {
+      encrypted: this._encrypted,
+      trust: this._trust
+    });
+    this._query = config.initial_cypher || defaults.neo4j.initialQuery;
     this._nodes = {};
     this._edges = {};
     this._data = {};
@@ -58,7 +61,7 @@ export default class NeoVis {
     let node = {};
     let label = n.labels[0];
 
-    let captionKey   = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['caption'],
+    let captionKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['caption'],
       sizeKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['size'],
       sizeCypher = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['sizeCypher'],
       communityKey = this._config && this._config.labels && this._config.labels[label] && this._config.labels[label]['community'];
@@ -73,14 +76,14 @@ export default class NeoVis {
       // of the internal node id
 
       let session = this._driver.session();
-      session.run(sizeCypher, {id: neo4j.v1.int(node['id'])})
-        .then(function(result) {
-          result.records.forEach(function(record) {
-            record.forEach(function(v,k,r) {
+      session.run(sizeCypher, { id: neo4j.v1.int(node['id']) })
+        .then(function (result) {
+          result.records.forEach(function (record) {
+            record.forEach(function (v, k, r) {
               if (typeof v === "number") {
-                self._addNode({id: node['id'], value: v});
+                self._addNode({ id: node['id'], value: v });
               } else if (neo4j.v1.isInt(v)) {
-                self._addNode({id: node['id'], value: v.toNumber()})
+                self._addNode({ id: node['id'], value: v.toNumber() })
               }
             })
           })
@@ -112,8 +115,7 @@ export default class NeoVis {
     // node caption
     if (typeof captionKey === "function") {
       node['label'] = captionKey(n);
-    }
-    else {
+    } else {
       node['label'] = n.properties[captionKey] || label || "";
     }
 
@@ -126,18 +128,14 @@ export default class NeoVis {
         if (n.properties[communityKey]) {
           node['group'] = n.properties[communityKey].toNumber() || label || 0;  // FIXME: cast to Integer
 
-        }
-        else {
+        } else {
           node['group'] = 0;
         }
 
-      } catch(e) {
+      } catch (e) {
         node['group'] = 0;
       }
-
-
     }
-
 
     // set all properties as tooltip
     node['title'] = "";
@@ -181,190 +179,179 @@ export default class NeoVis {
 
     edge['label'] = "";
 
-   /* if (typeof captionKey === "boolean") {
-      if (!captionKey) {
-        edge['label'] = "";
-      } else {
-        edge['label'] = r.type;
-      }
-    } else if (captionKey && typeof captionKey === "string") {
-      edge['label']  = r.properties[captionKey] || "";
-    } else {
-      edge['label'] = r.type;
-    }*/
+    /* if (typeof captionKey === "boolean") {
+       if (!captionKey) {
+         edge['label'] = "";
+       } else {
+         edge['label'] = r.type;
+       }
+     } else if (captionKey && typeof captionKey === "string") {
+       edge['label']  = r.properties[captionKey] || "";
+     } else {
+       edge['label'] = r.type;
+     }*/
 
     return edge;
   }
 
   // public API
 
-  render(onDone) {
+  render(onComplete, customLayout) {
 
     // connect to Neo4j instance
     // run query
 
     let self = this;
 
+    let dataFetcher
+
     let session = this._driver.session();
-    session
-      .run(this._query, {limit: 30})
-      .subscribe({
-        onNext: function (record) {
 
-          record.forEach(function(v, k, r) {
-            if (v instanceof neo4j.v1.types.Node) {
-              let node = self.buildNodeVisObject(v);
+    dataFetcher = session.run(this._query, { limit: 30 })
 
-              try {
-                self._addNode(node);
-              } catch(e) {
-                console.log(e);
-              }
+    dataFetcher
+      .then(({ records }) => {
+        if (customLayout) {
+          records.forEach(this.constructVisRecord.bind(this))
+          customLayout(Object.values(this._nodes))
+          console.log('LAYOUT DONE', this._nodes)
+          self.renderVis(onComplete, false)
+          // self.renderVisStatic(onComplete)
+        } else {
+          records.forEach(this.constructVisRecord.bind(this))
+          self.renderVis(onComplete)
+        }
+        session.close()
+      })
+      .catch(console.warn)
+  }
 
-            }
-            else if (v instanceof neo4j.v1.types.Relationship) {
+  constructVisRecord(record) {
+    let self = this
 
-              let edge = self.buildEdgeVisObject(v);
+    record.forEach(function (v, k, r) {
+      if (v instanceof neo4j.v1.types.Node) {
+        let node = self.buildNodeVisObject(v);
 
-              try {
-                self._addEdge(edge);
-              } catch(e) {
-                console.log(e);
-              }
-
-            }
-            else if (v instanceof neo4j.v1.types.Path) {
-              let n1 = self.buildNodeVisObject(v.start);
-              let n2 = self.buildNodeVisObject(v.end);
-
-              self._addNode(n1);
-              self._addNode(n2);
-
-              v.segments.forEach((obj) => {
-
-                self._addNode(self.buildNodeVisObject(obj.start));
-                self._addNode(self.buildNodeVisObject(obj.end))
-                self._addEdge(self.buildEdgeVisObject(obj.relationship))
-              });
-
-            }
-            else if (Array.isArray(v)) {
-              v.forEach(function(obj) {
-                if (v instanceof neo4j.v1.types.Node) {
-                  let node = self.buildNodeVisObject(obj);
-
-                  try {
-                    self._addNode(node);
-                  } catch(e) {
-                    console.log(e);
-                  }
-                }
-                else if (v instanceof neo4j.v1.types.Relationship) {
-                  let edge = self.buildEdgeVisObject(obj);
-
-                  try {
-                    self._addEdge(edge);
-                  } catch(e) {
-                    console.log(e);
-                  }
-                }
-              });
-            }
-
-          })
-        },
-        onCompleted: function () {
-          session.close();
-          self._options = {
-            nodes: {
-              shape: 'dot',
-              font: {
-                size: 26,
-                strokeWidth: 7
-              },
-              scaling: {
-                label: {
-                  enabled: true
-                }
-              }
-            },
-            edges: {
-              arrows: {
-                to: {enabled: self._config.arrows || false } // FIXME: handle default value
-              },
-              length: 200
-            },
-            layout: {
-              improvedLayout: false,
-              hierarchical: {
-                enabled: self._config.hierarchical || false,
-                sortMethod: self._config.hierarchical_sort_method || "hubsize"
-
-              }
-            },
-            physics: { // TODO: adaptive physics settings based on size of graph rendered
-              // enabled: true,
-              // timestep: 0.5,
-              // stabilization: {
-              //     iterations: 10
-              // }
-
-              adaptiveTimestep: true,
-              // barnesHut: {
-              //     gravitationalConstant: -8000,
-              //     springConstant: 0.04,
-              //     springLength: 95
-              // },
-              stabilization: {
-                iterations: 200,
-                fit: true
-              }
-
-            }
-          };
-
-          var container = self._container;
-          self._data = {
-            "nodes": new vis.DataSet(Object.values(self._nodes)),
-            "edges": new vis.DataSet(Object.values(self._edges))
-
-          }
-
-          console.log("NODES", self._data.nodes);
-          console.log(self._data.edges);
-
-          // Create duplicate node for any self reference relationships
-          // NOTE: Is this only useful for data model type data
-          // self._data.edges = self._data.edges.map(
-          //     function (item) {
-          //          if (item.from == item.to) {
-          //             var newNode = self._data.nodes.get(item.from)
-          //             delete newNode.id;
-          //             var newNodeIds = self._data.nodes.add(newNode);
-          //             console.log("Adding new node and changing self-ref to node: " + item.to);
-          //             item.to = newNodeIds[0];
-          //          }
-          //          return item;
-          //     }
-          // );
-
-          self._network = new vis.Network(container, self._data, self._options);
-
-          self._network.on("afterDrawing", () => {
-            console.log("afterDrawing");
-            onDone && onDone()
-          })
-
-          console.log("completed");
-          setTimeout(() => { self._network.stopSimulation(); }, 10000);
-
-        },
-        onError: function (error) {
-          console.log(error);
+        try {
+          self._addNode(node);
+        } catch (e) {
+          console.log(e);
         }
 
-      })
-  };
+      } else if (v instanceof neo4j.v1.types.Relationship) {
+
+        let edge = self.buildEdgeVisObject(v);
+
+        try {
+          self._addEdge(edge);
+        } catch (e) {
+          console.log(e);
+        }
+
+      } else if (v instanceof neo4j.v1.types.Path) {
+        let n1 = self.buildNodeVisObject(v.start);
+        let n2 = self.buildNodeVisObject(v.end);
+
+        self._addNode(n1);
+        self._addNode(n2);
+
+        v.segments.forEach((obj) => {
+
+          self._addNode(self.buildNodeVisObject(obj.start));
+          self._addNode(self.buildNodeVisObject(obj.end))
+          self._addEdge(self.buildEdgeVisObject(obj.relationship))
+        });
+
+      } else if (Array.isArray(v)) {
+        v.forEach(function (obj) {
+          if (v instanceof neo4j.v1.types.Node) {
+            let node = self.buildNodeVisObject(obj);
+
+            try {
+              self._addNode(node);
+            } catch (e) {
+              console.log(e);
+            }
+          } else if (v instanceof neo4j.v1.types.Relationship) {
+            let edge = self.buildEdgeVisObject(obj);
+
+            try {
+              self._addEdge(edge);
+            } catch (e) {
+              console.log(e);
+            }
+          }
+        });
+      }
+
+    })
+  }
+
+  renderVis(onComplete, autoLayout = true) {
+    const physics = autoLayout
+      ? {
+        adaptiveTimestep: true,
+        stabilization: {
+          iterations: 200,
+          fit: true
+        }
+      }
+      : false
+
+    this._options = {
+      nodes: {
+        shape: 'dot',
+        font: {
+          size: 26,
+          strokeWidth: 7
+        },
+        scaling: {
+          label: {
+            enabled: true
+          }
+        }
+      },
+      edges: {
+        arrows: {
+          to: { enabled: this._config.arrows || false } // FIXME: handle default value
+        },
+        length: 200
+      },
+      layout: {
+        improvedLayout: false,
+        hierarchical: {
+          enabled: this._config.hierarchical || false,
+          sortMethod: this._config.hierarchical_sort_method || "hubsize"
+
+        }
+      },
+      physics
+    }
+
+    var container = this._container;
+    this._data = {
+      "nodes": new vis.DataSet(Object.values(this._nodes)),
+      "edges": new vis.DataSet(Object.values(this._edges))
+
+    }
+
+    console.log("NODES", this._data.nodes);
+    console.log(this._data.edges);
+
+    this._network = new vis.Network(container, this._data, this._options);
+
+    this._network.on("afterDrawing", () => {
+      console.log("afterDrawing");
+      onComplete && onComplete()
+    })
+
+    console.log("completed");
+    setTimeout(() => {
+      this._network.stopSimulation();
+    }, 10000);
+  }
+
 
   /**
    * Clear the data for the visualization
@@ -397,10 +384,12 @@ export default class NeoVis {
     this._network.redraw()
   }
 
-  setContainerId (containerId) {
+  setContainerId(containerId) {
     this._container = document.getElementById(containerId);
     this._network = new vis.Network(this._container, this._data, this._options);
-    setTimeout(() => { this._network.stopSimulation(); }, 10000);
+    setTimeout(() => {
+      this._network.stopSimulation();
+    }, 10000);
     console.log('container set')
   }
 
@@ -428,7 +417,7 @@ export default class NeoVis {
     this._query = query;
     this.render();
 
-  };
+  }
 
   // configure exports based on environment (ie Node.js or browser)
   //if (typeof exports === 'object') {

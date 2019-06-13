@@ -3,6 +3,7 @@ import { Grid, Form, Button, Icon, Select, Loader, Input } from "semantic-ui-rea
 import NeoVis from "./neovis"
 import { getDriver } from "../../services/stores/neoStore"
 import VisConfigurationBar from './VisConfigurationBar'
+import { layoutDr } from "./communityLayout"
 
 const captionCandidates = ['name', 'title']
 
@@ -48,7 +49,7 @@ export default class extends Component {
 
   onUpdateConfig(props) {
     const { captions, cypher, nodeSize, nodeColor } = this.state
-    const { taskId, relationshipType } = props
+    const { taskId, relationshipType, algorithm } = props
 
     this.config.labels = Object.keys(captions).reduce((labelConfig, label) => {
       labelConfig[label] = {
@@ -78,7 +79,7 @@ export default class extends Component {
       neovis.render(() => {
         console.log('RENDERING DONE')
         this.setState({ rendering: false })
-      });
+      }, algorithm === 'Louvain' ? layoutDr : null);
       this.networks[taskId] = neovis
     }
 
@@ -108,8 +109,18 @@ return path`
     }
   }
 
+  generateCypherForCommunities (label, relationshipType, writeProperty) {
+    return `MATCH (node${label ? ':' + label : ''})
+WHERE not(node["${writeProperty}"] is null) ${relationshipType ? `AND exists((node)-[${relationshipType ? ':' + relationshipType : ''}]-())` : ''}
+WITH collect(distinct node["${writeProperty}"]) AS allCommunities
+MATCH path = (node${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
+WHERE not(node["${writeProperty}"] is null)
+WITH allCommunities, node, node["${writeProperty}"] AS community, path
+return path, community, algo.ml.oneHotEncoding(allCommunities, [community]) as vector`
+  }
+
   dataUpdated(props) {
-    const { results, label, relationshipType, taskId, writeProperty } = props
+    const { results, label, relationshipType, taskId, writeProperty, algorithm } = props
 
     let captions = {}
     if (results && results.length > 0) {
@@ -137,8 +148,10 @@ return path`
         return labelsMap
       }, {})
 
+      const generateCypher = algorithm === 'Louvain' ? this.generateCypherForCommunities : this.generateCypher
+
       this.setState({
-        cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
+        cypher: generateCypher(label, relationshipType, writeProperty),
         labels: labelProperties,
         captions,
         taskId
