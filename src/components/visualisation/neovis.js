@@ -140,7 +140,9 @@ export default class NeoVis {
     // set all properties as tooltip
     node['title'] = "";
     for (let key in n.properties) {
-      node[key] = n.properties[key]
+      if (key !== 'id') {
+        node[key] = n.properties[key]
+      }
       node['title'] += "<strong>" + key + ":</strong>" + " " + n.properties[key] + "<br>";
     }
 

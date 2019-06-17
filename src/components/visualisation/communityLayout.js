@@ -20,12 +20,12 @@ export const layoutDr = nodes => {
 
   const yArray = tsne.getSolution()
 
-  const distort = value => value + ((Math.random() > 0.5 ? 1 : -1) * Math.random() * 20)
+  const distort = value => value + ((Math.random() > 0.5 ? 1 : -1) * Math.random() * 30)
 
   yArray.forEach((xy, index) => {
     const node = nodes[index]
-    node.x = xy[0] * distort(50)
-    node.y = xy[1] * distort(50)
+    node.x =  distort(xy[0] * 50)
+    node.y =  distort(xy[1] * 50)
 
     node['title'] += "<strong>x</strong>" + " " + node.x + "<br>"
     node['title'] += "<strong>y</strong>" + " " + node.y + "<br>"
