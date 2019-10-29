@@ -1,5 +1,9 @@
 # Neuler: The Graph Algorithms Playground Release Notes
 
+## 0.1.13 (2019-10-29)
+
+- Fix issue with loading multiple sample datasets
+
 ## 0.1.12 (2019-05-17)
 
 - Fix path issue with images
