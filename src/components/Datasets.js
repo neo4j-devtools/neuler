@@ -21,11 +21,19 @@ class Datasets extends Component {
         selectedDataset: "Game of Thrones",
         currentQueryIndex: -1,
         completedQueryIndexes: {},
-        completed: false
+        completed: []
+    }
+
+    resetState() {
+        this.setState({
+            open: false,
+            currentQueryIndex: -1,
+            completedQueryIndexes: {},
+        })
     }
 
     show = (dimmer, datasetName) => () => this.setState({dimmer, open: true, selectedDataset: datasetName})
-    close = () => this.setState({open: false})
+    close = () => this.resetState()
 
     loadDataset() {
         const { selectedDataset } = this.state
@@ -43,9 +51,11 @@ class Datasets extends Component {
             );
         }, Promise.resolve([]))
           .then(results => {
+              const {completed} = this.state
+              completed.push(selectedDataset)
               this.setState({
                   currentQueryIndex: -1,
-                  completed: true
+                  completed: completed
               })
 
               this.props.onComplete()
@@ -122,7 +132,7 @@ class Datasets extends Component {
                             </Modal.Description>
                         </Modal.Content>
                         <Modal.Actions>
-                            {completed
+                            {completed.includes(selectedDataset)
                               ? <Button positive
                                         content="Done"
                                         onClick={this.close}/>
