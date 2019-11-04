@@ -1,15 +1,14 @@
-import React, { Component } from 'react'
-import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-react"
+import React, {Component} from 'react'
+import {Container, Header, Menu, Segment} from "semantic-ui-react"
 
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
-import { getAlgorithms } from "./algorithmsLibrary"
+import {getAlgorithms} from "./algorithmsLibrary"
 import MainContent from './MainContent'
 import Datasets from './Datasets'
-import { connect } from "react-redux"
-import { Form, Input, Dropdown, Button } from "semantic-ui-react"
-import { limit } from "../ducks/settings"
-import { loadMetadata } from "../services/metadata"
-import { setLabels, setRelationshipTypes } from "../ducks/metadata"
+import {connect} from "react-redux"
+import {limit} from "../ducks/settings"
+import {loadMetadata} from "../services/metadata"
+import {setLabels, setRelationshipTypes} from "../ducks/metadata"
 import Home from "./Home";
 
 class NEuler extends Component {

@@ -26,7 +26,7 @@ export default class extends Component {
   constructPayload(parameters, query, guid) {
     return {
       uuid: guid,
-      params: Object.keys(parameters).map(key => `:param ${key} => ${stringfyParam(parameters[key])};`).join('\n'),
+      params: Object.keys(parameters).map(key => `:param ${key} => (${stringfyParam(parameters[key])});`).join('\n'),
       query: query
     }
   }

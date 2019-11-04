@@ -1,23 +1,19 @@
-import React, { Component } from 'react'
-import { Container, Menu, Segment, Dimmer, Loader, Header } from "semantic-ui-react"
+import React, {Component} from 'react'
+import {Dimmer, Loader} from "semantic-ui-react"
 
 import './App.css'
-
-import AlgorithmsGroupMenu from "./components/AlgorithmGroupsMenu"
 import CheckGraphAlgorithmsInstalled from "./components/CheckGraphAlgorithmsInstalled"
 import NEuler from "./components/NEuler"
-import { selectAlgorithm } from "./ducks/algorithms"
-import { connect } from "react-redux"
-import { getAlgorithms } from "./components/algorithmsLibrary"
-import MainContent from './components/MainContent'
+import {selectAlgorithm} from "./ducks/algorithms"
+import {connect} from "react-redux"
 
-import { ConnectModal } from './components/ConnectModal';
+import {ConnectModal} from './components/ConnectModal';
 
-import { setDriver } from "./services/stores/neoStore"
-import { loadLabels, loadMetadata, loadRelationshipTypes } from "./services/metadata"
-import { setLabels, setRelationshipTypes } from "./ducks/metadata"
-import { setConnected, setDisconnected, CONNECTED, CONNECTING, DISCONNECTED, INITIAL } from "./ducks/connection"
-import { initializeConnection, tryConnect } from "./services/connections"
+import {setDriver} from "./services/stores/neoStore"
+import {loadMetadata} from "./services/metadata"
+import {setLabels, setRelationshipTypes} from "./ducks/metadata"
+import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
+import {initializeConnection, tryConnect} from "./services/connections"
 
 class App extends Component {
   constructor(props) {
