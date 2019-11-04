@@ -1,5 +1,9 @@
 # Neuler: The Graph Algorithms Playground Release Notes
 
+## 0.1.14 (2019-11-04)
+
+* Fix issue with algorithm parameter rendering on latest version of Neo4j Browser 
+
 ## 0.1.13 (2019-10-29)
 
 - Fix issue with loading multiple sample datasets
