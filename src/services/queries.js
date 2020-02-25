@@ -115,7 +115,7 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
 }
 
 export const centralityParams = ({label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty)
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
   const parsedMaxDepth = parseInt(maxDepth)
@@ -124,7 +124,6 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    // defaultValue: parseFloat(defaultValue) || null,
     dampingFactor: parseFloat(dampingFactor) || null,
     iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
     maxDepth: parsedMaxDepth && parsedMaxDepth > 0 ? parsedMaxDepth : null,
@@ -143,7 +142,7 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
 }
 
 
-export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty) => {
+export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
   const allowedDirections = ["Incoming", "Outgoing", "Both"]
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
@@ -157,7 +156,7 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
           type: relationshipType,
           projection: direction == null ? "NATURAL" : direction.toUpperCase(),
           properties: weightProperty == null ? {} : {
-            [weightProperty]: {property: weightProperty}
+            [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
           }
         }
       },
