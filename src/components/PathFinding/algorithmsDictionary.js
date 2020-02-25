@@ -31,7 +31,7 @@ export default {
                 persist: false,
                 writeProperty: "louvain",
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 concurrency: 8
             },
             streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
@@ -39,10 +39,12 @@ WITH start
 LIMIT 1
 CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
 WITH start, end
-LIMIT 1            
-CALL algo.shortestPath.stream(start, end, $config.weightProperty, $config)
+LIMIT 1        
+WITH apoc.map.setKey($config, "startNode", start) AS config, end
+WITH apoc.map.setKey(config, "endNode", end) AS config    
+CALL gds.alpha.shortestPath.stream(config)
 YIELD nodeId, cost
-RETURN algo.getNodeById(nodeId) AS node, cost`,
+RETURN gds.util.asNode(nodeId) AS node, cost`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The Shortest Path algorithm calculates the shortest (weighted) path between a pair of nodes. `
@@ -59,7 +61,7 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
                 persist: false,
                 writeProperty: "louvain",
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 propertyKeyLat: "latitude",
                 propertyKeyLon: "longitude",
                 concurrency: 8

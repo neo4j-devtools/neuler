@@ -44,7 +44,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   const params = {
     limit: parseInt(limit) || 50,
     config: {
-      concurrency: parseInt(concurrency) || null
+      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 
@@ -57,16 +57,31 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    nodeQuery: label || null,
-    relationshipQuery: relationshipType || null,
-    weightProperty: parsedWeightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
+    nodeProjection: label || null,
+    relationshipProjection: relationshipType == null ? null :  {
+      [relationshipType]: {
+        type: relationshipType,
+        projection: direction == null ? "NATURAL" : direction.toUpperCase(),
+        properties: !weightProperty ? {} : {
+          [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
+        }
+      }
+    },
+    relationshipWeightProperty: parsedWeightProperty || null,
+    // weightProperty: parsedWeightProperty || null,
+    // defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: parsedWriteProperty || null,
     propertyKeyLat: propertyKeyLat,
     propertyKeyLon: propertyKeyLon,
     delta: delta
   }
+
+  if(persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
