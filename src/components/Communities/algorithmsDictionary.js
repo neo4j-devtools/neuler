@@ -70,14 +70,15 @@ LIMIT $limit`,
             service: runAlgorithm,
             ResultView: CommunityResult,
             parameters: {
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: true,
                 writeProperty: "lpa",
                 defaultValue: 1.0,
-                concurrency: 8
+                concurrency: 8,
+                relationshipWeightProperty: null
             },
-            streamQuery: communityStreamQueryOutline(`CALL algo.labelPropagation.stream($label, $relationshipType, $config) YIELD nodeId, label AS community`),
-            storeQuery: `CALL algo.labelPropagation($label, $relationshipType, $config)`,
+            streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, label AS community`),
+            storeQuery: `CALL gds.labelPropagation.write($config)`,
             getFetchQuery: getCommunityFetchCypher,
             description: "a fast algorithm for finding communities in a graph"
         },

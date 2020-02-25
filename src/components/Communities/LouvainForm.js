@@ -28,28 +28,28 @@ export default class extends Component {
           </Form.Field> : null }
 
 
-        {relationshipType ?
-          <Form.Field inline>
-            <label style={{ 'width': '8em' }}>Weight Property</label>
-            <input
-              placeholder='Weight Property'
-              value={weightProperty}
-              onChange={evt => onChange('weightProperty', evt.target.value)}
-              style={{ 'width': '10em' }}
-            />
-          </Form.Field> : null }
-        {
-          weightProperty ?
+          {relationshipType ?
             <Form.Field inline>
-              <label style={{ 'width': '8em' }}>Default weight</label>
+              <label style={{ 'width': '8em' }}>Weight Property</label>
               <input
-                value={defaultValue}
-                onChange={evt => onChange('defaultValue', evt.target.value)}
-                style={{ 'width': '7em' }}
+                placeholder='Weight Property'
+                value={weightProperty}
+                onChange={evt => onChange('weightProperty', evt.target.value)}
+                style={{ 'width': '10em' }}
               />
-            </Form.Field>
-            : null
-        }
+            </Form.Field> : null }
+          {
+            weightProperty ?
+              <Form.Field inline>
+                <label style={{ 'width': '8em' }}>Default weight</label>
+                <input
+                  value={defaultValue}
+                  onChange={evt => onChange('defaultValue', evt.target.value)}
+                  style={{ 'width': '7em' }}
+                />
+              </Form.Field>
+              : null
+          }
 
         <Form.Group inline>
           <Form.Field inline>
