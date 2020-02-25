@@ -1,14 +1,14 @@
 import { v1 as neo } from "neo4j-driver"
 
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
-WITH algo.getNodeById(nodeId) AS node, score
+WITH gds.util.asNode(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
 LIMIT $limit
 `
 
 export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
-WITH algo.getNodeById(nodeId) AS node, community
+WITH gds.util.asNode(nodeId) AS node, community
 RETURN node, community
 ORDER BY community DESC
 LIMIT $limit
@@ -125,7 +125,7 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
 
   const config = {
     weightProperty: parsedWeightProperty || null,
-    defaultValue: parseFloat(defaultValue) || null,
+    // defaultValue: parseFloat(defaultValue) || null,
     dampingFactor: parseFloat(dampingFactor) || null,
     iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
     maxDepth: parsedMaxDepth && parsedMaxDepth > 0 ? parsedMaxDepth : null,
@@ -136,6 +136,9 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
     normalization: normalization || null
   }
 
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
@@ -145,12 +148,17 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
   const allowedDirections = ["Incoming", "Outgoing", "Both"]
 
   return {
-    label: label || null,
-    relationshipType: relationshipType || null,
     limit: parseInt(limit) || 50,
     config: {
-      concurrency: parseInt(concurrency) || null,
-      direction: direction && allowedDirections.includes(direction) ? direction : 'Outgoing'
+      nodeProjection: label || null,
+      relationshipProjection: relationshipType == null ? null :  {
+        [relationshipType]: {
+          type: relationshipType,
+          projection: direction == null ? "NATURAL" : direction.toUpperCase()
+        }
+        },
+      concurrency: concurrency == null ? null : neo.int(concurrency),
+      // direction: direction && allowedDirections.includes(direction) ? direction : 'Outgoing'
     }
   }
 }

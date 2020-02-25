@@ -37,7 +37,7 @@ class NEuler extends Component {
       case "Sample Graphs":
         return {header: "Sample Graphs", view: <Datasets onComplete={this.onComplete.bind(this)}/> }
       case  "Home":
-        return {header: "Graph Algorithms Playground", view: <Home/> }
+        return {header: "Graph Data Science Playground", view: <Home/> }
       default:
         return {header: "", view: <MainContent onComplete={this.onComplete.bind(this)} limit={limit}/> }
     }

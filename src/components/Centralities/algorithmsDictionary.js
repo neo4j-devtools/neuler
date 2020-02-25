@@ -38,8 +38,8 @@ export default {
         weightProperty: null
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.degree.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.degree($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.degree.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.alpha.degree.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `detects the number of direct connections a node has`
     },

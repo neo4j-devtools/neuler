@@ -1,0 +1,35 @@
+= Tasks to do
+
+* [ ] Update algorithms to use new algorithm name spaces
+* [ ] Move node labels and relationship types into config map
+* [ ] Handle directions for relationship types
+* [ ] Code tab incorrectly showing value for concurrency and missing node label & relationship type
+
+== Algorithms
+
+* [ ] Degree
+* [ ] Eigenvector
+* [ ] Page Rank
+* [ ] Article Rank
+* [ ] Betweenness
+* [ ] Approx Betweenness
+* [ ] Closeness
+* [ ] Harmonic
+
+* [ ] Louvain
+* [ ] Label Propagation
+* [ ] Connected Components
+* [ ] Strongly Connected Components
+* [ ] Triangles
+* [ ] Triangle Count
+
+* [ ] Shortest Path
+* [ ] A*
+* [ ] Single Source Shortest Path
+* [ ] All Pairs Shortest Path
+
+* [ ] Jaccard
+* [ ] Overlap
+* [ ] Cosine
+* [ ] Pearson
+* [ ] Euclidean

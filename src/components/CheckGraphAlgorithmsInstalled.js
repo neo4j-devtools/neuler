@@ -22,7 +22,7 @@ class CheckGraphAlgorithmsInstalled extends Component {
       return this.props.children;
      } else {
        return <Dimmer active>
-         <Loader size='massive'>This application relies on the Graph Algorithms plugin. You can install it via the 'Plugins' tab in the project view.</Loader>
+         <Loader size='massive'>This application relies on the Graph Data Science Library. You can install it via the 'Plugins' tab in the project view.</Loader>
        </Dimmer>
      }
   }

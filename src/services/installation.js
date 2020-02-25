@@ -15,7 +15,7 @@ const handleException = error => {
 const findGraphAlgosProceduresCypher = `
 CALL dbms.procedures()
 YIELD name
-WHERE name STARTS WITH "algo"
+WHERE name STARTS WITH "gds"
 RETURN count(*) AS count
 `
 

@@ -20,7 +20,7 @@ class Home extends Component {
                         Algorithm Categories
                     </Header>
                     <p>
-                        The Neo4j Graph Algorithms Library supports the following categories of algorithms.
+                        The Neo4j Graph Data Science Library supports the following categories of algorithms.
                     </p>
 
                     <CardGroup>

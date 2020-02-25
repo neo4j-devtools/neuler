@@ -14,25 +14,25 @@ export default ({onChange, direction, persist, writeProperty, weightProperty, co
     <Form.Group inline>
       <label style={{ 'width': '8em' }}>Direction</label>
       <Form.Radio
-        label='Out'
+        label='Nat'
         name='radioGroup'
-        value='Outgoing'
-        checked={direction === 'Outgoing'}
-        onChange={() => onChange('direction', 'Outgoing')}
+        value='Natural'
+        checked={direction === 'Natural'}
+        onChange={() => onChange('direction', 'Natural')}
       />
       <Form.Radio
-        label='In'
+        label='Rev'
         name='radioGroup'
-        value='Incoming'
-        checked={direction === 'Incoming'}
-        onChange={() => onChange('direction', 'Incoming')}
+        value='Reverse'
+        checked={direction === 'Reverse'}
+        onChange={() => onChange('direction', 'Reverse')}
       />
       <Form.Radio
-        label='Both'
+        label='Undir'
         name='radioGroup'
-        value='Both'
-        checked={direction === 'Both'}
-        onChange={() => onChange('direction', 'Both')}
+        value='Undirected'
+        checked={direction === 'Undirected'}
+        onChange={() => onChange('direction', 'Undirected')}
       />
     </Form.Group>
     <Form.Group inline>
