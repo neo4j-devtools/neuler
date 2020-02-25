@@ -6,28 +6,29 @@
 * [ ] Code tab incorrectly showing value for concurrency and missing node label & relationship type
 * [ ] Code tab not handling nested Cypher maps properly (putting all keys inside double quotes, which is invalid Cypher syntax)
 * [ ] Auto fill available properties based on the output of `db.schema.relTypeProperties()`
+* [ ] Make a component of the relationship type - relationship orientation - weight property trio
 * [x] Code tab missing node label & relationship type
 
 == Algorithms
 
-* [ ] Degree
-* [ ] Eigenvector
-* [ ] Page Rank
-* [ ] Article Rank
-* [ ] Betweenness
-* [ ] Approx Betweenness
-* [ ] Closeness
+* [x] Degree
+* [x] Eigenvector
+* [x] Page Rank
+* [x] Article Rank
+* [x] Betweenness
+* [x] Approx Betweenness
+* [x] Closeness
 * [ ] Harmonic
 
-* [ ] Louvain
-* [ ] Label Propagation
-* [ ] Connected Components
-* [ ] Strongly Connected Components
-* [ ] Triangles
-* [ ] Triangle Count
+* [x] Louvain
+* [x] Label Propagation
+* [x] Connected Components
+* [x] Strongly Connected Components
+* [x] Triangles
+* [x] Triangle Count
 
-* [ ] Shortest Path
-* [ ] A*
+* [x] Shortest Path
+* [x] A*
 * [ ] Single Source Shortest Path
 * [ ] All Pairs Shortest Path
 

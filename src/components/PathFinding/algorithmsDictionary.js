@@ -27,7 +27,7 @@ export default {
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 writeProperty: "louvain",
                 defaultValue: 1.0,
@@ -57,7 +57,7 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 writeProperty: "louvain",
                 defaultValue: 1.0,
@@ -71,10 +71,12 @@ WITH start
 LIMIT 1
 CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
 WITH start, end
-LIMIT 1 
-CALL algo.shortestPath.astar.stream(start, end, $config.weightProperty, $config.propertyKeyLat, $config.propertyKeyLon, $config)
+LIMIT 1        
+WITH apoc.map.setKey($config, "startNode", start) AS config, end
+WITH apoc.map.setKey(config, "endNode", end) AS config    
+CALL gds.alpha.shortestPath.astar.stream(config)
 YIELD nodeId, cost
-RETURN algo.getNodeById(nodeId) AS node, cost`,
+RETURN gds.util.asNode(nodeId) AS node, cost`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
