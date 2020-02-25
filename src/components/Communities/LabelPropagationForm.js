@@ -81,7 +81,7 @@ export default class extends Component {
             style={{ 'width': '10em' }}
           />
         </Form.Field>
-        
+
       </Form>
     )
   }

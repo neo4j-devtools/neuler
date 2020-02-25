@@ -77,7 +77,7 @@ LIMIT $limit`,
                 concurrency: 8,
                 relationshipWeightProperty: null
             },
-            streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, label AS community`),
+            streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, communityId AS community`),
             storeQuery: `CALL gds.labelPropagation.write($config)`,
             getFetchQuery: getCommunityFetchCypher,
             description: "a fast algorithm for finding communities in a graph"
