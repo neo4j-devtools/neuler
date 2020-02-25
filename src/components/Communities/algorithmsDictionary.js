@@ -115,10 +115,10 @@ LIMIT $limit`,
             parametersBuilder: communityParams,
             service: triangles,
             ResultView: TrianglesResult,
-            parameters: {persist: false, direction: 'Both'},
-            streamQuery: `CALL algo.triangle.stream($label, $relationshipType, $config)
+            parameters: {persist: false, direction: 'Undirected', concurrency: 8},
+            streamQuery: `CALL gds.alpha.triangle.stream($config)
 YIELD nodeA, nodeB, nodeC
-RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
+RETURN gds.util.asNode(nodeA) AS nodeA, gds.util.asNode(nodeB) AS nodeB, gds.util.asNode(nodeC) AS nodeC
 LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => ``,
@@ -134,11 +134,11 @@ LIMIT $limit`,
                 writeProperty: "trianglesCount",
                 clusteringCoefficientProperty: "clusteringCoefficient",
                 concurrency: 8,
-                direction: "Both"
+                direction: "Undirected"
             },
             streamQuery: `CALL algo.triangleCount.stream($label, $relationshipType, $config)
 YIELD nodeId, triangles, coefficient
-WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
+WITH gds.util.asNode(nodeId) AS node, coefficient, triangles
 RETURN node, triangles, coefficient
 ORDER BY triangles DESC
 LIMIT $limit`,

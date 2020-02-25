@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Form, Label, Input } from "semantic-ui-react"
+import {Form} from "semantic-ui-react"
 import CommunityForm from './CommunityForm'
 
 export default class extends Component {
