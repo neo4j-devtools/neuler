@@ -22,7 +22,10 @@ LIMIT $limit`
 
 export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
+WITH node, node[$config.writeProperty] AS community
+RETURN node, 
+       CASE WHEN apoc.meta.type(community) = "long[]" THEN community[0] ELSE community END AS community, 
+       CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
 LIMIT $limit`
 
 export const getCommunityFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
@@ -93,22 +96,26 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty: seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    weightProperty: parsedWeightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: parsedWriteProperty || null,
     clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
-    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
-    communityProperty: communityProperty || ""
+    // intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
+    seedProperty: seedProperty || ""
   }
+
+  if(persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params

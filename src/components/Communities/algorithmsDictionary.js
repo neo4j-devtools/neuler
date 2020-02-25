@@ -44,23 +44,23 @@ export default {
             service: runAlgorithm,
             ResultView: LouvainResult,
             parameters: {
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: true,
                 writeProperty: "louvain",
                 includeIntermediateCommunities: false,
                 intermediateCommunitiesWriteProperty: "louvainIntermediate",
                 defaultValue: 1.0,
-                weightProperty: null,
-                communityProperty: null,
+                relationshipWeightProperty: null,
+                seedProperty: null,
                 concurrency: 8
             },
-            streamQuery: `CALL algo.louvain.stream($label, $relationshipType, $config)
-YIELD nodeId, community, communities
-WITH algo.getNodeById(nodeId) AS node, community, communities
+            streamQuery: `CALL gds.louvain.stream($config)
+YIELD nodeId, communityId AS community, communityIds AS communities
+WITH gds.util.asNode(nodeId) AS node, community, communities
 RETURN node, community, communities
 ORDER BY community
 LIMIT $limit`,
-            storeQuery: `CALL algo.louvain($label, $relationshipType, $config)`,
+            storeQuery: `CALL gds.louvain.write($config)`,
             getFetchQuery: getFetchLouvainCypher,
             description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
         },
