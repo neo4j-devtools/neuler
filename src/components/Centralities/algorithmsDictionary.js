@@ -35,7 +35,7 @@ export default {
         writeProperty: "degree",
         defaultValue: 1.0,
         concurrency: 8,
-        weightProperty: null
+        relationshipWeightProperty: null
       },
       parametersBuilder: centralityParams,
       streamQuery: streamQueryOutline(`CALL gds.alpha.degree.stream($config) YIELD nodeId, score`),

@@ -4,6 +4,8 @@
 * [ ] Move node labels and relationship types into config map
 * [ ] Handle directions for relationship types
 * [ ] Code tab incorrectly showing value for concurrency and missing node label & relationship type
+* [ ] Code tab not handling nested Cypher maps properly (putting all keys inside double quotes, which is invalid Cypher syntax)
+* [x] Code tab missing node label & relationship type
 
 == Algorithms
 

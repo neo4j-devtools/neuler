@@ -141,10 +141,24 @@ test('nodeProjection always required', () => {
 
 test('relationshipProjection defaults to NATURAL', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR"})
-  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", projection: "NATURAL"}}})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", projection: "NATURAL", properties: {}}}})
 });
 
 test('relationshipProjection uses direction', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse"})
-  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", projection: "REVERSE"}}})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", projection: "REVERSE", properties: {}}}})
+});
+
+test('relationshipProjection has optional weight property', () => {
+  const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse", weightProperty: "distance"})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {
+    BAR: {
+      type: "BAR",
+      projection: "REVERSE",
+      properties: {
+        distance: {property: "distance"}
+      }
+    }
+  }
+  })
 });

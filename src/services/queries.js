@@ -115,7 +115,7 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
 }
 
 export const centralityParams = ({label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty)
 
   const parsedProbability = parseFloat(probability)
   const parsedMaxDepth = parseInt(maxDepth)
@@ -124,7 +124,6 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    weightProperty: parsedWeightProperty || null,
     // defaultValue: parseFloat(defaultValue) || null,
     dampingFactor: parseFloat(dampingFactor) || null,
     iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
@@ -144,8 +143,10 @@ export const centralityParams = ({label, relationshipType, direction, writePrope
 }
 
 
-export const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
+export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty) => {
   const allowedDirections = ["Incoming", "Outgoing", "Both"]
+
+  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
 
   return {
     limit: parseInt(limit) || 50,
@@ -154,9 +155,13 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
       relationshipProjection: relationshipType == null ? null :  {
         [relationshipType]: {
           type: relationshipType,
-          projection: direction == null ? "NATURAL" : direction.toUpperCase()
+          projection: direction == null ? "NATURAL" : direction.toUpperCase(),
+          properties: weightProperty == null ? {} : {
+            [weightProperty]: {property: weightProperty}
+          }
         }
-        },
+      },
+      relationshipWeightProperty: parsedWeightProperty || null,
       concurrency: concurrency == null ? null : neo.int(concurrency),
       // direction: direction && allowedDirections.includes(direction) ? direction : 'Outgoing'
     }
