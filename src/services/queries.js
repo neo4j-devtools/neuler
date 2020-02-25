@@ -114,24 +114,27 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
   return params
 }
 
-export const centralityParams = ({label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
+export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
   const parsedMaxDepth = parseInt(maxDepth)
-  const parsedIterations = parseInt(iterations)
-  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
+  const parsedIterations = maxIterations == null ? null : neo.int(maxIterations)
+  // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
     dampingFactor: parseFloat(dampingFactor) || null,
-    iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
+    maxIterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
     maxDepth: parsedMaxDepth && parsedMaxDepth > 0 ? parsedMaxDepth : null,
     probability: parsedProbability && parsedProbability > 0 ? parsedProbability : null,
     strategy: strategy,
     write: true,
-    writeProperty: parsedWriteProperty || null,
     normalization: normalization || null
+  }
+
+  if(persist) {
+    config.writeProperty = parsedWriteProperty
   }
 
   requiredProperties.push("nodeProjection")

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import { Form, Label, Input } from "semantic-ui-react"
+import {Form, Label, Input, Dropdown} from "semantic-ui-react"
 import CentralityForm from './CentralityForm'
 
 export default class extends Component {
@@ -8,20 +8,36 @@ export default class extends Component {
   }
 
   render() {
-    const { labelOptions, relationshipTypeOptions, writeProperty, onChange, iterations, dampingFactor, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, writeProperty, onChange, maxIterations, dampingFactor, weightProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
-        <CentralityForm onChange={onChange} direction={direction} writeProperty={writeProperty} weightProperty={weightProperty}  persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
-        <Form.Field inline>
-          <label style={{ 'width': '8em' }}>Weight Property</label>
-          <input
-            placeholder='Weight Property'
-            value={weightProperty}
-            onChange={evt => onChange('weightProperty', evt.target.value)}
-            style={{ 'width': '10em' }}
-          />
+        <Form.Field>
+          <label>Label</label>
+          <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
         </Form.Field>
+        <Form.Field>
+          <label>Relationship Type</label>
+          <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
+        </Form.Field>
+
+        {relationshipType ?
+          <Form.Field>
+            <label>Relationship Orientation</label>
+            <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
+          </Form.Field> : null }
+
+
+        {relationshipType ?
+          <Form.Field inline>
+            <label style={{ 'width': '8em' }}>Weight Property</label>
+            <input
+              placeholder='Weight Property'
+              value={weightProperty}
+              onChange={evt => onChange('weightProperty', evt.target.value)}
+              style={{ 'width': '10em' }}
+            />
+          </Form.Field> : null }
         {
           weightProperty ?
             <Form.Field inline>
@@ -35,6 +51,35 @@ export default class extends Component {
             : null
         }
 
+        <Form.Group inline>
+          <Form.Field inline>
+            <label style={{ 'width': '8em' }}>Store results</label>
+            <input type='checkbox' checked={persist} onChange={evt => {
+              onChange('persist', evt.target.checked)
+            }}/>
+          </Form.Field>
+          {
+            persist ?
+              <Form.Field inline>
+                <Input size='mini' basic="true" value={writeProperty} placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
+              </Form.Field>
+              : null
+          }
+        </Form.Group>
+        <Form.Field inline>
+          <label style={{ 'width': '8em' }}>Concurrency</label>
+          <input
+            type='number'
+            placeholder="Concurrency"
+            min={1}
+            max={1000}
+            step={1}
+            value={concurrency}
+            onChange={evt => onChange('concurrency', evt.target.value)}
+            style={{ 'width': '10em' }}
+          />
+        </Form.Field>
+
         <Form.Field inline>
           <label style={{ 'width': '8em' }}>Iterations</label>
           <input
@@ -42,8 +87,8 @@ export default class extends Component {
             min={1}
             max={50}
             step={1}
-            value={iterations}
-            onChange={evt => onChange('iterations', evt.target.value)}
+            value={maxIterations}
+            onChange={evt => onChange('maxIterations', evt.target.value)}
             style={{ 'width': '5em' }}
           />
         </Form.Field>

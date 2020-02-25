@@ -156,9 +156,22 @@ test('relationshipProjection has optional weight property', () => {
       type: "BAR",
       projection: "REVERSE",
       properties: {
-        distance: {property: "distance"}
+        distance: {property: "distance", defaultValue: null}
       }
     }
   }
   })
+});
+
+test('writeProperty if persist is true', () => {
+  const params = centralityParams({requiredProperties:["writeProperty"], persist: true, writeProperty: "foo"})
+  const config = params.config;
+  expect(config.writeProperty).toEqual("foo")
+});
+
+
+test('no writeProperty if persist is false', () => {
+  const params = centralityParams({requiredProperties:["writeProperty"], persist: false, writeProperty: "foo"})
+  const config = params.config;
+  expect(config.writeProperty).toEqual(undefined)
 });

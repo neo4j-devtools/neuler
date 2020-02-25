@@ -66,18 +66,18 @@ export default {
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "pagerank",
         dampingFactor: 0.85,
-        iterations: 20,
+        maxIterations: 20,
         defaultValue: 1.0,
         concurrency: 8,
-        weightProperty: null
+        relationshipWeightProperty: null
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.pageRank.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.pageRank($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.pageRank.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.pageRank.write($config)`,
       getFetchQuery: getFetchCypher,
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
