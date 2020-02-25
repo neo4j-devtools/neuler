@@ -104,14 +104,14 @@ export default {
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "betweenness",
         concurrency: 8
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.betweenness.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.betweenness($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.betweenness.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
     },

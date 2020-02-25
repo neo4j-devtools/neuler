@@ -146,8 +146,6 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 
 
 export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
-  const allowedDirections = ["Incoming", "Outgoing", "Both"]
-
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
 
   return {
@@ -165,7 +163,6 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
       },
       relationshipWeightProperty: parsedWeightProperty || null,
       concurrency: concurrency == null ? null : neo.int(concurrency),
-      // direction: direction && allowedDirections.includes(direction) ? direction : 'Outgoing'
     }
   }
 }
