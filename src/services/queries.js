@@ -158,7 +158,7 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
         [relationshipType]: {
           type: relationshipType,
           projection: direction == null ? "NATURAL" : direction.toUpperCase(),
-          properties: weightProperty == null ? {} : {
+          properties: !weightProperty ? {} : {
             [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
           }
         }

@@ -163,6 +163,19 @@ test('relationshipProjection has optional weight property', () => {
   })
 });
 
+test('relationshipProjection has optional weight property even if it is an empty string', () => {
+  const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse", weightProperty: ""})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {
+      BAR: {
+        type: "BAR",
+        projection: "REVERSE",
+        properties: {
+         }
+      }
+    }
+  })
+});
+
 test('writeProperty if persist is true', () => {
   const params = centralityParams({requiredProperties:["writeProperty"], persist: true, writeProperty: "foo"})
   const config = params.config;

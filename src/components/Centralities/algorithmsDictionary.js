@@ -1,8 +1,6 @@
 import PageRankForm from './PageRankForm'
 import {runAlgorithm, executeAlgorithm} from "../../services/centralities"
 import { centralityParams, getFetchCypher, streamQueryOutline } from '../../services/queries'
-import EigenvectorForm from './EigenvectorForm'
-import ArticleRankForm from "./ArticleRankForm"
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
@@ -44,20 +42,20 @@ export default {
       description: `detects the number of direct connections a node has`
     },
     "Eigenvector": {
-      Form: EigenvectorForm,
+      Form: PageRankForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "eigenvector",
-        iterations: 20,
+        maxIterations: 20,
         defaultValue: 1.0,
         normalization: "none"
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.eigenvector.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.eigenvector($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.eigenvector.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.alpha.eigenvector.write($config)`,
       getFetchQuery: getFetchCypher,
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
@@ -82,22 +80,22 @@ export default {
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
     'Article Rank': {
-      Form: ArticleRankForm,
+      Form: PageRankForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "articlerank",
         dampingFactor: 0.85,
-        iterations: 20,
+        maxIterations: 20,
         defaultValue: 1.0,
         concurrency: 8,
-        weightProperty: null
+        relationshipWeightProperty: null
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.articleRank.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.articleRank($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.articleRank.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.alpha.articleRank.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `a variant of the PageRank algorithm`
     },
