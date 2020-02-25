@@ -30,7 +30,7 @@ export default {
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Incoming',
+        direction: 'Reverse',
         persist: true,
         writeProperty: "degree",
         defaultValue: 1.0,

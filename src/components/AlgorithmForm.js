@@ -19,7 +19,8 @@ class Algorithms extends Component {
     collapsed: false,
     parameters: {},
     labelOptions: [{ key: null, value: null, text: 'Any' }],
-    relationshipTypeOptions: [{ key: null, value: null, text: 'Any' }]
+    relationshipTypeOptions: [{ key: null, value: null, text: 'Any' }],
+    relationshipOrientationOptions: [{ key: "Natural", value: "Natural", text: 'Natural' }]
   }
 
   static contextTypes = {
@@ -60,6 +61,15 @@ class Algorithms extends Component {
     relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
     this.setState({
       relationshipTypeOptions: relationshipTypes
+    })
+
+    const relationshipOrientationOptions = [
+      {key: "Natural", value: "Natural", text: "Natural"},
+      {key: "Reverse", value: "Reverse", text: "Reverse"},
+      {key: "Undirected", value: "Undirected", text: "Undirected"},
+    ]
+    this.setState({
+      relationshipOrientationOptions: relationshipOrientationOptions
     })
   }
 
@@ -144,6 +154,7 @@ class Algorithms extends Component {
               <div style={{marginBottom: '1em'}}>
                 <AlgoForm {...this.state.parameters} labelOptions={this.state.labelOptions}
                       relationshipTypeOptions={this.state.relationshipTypeOptions}
+                          relationshipOrientationOptions={this.state.relationshipOrientationOptions}
                       onChange={this.onChangeParam.bind(this)}/>
                 <Form size='mini'>
                   <Form.Field inline>
