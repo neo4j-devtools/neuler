@@ -8,7 +8,6 @@ import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
-import HarmonicCentralityForm from "./HarmonicCentralityForm"
 
 
 export default {
@@ -20,7 +19,7 @@ export default {
     "Betweenness",
     "Approx Betweenness",
     "Closeness",
-    "Harmonic"
+    // "Harmonic"
   ],
   algorithmDefinitions: {
     "Degree": {
@@ -138,21 +137,21 @@ export default {
       Form: ClosenessCentralityForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
-      parameters: { persist: true, writeProperty: "closeness", concurrency: 8, direction:"Outgoing"},
+      parameters: { persist: true, writeProperty: "closeness", concurrency: 8, direction:"Natural"},
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.closeness.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.closeness($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.closeness.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `detect nodes that are able to spread information very efficiently through a graph`
     },
     "Harmonic": {
-      Form: HarmonicCentralityForm,
+      Form: ClosenessCentralityForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
-      parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Outgoing"},
+      parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Natural"},
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.closeness.harmonic.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.closeness.harmonic($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.harmonic.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.harmonic.stream($config)`,
       getFetchQuery: getFetchCypher,
       description: `a variant of closeness centrality, that was invented to solve the problem the original
 -                  formula had when dealing with unconnected graphs.`
