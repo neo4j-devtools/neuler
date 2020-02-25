@@ -118,7 +118,7 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
-  const parsedMaxDepth = parseInt(maxDepth)
+  const parsedMaxDepth = maxDepth == null ? null : neo.int(maxDepth)
   const parsedIterations = maxIterations == null ? null : neo.int(maxIterations)
   // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty

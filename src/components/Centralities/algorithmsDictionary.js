@@ -121,7 +121,7 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         strategy: "random",
-        direction: "Outgoing",
+        direction: "Natural",
         persist: true,
         concurrency: 8,
         maxDepth: null,
@@ -129,8 +129,8 @@ export default {
         writeProperty: "approxBetweenness"
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.betweenness.sampled.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.betweenness.sampled($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.sampled.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.betweenness.sampled.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
     },

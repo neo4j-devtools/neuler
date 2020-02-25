@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Button, Checkbox} from "semantic-ui-react"
+import {Form} from "semantic-ui-react"
 import CentralityForm from "./CentralityForm"
 
 export default ({ onChange, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, direction, persist, concurrency, maxDepth, relationshipOrientationOptions }) => (
