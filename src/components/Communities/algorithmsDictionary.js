@@ -136,13 +136,13 @@ LIMIT $limit`,
                 concurrency: 8,
                 direction: "Undirected"
             },
-            streamQuery: `CALL algo.triangleCount.stream($label, $relationshipType, $config)
+            streamQuery: `CALL gds.alpha.triangleCount.stream($config)
 YIELD nodeId, triangles, coefficient
 WITH gds.util.asNode(nodeId) AS node, coefficient, triangles
 RETURN node, triangles, coefficient
 ORDER BY triangles DESC
 LIMIT $limit`,
-            storeQuery: `CALL algo.triangleCount($label, $relationshipType, $config)`,
+            storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
             getFetchQuery: getFetchTriangleCountCypher,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
         }/*,
