@@ -58,15 +58,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
 
   const config = {
     nodeProjection: label || null,
-    relationshipProjection: relationshipType == null ? null :  {
-      [relationshipType]: {
-        type: relationshipType,
-        projection: direction == null ? "NATURAL" : direction.toUpperCase(),
-        properties: !weightProperty ? {} : {
-          [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
-        }
-      }
-    },
+    relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
     relationshipWeightProperty: parsedWeightProperty || null,
     // weightProperty: parsedWeightProperty || null,
     // defaultValue: parseFloat(defaultValue) || 1.0,
@@ -86,6 +78,33 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
+
+export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
+  const params = {
+    limit: parseInt(limit) || 50,
+  }
+
+  const config = {
+    similarityCutoff: parseFloat(similarityCutoff),
+    degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
+    concurrency: concurrency == null ? null : neo.int(concurrency),
+    nodeProjection: label || null,
+    relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
+
+  }
+
+  if(persist) {
+    config.writeProperty = writeProperty || null
+    config.writeRelationshipType = writeRelationshipType || null
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
 
 export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
   const params = {
@@ -167,6 +186,18 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 }
 
 
+export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
+  return relationshipType == null ? null :  {
+    [relationshipType]: {
+      type: relationshipType,
+      projection: direction == null ? "NATURAL" : direction.toUpperCase(),
+      properties: !weightProperty ? {} : {
+        [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
+      }
+    }
+  }
+}
+
 export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
 
@@ -174,15 +205,7 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
     limit: parseInt(limit) || 50,
     config: {
       nodeProjection: label || null,
-      relationshipProjection: relationshipType == null ? null :  {
-        [relationshipType]: {
-          type: relationshipType,
-          projection: direction == null ? "NATURAL" : direction.toUpperCase(),
-          properties: !weightProperty ? {} : {
-            [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
-          }
-        }
-      },
+      relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
       relationshipWeightProperty: parsedWeightProperty || null,
       concurrency: concurrency == null ? null : neo.int(concurrency),
     }
