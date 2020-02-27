@@ -11,6 +11,9 @@ import EuclideanForm from "./EuclideanForm";
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
 WITH apoc.map.setKey($config, "data", data) AS config
+WITH $config AS config, data
+WITH config { .*, data: data} as config
+
 ${callAlgorithm}
 
 YIELD item1, item2, similarity
@@ -20,7 +23,9 @@ LIMIT $limit`
 
 const constructStoreQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
-WITH apoc.map.setKey($config, "data", data) AS config
+WITH $config AS config, data
+WITH config { .*, data: data} as config
+
 ${callAlgorithm}
 
 YIELD nodes, similarityPairs, write, writeRelationshipType, writeProperty, min, max, mean, stdDev, p25, p50, p75, p90, p95, p99, p999, p100

@@ -42,7 +42,7 @@
 
 == New Algorithms
 
-* [ ] Node Similarity
+* [x] Node Similarity
 * [ ] K-1 Coloring
 * [ ] Approximate Nearest Neighbors
 * [ ] Yen's K Shortest Paths

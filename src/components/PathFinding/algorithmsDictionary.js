@@ -40,8 +40,8 @@ LIMIT 1
 CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
 WITH start, end
 LIMIT 1        
-WITH apoc.map.setKey($config, "startNode", start) AS config, end
-WITH apoc.map.setKey(config, "endNode", end) AS config    
+WITH $config AS config, start, end
+WITH config { .*, startNode: start, endNode: end} as config
 CALL gds.alpha.shortestPath.stream(config)
 YIELD nodeId, cost
 RETURN gds.util.asNode(nodeId) AS node, cost`,
@@ -71,9 +71,9 @@ WITH start
 LIMIT 1
 CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
 WITH start, end
-LIMIT 1        
-WITH apoc.map.setKey($config, "startNode", start) AS config, end
-WITH apoc.map.setKey(config, "endNode", end) AS config    
+LIMIT 1            
+WITH $config AS config, start, end
+WITH config { .*, startNode: start, endNode: end} as config
 CALL gds.alpha.shortestPath.astar.stream(config)
 YIELD nodeId, cost
 RETURN gds.util.asNode(nodeId) AS node, cost`,
@@ -100,7 +100,8 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
 MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
 LIMIT 1
-WITH apoc.map.setKey($config, "startNode", start) AS config
+WITH $config AS config, start
+WITH config { .*, startNode: start} as config
 CALL gds.alpha.shortestPath.deltaStepping.stream(config)
 YIELD nodeId, distance AS cost
 RETURN gds.util.asNode(nodeId) AS node, cost
