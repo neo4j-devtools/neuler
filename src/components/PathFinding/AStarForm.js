@@ -26,7 +26,7 @@ export default class extends Component {
                   />
                 </Form.Field> : null }
               {
-                weightProperty ?
+                relationshipType && weightProperty ?
                   <Form.Field inline>
                     <label style={{ 'width': '8em' }}>Default weight</label>
                     <input

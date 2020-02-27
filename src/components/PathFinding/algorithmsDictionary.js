@@ -89,10 +89,10 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 concurrency: 8,
                 delta: 3.0
             },
@@ -100,9 +100,10 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
 MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
 LIMIT 1
-CALL algo.shortestPath.deltaStepping.stream(start, $config.weightProperty, $config.delta, $config)
+WITH apoc.map.setKey($config, "startNode", start) AS config
+CALL gds.alpha.shortestPath.deltaStepping.stream(config)
 YIELD nodeId, distance AS cost
-RETURN algo.getNodeById(nodeId) AS node, cost
+RETURN gds.util.asNode(nodeId) AS node, cost
 LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => "",
