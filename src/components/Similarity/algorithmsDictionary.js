@@ -82,8 +82,8 @@ export default {
         degreeCutoff: 0,
         write: true
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.overlap.stream(data, $config)", constructSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.overlap(data, $config)`, constructSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.overlap.stream(config)", constructSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.overlap.write(config)`, constructSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `measures overlap between two sets. It is defined as the size of the intersection of two sets, divided by the size of the smaller of the two sets.`
     },
@@ -124,8 +124,8 @@ export default {
         write: true,
         weightProperty: "weight"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.pearson.stream(data, $config)", constructWeightedSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.pearson(data, $config)`, constructWeightedSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.pearson.stream(config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.pearson.write(config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `the covariance of the two n-dimensional vectors divided by the product of their standard deviations.`
     },
@@ -145,8 +145,8 @@ export default {
         write: true,
         weightProperty: "weight"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.euclidean.stream(data, $config)", constructWeightedSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.euclidean(data, $config)`, constructWeightedSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.euclidean.stream(config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.euclidean.write(config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `measures the straight line distance between two points in n-dimensional space.`
     },
