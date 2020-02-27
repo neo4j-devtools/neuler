@@ -67,6 +67,6 @@ export const constructWeightedSimilarityMaps = (item, relationshipType, category
 
   return `MATCH ${itemNode}, ${categoryNode}
 OPTIONAL MATCH ${itemNode}-${rel}->${categoryNode}
-WITH {item:id(item), weights: collect(coalesce(rel[$weightProperty], algo.NaN()))} as userData
+WITH {item:id(item), weights: collect(coalesce(rel[$weightProperty], gds.util.NaN()))} as userData
 WITH collect(userData) as data`
 }

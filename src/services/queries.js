@@ -95,7 +95,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     categoryLabel: categoryLabel || null,
     weightProperty: weightProperty || null,
     config: {
-      concurrency: parseInt(concurrency) || null,
+      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 
@@ -103,7 +103,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: parseFloat(similarityCutoff),
-    degreeCutoff: parseInt(degreeCutoff),
+    degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
     write: persist,
   }
 

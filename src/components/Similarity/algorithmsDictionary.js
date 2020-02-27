@@ -10,17 +10,17 @@ import EuclideanForm from "./EuclideanForm";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
-
+WITH apoc.map.setKey($config, "data", data) AS config
 ${callAlgorithm}
 
 YIELD item1, item2, similarity
-RETURN algo.asNode(item1) AS from, algo.asNode(item2) AS to, similarity
+RETURN gds.util.asNode(item1) AS from, gds.util.asNode(item2) AS to, similarity
 ORDER BY similarity DESC
 LIMIT $limit`
 
 const constructStoreQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
-
+WITH apoc.map.setKey($config, "data", data) AS config
 ${callAlgorithm}
 
 YIELD nodes, similarityPairs, write, writeRelationshipType, writeProperty, min, max, mean, stdDev, p25, p50, p75, p90, p95, p99, p999, p100
@@ -103,8 +103,8 @@ export default {
         write: true,
         weightProperty: "weight"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.cosine.stream(data, $config)", constructWeightedSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.cosine(data, $config)`, constructWeightedSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.cosine.stream(config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.cosine.write(config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: ` the cosine of the angle between two n-dimensional vectors in an n-dimensional space. It is the dot product of the two vectors divided by the product of the two vectors' lengths (or magnitudes).`
     },
