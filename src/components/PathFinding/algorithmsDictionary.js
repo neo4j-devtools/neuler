@@ -117,15 +117,15 @@ LIMIT $limit`,
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 concurrency: 8,
             },
-            streamQuery: `CALL algo.allShortestPaths.stream($config.weightProperty, $config)
+            streamQuery: `CALL gds.alpha.allShortestPaths.stream($config)
 YIELD sourceNodeId, targetNodeId, distance AS cost
-RETURN algo.getNodeById(sourceNodeId) AS source, algo.getNodeById(targetNodeId) AS target, cost
+RETURN gds.util.asNode(sourceNodeId) AS source, gds.util.asNode(targetNodeId) AS target, cost
 LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => "",
