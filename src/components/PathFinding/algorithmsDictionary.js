@@ -27,11 +27,11 @@ export default {
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 writeProperty: "louvain",
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 concurrency: 8
             },
             streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
@@ -39,10 +39,12 @@ WITH start
 LIMIT 1
 CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
 WITH start, end
-LIMIT 1            
-CALL algo.shortestPath.stream(start, end, $config.weightProperty, $config)
+LIMIT 1        
+WITH $config AS config, start, end
+WITH config { .*, startNode: start, endNode: end} as config
+CALL gds.alpha.shortestPath.stream(config)
 YIELD nodeId, cost
-RETURN algo.getNodeById(nodeId) AS node, cost`,
+RETURN gds.util.asNode(nodeId) AS node, cost`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The Shortest Path algorithm calculates the shortest (weighted) path between a pair of nodes. `
@@ -55,11 +57,11 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 writeProperty: "louvain",
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 propertyKeyLat: "latitude",
                 propertyKeyLon: "longitude",
                 concurrency: 8
@@ -69,10 +71,12 @@ WITH start
 LIMIT 1
 CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
 WITH start, end
-LIMIT 1 
-CALL algo.shortestPath.astar.stream(start, end, $config.weightProperty, $config.propertyKeyLat, $config.propertyKeyLon, $config)
+LIMIT 1            
+WITH $config AS config, start, end
+WITH config { .*, startNode: start, endNode: end} as config
+CALL gds.alpha.shortestPath.astar.stream(config)
 YIELD nodeId, cost
-RETURN algo.getNodeById(nodeId) AS node, cost`,
+RETURN gds.util.asNode(nodeId) AS node, cost`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
@@ -85,10 +89,10 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 concurrency: 8,
                 delta: 3.0
             },
@@ -96,9 +100,11 @@ RETURN algo.getNodeById(nodeId) AS node, cost`,
 MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
 LIMIT 1
-CALL algo.shortestPath.deltaStepping.stream(start, $config.weightProperty, $config.delta, $config)
+WITH $config AS config, start
+WITH config { .*, startNode: start} as config
+CALL gds.alpha.shortestPath.deltaStepping.stream(config)
 YIELD nodeId, distance AS cost
-RETURN algo.getNodeById(nodeId) AS node, cost
+RETURN gds.util.asNode(nodeId) AS node, cost
 LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => "",
@@ -112,15 +118,15 @@ LIMIT $limit`,
             parameters: {
                 nodeQuery: null,
                 relationshipQuery: null,
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: false,
                 defaultValue: 1.0,
-                weightProperty: "weight",
+                relationshipWeightProperty: "weight",
                 concurrency: 8,
             },
-            streamQuery: `CALL algo.allShortestPaths.stream($config.weightProperty, $config)
+            streamQuery: `CALL gds.alpha.allShortestPaths.stream($config)
 YIELD sourceNodeId, targetNodeId, distance AS cost
-RETURN algo.getNodeById(sourceNodeId) AS source, algo.getNodeById(targetNodeId) AS target, cost
+RETURN gds.util.asNode(sourceNodeId) AS source, gds.util.asNode(targetNodeId) AS target, cost
 LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => "",

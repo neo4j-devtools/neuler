@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import { Form, Label, Input } from "semantic-ui-react"
-import CommunityForm from './CommunityForm'
+import {Dropdown, Form, Input} from "semantic-ui-react"
 
 export default class extends Component {
   state = {
@@ -8,38 +7,89 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipTypeOptions,  weightProperty, writeProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,  weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
-        <CommunityForm onChange={onChange} direction={direction} writeProperty={writeProperty} persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
+        <Form.Field>
+          <label>Label</label>
+          <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
+        </Form.Field>
+
+        <Form.Field>
+          <label>Relationship Type</label>
+          <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
+        </Form.Field>
+
+        {relationshipType ?
+          <Form.Field>
+            <label>Relationship Orientation</label>
+            <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
+          </Form.Field> : null }
+
+
+          {relationshipType ?
+            <Form.Field inline>
+              <label style={{ 'width': '8em' }}>Weight Property</label>
+              <input
+                placeholder='Weight Property'
+                value={weightProperty}
+                onChange={evt => onChange('weightProperty', evt.target.value)}
+                style={{ 'width': '10em' }}
+              />
+            </Form.Field> : null }
+          {
+            weightProperty ?
+              <Form.Field inline>
+                <label style={{ 'width': '8em' }}>Default weight</label>
+                <input
+                  value={defaultValue}
+                  onChange={evt => onChange('defaultValue', evt.target.value)}
+                  style={{ 'width': '7em' }}
+                />
+              </Form.Field>
+              : null
+          }
+
+        <Form.Group inline>
+          <Form.Field inline>
+            <label style={{ 'width': '10em' }}>Store results</label>
+            <input type='checkbox' checked={persist} onChange={evt => {
+              console.log(evt.target, evt)
+              onChange('persist', evt.target.checked)
+            }}/>
+          </Form.Field>
+          {
+            persist ?
+              <Form.Field inline>
+                <Input size='mini' basic="true" value={writeProperty} placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
+              </Form.Field>
+              : null
+          }
+        </Form.Group>
         <Form.Field inline>
-          <label style={{ 'width': '10em' }}>Weight Property</label>
+          <label style={{ 'width': '10em' }}>Concurrency</label>
           <input
-            placeholder='Weight Property'
-            value={weightProperty}
-            onChange={evt => onChange('weightProperty', evt.target.value)}
+            type='number'
+            placeholder="Concurrency"
+            min={1}
+            max={1000}
+            step={1}
+            value={concurrency}
+            onChange={evt => onChange('concurrency', evt.target.value)}
             style={{ 'width': '10em' }}
           />
         </Form.Field>
-        {
-          weightProperty ?
-        <Form.Field inline>
-          <label style={{ 'width': '10em' }}>Default weight</label>
-          <input
-            value={defaultValue}
-            onChange={evt => onChange('defaultValue', evt.target.value)}
-            style={{ 'width': '7em' }}
-          />
-          </Form.Field> : null
-        }
+
+
+
 
         <Form.Field inline>
-          <label style={{ 'width': '10em' }}>Community Property</label>
+          <label style={{ 'width': '10em' }}>Seed Property</label>
           <input
-            placeholder='Community Property'
-            value={communityProperty}
-            onChange={evt => onChange('communityProperty', evt.target.value)}
+            placeholder='Seed Property'
+            value={seedProperty}
+            onChange={evt => onChange('seedProperty', evt.target.value)}
             style={{ 'width': '10em' }}
           />
         </Form.Field>
@@ -49,16 +99,6 @@ export default class extends Component {
               onChange('includeIntermediateCommunities', evt.target.checked)
             }}/>
           </Form.Field>
-          { includeIntermediateCommunities ?
-          <Form.Field inline>
-            <label style={{ 'width': '10em' }}>Intermediate Communities Write Property</label>
-            <input
-              placeholder='Intermediate Communities Write Property'
-              value={intermediateCommunitiesWriteProperty}
-              onChange={evt => onChange('* intermediateCommunitiesWriteProperty', evt.target.value)}
-              style={{ 'width': '10em' }}
-            />
-          </Form.Field> : null }
       </Form>
     )
   }

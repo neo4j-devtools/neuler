@@ -44,23 +44,23 @@ export default {
             service: runAlgorithm,
             ResultView: LouvainResult,
             parameters: {
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: true,
                 writeProperty: "louvain",
                 includeIntermediateCommunities: false,
                 intermediateCommunitiesWriteProperty: "louvainIntermediate",
                 defaultValue: 1.0,
-                weightProperty: null,
-                communityProperty: null,
+                relationshipWeightProperty: null,
+                seedProperty: null,
                 concurrency: 8
             },
-            streamQuery: `CALL algo.louvain.stream($label, $relationshipType, $config)
-YIELD nodeId, community, communities
-WITH algo.getNodeById(nodeId) AS node, community, communities
+            streamQuery: `CALL gds.louvain.stream($config)
+YIELD nodeId, communityId AS community, communityIds AS communities
+WITH gds.util.asNode(nodeId) AS node, community, communities
 RETURN node, community, communities
 ORDER BY community
 LIMIT $limit`,
-            storeQuery: `CALL algo.louvain($label, $relationshipType, $config)`,
+            storeQuery: `CALL gds.louvain.write($config)`,
             getFetchQuery: getFetchLouvainCypher,
             description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
         },
@@ -70,14 +70,15 @@ LIMIT $limit`,
             service: runAlgorithm,
             ResultView: CommunityResult,
             parameters: {
-                direction: 'Both',
+                direction: 'Undirected',
                 persist: true,
                 writeProperty: "lpa",
                 defaultValue: 1.0,
-                concurrency: 8
+                concurrency: 8,
+                relationshipWeightProperty: null
             },
-            streamQuery: communityStreamQueryOutline(`CALL algo.labelPropagation.stream($label, $relationshipType, $config) YIELD nodeId, label AS community`),
-            storeQuery: `CALL algo.labelPropagation($label, $relationshipType, $config)`,
+            streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, communityId AS community`),
+            storeQuery: `CALL gds.labelPropagation.write($config)`,
             getFetchQuery: getCommunityFetchCypher,
             description: "a fast algorithm for finding communities in a graph"
         },
@@ -91,10 +92,10 @@ LIMIT $limit`,
                 writeProperty: "unionFind",
                 concurrency: 8,
                 defaultValue: 1.0,
-                direction: 'Both',
+                direction: 'Undirected',
             },
-            streamQuery: communityStreamQueryOutline(`CALL algo.unionFind.stream($label, $relationshipType, $config) YIELD nodeId, setId AS community`),
-            storeQuery: `CALL algo.unionFind($label, $relationshipType, $config)`,
+            streamQuery: communityStreamQueryOutline(`CALL gds.wcc.stream($config) YIELD nodeId, componentId AS community`),
+            storeQuery: `CALL gds.wcc.write($config)`,
             getFetchQuery: getCommunityFetchCypher,
             description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
         },
@@ -103,9 +104,9 @@ LIMIT $limit`,
             parametersBuilder: communityParams,
             service: runAlgorithm,
             ResultView: CommunityResult,
-            parameters: {persist: true, writeProperty: "scc", concurrency: 8, defaultValue: 1.0, direction: 'Both',},
-            streamQuery: communityStreamQueryOutline(`CALL algo.scc.stream($label, $relationshipType, $config) YIELD nodeId, partition AS community`),
-            storeQuery: `CALL algo.scc($label, $relationshipType, $config)`,
+            parameters: {persist: true, writeProperty: "scc", concurrency: 8, defaultValue: 1.0, direction: 'Undirected',},
+            streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, partition AS community`),
+            storeQuery: `CALL gds.alpha.scc.write($config)`,
             getFetchQuery: getCommunityFetchCypher,
             description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"
         },
@@ -114,10 +115,10 @@ LIMIT $limit`,
             parametersBuilder: communityParams,
             service: triangles,
             ResultView: TrianglesResult,
-            parameters: {persist: false, direction: 'Both'},
-            streamQuery: `CALL algo.triangle.stream($label, $relationshipType, $config)
+            parameters: {persist: false, direction: 'Undirected', concurrency: 8},
+            streamQuery: `CALL gds.alpha.triangle.stream($config)
 YIELD nodeA, nodeB, nodeC
-RETURN algo.getNodeById(nodeA) AS nodeA, algo.getNodeById(nodeB) AS nodeB, algo.getNodeById(nodeC) AS nodeC
+RETURN gds.util.asNode(nodeA) AS nodeA, gds.util.asNode(nodeB) AS nodeB, gds.util.asNode(nodeC) AS nodeC
 LIMIT $limit`,
             storeQuery: ``,
             getFetchQuery: () => ``,
@@ -133,15 +134,15 @@ LIMIT $limit`,
                 writeProperty: "trianglesCount",
                 clusteringCoefficientProperty: "clusteringCoefficient",
                 concurrency: 8,
-                direction: "Both"
+                direction: "Undirected"
             },
-            streamQuery: `CALL algo.triangleCount.stream($label, $relationshipType, $config)
+            streamQuery: `CALL gds.alpha.triangleCount.stream($config)
 YIELD nodeId, triangles, coefficient
-WITH algo.getNodeById(nodeId) AS node, coefficient, triangles
+WITH gds.util.asNode(nodeId) AS node, coefficient, triangles
 RETURN node, triangles, coefficient
 ORDER BY triangles DESC
 LIMIT $limit`,
-            storeQuery: `CALL algo.triangleCount($label, $relationshipType, $config)`,
+            storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
             getFetchQuery: getFetchTriangleCountCypher,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
         }/*,

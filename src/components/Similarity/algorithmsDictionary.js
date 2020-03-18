@@ -1,6 +1,6 @@
 import React from "react"
 import {constructSimilarityMaps, constructWeightedSimilarityMaps, runAlgorithm,} from "../../services/similarity"
-import {getFetchLouvainCypher, similarityParams} from "../../services/queries";
+import {getFetchLouvainCypher, nodeSimilarityParams, similarityParams} from "../../services/queries";
 import JaccardForm from "./JaccardForm";
 import SimilarityResult from "./SimilarityResult";
 import CosineForm from "./CosineForm";
@@ -10,16 +10,21 @@ import EuclideanForm from "./EuclideanForm";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
+WITH apoc.map.setKey($config, "data", data) AS config
+WITH $config AS config, data
+WITH config { .*, data: data} as config
 
 ${callAlgorithm}
 
 YIELD item1, item2, similarity
-RETURN algo.asNode(item1) AS from, algo.asNode(item2) AS to, similarity
+RETURN gds.util.asNode(item1) AS from, gds.util.asNode(item2) AS to, similarity
 ORDER BY similarity DESC
 LIMIT $limit`
 
 const constructStoreQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
+WITH $config AS config, data
+WITH config { .*, data: data} as config
 
 ${callAlgorithm}
 
@@ -51,20 +56,23 @@ export default {
   algorithmDefinitions: {
     "Jaccard": {
       Form: JaccardForm,
-      parametersBuilder: similarityParams,
+      parametersBuilder: nodeSimilarityParams,
       service: runAlgorithm,
       ResultView: SimilarityResult,
       parameters: {
-        persist: true,
+        persist: false,
         writeProperty: "score",
         writeRelationshipType: "SIMILAR_JACCARD",
         concurrency: 8,
         similarityCutoff: 0.1,
-        degreeCutoff: 0,
-        write: true
+        degreeCutoff: 1,
+        direction: "Natural"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.jaccard.stream(data, $config)", constructSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.jaccard(data, $config)`, constructSimilarityMaps),
+      streamQuery: (item, relationshipType, category) => `CALL gds.nodeSimilarity.stream($config) YIELD node1, node2, similarity
+RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
+ORDER BY similarity DESC
+LIMIT $limit`,
+      storeQuery: (item, relationshipType, category) => `CALL gds.nodeSimilarity.write($config)`,
       getFetchQuery: constructFetchQuery,
       description: `measures similarities between sets. It is defined as the size of the intersection divided by the size of the union of two sets.`
     },
@@ -82,8 +90,8 @@ export default {
         degreeCutoff: 0,
         write: true
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.overlap.stream(data, $config)", constructSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.overlap(data, $config)`, constructSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.overlap.stream(config)", constructSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.overlap.write(config)`, constructSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `measures overlap between two sets. It is defined as the size of the intersection of two sets, divided by the size of the smaller of the two sets.`
     },
@@ -103,8 +111,8 @@ export default {
         write: true,
         weightProperty: "weight"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.cosine.stream(data, $config)", constructWeightedSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.cosine(data, $config)`, constructWeightedSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.cosine.stream(config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.cosine.write(config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: ` the cosine of the angle between two n-dimensional vectors in an n-dimensional space. It is the dot product of the two vectors divided by the product of the two vectors' lengths (or magnitudes).`
     },
@@ -124,8 +132,8 @@ export default {
         write: true,
         weightProperty: "weight"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.pearson.stream(data, $config)", constructWeightedSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.pearson(data, $config)`, constructWeightedSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.pearson.stream(config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.pearson.write(config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `the covariance of the two n-dimensional vectors divided by the product of their standard deviations.`
     },
@@ -145,8 +153,8 @@ export default {
         write: true,
         weightProperty: "weight"
       },
-      streamQuery: constructStreamingQueryGetter("CALL algo.similarity.euclidean.stream(data, $config)", constructWeightedSimilarityMaps),
-      storeQuery: constructStoreQueryGetter(`CALL algo.similarity.euclidean(data, $config)`, constructWeightedSimilarityMaps),
+      streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.euclidean.stream(config)", constructWeightedSimilarityMaps),
+      storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.euclidean.write(config)`, constructWeightedSimilarityMaps),
       getFetchQuery: constructFetchQuery,
       description: `measures the straight line distance between two points in n-dimensional space.`
     },

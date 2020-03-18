@@ -1,8 +1,6 @@
 import PageRankForm from './PageRankForm'
 import {runAlgorithm, executeAlgorithm} from "../../services/centralities"
 import { centralityParams, getFetchCypher, streamQueryOutline } from '../../services/queries'
-import EigenvectorForm from './EigenvectorForm'
-import ArticleRankForm from "./ArticleRankForm"
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
@@ -10,7 +8,6 @@ import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
-import HarmonicCentralityForm from "./HarmonicCentralityForm"
 
 
 export default {
@@ -22,7 +19,7 @@ export default {
     "Betweenness",
     "Approx Betweenness",
     "Closeness",
-    "Harmonic"
+    // "Harmonic"
   ],
   algorithmDefinitions: {
     "Degree": {
@@ -30,34 +27,34 @@ export default {
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Incoming',
+        direction: 'Reverse',
         persist: true,
         writeProperty: "degree",
         defaultValue: 1.0,
         concurrency: 8,
-        weightProperty: null
+        relationshipWeightProperty: null
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.degree.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.degree($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.degree.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.alpha.degree.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `detects the number of direct connections a node has`
     },
     "Eigenvector": {
-      Form: EigenvectorForm,
+      Form: PageRankForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "eigenvector",
-        iterations: 20,
+        maxIterations: 20,
         defaultValue: 1.0,
         normalization: "none"
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.eigenvector.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.eigenvector($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.eigenvector.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.alpha.eigenvector.write($config)`,
       getFetchQuery: getFetchCypher,
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
@@ -66,38 +63,38 @@ export default {
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "pagerank",
         dampingFactor: 0.85,
-        iterations: 20,
+        maxIterations: 20,
         defaultValue: 1.0,
         concurrency: 8,
-        weightProperty: null
+        relationshipWeightProperty: null
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.pageRank.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.pageRank($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.pageRank.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.pageRank.write($config)`,
       getFetchQuery: getFetchCypher,
       description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
     },
     'Article Rank': {
-      Form: ArticleRankForm,
+      Form: PageRankForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "articlerank",
         dampingFactor: 0.85,
-        iterations: 20,
+        maxIterations: 20,
         defaultValue: 1.0,
         concurrency: 8,
-        weightProperty: null
+        relationshipWeightProperty: null
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.articleRank.stream($label, $relationshipType, $config) YIELD nodeId, score`),
-      storeQuery: `CALL algo.articleRank($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.articleRank.stream($config) YIELD nodeId, score`),
+      storeQuery: `CALL gds.alpha.articleRank.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `a variant of the PageRank algorithm`
     },
@@ -106,14 +103,14 @@ export default {
       service: runAlgorithm,
       ResultView: CentralityResult,
       parameters: {
-        direction: 'Outgoing',
+        direction: 'Natural',
         persist: true,
         writeProperty: "betweenness",
         concurrency: 8
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.betweenness.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.betweenness($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.betweenness.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
     },
@@ -123,7 +120,7 @@ export default {
       ResultView: CentralityResult,
       parameters: {
         strategy: "random",
-        direction: "Outgoing",
+        direction: "Natural",
         persist: true,
         concurrency: 8,
         maxDepth: null,
@@ -131,8 +128,8 @@ export default {
         writeProperty: "approxBetweenness"
       },
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.betweenness.sampled.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.betweenness.sampled($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.sampled.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.betweenness.sampled.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
     },
@@ -140,21 +137,21 @@ export default {
       Form: ClosenessCentralityForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
-      parameters: { persist: true, writeProperty: "closeness", concurrency: 8, direction:"Outgoing"},
+      parameters: { persist: true, writeProperty: "closeness", concurrency: 8, direction:"Natural"},
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.closeness.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.closeness($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.closeness.write($config)`,
       getFetchQuery: getFetchCypher,
       description: `detect nodes that are able to spread information very efficiently through a graph`
     },
     "Harmonic": {
-      Form: HarmonicCentralityForm,
+      Form: ClosenessCentralityForm,
       service: runAlgorithm,
       ResultView: CentralityResult,
-      parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Outgoing"},
+      parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Natural"},
       parametersBuilder: centralityParams,
-      streamQuery: streamQueryOutline(`CALL algo.closeness.harmonic.stream($label, $relationshipType, $config) YIELD nodeId, centrality AS score`),
-      storeQuery: `CALL algo.closeness.harmonic($label, $relationshipType, $config)`,
+      streamQuery: streamQueryOutline(`CALL gds.alpha.harmonic.stream($config) YIELD nodeId, centrality AS score`),
+      storeQuery: `CALL gds.alpha.harmonic.stream($config)`,
       getFetchQuery: getFetchCypher,
       description: `a variant of closeness centrality, that was invented to solve the problem the original
 -                  formula had when dealing with unconnected graphs.`

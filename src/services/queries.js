@@ -1,14 +1,14 @@
 import { v1 as neo } from "neo4j-driver"
 
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
-WITH algo.getNodeById(nodeId) AS node, score
+WITH gds.util.asNode(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
 LIMIT $limit
 `
 
 export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
-WITH algo.getNodeById(nodeId) AS node, community
+WITH gds.util.asNode(nodeId) AS node, community
 RETURN node, community
 ORDER BY community DESC
 LIMIT $limit
@@ -22,7 +22,10 @@ LIMIT $limit`
 
 export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS community, node[$config.intermediateCommunitiesWriteProperty] as communities
+WITH node, node[$config.writeProperty] AS community
+RETURN node, 
+       CASE WHEN apoc.meta.type(community) = "long[]" THEN community[0] ELSE community END AS community, 
+       CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
 LIMIT $limit`
 
 export const getCommunityFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
@@ -41,7 +44,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   const params = {
     limit: parseInt(limit) || 50,
     config: {
-      concurrency: parseInt(concurrency) || null
+      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 
@@ -54,20 +57,54 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    nodeQuery: label || null,
-    relationshipQuery: relationshipType || null,
-    weightProperty: parsedWeightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
+    nodeProjection: label || null,
+    relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
+    relationshipWeightProperty: parsedWeightProperty || null,
+    // weightProperty: parsedWeightProperty || null,
+    // defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: parsedWriteProperty || null,
     propertyKeyLat: propertyKeyLat,
     propertyKeyLon: propertyKeyLon,
     delta: delta
   }
 
+  if(persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
+
+export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
+  const params = {
+    limit: parseInt(limit) || 50,
+  }
+
+  const config = {
+    similarityCutoff: parseFloat(similarityCutoff),
+    degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
+    concurrency: concurrency == null ? null : neo.int(concurrency),
+    nodeProjection: label || null,
+    relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
+
+  }
+
+  if(persist) {
+    config.writeProperty = writeProperty || null
+    config.writeRelationshipType = writeRelationshipType || null
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
 
 export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
   const params = {
@@ -77,7 +114,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     categoryLabel: categoryLabel || null,
     weightProperty: weightProperty || null,
     config: {
-      concurrency: parseInt(concurrency) || null,
+      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 
@@ -85,7 +122,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: parseFloat(similarityCutoff),
-    degreeCutoff: parseInt(degreeCutoff),
+    degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
     write: persist,
   }
 
@@ -93,64 +130,86 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty: seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    weightProperty: parsedWeightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
     write: true,
-    writeProperty: parsedWriteProperty || null,
     clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
-    intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
-    communityProperty: communityProperty || ""
+    // intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
+    seedProperty: seedProperty || ""
   }
+
+  if(persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
 
-export const centralityParams = ({label, relationshipType, direction, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, iterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit)
+export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
+  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
-  const parsedMaxDepth = parseInt(maxDepth)
-  const parsedIterations = parseInt(iterations)
-  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
+  const parsedMaxDepth = maxDepth == null ? null : neo.int(maxDepth)
+  const parsedIterations = maxIterations == null ? null : neo.int(maxIterations)
+  // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    weightProperty: parsedWeightProperty || null,
-    defaultValue: parseFloat(defaultValue) || null,
     dampingFactor: parseFloat(dampingFactor) || null,
-    iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
+    maxIterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
     maxDepth: parsedMaxDepth && parsedMaxDepth > 0 ? parsedMaxDepth : null,
     probability: parsedProbability && parsedProbability > 0 ? parsedProbability : null,
     strategy: strategy,
     write: true,
-    writeProperty: parsedWriteProperty || null,
     normalization: normalization || null
   }
+
+  if(persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
 
 
-export const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
-  const allowedDirections = ["Incoming", "Outgoing", "Both"]
+export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
+  return relationshipType == null ? null :  {
+    [relationshipType]: {
+      type: relationshipType,
+      projection: direction == null ? "NATURAL" : direction.toUpperCase(),
+      properties: !weightProperty ? {} : {
+        [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
+      }
+    }
+  }
+}
+
+export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
+  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
+
+  // console.log("baseParameters...", neo.int(concurrency), neo.isInt(neo.int(concurrency)))
 
   return {
-    label: label || null,
-    relationshipType: relationshipType || null,
     limit: parseInt(limit) || 50,
     config: {
-      concurrency: parseInt(concurrency) || null,
-      direction: direction && allowedDirections.includes(direction) ? direction : 'Outgoing'
+      nodeProjection: label || null,
+      relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
+      relationshipWeightProperty: parsedWeightProperty || null,
+      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 }

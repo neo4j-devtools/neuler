@@ -1,4 +1,4 @@
-import { RenderParams } from './renderParams';
+import { RenderParams, cleanParams } from './renderParams';
 import { render } from 'react-testing-library'
 import React from 'react'
 
@@ -10,13 +10,13 @@ describe("Parameter renderer should", () => {
     expect(container.getElementsByTagName('pre')).toHaveLength(0)
   })
 
-  it('renders with a simple obbject', () => {
+  it('renders with a simple object', () => {
     const { container, getByText } = render(<RenderParams parameters={{ prop: 'value' }}/>)
     expect(container.getElementsByTagName('pre')).toHaveLength(1)
     expect(getByText(/^:param.*prop.*value.*$/)).toBeTruthy()
   })
 
-  it('renders with a complext obbject', () => {
+  it('renders with a complex object', () => {
     const { container, getByText } = render(<RenderParams parameters={{
       prop: 'value',
       secondProp: 123,

@@ -105,20 +105,20 @@ export default class extends Component {
               })
             }
 
-            <p>We can also generate a Neo4j Browser guide containing all of the above:</p>
+            {/*<p>We can also generate a Neo4j Browser guide containing all of the above:</p>*/}
 
 
-            <Segment>
-              <Button basic color='green' icon='play' content='Send to Neo4j Browser'
-                      onClick={() => this.openBrowser.bind(this)(task)}/>
-              {taskGuide ? <Message>
-                <p>
-                  If the Neo4j Browser doesn't automatically open, you can copy/paste the following command
-                  into the Neo4j Browser:
-                </p>
-                <pre>{taskGuide}</pre>
-              </Message> : null}
-            </Segment>
+            {/*<Segment>*/}
+              {/*<Button basic color='green' icon='play' content='Send to Neo4j Browser'*/}
+                      {/*onClick={() => this.openBrowser.bind(this)(task)}/>*/}
+              {/*{taskGuide ? <Message>*/}
+                {/*<p>*/}
+                  {/*If the Neo4j Browser doesn't automatically open, you can copy/paste the following command*/}
+                  {/*into the Neo4j Browser:*/}
+                {/*</p>*/}
+                {/*<pre>{taskGuide}</pre>*/}
+              {/*</Message> : null}*/}
+            {/*</Segment>*/}
           </div>
           : null
         }

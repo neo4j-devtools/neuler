@@ -1,0 +1,49 @@
+= Tasks to do
+
+* [ ] Update algorithms to use new algorithm name spaces
+* [ ] Code tab incorrectly showing value for concurrency and missing node label & relationship type
+* [ ] Code tab not handling nested Cypher maps properly (putting all keys inside double quotes, which is invalid Cypher syntax)
+* [ ] Auto fill available properties based on the output of `db.schema.relTypeProperties()`
+* [ ] Make a component of the relationship type - relationship orientation - weight property trio
+* [ ] Add tests around parameter construction in queries.js
+* [ ] Tidy up code in parameter construction/remove duplication
+* [x] Handle directions for relationship types
+* [x] Move node labels and relationship types into config map
+* [x] Code tab missing node label & relationship type
+
+== Algorithms
+
+* [x] Degree
+* [x] Eigenvector
+* [x] Page Rank
+* [x] Article Rank
+* [x] Betweenness
+* [x] Approx Betweenness
+* [x] Closeness
+* [ ] Harmonic
+
+* [x] Louvain
+* [x] Label Propagation
+* [x] Connected Components
+* [x] Strongly Connected Components
+* [x] Triangles
+* [x] Triangle Count
+
+* [x] Shortest Path
+* [x] A*
+* [x] Single Source Shortest Path
+* [x] All Pairs Shortest Path
+
+* [x] Jaccard
+* [x] Overlap
+* [x] Cosine
+* [x] Pearson
+* [x] Euclidean
+
+== New Algorithms
+
+* [x] Node Similarity
+* [ ] K-1 Coloring
+* [ ] Approximate Nearest Neighbors
+* [ ] Yen's K Shortest Paths
+* [ ] Random Walk
