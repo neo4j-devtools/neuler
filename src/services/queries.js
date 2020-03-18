@@ -201,6 +201,8 @@ export const createRelationshipProjection = (relationshipType, direction, weight
 export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
 
+  // console.log("baseParameters...", neo.int(concurrency), neo.isInt(neo.int(concurrency)))
+
   return {
     limit: parseInt(limit) || 50,
     config: {
