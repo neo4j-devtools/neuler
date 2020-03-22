@@ -187,7 +187,7 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 
 
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
-  return relationshipType == null ? null :  {
+  return relationshipType == null ? "*" :  {
     [relationshipType]: {
       type: relationshipType,
       projection: direction == null ? "NATURAL" : direction.toUpperCase(),
@@ -206,10 +206,9 @@ export const baseParameters = (label, relationshipType, direction, concurrency, 
   return {
     limit: parseInt(limit) || 50,
     config: {
-      nodeProjection: label || null,
+      nodeProjection: label || "*",
       relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
-      relationshipWeightProperty: parsedWeightProperty || null,
-      concurrency: concurrency == null ? null : neo.int(concurrency),
+      relationshipWeightProperty: parsedWeightProperty || null
     }
   }
 }
