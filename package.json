@@ -24,6 +24,7 @@
     "html2canvas": "^1.0.0-rc.1",
     "neo4j-driver": "^1.7.2",
     "react": "^16.7.0",
+    "react-clipboard.js": "^2.0.16",
     "react-dom": "^16.7.0",
     "react-redux": "^6.0.0",
     "react-scripts": "2.1.1",

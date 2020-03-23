@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
-import {Button, Message, Segment} from "semantic-ui-react"
-import {RenderParams} from "./renderParams"
+import {Button, Message, Popup, Segment} from "semantic-ui-react"
+import RenderParams from "./renderParams"
 import {v4 as generateId} from 'uuid'
+import Clipboard from 'react-clipboard.js';
+
 
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
 
@@ -101,6 +103,14 @@ export default class extends Component {
               task.query.map(query => {
                 return <Segment>
                   <pre>{query && query.replace('\n  ', '\n')}</pre>
+                  <Popup
+                    trigger={<Clipboard data-clipboard-text={query && query.replace('\n  ', '\n') }>
+                      Copy to clipboard
+                    </Clipboard>}
+                    content='Copied to clipboard'
+                    on='click'
+                    position='center right'
+                  />
                 </Segment>
               })
             }
