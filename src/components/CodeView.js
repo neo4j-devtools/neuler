@@ -3,6 +3,8 @@ import {Button, Message, Popup, Segment} from "semantic-ui-react"
 import RenderParams from "./renderParams"
 import {v4 as generateId} from 'uuid'
 import Clipboard from 'react-clipboard.js';
+import stringifyObject from "stringify-object";
+import {v1 as neo} from "neo4j-driver";
 
 
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
@@ -25,10 +27,26 @@ export default class extends Component {
     browserGuide: {}
   }
 
+  extractValue(parameters, key) {
+    return parameters[key]
+      ? (typeof parameters[key] === 'string'
+        ? `'${parameters[key]}'`
+        : (typeof parameters[key] === "object" ? `${stringifyObject(parameters[key], {
+          indent: "  ",
+          transform: (obj, prop, originalResult) => {
+            if (neo.isInt(obj[prop])) {
+              return obj[prop].toNumber()
+            }
+            return originalResult
+          }
+        })}` : ` ${parameters[key]}`))
+      : 'null';
+  }
+
   constructPayload(parameters, query, guid) {
     return {
       uuid: guid,
-      params: Object.keys(parameters).map(key => `:param ${key} => (${stringfyParam(parameters[key])});`).join('\n'),
+      params: Object.keys(parameters).map(key => `:param ${key} => (${this.extractValue(parameters, key)});`).join('\n'),
       query: query
     }
   }
@@ -38,6 +56,8 @@ export default class extends Component {
     const guid = generateId()
 
     const payload = this.constructPayload(parameters, query, guid)
+    console.log(payload)
+    console.log(JSON.stringify(payload))
 
     return fetch(generateGuidesUrl, {
       method: "POST",
@@ -115,20 +135,28 @@ export default class extends Component {
               })
             }
 
-            {/*<p>We can also generate a Neo4j Browser guide containing all of the above:</p>*/}
+            <p>We can also generate a Neo4j Browser guide containing all of the above:</p>
 
 
-            {/*<Segment>*/}
-              {/*<Button basic color='green' icon='play' content='Send to Neo4j Browser'*/}
-                      {/*onClick={() => this.openBrowser.bind(this)(task)}/>*/}
-              {/*{taskGuide ? <Message>*/}
-                {/*<p>*/}
-                  {/*If the Neo4j Browser doesn't automatically open, you can copy/paste the following command*/}
-                  {/*into the Neo4j Browser:*/}
-                {/*</p>*/}
-                {/*<pre>{taskGuide}</pre>*/}
-              {/*</Message> : null}*/}
-            {/*</Segment>*/}
+            <Segment>
+              <Button basic color='green' icon='play' content='Send to Neo4j Browser'
+                      onClick={() => this.openBrowser.bind(this)(task)}/>
+              {taskGuide ? <Message>
+                <p>
+                  If the Neo4j Browser doesn't automatically open, you can copy/paste the following command
+                  into the Neo4j Browser:
+                </p>
+                <pre>{taskGuide}</pre>
+                <Popup
+                  trigger={<Clipboard data-clipboard-text={taskGuide }>
+                    Copy to clipboard
+                  </Clipboard>}
+                  content='Copied to clipboard'
+                  on='click'
+                  position='center right'
+                />
+              </Message> : null}
+            </Segment>
           </div>
           : null
         }
