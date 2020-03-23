@@ -136,7 +136,7 @@ test('only keep allowed properties', () => {
 // });
 test('nodeProjection always required', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo"})
-  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: "*"})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {all: {type: "*", orientation: "NATURAL"}}})
 });
 
 test('relationshipProjection defaults to NATURAL', () => {

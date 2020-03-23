@@ -24,7 +24,7 @@ export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label 
 WHERE not(node[$config.writeProperty] is null)
 WITH node, node[$config.writeProperty] AS community
 RETURN node, 
-       CASE WHEN apoc.meta.type(community) = "long[]" THEN community[0] ELSE community END AS community, 
+       CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
        CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
 LIMIT $limit`
 
@@ -44,7 +44,6 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   const params = {
     limit: parseInt(limit) || 50,
     config: {
-      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 
@@ -57,7 +56,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const config = {
-    nodeProjection: label || null,
+    nodeProjection: label || "*",
     relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
     relationshipWeightProperty: parsedWeightProperty || null,
     // weightProperty: parsedWeightProperty || null,
@@ -87,8 +86,7 @@ export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, di
   const config = {
     similarityCutoff: parseFloat(similarityCutoff),
     degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
-    concurrency: concurrency == null ? null : neo.int(concurrency),
-    nodeProjection: label || null,
+    nodeProjection: label || "*",
     relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
 
   }
@@ -114,7 +112,6 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     categoryLabel: categoryLabel || null,
     weightProperty: weightProperty || null,
     config: {
-      concurrency: concurrency == null ? null : neo.int(concurrency),
     }
   }
 
@@ -187,7 +184,13 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 
 
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
-  return relationshipType == null ? "*" :  {
+  return relationshipType == null ? {
+      "all": {
+        type: "*",
+        orientation: direction == null ? "NATURAL" : direction.toUpperCase()
+      }
+    }
+    :  {
     [relationshipType]: {
       type: relationshipType,
       orientation: direction == null ? "NATURAL" : direction.toUpperCase(),
