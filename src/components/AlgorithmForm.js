@@ -19,7 +19,7 @@ class Algorithms extends Component {
     collapsed: false,
     parameters: {},
     labelOptions: [{ key: null, value: null, text: 'Any' }],
-    relationshipTypeOptions: [{ key: null, value: null, text: 'Any' }],
+    relationshipTypeOptions: [{ key: "*", value: "*", text: 'Any' }],
     relationshipOrientationOptions: [{ key: "Natural", value: "Natural", text: 'Natural' }]
   }
 
@@ -50,7 +50,7 @@ class Algorithms extends Component {
     const labels = metadata.labels.map(row => {
       return { key: row.label, value: row.label, text: row.label }
     })
-    labels.unshift({ key: null, value: null, text: 'Any' })
+    labels.unshift({ key: "*", value: "*", text: 'Any' })
     this.setState({
       labelOptions: labels,
     })
@@ -58,7 +58,7 @@ class Algorithms extends Component {
     const relationshipTypes = metadata.relationshipTypes.map(row => {
       return { key: row.label, value: row.label, text: row.label }
     })
-    relationshipTypes.unshift({ key: null, value: null, text: 'Any' })
+    relationshipTypes.unshift({ key: "*", value: "*", text: 'Any' })
     this.setState({
       relationshipTypeOptions: relationshipTypes
     })
