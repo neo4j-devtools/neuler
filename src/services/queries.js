@@ -190,7 +190,7 @@ export const createRelationshipProjection = (relationshipType, direction, weight
   return relationshipType == null ? "*" :  {
     [relationshipType]: {
       type: relationshipType,
-      projection: direction == null ? "NATURAL" : direction.toUpperCase(),
+      orientation: direction == null ? "NATURAL" : direction.toUpperCase(),
       properties: !weightProperty ? {} : {
         [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
       }

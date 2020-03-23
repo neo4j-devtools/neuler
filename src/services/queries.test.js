@@ -136,17 +136,17 @@ test('only keep allowed properties', () => {
 // });
 test('nodeProjection always required', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo"})
-  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: null})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: "*"})
 });
 
 test('relationshipProjection defaults to NATURAL', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR"})
-  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", projection: "NATURAL", properties: {}}}})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", orientation: "NATURAL", properties: {}}}})
 });
 
 test('relationshipProjection uses direction', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse"})
-  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", projection: "REVERSE", properties: {}}}})
+  expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {BAR: {type: "BAR", orientation: "REVERSE", properties: {}}}})
 });
 
 test('relationshipProjection has optional weight property', () => {
@@ -154,7 +154,7 @@ test('relationshipProjection has optional weight property', () => {
   expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {
     BAR: {
       type: "BAR",
-      projection: "REVERSE",
+      orientation: "REVERSE",
       properties: {
         distance: {property: "distance", defaultValue: null}
       }
@@ -168,7 +168,7 @@ test('relationshipProjection has optional weight property even if it is an empty
   expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {
       BAR: {
         type: "BAR",
-        projection: "REVERSE",
+        orientation: "REVERSE",
         properties: {
          }
       }
