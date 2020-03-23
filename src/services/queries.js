@@ -116,12 +116,17 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   }
 
   const config = {
+    nodeProjection: '*',
+    relationshipProjection: '*',
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: parseFloat(similarityCutoff),
     degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
     write: persist,
   }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params

@@ -16,8 +16,8 @@ export default ({onChange, direction, persist, concurrency, writeProperty, weigh
 
     <Form.Field>
       <label>Weight Property</label>
-      <Input  basic="true" value={writeProperty} placeholder='Write Property'
-              onChange={evt => onChange('writeProperty', evt.target.value)}/>
+      <Input  basic="true" value={weightProperty} placeholder='Weight Property'
+              onChange={evt => onChange('weightProperty', evt.target.value)}/>
     </Form.Field>
 
     <Form.Field>

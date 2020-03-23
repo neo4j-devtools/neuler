@@ -10,7 +10,6 @@ import EuclideanForm from "./EuclideanForm";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
-WITH apoc.map.setKey($config, "data", data) AS config
 WITH $config AS config, data
 WITH config { .*, data: data} as config
 
