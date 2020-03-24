@@ -12,5 +12,5 @@
   "display": "standalone",
   "theme_color": "#000000",
   "background_color": "#ffffff",
-  "pluginDependencies": ["org.neo4j.procedure/apoc", "org.neo4j.gds/proc", "org.neo4j.gds/alpha-proc"]
+  "pluginDependencies": ["org.neo4j.procedure/apoc"]
 }
