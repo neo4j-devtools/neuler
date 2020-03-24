@@ -1,4 +1,12 @@
-# Neuler: The Graph Algorithms Playground Release Notes
+# Neuler: The Graph Data Science Playground Release Notes
+
+## 0.1.16 (2020-03-24)
+
+* Updated to use the Graph Data Science Library 
+
+## 0.1.15 (2020-03-17)
+
+* Release with new Neo4j Labs signing key
 
 ## 0.1.14 (2019-11-04)
 
