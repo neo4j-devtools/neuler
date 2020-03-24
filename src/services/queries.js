@@ -189,14 +189,16 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 
 
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
+  const relTypeKey = "relType"
+
   return relationshipType == null ? {
-      "all": {
+      [relTypeKey]: {
         type: "*",
         orientation: direction == null ? "NATURAL" : direction.toUpperCase()
       }
     }
     :  {
-    [relationshipType]: {
+    [relTypeKey]: {
       type: relationshipType,
       orientation: direction == null ? "NATURAL" : direction.toUpperCase(),
       properties: !weightProperty ? {} : {
