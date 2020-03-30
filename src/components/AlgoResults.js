@@ -28,6 +28,7 @@ const VisView = ({ task, active }) => (
   <div style={tabContentStyle}>
     <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
                      algorithm={task.algorithm}
+                     limit={task.parameters.limit}
                      relationshipType={task.parameters.relationshipType}
                      writeProperty={(task.parameters.config || {}).writeProperty}/>
   </div>

@@ -14,7 +14,8 @@ export default class extends Component {
     nodeSize: null,
     nodeColour: null,
     relationshipThickness: "weight",
-    cypher: null
+    cypher: null,
+    limit: 50
   }
 
   constructor(props) {
@@ -38,7 +39,8 @@ export default class extends Component {
       },
       initial_cypher: `match (n:Person)
       where exists(n.pagerank)
-      return n`
+      return n
+      LIMIT 50`
     }
   }
 
@@ -94,22 +96,24 @@ export default class extends Component {
     }
   }
 
-  generateCypher(label, relationshipType, writeProperty, hideLonelyNodes = true) {
+  generateCypher(label, relationshipType, writeProperty, limit, hideLonelyNodes = true) {
     if (hideLonelyNodes) {
       return `match path = (n${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
-return path`
+return path
+limit ${limit}`
     } else {
       return `match path = (n${label ? ':' + label : ''})
 where not(n["${writeProperty}"] is null)
 return path
 union
 match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()
-return path`
+return path
+limit ${limit}`
     }
   }
 
   dataUpdated(props) {
-    const { results, label, relationshipType, taskId, writeProperty } = props
+    const { results, label, relationshipType, taskId, limit, writeProperty } = props
 
     let captions = {}
     if (results && results.length > 0) {
@@ -138,7 +142,7 @@ return path`
       }, {})
 
       this.setState({
-        cypher: this.generateCypher(label, relationshipType, writeProperty), //, props.algorithm === 'Louvain'),
+        cypher: this.generateCypher(label, relationshipType, writeProperty, limit), //, props.algorithm === 'Louvain'),
         labels: labelProperties,
         captions,
         taskId
