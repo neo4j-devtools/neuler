@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.17 (2020-03-30)
+
+* Limit the number of paths rendered in graph visualisation to `limit`
+
 ## 0.1.16 (2020-03-24)
 
 * Updated to use the Graph Data Science Library 
