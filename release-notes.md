@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.18 (2020-05-12)
+
+* Fix bug with return values of Louvain streaming algorithm
+
 ## 0.1.17 (2020-03-30)
 
 * Limit the number of paths rendered in graph visualisation to `limit`
