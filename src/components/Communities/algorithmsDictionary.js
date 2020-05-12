@@ -55,7 +55,7 @@ export default {
                 concurrency: 8
             },
             streamQuery: `CALL gds.louvain.stream($config)
-YIELD nodeId, communityId AS community, communityIds AS communities
+YIELD nodeId, communityId AS community, intermediateCommunityIds AS communities
 WITH gds.util.asNode(nodeId) AS node, community, communities
 RETURN node, community, communities
 ORDER BY community
