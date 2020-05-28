@@ -4,21 +4,21 @@ export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
-LIMIT $limit
+LIMIT toInteger($limit)
 `
 
 export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, community
 RETURN node, community
 ORDER BY community DESC
-LIMIT $limit
+LIMIT toInteger($limit)
 `
 
 export const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
 RETURN node, node[$config.writeProperty] AS score
 ORDER BY score DESC
-LIMIT $limit`
+LIMIT toInteger($limit)`
 
 export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
@@ -26,18 +26,18 @@ WITH node, node[$config.writeProperty] AS community
 RETURN node, 
        CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
        CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
-LIMIT $limit`
+LIMIT toInteger($limit)`
 
 export const getCommunityFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)
 RETURN node, node[$config.writeProperty] AS community
-LIMIT $limit`
+LIMIT toInteger($limit)`
 
 export const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
 RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCoefficientProperty] AS coefficient
 ORDER BY triangles DESC
-LIMIT $limit`
+LIMIT toInteger($limit)`
 
 
 export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {

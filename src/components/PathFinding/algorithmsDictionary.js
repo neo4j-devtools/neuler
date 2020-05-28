@@ -105,7 +105,7 @@ WITH config { .*, startNode: start} as config
 CALL gds.alpha.shortestPath.deltaStepping.stream(config)
 YIELD nodeId, distance AS cost
 RETURN gds.util.asNode(nodeId) AS node, cost
-LIMIT $limit`,
+LIMIT toInteger($limit)`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The Single Source Shortest Path (SSSP) algorithm calculates the shortest (weighted) path from a node to all other nodes in the graph..`
@@ -127,7 +127,7 @@ LIMIT $limit`,
             streamQuery: `CALL gds.alpha.allShortestPaths.stream($config)
 YIELD sourceNodeId, targetNodeId, distance AS cost
 RETURN gds.util.asNode(sourceNodeId) AS source, gds.util.asNode(targetNodeId) AS target, cost
-LIMIT $limit`,
+LIMIT toInteger($limit)`,
             storeQuery: ``,
             getFetchQuery: () => "",
             description: `The All Pairs Shortest Path (APSP) calculates the shortest (weighted) path between all pairs of nodes.`
