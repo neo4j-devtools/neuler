@@ -100,7 +100,7 @@ export default class extends Component {
     if (hideLonelyNodes) {
       return `match path = (n${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
 return path
-limit ${limit}`
+limit toInteger(${limit})`
     } else {
       return `match path = (n${label ? ':' + label : ''})
 where not(n["${writeProperty}"] is null)
@@ -108,7 +108,7 @@ return path
 union
 match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()
 return path
-limit ${limit}`
+limit toInteger(${limit})`
     }
   }
 
