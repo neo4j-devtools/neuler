@@ -18,7 +18,7 @@ ${callAlgorithm}
 YIELD item1, item2, similarity
 RETURN gds.util.asNode(item1) AS from, gds.util.asNode(item2) AS to, similarity
 ORDER BY similarity DESC
-LIMIT $limit`
+LIMIT toInteger($limit)`
 
 const constructStoreQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
   `${constructMapsFn(item, relationshipType, category)}
@@ -39,7 +39,7 @@ const constructFetchQuery = (item, writeRelationshipType) => {
 WHERE not (rel[$config.writeProperty] is null)
 RETURN from, to, rel[$config.writeProperty] AS similarity
 ORDER BY similarity DESC
-LIMIT $limit`
+LIMIT toInteger($limit)`
 }
 
 
@@ -70,7 +70,7 @@ export default {
       streamQuery: (item, relationshipType, category) => `CALL gds.nodeSimilarity.stream($config) YIELD node1, node2, similarity
 RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
 ORDER BY similarity DESC
-LIMIT $limit`,
+LIMIT toInteger($limit)`,
       storeQuery: (item, relationshipType, category) => `CALL gds.nodeSimilarity.write($config)`,
       getFetchQuery: constructFetchQuery,
       description: `measures similarities between sets. It is defined as the size of the intersection divided by the size of the union of two sets.`

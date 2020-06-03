@@ -138,7 +138,7 @@ const getFetchBalancedTriadsCypher = label => `MATCH (node${label ? ':' + label 
 WHERE not(node[$balancedProperty] is null) AND not(node[$unbalancedProperty] is null)
 RETURN node, node[$balancedProperty] AS balanced, node[$unbalancedProperty] AS unbalanced
 ORDER BY balanced DESC
-LIMIT $limit`
+LIMIT toInteger($limit)`
 
 const balancedTriadsStreamCypher = `
   CALL algo.balancedTriads.stream($label, $relationshipType, {
@@ -149,7 +149,7 @@ const balancedTriadsStreamCypher = `
   WITH algo.getNodeById(nodeId) AS node, balanced, unbalanced
   RETURN node, balanced, unbalanced
   ORDER BY balanced DESC
-  LIMIT $limit`
+  LIMIT toInteger($limit)`
 
 const balancedTriadsStoreCypher = `
   CALL algo.balancedTriads($label, $relationshipType, {

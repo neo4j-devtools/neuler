@@ -59,7 +59,7 @@ YIELD nodeId, communityId AS community, intermediateCommunityIds AS communities
 WITH gds.util.asNode(nodeId) AS node, community, communities
 RETURN node, community, communities
 ORDER BY community
-LIMIT $limit`,
+LIMIT toInteger($limit)`,
             storeQuery: `CALL gds.louvain.write($config)`,
             getFetchQuery: getFetchLouvainCypher,
             description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
@@ -119,7 +119,7 @@ LIMIT $limit`,
             streamQuery: `CALL gds.alpha.triangle.stream($config)
 YIELD nodeA, nodeB, nodeC
 RETURN gds.util.asNode(nodeA) AS nodeA, gds.util.asNode(nodeB) AS nodeB, gds.util.asNode(nodeC) AS nodeC
-LIMIT $limit`,
+LIMIT toInteger($limit)`,
             storeQuery: ``,
             getFetchQuery: () => ``,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
@@ -141,7 +141,7 @@ YIELD nodeId, triangles, coefficient
 WITH gds.util.asNode(nodeId) AS node, coefficient, triangles
 RETURN node, triangles, coefficient
 ORDER BY triangles DESC
-LIMIT $limit`,
+LIMIT toInteger($limit)`,
             storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
             getFetchQuery: getFetchTriangleCountCypher,
             description: "finds set of three nodes, where each node has a relationship to all other nodes"
