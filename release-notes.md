@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.19 (2020-06-04)
+
+* Fix bug with LIMIT on streaming algorithms
+
 ## 0.1.18 (2020-05-12)
 
 * Fix bug with return values of Louvain streaming algorithm
