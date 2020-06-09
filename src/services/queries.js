@@ -1,4 +1,4 @@
-import { v1 as neo } from "neo4j-driver"
+import {v1 as neo} from "neo4j-driver"
 
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, score
@@ -23,31 +23,39 @@ ORDER BY score DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null)
-WITH node, node[$config.writeProperty] AS community
+export const getFetchLouvainCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}\`)
+WITH node, node.\`${config.writeProperty}\` AS community
 RETURN node, 
        CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
        CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
 LIMIT toInteger($limit)`
+}
 
-export const getCommunityFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS community
+export const getCommunityFetchCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}\`)
+RETURN node, node.\`${config.writeProperty}\` AS community
 LIMIT toInteger($limit)`
+}
 
-export const getFetchTriangleCountCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null) AND not(node[$config.clusteringCoefficientProperty] is null)
-RETURN node, node[$config.writeProperty] AS triangles, node[$config.clusteringCoefficientProperty] AS coefficient
+export const getFetchTriangleCountCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}\`) AND exists(node.\`${config.clusteringCoefficientProperty}\`)
+RETURN node, node.\`${config.writeProperty}\` AS triangles, node.\`${config.clusteringCoefficientProperty}\` AS coefficient
 ORDER BY triangles DESC
 LIMIT toInteger($limit)`
+}
 
 
 export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
-    config: {
-    }
+    config: {}
   }
 
   params.startNodeId = parseInt(startNodeId)
@@ -70,7 +78,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
     delta: delta
   }
 
-  if(persist) {
+  if (persist) {
     config.writeProperty = parsedWriteProperty
   }
 
@@ -94,7 +102,7 @@ export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, di
 
   }
 
-  if(persist) {
+  if (persist) {
     config.writeProperty = writeProperty || null
     config.writeRelationshipType = writeRelationshipType || null
   }
@@ -114,8 +122,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     relationshipType: relationshipType || null,
     categoryLabel: categoryLabel || null,
     weightProperty: weightProperty || null,
-    config: {
-    }
+    config: {}
   }
 
   const config = {
@@ -149,7 +156,7 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
     seedProperty: seedProperty || ""
   }
 
-  if(persist) {
+  if (persist) {
     config.writeProperty = parsedWriteProperty
   }
 
@@ -179,7 +186,7 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
     normalization: normalization || null
   }
 
-  if(persist) {
+  if (persist) {
     config.writeProperty = parsedWriteProperty
   }
 
@@ -200,15 +207,15 @@ export const createRelationshipProjection = (relationshipType, direction, weight
         orientation: direction == null ? "NATURAL" : direction.toUpperCase()
       }
     }
-    :  {
-    [relTypeKey]: {
-      type: relationshipType,
-      orientation: direction == null ? "NATURAL" : direction.toUpperCase(),
-      properties: !weightProperty ? {} : {
-        [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
+    : {
+      [relTypeKey]: {
+        type: relationshipType,
+        orientation: direction == null ? "NATURAL" : direction.toUpperCase(),
+        properties: !weightProperty ? {} : {
+          [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
+        }
       }
     }
-  }
 }
 
 export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
