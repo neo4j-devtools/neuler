@@ -14,11 +14,14 @@ ORDER BY community DESC
 LIMIT toInteger($limit)
 `
 
-export const getFetchCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$config.writeProperty] is null)
-RETURN node, node[$config.writeProperty] AS score
+export const getFetchCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}\`)
+RETURN node, node.\`${config.writeProperty}\` AS score
 ORDER BY score DESC
 LIMIT toInteger($limit)`
+}
 
 export const getFetchLouvainCypher = label => `MATCH (node${label ? ':' + label : ''})
 WHERE not(node[$config.writeProperty] is null)

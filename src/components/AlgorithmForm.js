@@ -92,7 +92,7 @@ class Algorithms extends Component {
         ...this.state.parameters,
         requiredProperties: Object.keys(this.state.parameters)
       })
-      const fetchCypher = getFetchQuery(parameters.label)
+      const fetchCypher = getFetchQuery(parameters.label, parameters.config)
       const persisted = this.state.parameters.persist
 
 

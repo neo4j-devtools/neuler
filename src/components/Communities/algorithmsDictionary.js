@@ -105,7 +105,7 @@ LIMIT toInteger($limit)`,
             service: runAlgorithm,
             ResultView: CommunityResult,
             parameters: {persist: true, writeProperty: "scc", concurrency: 8, defaultValue: 1.0, direction: 'Undirected',},
-            streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, partition AS community`),
+            streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, componentId AS community`),
             storeQuery: `CALL gds.alpha.scc.write($config)`,
             getFetchQuery: getCommunityFetchCypher,
             description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"

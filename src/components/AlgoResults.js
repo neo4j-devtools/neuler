@@ -214,7 +214,7 @@ class TabExampleVerticalTabular extends Component {
     let algorithmDefinition = getAlgorithmDefinitions(group, algorithm);
     const { service, getFetchQuery } = algorithmDefinition
 
-    let fetchCypher = getFetchQuery(parameters.label)
+    let fetchCypher = getFetchQuery(parameters.label, parameters.config)
 
     let streamQuery = algorithmDefinition.streamQuery
     let storeQuery = algorithmDefinition.storeQuery

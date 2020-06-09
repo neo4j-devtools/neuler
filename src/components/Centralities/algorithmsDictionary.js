@@ -1,5 +1,5 @@
 import PageRankForm from './PageRankForm'
-import {runAlgorithm, executeAlgorithm} from "../../services/centralities"
+import {runAlgorithm} from "../../services/centralities"
 import { centralityParams, getFetchCypher, streamQueryOutline } from '../../services/queries'
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
