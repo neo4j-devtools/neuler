@@ -11,6 +11,7 @@ import {limit} from "../ducks/settings"
 import {loadMetadata} from "../services/metadata"
 import {setLabels, setRelationshipTypes} from "../ducks/metadata"
 import Home from "./Home";
+import About from "./About";
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -35,6 +36,8 @@ class NEuler extends Component {
 
   selectComponent(activeGroup) {
     switch (activeGroup) {
+      case "About":
+        return {header: "About", view: <About /> }
       case "Sample Graphs":
         return {header: "Sample Graphs", view: <Datasets onComplete={this.onComplete.bind(this)}/> }
       case  "Home":

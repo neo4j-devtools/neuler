@@ -15,11 +15,18 @@ ORDER BY relationshipType`, {})
     .catch(handleException)
 }
 
+export const loadGdsVersion = () => {
+  return runCypher(`RETURN gds.version() AS version`, {})
+    .then(parseGdsVersionResultStream)
+    .catch(handleException)
+}
+
 export const loadMetadata = () => loadLabels().then(labels => {
-  return loadRelationshipTypes().then(relationships => ({
-    labels,
-    relationships
-  }))
+  return loadRelationshipTypes().then(relationships => {
+    return loadGdsVersion().then(gdsVersion => ({
+      labels, relationships, gdsVersion
+    }))
+  })
 })
 
 const parseLabelsResultStream = result => {
@@ -42,6 +49,15 @@ const parseRelTypesResultStream = result => {
         label: record.get("relationshipType")
       }
     })
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
+
+const parseGdsVersionResultStream = result => {
+  if (result.records) {
+    return result.records[0].get("version")
   } else {
     console.error(result.error)
     throw new Error(result.error)

@@ -56,9 +56,10 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
                        style={menuItemStyle}>
                 <Image size='mini' src='images/datasetin.png' />
             </Menu.Item>
-           {/* <Menu.Item>
-                {children}
-            </Menu.Item>*/}
+            <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => selectGroup('About')}
+                       style={menuItemStyle}>
+                <Image size='mini' src='images/neo4j_logo_globe1.png' />
+            </Menu.Item>
         </div>
     </Menu>
 
