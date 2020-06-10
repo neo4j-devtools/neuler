@@ -214,7 +214,7 @@ class TabExampleVerticalTabular extends Component {
     let algorithmDefinition = getAlgorithmDefinitions(group, algorithm);
     const { service, getFetchQuery } = algorithmDefinition
 
-    let fetchCypher = getFetchQuery(parameters.label, parameters.config)
+    let fetchCypher
 
     let streamQuery = algorithmDefinition.streamQuery
     let storeQuery = algorithmDefinition.storeQuery
@@ -223,13 +223,14 @@ class TabExampleVerticalTabular extends Component {
       const { itemLabel, relationshipType, categoryLabel } = parameters
       streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel)
       storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel)
-      fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType)
 
+      fetchCypher = getFetchQuery(parameters.config.nodeProjection, parameters.config.writeRelationshipType, parameters.config)
       delete parameters.itemLabel
       delete parameters.relationshipType
       delete parameters.categoryLabel
+    } else {
+      fetchCypher = getFetchQuery(parameters.label, parameters.config)
     }
-
     service({
       streamCypher: streamQuery,
       storeCypher: storeQuery,

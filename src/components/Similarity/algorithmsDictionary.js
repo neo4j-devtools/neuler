@@ -30,14 +30,14 @@ ${callAlgorithm}
 YIELD nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, mean, stdDev, p25, p50, p75, p90, p95, p99, p999, p100
 RETURN nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, mean, p95`
 
-const constructFetchQuery = (item, writeRelationshipType) => {
-  const itemNode1 = item ?  `(from:\`${item}\`)` : `(from)`
-  const itemNode2 = item ?  `(to:\`${item}\`)` : `(to)`
+const constructFetchQuery = (item, writeRelationshipType, config) => {
+  const itemNode1 = item ?  `(from:\`${config.nodeProjection}\`)` : `(from)`
+  const itemNode2 = item ?  `(to:\`${config.nodeProjection}\`)` : `(to)`
   const rel =  `[rel:\`${writeRelationshipType}\`]`
 
   return `MATCH ${itemNode1}-${rel}-${itemNode2}
-WHERE not (rel[$config.writeProperty] is null)
-RETURN from, to, rel[$config.writeProperty] AS similarity
+WHERE exists(rel.\`${config.writeProperty}\`)
+RETURN from, to, rel.\`${config.writeProperty}\` AS similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`
 }
