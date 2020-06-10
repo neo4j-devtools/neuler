@@ -1,21 +1,5 @@
-import {
-    Button,
-    Card,
-    CardGroup,
-    Icon,
-    Container,
-    Header,
-    Modal,
-    Loader,
-    Segment,
-    Dimmer,
-    Message
-} from "semantic-ui-react"
+import {Container, Message} from "semantic-ui-react"
 import React, {Component} from 'react'
-import {runCypher} from "../services/stores/neoStore"
-import {getCurrentAlgorithm} from "../ducks/algorithms";
-import {limit} from "../ducks/settings";
-import {addTask} from "../ducks/tasks";
 import {connect} from "react-redux";
 
 

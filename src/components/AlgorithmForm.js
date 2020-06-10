@@ -20,7 +20,7 @@ class Algorithms extends Component {
     parameters: {},
     labelOptions: [{ key: null, value: null, text: 'Any' }],
     relationshipTypeOptions: [{ key: "*", value: "*", text: 'Any' }],
-    relationshipOrientationOptions: [{ key: "Natural", value: "Natural", text: 'Natural' }]
+    relationshipOrientationOptions: [{ key: "Natural", value: "Natural", text: 'Natural' }],
   }
 
   static contextTypes = {
@@ -29,15 +29,18 @@ class Algorithms extends Component {
 
   componentDidMount() {
     const { activeGroup, activeAlgorithm, metadata } = this.props
-    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+    console.log("gds version:", metadata.versions.gdsVersion)
+
+    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
     this.setState({ parameters })
     this.loadMetadata(metadata)
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     if (this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
-      const { activeGroup, activeAlgorithm } = nextProps
-      const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm)
+      const { activeGroup, activeAlgorithm, metadata } = nextProps
+      console.log("gds version:", metadata.versions.gdsVersion)
+      const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
       this.setState({ parameters })
     }
 

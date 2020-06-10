@@ -10,6 +10,8 @@ import {v1 as neo} from "neo4j-driver";
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
 
 
+const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
+
 const stringfyParam = value => {
   if (!value) {
     return 'null'
@@ -124,7 +126,7 @@ export default class extends Component {
                 return <Segment>
                   <pre>{query && query.replace('\n  ', '\n')}</pre>
                   <Popup
-                    trigger={<Clipboard data-clipboard-text={query && query.replace('\n  ', '\n') }>
+                    trigger={<Clipboard data-clipboard-text={query && removeSpacing(query.replace('\n  ', '\n')) }>
                       Copy to clipboard
                     </Clipboard>}
                     content='Copied to clipboard'

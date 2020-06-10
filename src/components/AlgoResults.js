@@ -17,8 +17,8 @@ const tabContentStyle = {
   overflowX: 'hidden'
 }
 
-const TableView = ({ task }) => {
-  const { ResultView } = getAlgorithmDefinitions(task.group, task.algorithm)
+const TableView = ({ task, gdsVersion }) => {
+  const { ResultView } = getAlgorithmDefinitions(task.group, task.algorithm, gdsVersion)
   return <div style={tabContentStyle}>
     <ResultView task={task}/>
   </div>
@@ -160,7 +160,7 @@ class HorizontalAlgoTab extends Component {
             <div ref={this.panelRef}>
               <Segment attached='bottom'>
                 <div style={getStyle('Table')}>
-                  <TableView task={task}/>
+                  <TableView task={task} gdsVersion={this.props.gdsVersion}/>
                 </div>
 
                 <div style={getStyle('Code')}>
@@ -211,7 +211,7 @@ class TabExampleVerticalTabular extends Component {
 
   onRunAlgo(task) {
     const { taskId, group, algorithm, parameters, persisted } = task
-    let algorithmDefinition = getAlgorithmDefinitions(group, algorithm);
+    const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, this.props.metadata.versions.gdsVersion);
     const { service, getFetchQuery } = algorithmDefinition
 
     let fetchCypher
@@ -264,6 +264,7 @@ class TabExampleVerticalTabular extends Component {
         nextResult={this.nextResult.bind(this)}
         currentPage={page + 1}
         totalPages={tasks.length}
+        gdsVersion={this.props.metadata.versions.gdsVersion}
       />
     } else {
       return null
@@ -273,7 +274,8 @@ class TabExampleVerticalTabular extends Component {
 
 const mapStateToProps = state => ({
   tasks: state.tasks,
-  limit: state.settings.limit
+  limit: state.settings.limit,
+  metadata: state.metadata,
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({

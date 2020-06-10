@@ -52,7 +52,7 @@ export const triangles = ({streamCypher, parameters}) => {
   })
 }
 
-export const triangleCount = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+export const triangleCountOld = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
   return runAlgorithm({
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
@@ -64,6 +64,27 @@ export const triangleCount = ({streamCypher, storeCypher, fetchCypher, parameter
             labels: labels,
             triangles: record.get('triangles').toNumber(),
             coefficient: record.get('coefficient'),
+          }
+        })
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
+    }
+  })
+}
+
+export const triangleCountNew = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+  return runAlgorithm({
+    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
+      if (result.records) {
+        return result.records.map(record => {
+          const {properties, labels} = record.get('node')
+
+          return {
+            properties: parseProperties(properties),
+            labels: labels,
+            triangles: record.get('triangles').toNumber()
           }
         })
       } else {
