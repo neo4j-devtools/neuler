@@ -27,6 +27,7 @@ import {
   getFetchTriangleCountCypher
 } from "../../services/queries";
 import NewTriangleCountResult from "./NewTriangleCountResult";
+import NewTriangleCountForm from "./NewTriangleCountForm";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
@@ -126,12 +127,12 @@ const baseTriangles = {
 }
 
 const baseTriangleCount = {
-  Form: TriangleCountForm,
   parametersBuilder: communityParams,
   description: "finds set of three nodes, where each node has a relationship to all other nodes"
 }
 
 const oldTriangleCount = {
+  Form: TriangleCountForm,
   service: triangleCountOld,
   ResultView: TriangleCountResult,
   streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
@@ -152,6 +153,7 @@ const oldTriangleCount = {
 }
 
 const newTriangleCount = {
+  Form: NewTriangleCountForm,
   service: triangleCountNew,
   ResultView: NewTriangleCountResult,
   streamQuery: removeSpacing(`CALL gds.triangleCount.stream($config)
