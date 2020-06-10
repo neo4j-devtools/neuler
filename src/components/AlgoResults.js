@@ -231,6 +231,8 @@ class TabExampleVerticalTabular extends Component {
     } else {
       fetchCypher = getFetchQuery(parameters.label, parameters.config)
     }
+
+
     service({
       streamCypher: streamQuery,
       storeCypher: storeQuery,

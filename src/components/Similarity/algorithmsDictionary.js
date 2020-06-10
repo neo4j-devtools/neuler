@@ -31,8 +31,8 @@ YIELD nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, me
 RETURN nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, mean, p95`
 
 const constructFetchQuery = (item, writeRelationshipType, config) => {
-  const itemNode1 = item ?  `(from:\`${config.nodeProjection}\`)` : `(from)`
-  const itemNode2 = item ?  `(to:\`${config.nodeProjection}\`)` : `(to)`
+  const itemNode1 = item && item !== "*" ?  `(from:\`${config.nodeProjection}\`)` : `(from)`
+  const itemNode2 = item && item !== "*" ?  `(to:\`${config.nodeProjection}\`)` : `(to)`
   const rel =  `[rel:\`${writeRelationshipType}\`]`
 
   return `MATCH ${itemNode1}-${rel}-${itemNode2}

@@ -84,7 +84,7 @@ class Algorithms extends Component {
   onRunAlgo() {
     const taskId = generateTaskId()
 
-    const { service, parametersBuilder, storeQuery, streamQuery, getFetchQuery } = this.props.currentAlgorithm
+    const { service, parametersBuilder } = this.props.currentAlgorithm
     const { activeGroup, activeAlgorithm } = this.props
 
     if (service) {
