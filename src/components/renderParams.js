@@ -37,14 +37,17 @@ class RenderParams extends React.Component {
           <pre key={key}>:param {key} => ({this.extractValue(parameters, key)});
       </pre>
       )}
-      <Popup
-        trigger={<Clipboard option-text={this.getText.bind(this)}>
-          Copy to clipboard
-        </Clipboard>}
-        content='Copied to clipboard'
-        on='click'
-        position='center right'
-      />
+
+      <Clipboard onSuccess={(event) => {
+        event.trigger.textContent = "Copied";
+        setTimeout(function () {
+          event.trigger.textContent = 'Copy';
+        }, 2000);
+      }}
+                 button-class="code"
+                 option-text={this.getText.bind(this)}>
+        Copy
+      </Clipboard>
 
 
     </React.Fragment>

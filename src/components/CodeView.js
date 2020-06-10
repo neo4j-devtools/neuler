@@ -114,25 +114,24 @@ export default class extends Component {
             : null
         }
 
-
         {task.query ?
-
-
           <div>
             <p>And by running the following {task.query.length > 1 ? 'queries' : 'query'}:</p>
 
             {
               task.query.map(query => {
                 return <Segment>
-                  <pre>{query && query.replace('\n  ', '\n')}</pre>
-                  <Popup
-                    trigger={<Clipboard data-clipboard-text={query && removeSpacing(query.replace('\n  ', '\n')) }>
-                      Copy to clipboard
-                    </Clipboard>}
-                    content='Copied to clipboard'
-                    on='click'
-                    position='center right'
-                  />
+                  <pre>{query && removeSpacing(query.replace('\n  ', '\n'))}</pre>
+                  <Clipboard onSuccess={(event) => {
+                    event.trigger.textContent = "Copied";
+                    setTimeout(function () {
+                      event.trigger.textContent = 'Copy';
+                    }, 2000);
+                  }}
+                             button-class="code"
+                             data-clipboard-text={query && removeSpacing(query.replace('\n  ', '\n'))}>
+                    Copy
+                  </Clipboard>
                 </Segment>
               })
             }
@@ -149,14 +148,18 @@ export default class extends Component {
                   into the Neo4j Browser:
                 </p>
                 <pre>{taskGuide}</pre>
-                <Popup
-                  trigger={<Clipboard data-clipboard-text={taskGuide }>
-                    Copy to clipboard
-                  </Clipboard>}
-                  content='Copied to clipboard'
-                  on='click'
-                  position='center right'
-                />
+            
+                <Clipboard onSuccess={(event) => {
+                  event.trigger.textContent = "Copied";
+                  setTimeout(function () {
+                    event.trigger.textContent = 'Copy';
+                  }, 2000);
+                }}
+                           button-class="code"
+                           data-clipboard-text={taskGuide }>
+                  Copy
+                </Clipboard>
+
               </Message> : null}
             </Segment>
           </div>
