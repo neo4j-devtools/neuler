@@ -1,6 +1,6 @@
 import React from "react"
 import {constructSimilarityMaps, constructWeightedSimilarityMaps, runAlgorithm,} from "../../services/similarity"
-import {getFetchLouvainCypher, nodeSimilarityParams, similarityParams} from "../../services/queries";
+import {nodeSimilarityParams, similarityParams} from "../../services/queries";
 import JaccardForm from "./JaccardForm";
 import SimilarityResult from "./SimilarityResult";
 import CosineForm from "./CosineForm";
@@ -27,8 +27,8 @@ WITH config { .*, data: data} as config
 
 ${callAlgorithm}
 
-YIELD nodes, similarityPairs, write, writeRelationshipType, writeProperty, min, max, mean, stdDev, p25, p50, p75, p90, p95, p99, p999, p100
-RETURN nodes, similarityPairs, write, writeRelationshipType, writeProperty, min, max, mean, p95`
+YIELD nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, mean, stdDev, p25, p50, p75, p90, p95, p99, p999, p100
+RETURN nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, mean, p95`
 
 const constructFetchQuery = (item, writeRelationshipType) => {
   const itemNode1 = item ?  `(from:\`${item}\`)` : `(from)`

@@ -132,9 +132,8 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: parseFloat(similarityCutoff),
     degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
-    write: persist,
   }
-
+  
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
