@@ -33,18 +33,6 @@ export default ({relationshipType, onChange, direction, persist, writeProperty, 
           : null
       }
     </Form.Group>
-    <Form.Field inline>
-      <label style={{ 'width': '8em' }}>Concurrency</label>
-      <input
-        type='number'
-        placeholder="Concurrency"
-        min={1}
-        max={1000}
-        step={1}
-        value={concurrency}
-        onChange={evt => onChange('concurrency', evt.target.value)}
-        style={{ 'width': '10em' }}
-      />
-    </Form.Field>
+
   </React.Fragment>
 )

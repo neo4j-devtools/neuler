@@ -55,19 +55,7 @@ export default class extends Component {
             </Form.Field>
             : null
         }
-        <Form.Field inline>
-          <label style={{'width': '10em'}}>Concurrency</label>
-          <input
-            type='number'
-            placeholder="Concurrency"
-            min={1}
-            max={1000}
-            step={1}
-            value={concurrency}
-            onChange={evt => onChange('concurrency', evt.target.value)}
-            style={{'width': '10em'}}
-          />
-        </Form.Field>
+
         <Form.Field inline>
 
           <label style={{ 'width': '10em' }}>Similarity Cutoff</label>

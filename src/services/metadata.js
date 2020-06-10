@@ -16,10 +16,10 @@ ORDER BY relationshipType`, {})
 }
 
 export const loadGdsVersion = () => {
-  return runCypher(`call dbms.components() 
-yield versions
-unwind versions as version 
-return version AS neo4jVersion, gds.version() AS gdsVersion
+  return runCypher(`CALL dbms.components() 
+YIELD versions
+UNWIND versions as version 
+RETURN version AS neo4jVersion, gds.version() AS gdsVersion
 LIMIT 1`, {})
     .then(parseGdsVersionResultStream)
     .catch(handleException)
