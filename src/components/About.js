@@ -30,15 +30,16 @@ class About extends Component {
 
         return (<div style={containerStyle}>
                 <Container fluid>
+                    <h3>You are running</h3>
                     <Message>
-                        <h3>You are running</h3>
+
 
                         <p>
-                            Neo4j Server version:
+                            Neo4j Server version: <strong>{this.props.metadata.versions.neo4jVersion}</strong>
                         </p>
 
                         <p>
-                            Graph Data Science Library version: <strong>{this.props.metadata.gdsVersion}</strong>
+                            Graph Data Science Library version: <strong>{this.props.metadata.versions.gdsVersion}</strong>
                         </p>
                     </Message>
 

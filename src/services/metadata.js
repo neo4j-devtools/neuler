@@ -16,15 +16,19 @@ ORDER BY relationshipType`, {})
 }
 
 export const loadGdsVersion = () => {
-  return runCypher(`RETURN gds.version() AS version`, {})
+  return runCypher(`call dbms.components() 
+yield versions
+unwind versions as version 
+return version AS neo4jVersion, gds.version() AS gdsVersion
+LIMIT 1`, {})
     .then(parseGdsVersionResultStream)
     .catch(handleException)
 }
 
 export const loadMetadata = () => loadLabels().then(labels => {
   return loadRelationshipTypes().then(relationships => {
-    return loadGdsVersion().then(gdsVersion => ({
-      labels, relationships, gdsVersion
+    return loadGdsVersion().then(versions => ({
+      labels, relationships, versions
     }))
   })
 })
@@ -57,7 +61,8 @@ const parseRelTypesResultStream = result => {
 
 const parseGdsVersionResultStream = result => {
   if (result.records) {
-    return result.records[0].get("version")
+    let row = result.records[0];
+    return {gdsVersion: row.get("gdsVersion"), neo4jVersion: row.get("neo4jVersion") }
   } else {
     console.error(result.error)
     throw new Error(result.error)

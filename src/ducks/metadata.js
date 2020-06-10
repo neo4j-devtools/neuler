@@ -3,7 +3,7 @@ const NAME = 'METADATA'
 export const SET_METADATA = `${NAME}/SET_METADATA`
 export const SET_LABELS = `${NAME}/SET_LABELS`
 export const SET_RELATIONSHIPTYPES = `${NAME}/SET_RELATIONSHIPTYPES`
-export const SET_GDS_VERSION = `${NAME}/SET_GDS_VERSION`
+export const SET_VERSIONS = `${NAME}/SET_VERSIONS`
 
 export const setMetadata = (labels, relationshipTypes) => ({
   type: SET_METADATA,
@@ -21,8 +21,8 @@ export const setRelationshipTypes = relationshipTypes => ({
   relationshipTypes
 })
 
-export const setGds = version => ({
-  type: SET_GDS_VERSION,
+export const setVersions = version => ({
+  type: SET_VERSIONS,
   version
 })
 
@@ -48,10 +48,10 @@ export default (state = initialState, action) => {
         ...state,
         relationshipTypes: action.relationshipTypes
       }
-    case SET_GDS_VERSION:
+    case SET_VERSIONS:
       return {
         ...state,
-        gdsVersion: action.version
+        versions: action.version
       }
     default:
       return state
