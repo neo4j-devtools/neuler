@@ -3,6 +3,7 @@ const NAME = 'METADATA'
 export const SET_METADATA = `${NAME}/SET_METADATA`
 export const SET_LABELS = `${NAME}/SET_LABELS`
 export const SET_RELATIONSHIPTYPES = `${NAME}/SET_RELATIONSHIPTYPES`
+export const SET_PROPERTY_KEYS = `${NAME}/SET_PROPERTY_KEYS`
 export const SET_VERSIONS = `${NAME}/SET_VERSIONS`
 
 export const setMetadata = (labels, relationshipTypes) => ({
@@ -19,6 +20,11 @@ export const setLabels = labels => ({
 export const setRelationshipTypes = relationshipTypes => ({
   type: SET_RELATIONSHIPTYPES,
   relationshipTypes
+})
+
+export const setPropertyKeys = propertyKeys => ({
+  type: SET_PROPERTY_KEYS,
+  propertyKeys: propertyKeys
 })
 
 export const setVersions = version => ({
@@ -47,6 +53,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         relationshipTypes: action.relationshipTypes
+      }
+    case SET_PROPERTY_KEYS:
+      return {
+        ...state,
+        propertyKeys: action.propertyKeys
       }
     case SET_VERSIONS:
       return {

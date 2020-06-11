@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import {Form, Label, Input, Dropdown} from "semantic-ui-react"
-import CentralityForm from './CentralityForm'
+import {Dropdown, Form, Input} from "semantic-ui-react"
 
 export default class extends Component {
   state = {
@@ -8,7 +7,7 @@ export default class extends Component {
   }
 
   render() {
-    const { relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, onChange, writeProperty, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { relationshipType, labelOptions, relationshipTypeOptions, propertyKeyOptions, relationshipOrientationOptions, onChange, writeProperty, weightProperty, defaultValue, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -27,17 +26,12 @@ export default class extends Component {
           <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
         </Form.Field> : null }
 
-
         {relationshipType ?
         <Form.Field inline>
           <label style={{ 'width': '8em' }}>Weight Property</label>
-          <input
-            placeholder='Weight Property'
-            value={weightProperty}
-            onChange={evt => onChange('weightProperty', evt.target.value)}
-            style={{ 'width': '10em' }}
-          />
+          <Dropdown placeholder='Weight Property' defaultValue={weightProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("weightProperty", data.value)} />
         </Form.Field> : null }
+
         {
           weightProperty ?
             <Form.Field inline>

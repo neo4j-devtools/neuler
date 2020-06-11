@@ -15,6 +15,16 @@ ORDER BY relationshipType`, {})
     .catch(handleException)
 }
 
+export const loadPropertyKeys = () => {
+  return runCypher(`call db.propertyKeys()
+YIELD propertyKey
+RETURN propertyKey
+ORDER BY propertyKey`, {})
+    .then(parsePropertyKeysResultStream)
+    .catch(handleException)
+}
+
+
 export const loadGdsVersion = () => {
   return runCypher(`CALL dbms.components() 
 YIELD versions
@@ -27,10 +37,11 @@ LIMIT 1`, {})
 
 export const loadMetadata = () => loadLabels().then(labels => {
   return loadRelationshipTypes().then(relationships => {
+    return loadPropertyKeys().then(propertyKeys => {
     return loadGdsVersion().then(versions => ({
-      labels, relationships, versions
+      labels, relationships, propertyKeys, versions
     }))
-  })
+  })})
 })
 
 const parseLabelsResultStream = result => {
@@ -51,6 +62,19 @@ const parseRelTypesResultStream = result => {
     return result.records.map(record => {
       return {
         label: record.get("relationshipType")
+      }
+    })
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
+
+const parsePropertyKeysResultStream = result => {
+  if (result.records) {
+    return result.records.map(record => {
+      return {
+        propertyKey: record.get("propertyKey")
       }
     })
   } else {

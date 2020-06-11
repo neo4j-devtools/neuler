@@ -9,7 +9,7 @@ import Datasets from './Datasets'
 import {connect} from "react-redux"
 import {limit} from "../ducks/settings"
 import {loadMetadata} from "../services/metadata"
-import {setLabels, setRelationshipTypes} from "../ducks/metadata"
+import {setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata"
 import Home from "./Home";
 import About from "./About";
 
@@ -31,6 +31,7 @@ class NEuler extends Component {
     loadMetadata().then(metadata => {
       this.props.setLabels(metadata.labels)
       this.props.setRelationshipTypes(metadata.relationships)
+      this.props.setPropertyKeys(metadata.propertyKeys)
     })
   }
 
@@ -85,7 +86,8 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   updateLimit: value => dispatch(limit(value)),
   setLabels: labels => dispatch(setLabels(labels)),
-  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes))
+  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+  setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NEuler)

@@ -148,7 +148,7 @@ export default class extends Component {
                   into the Neo4j Browser:
                 </p>
                 <pre>{taskGuide}</pre>
-            
+
                 <Clipboard onSuccess={(event) => {
                   event.trigger.textContent = "Copied";
                   setTimeout(function () {

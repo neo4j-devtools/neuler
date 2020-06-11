@@ -11,7 +11,7 @@ import {ConnectModal} from './components/ConnectModal';
 
 import {setDriver} from "./services/stores/neoStore"
 import {loadMetadata} from "./services/metadata"
-import {setLabels, setRelationshipTypes, setVersions} from "./ducks/metadata"
+import {setLabels, setPropertyKeys, setRelationshipTypes, setVersions} from "./ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
 
@@ -40,6 +40,7 @@ class App extends Component {
     loadMetadata().then(metadata => {
       this.props.setLabels(metadata.labels)
       this.props.setRelationshipTypes(metadata.relationships)
+      this.props.setPropertyKeys(metadata.propertyKeys)
       this.props.setGds(metadata.versions)
     })
   }
@@ -96,6 +97,7 @@ const mapDispatchToProps = dispatch => ({
   selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
   setLabels: labels => dispatch(setLabels(labels)),
   setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+  setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
   setGds: version => dispatch(setVersions(version)),
   setConnected: credentials => dispatch(setConnected(credentials)),
   setDisconnected: () => dispatch(setDisconnected())

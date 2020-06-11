@@ -20,6 +20,7 @@ class Algorithms extends Component {
     parameters: {},
     labelOptions: [{ key: null, value: null, text: 'Any' }],
     relationshipTypeOptions: [{ key: "*", value: "*", text: 'Any' }],
+    propertyKeyOptions: [],
     relationshipOrientationOptions: [{ key: "Natural", value: "Natural", text: 'Natural' }],
   }
 
@@ -64,6 +65,14 @@ class Algorithms extends Component {
     relationshipTypes.unshift({ key: "*", value: "*", text: 'Any' })
     this.setState({
       relationshipTypeOptions: relationshipTypes
+    })
+
+    const propertyKeys = metadata.propertyKeys.map(row => {
+      return { key: row.propertyKey, value: row.propertyKey, text: row.propertyKey }
+    })
+
+    this.setState({
+      propertyKeyOptions: propertyKeys
     })
 
     const relationshipOrientationOptions = [
@@ -156,9 +165,10 @@ class Algorithms extends Component {
             <Card.Content extra>
               <div style={{marginBottom: '1em'}}>
                 <AlgoForm {...this.state.parameters} labelOptions={this.state.labelOptions}
-                      relationshipTypeOptions={this.state.relationshipTypeOptions}
+                          relationshipTypeOptions={this.state.relationshipTypeOptions}
                           relationshipOrientationOptions={this.state.relationshipOrientationOptions}
-                      onChange={this.onChangeParam.bind(this)}/>
+                          propertyKeyOptions={this.state.propertyKeyOptions}
+                          onChange={this.onChangeParam.bind(this)}/>
                 <Form size='mini'>
                   <Form.Field inline>
                     <label style={{ 'width': '8em' }}>Rows to show</label>
