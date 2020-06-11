@@ -31,7 +31,6 @@ export default class extends Component {
           <Form.Field inline>
             <label style={{ 'width': '8em' }}>Weight Property</label>
             <Dropdown placeholder='Weight Property' defaultValue={weightProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("weightProperty", data.value)} />
-
           </Form.Field> : null }
         {
           weightProperty ?

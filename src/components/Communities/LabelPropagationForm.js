@@ -8,7 +8,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipType, relationshipOrientationOptions, relationshipTypeOptions, writeProperty, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, relationshipType, relationshipOrientationOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, weightProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -32,12 +32,7 @@ export default class extends Component {
         {relationshipType ?
           <Form.Field inline>
             <label style={{ 'width': '8em' }}>Weight Property</label>
-            <input
-              placeholder='Weight Property'
-              value={weightProperty}
-              onChange={evt => onChange('weightProperty', evt.target.value)}
-              style={{ 'width': '10em' }}
-            />
+            <Dropdown placeholder='Weight Property' defaultValue={weightProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("weightProperty", data.value)} />
           </Form.Field> : null }
         {
           weightProperty ?
