@@ -220,11 +220,11 @@ class TabExampleVerticalTabular extends Component {
     let storeQuery = algorithmDefinition.storeQuery
 
     if (group === "Similarity") {
-      const { itemLabel, relationshipType, categoryLabel } = parameters
-      streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel)
-      storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel)
+      const { itemLabel, relationshipType, categoryLabel, weightProperty } = parameters
+      streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
+      storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
 
-      fetchCypher = getFetchQuery(parameters.config.nodeProjection, parameters.config.writeRelationshipType, parameters.config)
+      fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType, parameters.config)
       delete parameters.itemLabel
       delete parameters.relationshipType
       delete parameters.categoryLabel

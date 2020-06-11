@@ -28,7 +28,7 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
         <div style={topBarStyle}>
             <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
                        style={defaultIconStyle}>
-                <Icon size='big' name='home' color='gray'/>
+                <Icon size='big' name='home' color='grey'/>
             </Menu.Item>
             <Menu.Item title='Centralities' active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
                        style={menuItemStyle}>

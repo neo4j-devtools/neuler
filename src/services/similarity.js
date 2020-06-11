@@ -51,22 +51,24 @@ export const parseResultStream = (result) => {
 }
 
 export const constructSimilarityMaps = (item, relationshipType, category) => {
-  const itemNode = item ?  `(item:\`${item}\`)` : `(item)`
+  const itemNode = notAll(item) ?  `(item:\`${item}\`)` : `(item)`
   const rel =  relationshipType ? `[:\`${relationshipType}\`]` : ""
-  const categoryNode = category ? `(category:\`${category}\`)` : "(category)"
+  const categoryNode = notAll(category) ? `(category:\`${category}\`)` : "(category)"
 
   return `MATCH ${itemNode}-${rel}->${categoryNode}
 WITH {item:id(item), categories: collect(distinct id(category))} as userData
 WITH collect(userData) as data`
 }
 
-export const constructWeightedSimilarityMaps = (item, relationshipType, category) => {
-  const itemNode = item ?  `(item:\`${item}\`)` : `(item)`
+const notAll = value => value && value !== "*"
+
+export const constructWeightedSimilarityMaps = (item, relationshipType, category, weightProperty) => {
+  const itemNode = notAll(item) ?  `(item:\`${item}\`)` : `(item)`
   const rel =  relationshipType ? `[rel:\`${relationshipType}\`]` : "[rel]"
-  const categoryNode = category ? `(category:\`${category}\`)` : "(category)"
+  const categoryNode = notAll(category) ? `(category:\`${category}\`)` : "(category)"
 
   return `MATCH ${itemNode}, ${categoryNode}
 OPTIONAL MATCH ${itemNode}-${rel}->${categoryNode}
-WITH {item:id(item), weights: collect(coalesce(rel[$weightProperty], gds.util.NaN()))} as userData
+WITH {item:id(item), weights: collect(coalesce(rel.\`${weightProperty}\`, gds.util.NaN()))} as userData
 WITH collect(userData) as data`
 }

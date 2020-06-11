@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form, Input, Dropdown} from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions}) => (
+export default ({onChange, direction, persist, concurrency, writeProperty, propertyKeyOptions, writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions}) => (
   <React.Fragment>
     <Form.Field>
       <label>Item Label</label>

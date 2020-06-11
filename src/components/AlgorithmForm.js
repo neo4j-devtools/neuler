@@ -30,7 +30,6 @@ class Algorithms extends Component {
 
   componentDidMount() {
     const { activeGroup, activeAlgorithm, metadata } = this.props
-    console.log("gds version:", metadata.versions.gdsVersion)
 
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
     this.setState({ parameters })
@@ -40,7 +39,6 @@ class Algorithms extends Component {
   componentWillReceiveProps(nextProps, nextContext) {
     if (this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
       const { activeGroup, activeAlgorithm, metadata } = nextProps
-      console.log("gds version:", metadata.versions.gdsVersion)
       const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
       this.setState({ parameters })
     }
@@ -51,6 +49,7 @@ class Algorithms extends Component {
   }
 
   loadMetadata(metadata) {
+    console.log("loading metadata", metadata)
     const labels = metadata.labels.map(row => {
       return { key: row.label, value: row.label, text: row.label }
     })

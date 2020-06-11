@@ -8,8 +8,8 @@ import PearsonForm from "./PearsonForm";
 import OverlapForm from "./OverlapForm";
 import EuclideanForm from "./EuclideanForm";
 
-const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
-  `${constructMapsFn(item, relationshipType, category)}
+const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category, weightProperty) =>
+  `${constructMapsFn(item, relationshipType, category, weightProperty)}
 WITH $config AS config, data
 WITH config { .*, data: data} as config
 
@@ -20,8 +20,8 @@ RETURN gds.util.asNode(item1) AS from, gds.util.asNode(item2) AS to, similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`
 
-const constructStoreQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category) =>
-  `${constructMapsFn(item, relationshipType, category)}
+const constructStoreQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category, weightProperty) =>
+  `${constructMapsFn(item, relationshipType, category, weightProperty)}
 WITH $config AS config, data
 WITH config { .*, data: data} as config
 
@@ -31,8 +31,8 @@ YIELD nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, me
 RETURN nodes, similarityPairs, writeRelationshipType, writeProperty, min, max, mean, p95`
 
 const constructFetchQuery = (item, writeRelationshipType, config) => {
-  const itemNode1 = item && item !== "*" ?  `(from:\`${config.nodeProjection}\`)` : `(from)`
-  const itemNode2 = item && item !== "*" ?  `(to:\`${config.nodeProjection}\`)` : `(to)`
+  const itemNode1 = item && item !== "*" ?  `(from:\`${item}\`)` : `(from)`
+  const itemNode2 = item && item !== "*" ?  `(to:\`${item}\`)` : `(to)`
   const rel =  `[rel:\`${writeRelationshipType}\`]`
 
   return `MATCH ${itemNode1}-${rel}-${itemNode2}

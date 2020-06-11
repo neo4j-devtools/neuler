@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form, Input, Dropdown} from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions}) => (
+export default ({onChange, direction, persist, concurrency, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions, propertyKeyOptions}) => (
   <React.Fragment>
     <Form.Field>
       <label>Item Label</label>
@@ -16,8 +16,8 @@ export default ({onChange, direction, persist, concurrency, writeProperty, weigh
 
     <Form.Field>
       <label>Weight Property</label>
-      <Input  basic="true" value={weightProperty} placeholder='Weight Property'
-              onChange={evt => onChange('weightProperty', evt.target.value)}/>
+      <Dropdown placeholder='Weight Property' defaultValue={weightProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("weightProperty", data.value)} />
+
     </Form.Field>
 
     <Form.Field>
