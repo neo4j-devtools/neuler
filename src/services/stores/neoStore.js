@@ -29,6 +29,11 @@ export const runCypher = (cypher, parameters = {}) => {
   return session.run(cypher, parameters)
 }
 
+export const runCypherDefaultDatabase = (cypher, parameters = {}) => {
+  const session = getDriver().session()
+  return session.run(cypher, parameters)
+}
+
 export const runCypherNamedDatabase = (cypher, database, parameters = {}) => {
   const session = getSession(database)
   return session.run(cypher, parameters)

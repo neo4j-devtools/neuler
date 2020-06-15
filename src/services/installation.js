@@ -1,8 +1,8 @@
-import { runCypher } from "./stores/neoStore"
+import {runCypher, runCypherDefaultDatabase} from "./stores/neoStore"
 
 
 export const checkGraphAlgorithmsInstalled = () => {
-  return runCypher(findGraphAlgosProceduresCypher)
+  return runCypherDefaultDatabase(findGraphAlgosProceduresCypher)
     .then(result => (parseResultStream(result)))
     .catch(handleException)
 }

@@ -19,8 +19,12 @@ class App extends Component {
   constructor(props) {
     super(props)
 
+    this.state = {
+      errorMsg: "Could not get a connection!"
+    }
+
     const { setConnected, setDisconnected } = this.props
-    initializeConnection(setConnected, setDisconnected)
+    initializeConnection(setConnected, setDisconnected, (error) => this.setState({errorMsg: error}))
   }
 
   componentDidMount() {
@@ -37,8 +41,9 @@ class App extends Component {
   }
 
   onConnected() {
-    loadMetadata().then(metadata => {
-      console.log(metadata)
+    const {metadata} = this.props
+    const activateDatabase = metadata.activeDatabase;
+    loadMetadata(activateDatabase).then(metadata => {
       this.props.setLabels(metadata.labels)
       this.props.setRelationshipTypes(metadata.relationships)
       this.props.setPropertyKeys(metadata.propertyKeys)
@@ -64,7 +69,7 @@ class App extends Component {
         } else {
           return <ConnectModal
             key="modal"
-            errorMsg="Could not get a connection!"
+            errorMsg={this.state.errorMsg}
             onSubmit={(username, password) => {
               const credentials = { username, password }
               tryConnect(credentials)
@@ -92,7 +97,8 @@ class App extends Component {
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
   activeAlgorithm: state.algorithms.algorithm,
-  connectionInfo: state.connections
+  connectionInfo: state.connections,
+  metadata: state.metadata
 })
 
 const mapDispatchToProps = dispatch => ({

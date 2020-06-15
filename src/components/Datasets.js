@@ -1,20 +1,18 @@
 import {
-    Button,
-    Card,
-    CardGroup,
-    Icon,
-    Container,
-    Header,
-    Modal,
-    Loader,
-    Segment,
-    Dimmer,
-    Message
+  Button,
+  Card,
+  CardGroup,
+  Container,
+  Dimmer,
+  Header,
+  Icon,
+  Loader,
+  Message,
+  Modal,
+  Segment
 } from "semantic-ui-react"
 import React, {Component} from 'react'
-import {runCypher, runCypherNamedDatabase} from "../services/stores/neoStore"
-import {selectGroup} from "../ducks/algorithms";
-import {setActiveDatabase} from "../ducks/metadata";
+import {runCypherNamedDatabase} from "../services/stores/neoStore"
 import {connect} from "react-redux";
 
 
@@ -60,6 +58,7 @@ class Datasets extends Component {
               completed.push(selectedDataset)
               this.setState({
                   currentQueryIndex: -1,
+
                   completed: completed
               })
 
@@ -216,11 +215,11 @@ SET eroad.distance = toInteger(row.distance), eroad.watercrossing = row.watercro
 YIELD value
 MERGE (u:User {id: value.user.id })
 SET u += value.user
-FOREACH (following IN value.following |  
-  MERGE (f1:User {id: following})  
+FOREACH (following IN value.following |
+  MERGE (f1:User {id: following})
   MERGE (u)-[:FOLLOWS]->(f1))
-FOREACH (follower IN value.followers |  
-  MERGE(f2:User {id: follower})  
+FOREACH (follower IN value.followers |
+  MERGE(f2:User {id: follower})
   MERGE (u)<-[:FOLLOWS]-(f2));`
         ]
     }

@@ -1,11 +1,10 @@
 import { subscribeToDatabaseCredentialsForActiveGraph } from 'graph-app-kit/components/GraphAppBase'
-import { onDisconnected, onNewConnection, runCypher } from "./stores/neoStore"
+import {onDisconnected, onNewConnection, runCypher, runCypherDefaultDatabase} from "./stores/neoStore"
 
 export const initializeConnection = (setConnected, setDisconnected) => {
   if (window.neo4jDesktopApi) {
     subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
       (credentials, activeProject, activeGraph) => {
-        console.log("credentials", credentials)
         onNewConnection(credentials)
         setConnected(credentials)
       },
@@ -23,11 +22,11 @@ export const initializeConnection = (setConnected, setDisconnected) => {
 
     tryConnect(credentials)
       .then(() => setConnected(credentials))
-      .catch(() => {})
+      .catch((error) => {console.log(error)})
   }
 }
 
 export const tryConnect = credentials => {
   onNewConnection(credentials)
-  return runCypher("RETURN 1")
+  return runCypherDefaultDatabase("RETURN 1")
 }
