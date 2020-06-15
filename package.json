@@ -22,7 +22,7 @@
     "@nivo/bar": "^0.52.1",
     "graph-app-kit": "^1.0.4",
     "html2canvas": "^1.0.0-rc.1",
-    "neo4j-driver": "^1.7.2",
+    "neo4j-driver": "^4.0.2",
     "react": "^16.7.0",
     "react-clipboard.js": "^2.0.16",
     "react-dom": "^16.7.0",

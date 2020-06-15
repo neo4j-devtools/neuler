@@ -1,4 +1,4 @@
-import { v1 as neo } from 'neo4j-driver'
+import { driver, auth } from 'neo4j-driver'
 
 let neoDriver
 
@@ -10,8 +10,8 @@ export const getDriver = () => {
 }
 
 export const onNewConnection = credentials => {
-  neoDriver = neo.driver(credentials.host || 'bolt://localhost:7687',
-    neo.auth.basic(credentials.username, credentials.password), { encrypted: credentials.encrypted })
+  neoDriver = driver(credentials.host || 'bolt://localhost:7687',
+    auth.basic(credentials.username, credentials.password), { encrypted: credentials.encrypted })
 }
 
 export const onDisconnected = () => {

@@ -1,4 +1,4 @@
-import {v1 as neo} from "neo4j-driver"
+import {int} from "neo4j-driver"
 
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, score
@@ -105,7 +105,7 @@ export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, di
 
   const config = {
     similarityCutoff: parseFloat(similarityCutoff),
-    degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
+    degreeCutoff: degreeCutoff == null ? null : int(degreeCutoff),
     nodeProjection: label || "*",
     relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
 
@@ -140,7 +140,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     writeProperty: writeProperty || null,
     writeRelationshipType: writeRelationshipType || null,
     similarityCutoff: parseFloat(similarityCutoff),
-    degreeCutoff: degreeCutoff == null ? null : neo.int(degreeCutoff),
+    degreeCutoff: degreeCutoff == null ? null : int(degreeCutoff),
   }
   
   requiredProperties.push("nodeProjection")
@@ -179,8 +179,8 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
-  const parsedMaxDepth = maxDepth == null ? null : neo.int(maxDepth)
-  const parsedIterations = maxIterations == null ? null : neo.int(maxIterations)
+  const parsedMaxDepth = maxDepth == null ? null : int(maxDepth)
+  const parsedIterations = maxIterations == null ? null : int(maxIterations)
   // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 

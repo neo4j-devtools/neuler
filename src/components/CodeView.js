@@ -4,8 +4,7 @@ import RenderParams from "./renderParams"
 import {v4 as generateId} from 'uuid'
 import Clipboard from 'react-clipboard.js';
 import stringifyObject from "stringify-object";
-import {v1 as neo} from "neo4j-driver";
-
+import * as neo from 'neo4j-driver'
 
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
 

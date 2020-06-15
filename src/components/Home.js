@@ -1,4 +1,4 @@
-import {Button, Card, CardGroup, Container, Header, Icon} from "semantic-ui-react"
+import {Button, Card, CardGroup, Container, Dropdown, Header, Icon} from "semantic-ui-react"
 import React, {Component} from 'react'
 
 import { selectGroup } from "../ducks/algorithms"
@@ -13,6 +13,11 @@ class Home extends Component {
         }
 
         const {selectGroup} = this.props
+
+        const databaseOptions =  [
+          { key: "neo4j", value: "neo4j", text: 'neo4j (default)' },
+            { key: "neo4j", value: "neo4j", text: 'blahblahblahlblah' }
+          ]
 
         return (<div style={containerStyle}>
                 <Container fluid>
@@ -102,6 +107,14 @@ class Home extends Component {
                         </Card>
 
                     </CardGroup>
+
+                    <Header as={"h3"}>
+                        Use Database
+                    </Header>
+
+                    <p style={{"width": "290px"}}>
+                        <Dropdown  placeholder='Database' defaultValue="neo4j" fluid search selection options={databaseOptions} />
+                    </p>
 
                 </Container>
             </div>

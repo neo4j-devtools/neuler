@@ -27,7 +27,7 @@ export default class NeoVis {
     this._config = config;
     this._encrypted = config.encrypted || defaults['neo4j']['encrypted'];
     this._trust = config.trust || defaults.neo4j.trust;
-    this._driver = driver || neo4j.v1.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.v1.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
+    this._driver = driver || neo4j.driver(config.server_url || defaults.neo4j.neo4jUri, neo4j.auth.basic(config.server_user || defaults.neo4j.neo4jUser, config.server_password || defaults.neo4j.neo4jPassword), {encrypted: this._encrypted, trust: this._trust});
     this._query =   config.initial_cypher || defaults.neo4j.initialQuery;
     this._nodes = {};
     this._edges = {};
@@ -73,13 +73,13 @@ export default class NeoVis {
       // of the internal node id
 
       let session = this._driver.session();
-      session.run(sizeCypher, {id: neo4j.v1.int(node['id'])})
+      session.run(sizeCypher, {id: neo4j.int(node['id'])})
         .then(function(result) {
           result.records.forEach(function(record) {
             record.forEach(function(v,k,r) {
               if (typeof v === "number") {
                 self._addNode({id: node['id'], value: v});
-              } else if (neo4j.v1.isInt(v)) {
+              } else if (neo4j.isInt(v)) {
                 self._addNode({id: node['id'], value: v.toNumber()})
               }
             })
@@ -96,7 +96,7 @@ export default class NeoVis {
       if (sizeProp && typeof sizeProp === "number") {
         // propety value is a number, OK to use
         node['value'] = sizeProp;
-      } else if (sizeProp && typeof sizeProp === "object" && neo4j.v1.isInt(sizeProp)) {
+      } else if (sizeProp && typeof sizeProp === "object" && neo4j.isInt(sizeProp)) {
         // property value might be a Neo4j Integer, check if we can call toNumber on it:
         if (sizeProp.inSafeRange()) {
           node['value'] = sizeProp.toNumber();
@@ -212,7 +212,7 @@ export default class NeoVis {
         onNext: function (record) {
 
           record.forEach(function(v, k, r) {
-            if (v instanceof neo4j.v1.types.Node) {
+            if (v instanceof neo4j.types.Node) {
               let node = self.buildNodeVisObject(v);
 
               try {
@@ -222,7 +222,7 @@ export default class NeoVis {
               }
 
             }
-            else if (v instanceof neo4j.v1.types.Relationship) {
+            else if (v instanceof neo4j.types.Relationship) {
 
               let edge = self.buildEdgeVisObject(v);
 
@@ -233,7 +233,7 @@ export default class NeoVis {
               }
 
             }
-            else if (v instanceof neo4j.v1.types.Path) {
+            else if (v instanceof neo4j.types.Path) {
               let n1 = self.buildNodeVisObject(v.start);
               let n2 = self.buildNodeVisObject(v.end);
 
@@ -250,7 +250,7 @@ export default class NeoVis {
             }
             else if (Array.isArray(v)) {
               v.forEach(function(obj) {
-                if (v instanceof neo4j.v1.types.Node) {
+                if (v instanceof neo4j.types.Node) {
                   let node = self.buildNodeVisObject(obj);
 
                   try {
@@ -259,7 +259,7 @@ export default class NeoVis {
                     console.log(e);
                   }
                 }
-                else if (v instanceof neo4j.v1.types.Relationship) {
+                else if (v instanceof neo4j.types.Relationship) {
                   let edge = self.buildEdgeVisObject(obj);
 
                   try {
