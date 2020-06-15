@@ -20,11 +20,16 @@ export const onDisconnected = () => {
    neoDriver = null*/
 }
 
-const getSession = () => {
-  return getDriver().session()
+const getSession = (database) => {
+  return getDriver().session({database: database})
 }
 
 export const runCypher = (cypher, parameters = {}) => {
-  const session = getSession()
+  const session = getSession("neo4j")
+  return session.run(cypher, parameters)
+}
+
+export const runCypherNamedDatabase = (cypher, database, parameters = {}) => {
+  const session = getSession(database)
   return session.run(cypher, parameters)
 }

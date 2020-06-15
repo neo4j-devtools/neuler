@@ -12,7 +12,10 @@ import {
     Message
 } from "semantic-ui-react"
 import React, {Component} from 'react'
-import {runCypher} from "../services/stores/neoStore"
+import {runCypher, runCypherNamedDatabase} from "../services/stores/neoStore"
+import {selectGroup} from "../ducks/algorithms";
+import {setActiveDatabase} from "../ducks/metadata";
+import {connect} from "react-redux";
 
 
 class Datasets extends Component {
@@ -37,11 +40,13 @@ class Datasets extends Component {
 
     loadDataset() {
         const { selectedDataset } = this.state
+        const {metadata} = this.props
+
         const queries = sampleGraphs[selectedDataset].queries;
         queries.reduce((promiseChain, query, qIndex) => {
             return promiseChain.then(chainResults => {
                   this.setState({ currentQueryIndex: qIndex })
-                  return runCypher(query).then(currentResult => {
+                  return runCypherNamedDatabase(query, metadata.activeDatabase).then(currentResult => {
                       this.setState({
                           completedQueryIndexes: { ...this.state.completedQueryIndexes, [qIndex]: true }
                       })
@@ -222,4 +227,9 @@ FOREACH (follower IN value.followers |
 
 }
 
-export default Datasets
+const mapStateToProps = state => ({
+    metadata: state.metadata
+})
+
+
+export default connect(mapStateToProps)(Datasets)

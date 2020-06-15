@@ -5,6 +5,8 @@ export const SET_LABELS = `${NAME}/SET_LABELS`
 export const SET_RELATIONSHIPTYPES = `${NAME}/SET_RELATIONSHIPTYPES`
 export const SET_PROPERTY_KEYS = `${NAME}/SET_PROPERTY_KEYS`
 export const SET_VERSIONS = `${NAME}/SET_VERSIONS`
+export const SET_DATABASES = `${NAME}/SET_DATABASES`
+export const SET_ACTIVE_DATABASE = `${NAME}/SET_ACTIVE_DATABASE`
 
 export const setMetadata = (labels, relationshipTypes) => ({
   type: SET_METADATA,
@@ -32,9 +34,21 @@ export const setVersions = version => ({
   version
 })
 
+export const setDatabases = databases => ({
+  type: SET_DATABASES,
+  databases
+})
+
+export const setActiveDatabase = activeDatabase => ({
+  type: SET_ACTIVE_DATABASE,
+  activeDatabase
+})
+
 const initialState = {
   labels: [],
-  relationshipTypes: []
+  relationshipTypes: [],
+  databases: [],
+  activeDatabase: "neo4j"
 }
 
 export default (state = initialState, action) => {
@@ -63,6 +77,16 @@ export default (state = initialState, action) => {
       return {
         ...state,
         versions: action.version
+      }
+    case SET_DATABASES:
+      return {
+        ...state,
+        databases: action.databases
+      }
+    case SET_ACTIVE_DATABASE:
+      return {
+        ...state,
+        activeDatabase: action.activeDatabase
       }
     default:
       return state

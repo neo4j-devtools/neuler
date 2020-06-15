@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 
 import { selectGroup } from "../ducks/algorithms"
 import {connect} from "react-redux";
+import {setActiveDatabase} from "../ducks/metadata";
 
 class Home extends Component {
 
@@ -12,12 +13,12 @@ class Home extends Component {
             padding: '1em'
         }
 
-        const {selectGroup} = this.props
+        const {selectGroup, setActiveDatabase, metadata} = this.props
+        console.log("metadata", metadata)
 
-        const databaseOptions =  [
-          { key: "neo4j", value: "neo4j", text: 'neo4j (default)' },
-            { key: "neo4j", value: "neo4j", text: 'blahblahblahlblah' }
-          ]
+        const databaseOptions= metadata.databases.map(value => {
+            return {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
+        })
 
         return (<div style={containerStyle}>
                 <Container fluid>
@@ -113,7 +114,7 @@ class Home extends Component {
                     </Header>
 
                     <p style={{"width": "290px"}}>
-                        <Dropdown  placeholder='Database' defaultValue="neo4j" fluid search selection options={databaseOptions} />
+                        <Dropdown value={metadata.activeDatabase} placeholder='Database' defaultValue="neo4j" fluid search selection options={databaseOptions} onChange={(evt, data) => setActiveDatabase(data.value) } />
                     </p>
 
                 </Container>
@@ -124,11 +125,13 @@ class Home extends Component {
 }
 
 const mapStateToProps = state => ({
-    activeGroup: state.algorithms.group
+    activeGroup: state.algorithms.group,
+    metadata: state.metadata
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group))
+    selectGroup: group => dispatch(selectGroup(group)),
+    setActiveDatabase: database => dispatch(setActiveDatabase(database))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

@@ -1,4 +1,4 @@
-import { runCypher } from "./stores/neoStore"
+import {runCypher, runCypherNamedDatabase} from "./stores/neoStore"
 
 export const loadLabels = () => {
   return runCypher("CALL db.labels()", {})
@@ -35,14 +35,23 @@ LIMIT 1`, {})
     .catch(handleException)
 }
 
+export const loadDatabases = () => {
+  return runCypherNamedDatabase(`SHOW DATABASES`, "system")
+    .then(parseDatabasesResultStream)
+    .catch(handleException)
+}
+
 export const loadMetadata = () => loadLabels().then(labels => {
   return loadRelationshipTypes().then(relationships => {
     return loadPropertyKeys().then(propertyKeys => {
-    return loadGdsVersion().then(versions => ({
-      labels, relationships, propertyKeys, versions
-    }))
-  })})
-})
+      return loadGdsVersion().then(versions => {
+        return loadDatabases().then(databases => ({
+          labels, relationships, propertyKeys, versions, databases
+        }))
+      })
+    })
+  })
+});
 
 const parseLabelsResultStream = result => {
   if (result.records) {
@@ -86,7 +95,21 @@ const parsePropertyKeysResultStream = result => {
 const parseGdsVersionResultStream = result => {
   if (result.records) {
     let row = result.records[0];
-    return {gdsVersion: row.get("gdsVersion"), neo4jVersion: row.get("neo4jVersion") }
+    return {gdsVersion: row.get("gdsVersion"), neo4jVersion: row.get("neo4jVersion")}
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
+
+const parseDatabasesResultStream = result => {
+  if (result.records) {
+    return result.records.filter(record => record.get("name") !== "system").map(record => {
+      return {
+        name: record.get("name"),
+        default: record.get("default"),
+      }
+    })
   } else {
     console.error(result.error)
     throw new Error(result.error)
