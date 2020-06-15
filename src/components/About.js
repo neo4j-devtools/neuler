@@ -18,7 +18,6 @@ class About extends Component {
                     <h3>Versions</h3>
                     <Message>
 
-
                         <p>
                             NEuler: <strong>{version}</strong>
                         </p>

@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.20 (2020-06-15)
+
+* Added compatibility with GDS versions 1.1 and 1.2
+
 ## 0.1.19 (2020-06-04)
 
 * Fix bug with LIMIT on streaming algorithms
