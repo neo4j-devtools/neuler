@@ -1,6 +1,8 @@
 import { driver, auth } from 'neo4j-driver'
 
 let neoDriver
+let neo4jVersion
+let activeDatabase = "neo4j"
 
 export const getDriver = () => {
   /*if (!driver) {
@@ -9,9 +11,22 @@ export const getDriver = () => {
   return neoDriver
 }
 
+export const getNeo4jVersion = () => {
+  return neo4jVersion
+}
+
 export const onNewConnection = credentials => {
   neoDriver = driver(credentials.host || 'bolt://localhost:7687',
     auth.basic(credentials.username, credentials.password), { encrypted: credentials.encrypted })
+}
+
+export const onNeo4jVersion = version => {
+  console.log("neo4jVersion", version)
+  neo4jVersion = version
+}
+
+export const onActiveDatabase = value => {
+  activeDatabase = value
 }
 
 export const onDisconnected = () => {
@@ -25,8 +40,13 @@ const getSession = (database) => {
 }
 
 export const runCypher = (cypher, parameters = {}) => {
-  const session = getSession("neo4j")
-  return session.run(cypher, parameters)
+  const version = getNeo4jVersion().split(".").slice(0, 1).join(".")
+  if (version === "4") {
+    return getSession(activeDatabase).run(cypher, parameters)
+  } else {
+    return getDriver().session().run(cypher, parameters)
+  }
+
 }
 
 export const runCypherDefaultDatabase = (cypher, parameters = {}) => {
@@ -34,7 +54,7 @@ export const runCypherDefaultDatabase = (cypher, parameters = {}) => {
   return session.run(cypher, parameters)
 }
 
-export const runCypherNamedDatabase = (cypher, database, parameters = {}) => {
-  const session = getSession(database)
+export const runCypherSystemDatabase = (cypher, parameters = {}) => {
+  const session = getSession("system")
   return session.run(cypher, parameters)
 }

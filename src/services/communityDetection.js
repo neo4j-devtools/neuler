@@ -131,7 +131,6 @@ const handleException = error => {
 
 const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = parseResultStream) => {
   return runCypher(streamCypher, parameters)
-
     .then(result => parseResultStreamFn(result))
     .catch(handleException)
 }

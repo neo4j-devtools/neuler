@@ -49,7 +49,6 @@ class Algorithms extends Component {
   }
 
   loadMetadata(metadata) {
-    console.log("loading metadata", metadata)
     const labels = metadata.labels.map(row => {
       return { key: row.label, value: row.label, text: row.label }
     })

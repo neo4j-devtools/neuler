@@ -4,6 +4,7 @@ import React, {Component} from 'react'
 import { selectGroup } from "../ducks/algorithms"
 import {connect} from "react-redux";
 import {setActiveDatabase} from "../ducks/metadata";
+import {onActiveDatabase} from "../services/stores/neoStore";
 
 class Home extends Component {
 
@@ -14,7 +15,6 @@ class Home extends Component {
         }
 
         const {selectGroup, setActiveDatabase, metadata} = this.props
-        console.log("metadata", metadata)
 
         const databaseOptions= metadata.databases.map(value => {
             return {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
@@ -113,9 +113,9 @@ class Home extends Component {
                         Use Database
                     </Header>
 
-                    <p style={{"width": "290px"}}>
-                        <Dropdown value={metadata.activeDatabase} placeholder='Database' defaultValue="neo4j" fluid search selection options={databaseOptions} onChange={(evt, data) => setActiveDatabase(data.value) } />
-                    </p>
+                    <div style={{"width": "290px"}}>
+                        <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection options={databaseOptions} onChange={(evt, data) => { setActiveDatabase(data.value); onActiveDatabase(data.value); }} />
+                    </div>
 
                 </Container>
             </div>

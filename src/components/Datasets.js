@@ -1,18 +1,18 @@
 import {
-  Button,
-  Card,
-  CardGroup,
-  Container,
-  Dimmer,
-  Header,
-  Icon,
-  Loader,
-  Message,
-  Modal,
-  Segment
+    Button,
+    Card,
+    CardGroup,
+    Container,
+    Dimmer,
+    Header,
+    Icon,
+    Loader,
+    Message,
+    Modal,
+    Segment
 } from "semantic-ui-react"
 import React, {Component} from 'react'
-import {runCypherNamedDatabase} from "../services/stores/neoStore"
+import {runCypher} from "../services/stores/neoStore"
 import {connect} from "react-redux";
 
 
@@ -38,13 +38,12 @@ class Datasets extends Component {
 
     loadDataset() {
         const { selectedDataset } = this.state
-        const {metadata} = this.props
 
         const queries = sampleGraphs[selectedDataset].queries;
         queries.reduce((promiseChain, query, qIndex) => {
             return promiseChain.then(chainResults => {
                   this.setState({ currentQueryIndex: qIndex })
-                  return runCypherNamedDatabase(query, metadata.activeDatabase).then(currentResult => {
+                  return runCypher(query).then(currentResult => {
                       this.setState({
                           completedQueryIndexes: { ...this.state.completedQueryIndexes, [qIndex]: true }
                       })

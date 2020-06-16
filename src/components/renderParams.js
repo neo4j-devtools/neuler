@@ -44,7 +44,7 @@ class RenderParams extends React.Component {
           event.trigger.textContent = 'Copy';
         }, 2000);
       }}
-                 button-class="code"
+                 button-className="code"
                  option-text={this.getText.bind(this)}>
         Copy
       </Clipboard>

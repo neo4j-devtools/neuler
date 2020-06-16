@@ -8,10 +8,11 @@ import MainContent from './MainContent'
 import Datasets from './Datasets'
 import {connect} from "react-redux"
 import {limit} from "../ducks/settings"
-import {loadMetadata} from "../services/metadata"
+import {loadMetadata, loadVersions} from "../services/metadata"
 import {setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata"
 import Home from "./Home";
 import About from "./About";
+import {onNeo4jVersion} from "../services/stores/neoStore";
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -28,11 +29,16 @@ class NEuler extends Component {
   }
 
   onComplete() {
-    loadMetadata().then(metadata => {
-      this.props.setLabels(metadata.labels)
-      this.props.setRelationshipTypes(metadata.relationships)
-      this.props.setPropertyKeys(metadata.propertyKeys)
-    })
+    loadVersions().then(versions => {
+      this.props.setGds(versions)
+      onNeo4jVersion(versions.neo4jVersion)
+      loadMetadata(versions.neo4jVersion).then(metadata => {
+        this.props.setLabels(metadata.labels)
+        this.props.setRelationshipTypes(metadata.relationships)
+        this.props.setPropertyKeys(metadata.propertyKeys)
+        this.props.setDatabases(metadata.databases)
+      })
+    });
   }
 
   selectComponent(activeGroup) {

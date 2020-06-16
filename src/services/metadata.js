@@ -1,25 +1,25 @@
-import {runCypher, runCypherDefaultDatabase, runCypherNamedDatabase} from "./stores/neoStore"
+import {runCypher, runCypherDefaultDatabase, runCypherSystemDatabase} from "./stores/neoStore"
 
-export const loadLabels = (activateDatabase) => {
-  return runCypherNamedDatabase("CALL db.labels()", activateDatabase, {})
+export const loadLabels = () => {
+  return runCypher("CALL db.labels()", {})
     .then(parseLabelsResultStream)
     .catch(handleException)
 }
 
-export const loadRelationshipTypes = (activateDatabase) => {
-  return runCypherNamedDatabase(`CALL db.relationshipTypes() 
+export const loadRelationshipTypes = () => {
+  return runCypher(`CALL db.relationshipTypes() 
 YIELD relationshipType
 RETURN relationshipType
-ORDER BY relationshipType`, activateDatabase, {})
+ORDER BY relationshipType`, {})
     .then(parseRelTypesResultStream)
     .catch(handleException)
 }
 
-export const loadPropertyKeys = (activateDatabase) => {
-  return runCypherNamedDatabase(`call db.propertyKeys()
+export const loadPropertyKeys = () => {
+  return runCypher(`call db.propertyKeys()
 YIELD propertyKey
 RETURN propertyKey
-ORDER BY propertyKey`, activateDatabase, {})
+ORDER BY propertyKey`, {})
     .then(parsePropertyKeysResultStream)
     .catch(handleException)
 }
@@ -35,36 +35,29 @@ LIMIT 1`, {})
     .catch(handleException)
 }
 
-export const loadDatabases = () => {
-  return runCypherNamedDatabase(`SHOW DATABASES`, "system")
-    .then(parseDatabasesResultStream)
-    .catch(handleException)
+export const loadDatabases = (neo4jVersion) => {
+  const version = neo4jVersion.split(".").slice(0, 1).join(".")
+
+  if(version === "4") {
+    return runCypherSystemDatabase(`SHOW DATABASES`)
+      .then(parseDatabasesResultStream)
+      .catch(handleException)
+  } else {
+    return Promise.resolve([{name: "neo4j", default: true}]);
+  }
 }
 
-export const loadMetadata = (activeDatabase) => loadVersions().then(versions => {
-  const neo4jVersion = versions.neo4jVersion.split(".").slice(0, 1).join(".")
-  if (neo4jVersion === "4") {
-    return loadDatabases().then(databases => {
-      return loadLabels(activeDatabase).then(labels => {
-        return loadRelationshipTypes(activeDatabase).then(relationships => {
-          return loadPropertyKeys(activeDatabase).then(propertyKeys => ({
-            labels, relationships, propertyKeys, versions, databases
-          }))
-        })
+export const loadMetadata = (neo4jVersion) => {
+  return loadDatabases(neo4jVersion).then(databases => {
+    return loadLabels().then(labels => {
+      return loadRelationshipTypes().then(relationships => {
+        return loadPropertyKeys().then(propertyKeys => ({
+          labels, relationships, propertyKeys, databases
+        }))
       })
     })
-  } else {
-    return Promise.resolve([{name: "neo4j", default: true}]).then(databases => {
-      return loadLabels(null).then(labels => {
-        return loadRelationshipTypes(null).then(relationships => {
-          return loadPropertyKeys(null).then(propertyKeys => ({
-            labels, relationships, propertyKeys, versions, databases
-          }))
-        })
-      })
-    })
-  }
-});
+  })
+};
 
 const parseLabelsResultStream = result => {
   if (result.records) {

@@ -9,8 +9,8 @@ import {connect} from "react-redux"
 
 import {ConnectModal} from './components/ConnectModal';
 
-import {setDriver} from "./services/stores/neoStore"
-import {loadMetadata} from "./services/metadata"
+import {onNeo4jVersion, setDriver} from "./services/stores/neoStore"
+import {loadMetadata, loadVersions} from "./services/metadata"
 import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersions} from "./ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
@@ -41,15 +41,16 @@ class App extends Component {
   }
 
   onConnected() {
-    const {metadata} = this.props
-    const activateDatabase = metadata.activeDatabase;
-    loadMetadata(activateDatabase).then(metadata => {
-      this.props.setLabels(metadata.labels)
-      this.props.setRelationshipTypes(metadata.relationships)
-      this.props.setPropertyKeys(metadata.propertyKeys)
-      this.props.setGds(metadata.versions)
-      this.props.setDatabases(metadata.databases)
-    })
+    loadVersions().then(versions => {
+      this.props.setGds(versions)
+      onNeo4jVersion(versions.neo4jVersion)
+      loadMetadata(versions.neo4jVersion).then(metadata => {
+        this.props.setLabels(metadata.labels)
+        this.props.setRelationshipTypes(metadata.relationships)
+        this.props.setPropertyKeys(metadata.propertyKeys)
+        this.props.setDatabases(metadata.databases)
+      })
+    });
   }
 
   render() {

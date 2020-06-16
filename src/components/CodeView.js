@@ -127,7 +127,7 @@ export default class extends Component {
                       event.trigger.textContent = 'Copy';
                     }, 2000);
                   }}
-                             button-class="code"
+                             button-className="code"
                              data-clipboard-text={query && removeSpacing(query.replace('\n  ', '\n'))}>
                     Copy
                   </Clipboard>
@@ -154,7 +154,7 @@ export default class extends Component {
                     event.trigger.textContent = 'Copy';
                   }, 2000);
                 }}
-                           button-class="code"
+                           button-className="code"
                            data-clipboard-text={taskGuide }>
                   Copy
                 </Clipboard>
