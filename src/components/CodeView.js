@@ -5,6 +5,7 @@ import {v4 as generateId} from 'uuid'
 import Clipboard from 'react-clipboard.js';
 import stringifyObject from "stringify-object";
 import * as neo from 'neo4j-driver'
+import {getActiveDatabase, hasNamedDatabase} from "../services/stores/neoStore";
 
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
 
@@ -98,6 +99,7 @@ export default class extends Component {
 
     const taskGuide = browserGuide[task.taskId]
 
+    const activeDatabase = getActiveDatabase();
     return (
       <div style={{
         height: '85vh',
@@ -105,6 +107,24 @@ export default class extends Component {
         overflowX: 'hidden'
       }}>
         <p>This algorithm run can be reproduced in the Neo4j Browser, by defining the following parameters:</p>
+
+        {
+          hasNamedDatabase() ? <Segment>
+            <pre>:use {activeDatabase}</pre>
+            <Clipboard onSuccess={(event) => {
+              event.trigger.textContent = "Copied";
+              setTimeout(function () {
+                event.trigger.textContent = 'Copy';
+              }, 2000);
+            }}
+                       button-className="code"
+                       data-clipboard-text={`:use ${activeDatabase}`}>
+              Copy
+            </Clipboard>
+
+          </Segment> : null
+        }
+
         {
           task.parameters
             ? <Segment>

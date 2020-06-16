@@ -15,6 +15,15 @@ export const getNeo4jVersion = () => {
   return neo4jVersion
 }
 
+export const getActiveDatabase = () => {
+  return activeDatabase
+}
+
+export const hasNamedDatabase = () => {
+  const version = getNeo4jVersion().split(".").slice(0, 1).join(".")
+  return version === "4"
+}
+
 export const onNewConnection = credentials => {
   neoDriver = driver(credentials.host || 'bolt://localhost:7687',
     auth.basic(credentials.username, credentials.password), { encrypted: credentials.encrypted })

@@ -3,8 +3,9 @@ import React, {Component} from 'react'
 
 import { selectGroup } from "../ducks/algorithms"
 import {connect} from "react-redux";
-import {setActiveDatabase} from "../ducks/metadata";
-import {getDriver, onActiveDatabase} from "../services/stores/neoStore";
+import {setActiveDatabase, setDatabases} from "../ducks/metadata";
+import {getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
+import {loadDatabases} from "../services/metadata";
 
 class Home extends Component {
 
@@ -13,6 +14,12 @@ class Home extends Component {
         this.state = {
             serverInfo: ""
         }
+    }
+
+    onRefresh() {
+      loadDatabases(this.props.metadata.versions.neo4jVersion).then(databases => {
+        this.props.setDatabases(databases)
+      })
     }
 
     render() {
@@ -34,11 +41,25 @@ class Home extends Component {
                         Use Database
                     </Header>
 
-                    <div style={{"width": "290px"}}>
+                    <div>
                         <p>
                             Connected to: {this.state.serverInfo.address}
+
                         </p>
-                        <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection options={databaseOptions} onChange={(evt, data) => { setActiveDatabase(data.value); onActiveDatabase(data.value); }} />
+
+                            <Button as='div' labelPosition='left'>
+                            <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection style={{"width": "290px"}}
+                                      options={databaseOptions} onChange={(evt, data) => {
+                                setActiveDatabase(data.value);
+                                onActiveDatabase(data.value);
+                            }}/>
+
+                              {hasNamedDatabase() ? <Button icon style={{marginLeft: "10px"}} onClick={this.onRefresh.bind(this)}>
+                                <Icon className="refresh" size="large"  />
+                            </Button> : null}
+                            </Button>
+
+
 
                     </div>
 
@@ -146,7 +167,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     selectGroup: group => dispatch(selectGroup(group)),
-    setActiveDatabase: database => dispatch(setActiveDatabase(database))
+    setActiveDatabase: database => dispatch(setActiveDatabase(database)),
+    setDatabases: databases => dispatch(setDatabases(databases))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
