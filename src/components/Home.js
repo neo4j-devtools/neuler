@@ -1,13 +1,19 @@
-import {Button, Card, CardGroup, Container, Dropdown, Header, Icon} from "semantic-ui-react"
+import {Button, Card, CardGroup, Container, Divider, Dropdown, Header, Icon} from "semantic-ui-react"
 import React, {Component} from 'react'
 
 import { selectGroup } from "../ducks/algorithms"
 import {connect} from "react-redux";
 import {setActiveDatabase} from "../ducks/metadata";
-import {onActiveDatabase} from "../services/stores/neoStore";
+import {getDriver, onActiveDatabase} from "../services/stores/neoStore";
 
 class Home extends Component {
 
+    constructor(props) {
+        super(props)
+        this.state = {
+            serverInfo: ""
+        }
+    }
 
     render() {
         const containerStyle = {
@@ -20,8 +26,24 @@ class Home extends Component {
             return {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
         })
 
+        getDriver().verifyConnectivity().then(value => this.setState({serverInfo: value}))
+
         return (<div style={containerStyle}>
                 <Container fluid>
+                    <Header as={"h3"}>
+                        Use Database
+                    </Header>
+
+                    <div style={{"width": "290px"}}>
+                        <p>
+                            Connected to: {this.state.serverInfo.address}
+                        </p>
+                        <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection options={databaseOptions} onChange={(evt, data) => { setActiveDatabase(data.value); onActiveDatabase(data.value); }} />
+
+                    </div>
+
+                    <Divider />
+
                     <Header as={"h3"}>
                         Algorithm Categories
                     </Header>
@@ -109,13 +131,6 @@ class Home extends Component {
 
                     </CardGroup>
 
-                    <Header as={"h3"}>
-                        Use Database
-                    </Header>
-
-                    <div style={{"width": "290px"}}>
-                        <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection options={databaseOptions} onChange={(evt, data) => { setActiveDatabase(data.value); onActiveDatabase(data.value); }} />
-                    </div>
 
                 </Container>
             </div>

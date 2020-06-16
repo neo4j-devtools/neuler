@@ -2,7 +2,6 @@ import React from 'react'
 import stringifyObject from 'stringify-object';
 import {isInt} from "neo4j-driver"
 import Clipboard from 'react-clipboard.js';
-import {Popup} from "semantic-ui-react";
 
 class RenderParams extends React.Component {
   extractValue(parameters, key) {
