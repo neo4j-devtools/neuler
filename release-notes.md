@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.21 (2020-06-16)
+
+* Select database when using Neo4j 4.x
+
 ## 0.1.20 (2020-06-15)
 
 * Added compatibility with GDS versions 1.1 and 1.2

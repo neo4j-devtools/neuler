@@ -131,7 +131,7 @@ class Home extends Component {
                             </Card.Content>
                         </Card>
 
-                        <Card key={"similairty"}>
+                        <Card key={"similarity"}>
                             <Card.Content>
                                 <Icon name='sitemap'/>
                                 <Card.Header>

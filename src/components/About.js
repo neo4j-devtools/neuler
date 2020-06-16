@@ -8,7 +8,7 @@ class About extends Component {
             margin: "1em",
         }
 
-        const version = "0.1.20"
+        const version = "0.1.21"
 
         console.log(this.props.metadata)
 
