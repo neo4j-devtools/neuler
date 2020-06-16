@@ -99,7 +99,7 @@ export default class extends Component {
 
     const taskGuide = browserGuide[task.taskId]
 
-    const activeDatabase = getActiveDatabase();
+    const activeDatabase = `\`${getActiveDatabase()}\``;
     return (
       <div style={{
         height: '85vh',
