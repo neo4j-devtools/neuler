@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.22 (2020-06-17)
+
+* Refresh property keys, labels, and relationship types when changing database
+
 ## 0.1.21 (2020-06-16)
 
 * Select database when using Neo4j 4.x

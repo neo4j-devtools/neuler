@@ -3,9 +3,9 @@ import React, {Component} from 'react'
 
 import { selectGroup } from "../ducks/algorithms"
 import {connect} from "react-redux";
-import {setActiveDatabase, setDatabases} from "../ducks/metadata";
+import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata";
 import {getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
-import {loadDatabases} from "../services/metadata";
+import {loadDatabases, loadMetadata} from "../services/metadata";
 
 class Home extends Component {
 
@@ -17,9 +17,12 @@ class Home extends Component {
     }
 
     onRefresh() {
-      loadDatabases(this.props.metadata.versions.neo4jVersion).then(databases => {
-        this.props.setDatabases(databases)
-      })
+        loadMetadata(this.props.metadata.versions.neo4jVersion).then(metadata => {
+            this.props.setLabels(metadata.labels)
+            this.props.setRelationshipTypes(metadata.relationships)
+            this.props.setPropertyKeys(metadata.propertyKeys)
+            this.props.setDatabases(metadata.databases)
+        })
     }
 
     render() {
@@ -52,6 +55,7 @@ class Home extends Component {
                                       options={databaseOptions} onChange={(evt, data) => {
                                 setActiveDatabase(data.value);
                                 onActiveDatabase(data.value);
+                                this.onRefresh()
                             }}/>
 
                               {hasNamedDatabase() ? <Button icon style={{marginLeft: "10px"}} onClick={this.onRefresh.bind(this)}>
@@ -168,7 +172,10 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
     selectGroup: group => dispatch(selectGroup(group)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
-    setDatabases: databases => dispatch(setDatabases(databases))
+    setDatabases: databases => dispatch(setDatabases(databases)),
+    setLabels: labels => dispatch(setLabels(labels)),
+    setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
