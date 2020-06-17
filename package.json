@@ -19,6 +19,7 @@
     "registry": "https://neo.jfrog.io/neo/api/npm/npm-local"
   },
   "dependencies": {
+    "@apollo/react-components": "^3.1.5",
     "@apollo/react-hooks": "^3.1.5",
     "@nivo/bar": "^0.52.1",
     "apollo-boost": "^0.4.7",

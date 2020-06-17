@@ -1,15 +1,17 @@
-import React, { Component } from 'react'
-import { Button, Header, Icon, Segment, Menu, Loader, Message, Image } from 'semantic-ui-react'
-import { connect } from "react-redux"
+import React, {Component, useState, useEffect} from 'react'
+import {Button, Header, Icon, Image, Loader, Menu, Message, Segment} from 'semantic-ui-react'
+import {connect} from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
-import { getAlgorithmDefinitions } from "./algorithmsLibrary"
+import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView from './CodeView'
 
-import { ADDED, completeTask, FAILED, runTask } from "../ducks/tasks"
+import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
 import html2canvas from "html2canvas";
-import {ReImg } from 'reimg'
+import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
+import {SEND_METRICS_MUTATION} from "../services/metrics";
+import {useMutation} from "@apollo/react-hooks";
 
 const tabContentStyle = {
   height: '85vh',
@@ -185,34 +187,34 @@ class HorizontalAlgoTab extends Component {
   }
 }
 
-class TabExampleVerticalTabular extends Component {
-  state = {
-    page: 0
+const TabExampleVerticalTabular = (props) => {
+  const [page, setPage] = useState(0)
+  const [sendMetrics] = useMutation(SEND_METRICS_MUTATION)
+
+  const prevResult = () => {
+    setPage(Math.max(0, page - 1))
   }
 
-  prevResult() {
-    this.setState(({ page }) => ({ page: Math.max(0, page - 1) }))
+  const nextResult = () => {
+    const length = (props.tasks || []).length
+    setPage(Math.min(length - 1, page + 1))
   }
 
-  nextResult() {
-    const length = (this.props.tasks || []).length
-    this.setState(({ page }) => ({ page: Math.min(length - 1, page + 1) }))
-  }
-
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.tasks.length !== this.props.tasks.length) {
-      this.setState({ page: 0 })
-      const task = nextProps.tasks[0]
+  useEffect(() => {
+    setPage(0)
+    if(props.tasks.length > 0) {
+      const task = props.tasks[0]
       if (task.status === ADDED) {
-        this.onRunAlgo(task)
+        onRunAlgo(task)
       }
     }
-  }
+  }, [props.tasks.length])
 
-  onRunAlgo(task) {
-    const { taskId, group, algorithm, parameters, persisted } = task
-    const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, this.props.metadata.versions.gdsVersion);
-    const { service, getFetchQuery } = algorithmDefinition
+
+  const onRunAlgo = (task) => {
+    const {taskId, group, algorithm, parameters, persisted} = task
+    const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion);
+    const {service, getFetchQuery} = algorithmDefinition
 
     let fetchCypher
 
@@ -220,7 +222,7 @@ class TabExampleVerticalTabular extends Component {
     let storeQuery = algorithmDefinition.storeQuery
 
     if (group === "Similarity") {
-      const { itemLabel, relationshipType, categoryLabel, weightProperty } = parameters
+      const {itemLabel, relationshipType, categoryLabel, weightProperty} = parameters
       streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
       storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
 
@@ -233,6 +235,16 @@ class TabExampleVerticalTabular extends Component {
     }
 
 
+    sendMetrics({
+      variables: {
+        eventCategory: 'callAlgorithm',
+        eventLabel: algorithm,
+        eventName: algorithm,
+        eventValue: "N/A",
+      },
+    })
+    console.log("sendMetrics")
+
     service({
       streamCypher: streamQuery,
       storeCypher: storeQuery,
@@ -240,37 +252,123 @@ class TabExampleVerticalTabular extends Component {
       parameters,
       persisted
     }).then(result => {
-      this.props.completeTask(taskId, result)
+      props.completeTask(taskId, result)
       if (persisted) {
-        this.props.onComplete()
+        props.onComplete()
       }
     }).catch(exc => {
       console.log('ERROR IN SERVICE', exc)
-      this.props.completeTask(taskId, [], exc.toString())
+      props.completeTask(taskId, [], exc.toString())
 
     })
 
-    this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
+    props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
   }
 
-  render() {
-    const tasks = this.props.tasks
-    const page = this.state.page
-    if (tasks && tasks.length > 0) {
-      const currentTask = tasks[this.state.page]
-      return <HorizontalAlgoTab
-        task={currentTask}
-        prevResult={this.prevResult.bind(this)}
-        nextResult={this.nextResult.bind(this)}
-        currentPage={page + 1}
-        totalPages={tasks.length}
-        gdsVersion={this.props.metadata.versions.gdsVersion}
-      />
-    } else {
-      return null
-    }
+  const tasks = props.tasks
+
+  if (tasks && tasks.length > 0) {
+    const currentTask = tasks[page]
+    return <HorizontalAlgoTab
+      task={currentTask}
+      prevResult={prevResult.bind(this)}
+      nextResult={nextResult.bind(this)}
+      currentPage={page + 1}
+      totalPages={tasks.length}
+      gdsVersion={props.metadata.versions.gdsVersion}
+    />
+  } else {
+    return null
   }
 }
+
+
+// class TabExampleVerticalTabular extends Component {
+//   state = {
+//     page: 0
+//   }
+//
+//   prevResult() {
+//     this.setState(({ page }) => ({ page: Math.max(0, page - 1) }))
+//   }
+//
+//   nextResult() {
+//     const length = (this.props.tasks || []).length
+//     this.setState(({ page }) => ({ page: Math.min(length - 1, page + 1) }))
+//   }
+//
+//   componentWillReceiveProps(nextProps, nextContext) {
+//     if (nextProps.tasks.length !== this.props.tasks.length) {
+//       this.setState({ page: 0 })
+//       const task = nextProps.tasks[0]
+//       if (task.status === ADDED) {
+//         this.onRunAlgo(task)
+//       }
+//     }
+//   }
+//
+//   onRunAlgo(task) {
+//     const { taskId, group, algorithm, parameters, persisted } = task
+//     const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, this.props.metadata.versions.gdsVersion);
+//     const { service, getFetchQuery } = algorithmDefinition
+//
+//     let fetchCypher
+//
+//     let streamQuery = algorithmDefinition.streamQuery
+//     let storeQuery = algorithmDefinition.storeQuery
+//
+//     if (group === "Similarity") {
+//       const { itemLabel, relationshipType, categoryLabel, weightProperty } = parameters
+//       streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
+//       storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
+//
+//       fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType, parameters.config)
+//       delete parameters.itemLabel
+//       delete parameters.relationshipType
+//       delete parameters.categoryLabel
+//     } else {
+//       fetchCypher = getFetchQuery(parameters.label, parameters.config)
+//     }
+//
+//
+//     service({
+//       streamCypher: streamQuery,
+//       storeCypher: storeQuery,
+//       fetchCypher,
+//       parameters,
+//       persisted
+//     }).then(result => {
+//       this.props.completeTask(taskId, result)
+//       if (persisted) {
+//         this.props.onComplete()
+//       }
+//     }).catch(exc => {
+//       console.log('ERROR IN SERVICE', exc)
+//       this.props.completeTask(taskId, [], exc.toString())
+//
+//     })
+//
+//     this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
+//   }
+//
+//   render() {
+//     const tasks = this.props.tasks
+//     const page = this.state.page
+//     if (tasks && tasks.length > 0) {
+//       const currentTask = tasks[this.state.page]
+//       return <HorizontalAlgoTab
+//         task={currentTask}
+//         prevResult={this.prevResult.bind(this)}
+//         nextResult={this.nextResult.bind(this)}
+//         currentPage={page + 1}
+//         totalPages={tasks.length}
+//         gdsVersion={this.props.metadata.versions.gdsVersion}
+//       />
+//     } else {
+//       return null
+//     }
+//   }
+// }
 
 const mapStateToProps = state => ({
   tasks: state.tasks,
