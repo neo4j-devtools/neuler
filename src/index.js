@@ -41,15 +41,14 @@ const LoaderComponent = <Dimmer active>
 </Dimmer>
 
 ReactDOM.render(
-  <ApolloProvider client={client}>
-    <Provider store={store}>
-      <PersistGate loading={LoaderComponent} persistor={persistor}>
-
+  <Provider store={store}>
+    <PersistGate loading={LoaderComponent} persistor={persistor}>
+      <ApolloProvider client={client}>
         <App/>
+      </ApolloProvider>
+    </PersistGate>
+  </Provider>
 
-      </PersistGate>
-    </Provider>
-  </ApolloProvider>
   , document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change

@@ -15,6 +15,7 @@ import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersi
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
 
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -24,6 +25,7 @@ class App extends Component {
     }
 
     const { setConnected, setDisconnected } = this.props
+
     initializeConnection(setConnected, setDisconnected, (error) => this.setState({errorMsg: error}))
   }
 
@@ -82,7 +84,6 @@ class App extends Component {
           />
         }
       case CONNECTED:
-
         return (<CheckGraphAlgorithmsInstalled {...this.props}>
                   <NEuler key="app" {...this.props} />
                 </CheckGraphAlgorithmsInstalled>)
