@@ -30,7 +30,6 @@ export const onNewConnection = credentials => {
 }
 
 export const onNeo4jVersion = version => {
-  console.log("neo4jVersion", version)
   neo4jVersion = version
 }
 

@@ -60,7 +60,6 @@ class App extends Component {
       <Loader size='massive'>Connecting</Loader>
     </Dimmer>
 
-    console.log('connectionInfo', connectionInfo)
 
     switch (connectionInfo.status) {
       case INITIAL:
@@ -75,7 +74,6 @@ class App extends Component {
               const credentials = { username, password }
               tryConnect(credentials)
                 .then(() => {
-                  console.log("tryConnect - then", credentials)
                   setConnected(credentials)
                 })
                 .catch(setDisconnected)

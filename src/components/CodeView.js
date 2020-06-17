@@ -113,7 +113,7 @@ export default class extends Component {
             <pre>:use {activeDatabase}</pre>
             <Clipboard onSuccess={(event) => {
               event.trigger.textContent = "Copied";
-              setTimeout(function () {
+              setTimeout( () => {
                 event.trigger.textContent = 'Copy';
               }, 2000);
             }}
@@ -143,7 +143,7 @@ export default class extends Component {
                   <pre>{query && removeSpacing(query.replace('\n  ', '\n'))}</pre>
                   <Clipboard onSuccess={(event) => {
                     event.trigger.textContent = "Copied";
-                    setTimeout(function () {
+                    setTimeout( () => {
                       event.trigger.textContent = 'Copy';
                     }, 2000);
                   }}
@@ -170,7 +170,7 @@ export default class extends Component {
 
                 <Clipboard onSuccess={(event) => {
                   event.trigger.textContent = "Copied";
-                  setTimeout(function () {
+                  setTimeout(() => {
                     event.trigger.textContent = 'Copy';
                   }, 2000);
                 }}

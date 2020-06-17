@@ -7,7 +7,7 @@ export default class extends Component {
   }
 
   render() {
-    const { relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, writeProperty, onChange, maxIterations, dampingFactor, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, writeProperty, onChange, maxIterations, dampingFactor, weightProperty, defaultValue, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>

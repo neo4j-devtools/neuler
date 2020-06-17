@@ -39,11 +39,12 @@ class RenderParams extends React.Component {
 
       <Clipboard onSuccess={(event) => {
         event.trigger.textContent = "Copied";
-        setTimeout(function () {
+        setTimeout( () => {
           event.trigger.textContent = 'Copy';
         }, 2000);
       }}
                  button-className="code"
+                 button-onfocusout={() => console.log("focusout")}
                  option-text={this.getText.bind(this)}>
         Copy
       </Clipboard>
