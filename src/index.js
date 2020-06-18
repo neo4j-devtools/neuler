@@ -31,10 +31,9 @@ const persistor = persistStore(store)
 const isBrowser = window.neo4jDesktopApi === undefined
 const link = getLink(isBrowser)
 
-const client = new ApolloClient({
-  uri: link,
-  resolvers: {}
-})
+console.log("link:", link)
+
+const client = new ApolloClient({link})
 
 const LoaderComponent = <Dimmer active>
   <Loader size='massive'>Connecting</Loader>

@@ -2,24 +2,12 @@ import React, {useState} from 'react'
 import {Dimmer, Image, Loader} from "semantic-ui-react"
 
 import {checkGraphAlgorithmsInstalled} from "../services/installation"
-import {SEND_METRICS_MUTATION} from "../services/metrics";
-import {useMutation} from "@apollo/react-hooks";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
   const [algorithmsInstalled, setAlgorithmsInstalled] = useState(false)
-  const [sendMetrics] = useMutation(SEND_METRICS_MUTATION)
 
   checkGraphAlgorithmsInstalled().then(result => {
-    sendMetrics({
-      variables: {
-        eventCategory: 'startNeuler',
-        eventLabel: 'checkLibraryInstalled',
-        eventName: 'checkLibraryInstalled',
-        eventValue: result,
-      },
-    })
-
     setAlgorithmsInstalled(result)
   });
 

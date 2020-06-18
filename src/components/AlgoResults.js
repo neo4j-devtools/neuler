@@ -235,14 +235,10 @@ const TabExampleVerticalTabular = (props) => {
     }
 
 
-    sendMetrics({
-      variables: {
-        eventCategory: 'callAlgorithm',
-        eventLabel: algorithm,
-        eventName: algorithm,
-        eventValue: "N/A",
-      },
-    })
+    if(!!window.neo4jDesktopApi) {
+      window.neo4jDesktopApi.sendMetrics('neuler-call-algorithm', algorithm)
+    }
+
     console.log("sendMetrics")
 
     service({
