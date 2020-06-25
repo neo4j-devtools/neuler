@@ -57,10 +57,12 @@ class Datasets extends Component {
               completed.push(selectedDataset)
               this.setState({
                   currentQueryIndex: -1,
-
                   completed: completed
               })
 
+              if(!!window.neo4jDesktopApi) {
+                  window.neo4jDesktopApi.sendMetrics('neuler-loaded-dataset', selectedDataset )
+              }
               this.props.onComplete()
           })
     }

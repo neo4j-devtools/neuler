@@ -44,6 +44,10 @@ class App extends Component {
 
   onConnected() {
     loadVersions().then(versions => {
+      if(!!window.neo4jDesktopApi) {
+        window.neo4jDesktopApi.sendMetrics('neuler-connected', true, versions)
+      }
+
       this.props.setGds(versions)
       onNeo4jVersion(versions.neo4jVersion)
       loadMetadata(versions.neo4jVersion).then(metadata => {

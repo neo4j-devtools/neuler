@@ -8,10 +8,7 @@ class About extends Component {
             margin: "1em",
         }
 
-        const version = "0.1.22"
-
-        console.log(this.props.metadata)
-
+        const version = "0.1.23"
 
         return (<div style={containerStyle}>
                 <Container fluid>

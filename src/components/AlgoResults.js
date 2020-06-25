@@ -61,7 +61,12 @@ class HorizontalAlgoTab extends Component {
     activeItem: this.props.error ? 'Error' : 'Table'
   }
 
-  handleMenuItemClick = (e, { name }) => this.setState({ activeItem: name })
+  handleMenuItemClick = (e, { name }) => {{
+    if(!!window.neo4jDesktopApi) {
+      window.neo4jDesktopApi.sendMetrics('neuler-click-view', name)
+    }
+    this.setState({ activeItem: name })
+  }}
 
   componentDidMount() {
     if (this.props.task.error) {
@@ -234,12 +239,9 @@ const TabExampleVerticalTabular = (props) => {
       fetchCypher = getFetchQuery(parameters.label, parameters.config)
     }
 
-
     if(!!window.neo4jDesktopApi) {
       window.neo4jDesktopApi.sendMetrics('neuler-call-algorithm', algorithm)
     }
-
-    console.log("sendMetrics")
 
     service({
       streamCypher: streamQuery,

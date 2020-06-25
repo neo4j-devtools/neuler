@@ -58,8 +58,6 @@ export default class extends Component {
     const guid = generateId()
 
     const payload = this.constructPayload(parameters, query, guid)
-    console.log(payload)
-    console.log(JSON.stringify(payload))
 
     return fetch(generateGuidesUrl, {
       method: "POST",
@@ -70,6 +68,9 @@ export default class extends Component {
       body: JSON.stringify(payload)
     })
       .then(response => {
+        if(!!window.neo4jDesktopApi) {
+          window.neo4jDesktopApi.sendMetrics('neuler-code-view', "generated-browser-guide", {guideId: guid})
+        }
         this.setState({browserGuide: {...this.state.browserGuide, [taskId]: `:play neuler/user-content-${guid}.html`}})
         return guid
       })
@@ -92,7 +93,6 @@ export default class extends Component {
   //         this.setState({browserGuide: null})
   //     }
   // }
-
   render() {
     const {task} = this.props
     const {browserGuide} = this.state
