@@ -39,3 +39,5 @@ button.code {
 .feedback-icon:hover {
   cursor: pointer;
 }
+
+textarea#feedback-form { resize: none; }

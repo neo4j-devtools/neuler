@@ -1,7 +1,34 @@
 import React, {useState} from "react";
 import {Button, Checkbox, Icon, TextArea, Form} from "semantic-ui-react";
 
-export const FeedbackForm = () => {
+export const postFeedback = (body) => {
+  const formData = new URLSearchParams();
+  formData.append("project", "neuler")
+  formData.append("helpful", body.helpful)
+  formData.append("url", `@neuler/${body.page}`)
+
+  if(body.reason) {
+    formData.append("reason", body.reason)
+  }
+
+  if(body.moreInformation) {
+    formData.append("moreInformation", body.moreInformation)
+  }
+
+  fetch('https://uglfznxroe.execute-api.us-east-1.amazonaws.com/dev/Feedback', {
+    method: 'post',
+    body: formData,
+    mode: "no-cors"
+  }).then(function(response) {
+    return response.json();
+  }).then(function(data) {
+    console.log(data)
+  }).catch(error => {
+    console.log(error)
+  });
+}
+
+export const FeedbackForm = (props) => {
   const [open, setOpen] = useState(true);
   const [feedback, setFeedback] = useState({complete: false})
 
@@ -13,6 +40,8 @@ export const FeedbackForm = () => {
   } else {
     if (feedback.success === undefined) {
       View = <FeedbackFirstScreen open={open} setOpen={setOpen} response={(wasSuccessful) => {
+        postFeedback({page: props.page, helpful: true})
+
         feedback.success = wasSuccessful
         if (wasSuccessful) {
           feedback.complete = true
@@ -22,17 +51,21 @@ export const FeedbackForm = () => {
     } else {
       View = <FeedbackSecondScreen open={open} setOpen={setOpen}
                                    skip={() => {
-                                     console.log("skip")
+                                     postFeedback({page: props.page, helpful: false})
+
                                      feedback.complete = true
                                      feedback.success = false
+
                                      setFeedback(feedback)
                                    }}
                                    submit={(reason, moreInformation) => {
+                                     postFeedback({page: props.page, helpful: false, reason: reason, moreInformation: moreInformation})
+
                                      feedback.complete = true
                                      feedback.success = false
                                      feedback.reason = reason
                                      feedback.moreInformation = moreInformation
-                                     console.log("feedback", feedback)
+
                                      setFeedback(feedback)
                                    }}/>
     }
@@ -158,7 +191,7 @@ const FeedbackSecondScreen = (props) => {
               />
             </Form.Field>
 
-            <TextArea placeholder='Tell us more' onChange={(event, data) => setMoreInformation(data.value)} />
+            <TextArea id="feedback-form" placeholder='Tell us more' onChange={(event, data) => setMoreInformation(data.value)}  rows={5} />
           </Form>
 
           <Button onClick={(e) => {props.submit(reason, moreInformation); e.preventDefault()}}>Submit</Button>
