@@ -35,3 +35,7 @@ button.code {
   transition: all .25s ease-out;
   outline: none;
 }
+
+.feedback-icon:hover {
+  cursor: pointer;
+}
