@@ -1,4 +1,4 @@
-import React, {Component, useState, useEffect} from 'react'
+import React, {Component, useEffect, useState} from 'react'
 import {Button, Header, Icon, Image, Loader, Menu, Message, Segment} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
@@ -10,8 +10,6 @@ import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
 import html2canvas from "html2canvas";
 import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
-import {SEND_METRICS_MUTATION} from "../services/metrics";
-import {useMutation} from "@apollo/react-hooks";
 
 const tabContentStyle = {
   height: '85vh',
@@ -194,7 +192,6 @@ class HorizontalAlgoTab extends Component {
 
 const TabExampleVerticalTabular = (props) => {
   const [page, setPage] = useState(0)
-  const [sendMetrics] = useMutation(SEND_METRICS_MUTATION)
 
   const prevResult = () => {
     setPage(Math.max(0, page - 1))

@@ -1,9 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {persistStore, persistReducer} from 'redux-persist'
+import {persistReducer, persistStore} from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import {PersistGate} from 'redux-persist/integration/react'
-import {Loader, Dimmer} from 'semantic-ui-react'
+import {Dimmer, Loader} from 'semantic-ui-react'
 
 import './index.css';
 import App from './App';
@@ -11,9 +11,6 @@ import * as serviceWorker from './serviceWorker';
 import {createStore} from "redux"
 import {Provider} from 'react-redux'
 import rootReducer from './ducks'
-import ApolloClient from 'apollo-boost';
-import {getLink} from "./services/neo4jDesktop";
-import {ApolloProvider} from '@apollo/react-hooks'
 
 // Import apollo client nethods from services
 
@@ -28,12 +25,8 @@ const store = createStore(persistedReducer)
 const persistor = persistStore(store)
 
 // Check for global and setup apollo variables
-const isBrowser = window.neo4jDesktopApi === undefined
-const link = getLink(isBrowser)
 
-console.log("link:", link)
 
-const client = new ApolloClient({link})
 
 const LoaderComponent = <Dimmer active>
   <Loader size='massive'>Connecting</Loader>
@@ -42,9 +35,7 @@ const LoaderComponent = <Dimmer active>
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={LoaderComponent} persistor={persistor}>
-      <ApolloProvider client={client}>
         <App/>
-      </ApolloProvider>
     </PersistGate>
   </Provider>
 

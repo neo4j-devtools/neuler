@@ -20,7 +20,7 @@ export const postFeedback = (body) => {
     body: formData,
     mode: "no-cors"
   }).then(function(response) {
-    return response.json();
+    return response;
   }).then(function(data) {
     console.log(data)
   }).catch(error => {
@@ -34,39 +34,34 @@ export const FeedbackForm = (props) => {
 
   let View
 
+  console.log("FeedbackForm:", feedback)
+
   if (feedback.complete) {
     const message = feedback.success ? "Thanks for your feedback. We're happy to hear that NEuler is serving you well!" : "Thanks for your feedback. We'll take it account when we're updating NEuler."
     View = <FeedbackThanks open={open} setOpen={setOpen} message={message}/>
   } else {
     if (feedback.success === undefined) {
       View = <FeedbackFirstScreen open={open} setOpen={setOpen} response={(wasSuccessful) => {
-        postFeedback({page: props.page, helpful: true})
-
-        feedback.success = wasSuccessful
+        const newFeedback = {success: wasSuccessful}
         if (wasSuccessful) {
-          feedback.complete = true
+          newFeedback.complete = true
         }
-        setFeedback(feedback)
+        setFeedback(newFeedback)
+        postFeedback({page: props.page, helpful: true})
       }}/>
     } else {
       View = <FeedbackSecondScreen open={open} setOpen={setOpen}
                                    skip={() => {
+                                     const newFeedback = {complete: true, success: false }
+                                     setFeedback(newFeedback)
+
                                      postFeedback({page: props.page, helpful: false})
-
-                                     feedback.complete = true
-                                     feedback.success = false
-
-                                     setFeedback(feedback)
                                    }}
                                    submit={(reason, moreInformation) => {
+                                     const newFeedback = {complete: true, success: false, reason: reason, moreInformation: moreInformation }
+                                     setFeedback(newFeedback)
+
                                      postFeedback({page: props.page, helpful: false, reason: reason, moreInformation: moreInformation})
-
-                                     feedback.complete = true
-                                     feedback.success = false
-                                     feedback.reason = reason
-                                     feedback.moreInformation = moreInformation
-
-                                     setFeedback(feedback)
                                    }}/>
     }
 

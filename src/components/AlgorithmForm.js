@@ -9,6 +9,7 @@ import { getCurrentAlgorithm } from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
 import { limit } from "../ducks/settings"
+import {FeedbackForm} from "./Feedback/FeedbackForm";
 
 class Algorithms extends Component {
   constructor(props, context) {
@@ -118,6 +119,8 @@ class Algorithms extends Component {
     const { Form: AlgoForm, description } = this.props.currentAlgorithm
     const { collapsed } = this.state
 
+    const Feedback = <FeedbackForm page={`${this.props.activeAlgorithm}/Form`} />
+
     const containerStyle = {
       display: 'flex',
       width: '96%',
@@ -197,6 +200,8 @@ class Algorithms extends Component {
             <Icon name={toggleIcon}/>
           </Button>
         </div>}*/}
+
+          {Feedback}
 
         </div>
       )

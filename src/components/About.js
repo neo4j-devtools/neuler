@@ -1,6 +1,7 @@
 import {Container, Message} from "semantic-ui-react"
 import React, {Component} from 'react'
 import {connect} from "react-redux";
+import {FeedbackForm} from "./Feedback/FeedbackForm";
 
 class About extends Component {
     render() {
@@ -31,6 +32,7 @@ class About extends Component {
                     </Message>
 
                 </Container>
+              <FeedbackForm page="About" />
             </div>
         )
     }
