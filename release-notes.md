@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.23 (2020-06-26)
+
+* Add feedback form
+
 ## 0.1.22 (2020-06-18)
 
 * Refresh property keys, labels, and relationship types when changing database
