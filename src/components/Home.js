@@ -171,7 +171,6 @@ class Home extends Component {
 
 
                 </Container>
-                <FeedbackForm page="Home" />
 
           </div>
 

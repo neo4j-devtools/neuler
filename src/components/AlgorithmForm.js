@@ -1,15 +1,14 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import { Button, Card, Form, Icon } from 'semantic-ui-react'
+import React, {Component} from 'react'
+import {connect} from 'react-redux'
+import {Button, Card, Form, Icon} from 'semantic-ui-react'
 
-import { v4 as generateTaskId } from 'uuid'
-import { addTask, completeTask } from "../ducks/tasks"
-import { getAlgorithmDefinitions } from "./algorithmsLibrary"
-import { getCurrentAlgorithm } from "../ducks/algorithms"
+import {v4 as generateTaskId} from 'uuid'
+import {addTask} from "../ducks/tasks"
+import {getAlgorithmDefinitions} from "./algorithmsLibrary"
+import {getCurrentAlgorithm} from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
-import { limit } from "../ducks/settings"
-import {FeedbackForm} from "./Feedback/FeedbackForm";
+import {limit} from "../ducks/settings"
 
 class Algorithms extends Component {
   constructor(props, context) {
@@ -119,7 +118,7 @@ class Algorithms extends Component {
     const { Form: AlgoForm, description } = this.props.currentAlgorithm
     const { collapsed } = this.state
 
-    const Feedback = <FeedbackForm page={`${this.props.activeAlgorithm}/Form`} />
+    // const Feedback = <FeedbackForm page={`${this.props.activeAlgorithm}/Form`} />
 
     const containerStyle = {
       display: 'flex',
@@ -201,7 +200,7 @@ class Algorithms extends Component {
           </Button>
         </div>}*/}
 
-          {Feedback}
+          {/*{Feedback}*/}
 
         </div>
       )

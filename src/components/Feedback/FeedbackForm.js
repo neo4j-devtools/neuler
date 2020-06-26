@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {Button, Checkbox, Icon, TextArea, Form} from "semantic-ui-react";
 
 export const postFeedback = (body) => {
@@ -32,9 +32,13 @@ export const FeedbackForm = (props) => {
   const [open, setOpen] = useState(true);
   const [feedback, setFeedback] = useState({complete: false})
 
-  let View
+  const [page, setPage] = useState(props.page)
+  useEffect(() => {
+    setPage(props.page);
+    setFeedback({complete: false})
+  }, [props.page])
 
-  console.log("FeedbackForm:", feedback)
+  let View
 
   if (feedback.complete) {
     const message = feedback.success ? "Thanks for your feedback. We're happy to hear that NEuler is serving you well!" : "Thanks for your feedback. We'll take it account when we're updating NEuler."
@@ -45,9 +49,9 @@ export const FeedbackForm = (props) => {
         const newFeedback = {success: wasSuccessful}
         if (wasSuccessful) {
           newFeedback.complete = true
+          postFeedback({page: page, helpful: true})
         }
         setFeedback(newFeedback)
-        postFeedback({page: props.page, helpful: true})
       }}/>
     } else {
       View = <FeedbackSecondScreen open={open} setOpen={setOpen}
@@ -55,13 +59,13 @@ export const FeedbackForm = (props) => {
                                      const newFeedback = {complete: true, success: false }
                                      setFeedback(newFeedback)
 
-                                     postFeedback({page: props.page, helpful: false})
+                                     postFeedback({page: page, helpful: false})
                                    }}
                                    submit={(reason, moreInformation) => {
                                      const newFeedback = {complete: true, success: false, reason: reason, moreInformation: moreInformation }
                                      setFeedback(newFeedback)
 
-                                     postFeedback({page: props.page, helpful: false, reason: reason, moreInformation: moreInformation})
+                                     postFeedback({page: page, helpful: false, reason: reason, moreInformation: moreInformation})
                                    }}/>
     }
 

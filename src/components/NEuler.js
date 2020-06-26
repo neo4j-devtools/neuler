@@ -11,8 +11,11 @@ import {limit} from "../ducks/settings"
 import {loadMetadata, loadVersions} from "../services/metadata"
 import {setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata"
 import Home from "./Home";
-import About from "./About";
+import About, {NEULER_VERSION} from "./About";
 import {onNeo4jVersion} from "../services/stores/neoStore";
+import {FeedbackForm} from "./Feedback/FeedbackForm";
+
+
 
 class NEuler extends Component {
   constructor(props, context) {
@@ -59,6 +62,8 @@ class NEuler extends Component {
 
     const {header, view} = this.selectComponent(activeGroup)
 
+    const page = activeAlgorithm ? `${NEULER_VERSION}/${activeGroup}/${activeAlgorithm}` : `${NEULER_VERSION}/${activeGroup}`
+
     return (
       <Container fluid style={{ display: 'flex' }}>
           <AlgorithmsGroupMenu/>
@@ -79,6 +84,7 @@ class NEuler extends Component {
             </Header>
           </Segment>
           {view}
+          <FeedbackForm page={page} />
         </div>
       </Container>
     )

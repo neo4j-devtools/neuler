@@ -1,7 +1,8 @@
 import {Container, Message} from "semantic-ui-react"
 import React, {Component} from 'react'
 import {connect} from "react-redux";
-import {FeedbackForm} from "./Feedback/FeedbackForm";
+
+export const NEULER_VERSION = "0.1.23"
 
 class About extends Component {
     render() {
@@ -9,15 +10,13 @@ class About extends Component {
             margin: "1em",
         }
 
-        const version = "0.1.23"
-
         return (<div style={containerStyle}>
                 <Container fluid>
                     <h3>Versions</h3>
                     <Message>
 
                         <p>
-                            NEuler: <strong>{version}</strong>
+                            NEuler: <strong>{NEULER_VERSION}</strong>
                         </p>
 
                         <p>
@@ -32,7 +31,6 @@ class About extends Component {
                     </Message>
 
                 </Container>
-              <FeedbackForm page="About" />
             </div>
         )
     }
