@@ -60,6 +60,23 @@ ORDER BY triangles DESC
 LIMIT toInteger($limit)`
 }
 
+export const getFetchLocalClusteringCoefficientCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}\`) AND exists(node.\`${config.clusteringCoefficientProperty}\`)
+RETURN node, node.\`${config.writeProperty}\` AS triangles, node.\`${config.clusteringCoefficientProperty}\` AS coefficient
+ORDER BY triangles DESC
+LIMIT toInteger($limit)`
+}
+
+export const getFetchNewLocalClusteringCoefficientCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}\`)
+RETURN node, node.\`${config.writeProperty}\` AS coefficient
+ORDER BY coefficient DESC
+LIMIT toInteger($limit)`
+}
 
 export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = {

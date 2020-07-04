@@ -95,6 +95,27 @@ export const triangleCountNew = ({streamCypher, storeCypher, fetchCypher, parame
   })
 }
 
+export const localClusteringCoefficientNew = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+  return runAlgorithm({
+    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
+      if (result.records) {
+        return result.records.map(record => {
+          const {properties, labels} = record.get('node')
+
+          return {
+            properties: parseProperties(properties),
+            labels: labels,
+            coefficient: record.get('coefficient')//.toNumber()
+          }
+        })
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
+    }
+  })
+}
+
 export const balancedTriads = ({label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit}) => {
   const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
   const extraParams = {

@@ -7,7 +7,7 @@ import {
   runAlgorithm,
   stronglyConnectedComponents,
   triangleCount, triangleCountNew, triangleCountOld,
-  triangles
+  triangles, localClusteringCoefficientNew
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
 import LabelPropagationForm from "./LabelPropagationForm"
@@ -24,10 +24,16 @@ import {
   communityStreamQueryOutline,
   getCommunityFetchCypher,
   getFetchLouvainCypher, getFetchNewTriangleCountCypher,
-  getFetchTriangleCountCypher
+  getFetchTriangleCountCypher,
+  getFetchLocalClusteringCoefficientCypher,
+  getFetchNewLocalClusteringCoefficientCypher
 } from "../../services/queries";
 import NewTriangleCountResult from "./NewTriangleCountResult";
 import NewTriangleCountForm from "./NewTriangleCountForm";
+import LocalClusteringCoefficientForm from "./LocalClusteringCoefficientForm";
+import LocalClusteringCoefficientResult from "./LocalClusteringCoefficientResult";
+import NewLocalClusteringCoefficientForm from "./NewLocalClusteringCoefficientForm";
+import NewLocalClusteringCoefficientResult from "./NewLocalClusteringCoefficientResult";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
@@ -172,6 +178,51 @@ const newTriangleCount = {
   getFetchQuery: getFetchNewTriangleCountCypher
 }
 
+const oldLocalClusteringCoefficient = {
+  Form: LocalClusteringCoefficientForm,
+  service: runAlgorithm,
+  ResultView: LocalClusteringCoefficientResult,
+  streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
+        YIELD nodeId, coefficient
+        WITH gds.util.asNode(nodeId) AS node, coefficient
+        RETURN node, coefficient
+        ORDER BY coefficient DESC
+        LIMIT toInteger($limit)`),
+  storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
+  parameters: {
+    persist: true,
+    clusteringCoefficientProperty: "clusteringCoefficient",
+    concurrency: 8,
+    direction: "Undirected"
+  },
+  getFetchQuery: getFetchLocalClusteringCoefficientCypher,
+  description: "describes the likelihood that the neighbours of node are also connected"
+
+}
+
+
+const newLocalClusteringCoefficient = {
+  Form: NewLocalClusteringCoefficientForm,
+  service: localClusteringCoefficientNew,
+  ResultView: NewLocalClusteringCoefficientResult,
+  streamQuery: removeSpacing(`CALL gds.localClusteringCoefficient.stream($config)
+        YIELD nodeId, localClusteringCoefficient AS coefficient
+        WITH gds.util.asNode(nodeId) AS node, coefficient
+        RETURN node, coefficient
+        ORDER BY coefficient DESC
+        LIMIT toInteger($limit)`),
+  storeQuery: `CALL gds.localClusteringCoefficient.write($config)`,
+  parameters: {
+    persist: true,
+    writeProperty: "coefficient",
+    concurrency: 8,
+    direction: "Undirected"
+  },
+  getFetchQuery: getFetchNewLocalClusteringCoefficientCypher,
+  description: "describes the likelihood that the neighbours of node are also connected"
+
+}
+
 export default {
   algorithmList: [
     "Louvain",
@@ -180,10 +231,11 @@ export default {
     "Strongly Connected Components",
     "Triangles",
     "Triangle Count",
+    "Local Clustering Coefficient"
     // "Balanced Triads"
   ],
   algorithmDefinitions: (algorithm, gdsVersion) => {
-    const version = gdsVersion.split(".").slice(0, 2).join(".")
+    const version = gdsVersion.split(".")[1]
     switch (algorithm) {
       case "Triangles": {
         const oldStreamQuery = `CALL gds.alpha.triangle.stream($config)
@@ -196,11 +248,14 @@ export default {
                 RETURN gds.util.asNode(nodeA) AS nodeA, gds.util.asNode(nodeB) AS nodeB, gds.util.asNode(nodeC) AS nodeC
                 LIMIT toInteger($limit)`
 
-        baseTriangles.streamQuery = removeSpacing(version === "1.2" ? newStreamQuery : oldStreamQuery)
+        baseTriangles.streamQuery = removeSpacing(version > "1" ? newStreamQuery : oldStreamQuery)
         return baseTriangles
       }
       case "Triangle Count": {
-        return Object.assign({}, baseTriangleCount, version === "1.2" ? newTriangleCount : oldTriangleCount)
+        return Object.assign({}, baseTriangleCount, version > "1" ? newTriangleCount : oldTriangleCount)
+      }
+      case "Local Clustering Coefficient": {
+        return Object.assign({}, baseTriangleCount, version > "1" ? newLocalClusteringCoefficient : oldLocalClusteringCoefficient)
       }
       default:
         return algorithms[algorithm]
