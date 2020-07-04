@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import {Form, Label, Input} from "semantic-ui-react"
-import CommunityForm from './CommunityForm'
+import {Form, Dropdown, Input} from "semantic-ui-react"
 
 export default class extends Component {
     state = {
@@ -12,21 +11,43 @@ export default class extends Component {
         const {onChange, labelOptions, relationshipType, relationshipTypeOptions, weightProperty, clusteringCoefficientProperty, writeProperty, defaultValue, concurrency, direction, persist} = this.props
 
         return (
-            <Form size='mini' style={{marginBottom: '1em'}}>
-                <CommunityForm onChange={onChange} direction={direction} persist={persist} writeProperty={writeProperty}
-                               concurrency={concurrency} labelOptions={labelOptions}
-                               relationshipType={relationshipType} relationshipOrientationOptions={this.state.relationshipOrientationOptions}
-                               relationshipTypeOptions={relationshipTypeOptions}/>
-                <Form.Field inline>
+            <Form size='mini' style={{ marginBottom: '1em' }}>
 
-                    <label style={{'width': '8em'}}>Clustering Coefficient Property</label>
-                    <input
-                        value={clusteringCoefficientProperty}
-                        onChange={evt => onChange('clusteringCoefficientProperty', evt.target.value)}
-                        style={{'width': '10em'}}
-                    />
-                </Form.Field>
-            </Form>
+            <Form.Field>
+              <label>Label</label>
+              <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
+            </Form.Field>
+    
+            <Form.Field>
+              <label>Relationship Type</label>
+              <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
+            </Form.Field>
+    
+            {relationshipType ?
+              <Form.Field>
+                <label>Relationship Orientation</label>
+                <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={this.state.relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
+              </Form.Field> : null }
+        
+            <Form.Group inline>
+              <Form.Field inline>
+                <label style={{ 'width': '10em' }}>Store results</label>
+                <input type='checkbox' checked={persist} onChange={evt => {
+                  console.log(evt.target, evt)
+                  onChange('persist', evt.target.checked)
+                }}/>
+              </Form.Field>
+              {
+                persist ?
+                  <Form.Field inline>
+                    <Input size='mini' basic="true" value={clusteringCoefficientProperty} placeholder='Write Property' onChange={evt => onChange('clusteringCoefficientProperty', evt.target.value)}/>
+                  </Form.Field>
+                  : null
+              }
+            </Form.Group>
+    
+    
+          </Form>
         )
     }
 }

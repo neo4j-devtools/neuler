@@ -7,7 +7,7 @@ import {
   runAlgorithm,
   stronglyConnectedComponents,
   triangleCount, triangleCountNew, triangleCountOld,
-  triangles, localClusteringCoefficientNew
+  triangles, localClusteringCoefficient
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
 import LabelPropagationForm from "./LabelPropagationForm"
@@ -33,7 +33,6 @@ import NewTriangleCountForm from "./NewTriangleCountForm";
 import LocalClusteringCoefficientForm from "./LocalClusteringCoefficientForm";
 import LocalClusteringCoefficientResult from "./LocalClusteringCoefficientResult";
 import NewLocalClusteringCoefficientForm from "./NewLocalClusteringCoefficientForm";
-import NewLocalClusteringCoefficientResult from "./NewLocalClusteringCoefficientResult";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
@@ -151,7 +150,6 @@ const oldTriangleCount = {
   parameters: {
     persist: true,
     writeProperty: "trianglesCount",
-    clusteringCoefficientProperty: "clusteringCoefficient",
     concurrency: 8,
     direction: "Undirected"
   },
@@ -180,7 +178,7 @@ const newTriangleCount = {
 
 const oldLocalClusteringCoefficient = {
   Form: LocalClusteringCoefficientForm,
-  service: runAlgorithm,
+  service: localClusteringCoefficient,
   ResultView: LocalClusteringCoefficientResult,
   streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
         YIELD nodeId, coefficient
@@ -191,7 +189,7 @@ const oldLocalClusteringCoefficient = {
   storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
   parameters: {
     persist: true,
-    clusteringCoefficientProperty: "clusteringCoefficient",
+    clusteringCoefficientProperty: "coefficient",
     concurrency: 8,
     direction: "Undirected"
   },
@@ -200,11 +198,10 @@ const oldLocalClusteringCoefficient = {
 
 }
 
-
 const newLocalClusteringCoefficient = {
   Form: NewLocalClusteringCoefficientForm,
-  service: localClusteringCoefficientNew,
-  ResultView: NewLocalClusteringCoefficientResult,
+  service: localClusteringCoefficient,
+  ResultView: LocalClusteringCoefficientResult,
   streamQuery: removeSpacing(`CALL gds.localClusteringCoefficient.stream($config)
         YIELD nodeId, localClusteringCoefficient AS coefficient
         WITH gds.util.asNode(nodeId) AS node, coefficient

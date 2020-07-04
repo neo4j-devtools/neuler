@@ -45,8 +45,8 @@ LIMIT toInteger($limit)`
 export const getFetchTriangleCountCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`) AND exists(node.\`${config.clusteringCoefficientProperty}\`)
-RETURN node, node.\`${config.writeProperty}\` AS triangles, node.\`${config.clusteringCoefficientProperty}\` AS coefficient
+WHERE exists(node.\`${config.writeProperty}\`)
+RETURN node, node.\`${config.writeProperty}\` AS triangles
 ORDER BY triangles DESC
 LIMIT toInteger($limit)`
 }
@@ -63,9 +63,9 @@ LIMIT toInteger($limit)`
 export const getFetchLocalClusteringCoefficientCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`) AND exists(node.\`${config.clusteringCoefficientProperty}\`)
-RETURN node, node.\`${config.writeProperty}\` AS triangles, node.\`${config.clusteringCoefficientProperty}\` AS coefficient
-ORDER BY triangles DESC
+WHERE exists(node.\`${config.clusteringCoefficientProperty}\`)
+RETURN node, node.\`${config.clusteringCoefficientProperty}\` AS coefficient
+ORDER BY coefficient DESC
 LIMIT toInteger($limit)`
 }
 
