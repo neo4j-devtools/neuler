@@ -104,7 +104,7 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
           return {
             properties: parseProperties(properties),
             labels: labels,
-            coefficient: record.get('coefficient')//.toNumber()
+            coefficient: record.get('coefficient')
           }
         })
       } else {
