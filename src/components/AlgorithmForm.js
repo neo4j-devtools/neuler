@@ -37,7 +37,6 @@ class Algorithms extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    console.log(nextProps.currentAlgorithm)
     if (this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
       const { activeGroup, activeAlgorithm, metadata } = nextProps
       const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
