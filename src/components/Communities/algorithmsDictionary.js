@@ -176,10 +176,15 @@ const newTriangleCount = {
   getFetchQuery: getFetchNewTriangleCountCypher
 }
 
+const baseLocalClusteringCoefficient = {
+  parametersBuilder: communityParams,
+  ResultView: LocalClusteringCoefficientResult,
+  service: localClusteringCoefficient,
+  description: "describes the likelihood that the neighbours of node are also connected"
+}
+
 const oldLocalClusteringCoefficient = {
   Form: LocalClusteringCoefficientForm,
-  service: localClusteringCoefficient,
-  ResultView: LocalClusteringCoefficientResult,
   streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
         YIELD nodeId, coefficient
         WITH gds.util.asNode(nodeId) AS node, coefficient
@@ -193,15 +198,11 @@ const oldLocalClusteringCoefficient = {
     concurrency: 8,
     direction: "Undirected"
   },
-  getFetchQuery: getFetchLocalClusteringCoefficientCypher,
-  description: "describes the likelihood that the neighbours of node are also connected"
-
+  getFetchQuery: getFetchLocalClusteringCoefficientCypher
 }
 
 const newLocalClusteringCoefficient = {
   Form: NewLocalClusteringCoefficientForm,
-  service: localClusteringCoefficient,
-  ResultView: LocalClusteringCoefficientResult,
   streamQuery: removeSpacing(`CALL gds.localClusteringCoefficient.stream($config)
         YIELD nodeId, localClusteringCoefficient AS coefficient
         WITH gds.util.asNode(nodeId) AS node, coefficient
@@ -215,9 +216,7 @@ const newLocalClusteringCoefficient = {
     concurrency: 8,
     direction: "Undirected"
   },
-  getFetchQuery: getFetchNewLocalClusteringCoefficientCypher,
-  description: "describes the likelihood that the neighbours of node are also connected"
-
+  getFetchQuery: getFetchNewLocalClusteringCoefficientCypher
 }
 
 export default {
@@ -252,7 +251,7 @@ export default {
         return Object.assign({}, baseTriangleCount, version > "1" ? newTriangleCount : oldTriangleCount)
       }
       case "Local Clustering Coefficient": {
-        return Object.assign({}, baseTriangleCount, version > "1" ? newLocalClusteringCoefficient : oldLocalClusteringCoefficient)
+        return Object.assign({}, baseLocalClusteringCoefficient, version > "1" ? newLocalClusteringCoefficient : oldLocalClusteringCoefficient)
       }
       default:
         return algorithms[algorithm]
