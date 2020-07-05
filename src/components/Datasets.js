@@ -43,7 +43,8 @@ class Datasets extends Component {
         queries.reduce((promiseChain, query, qIndex) => {
             return promiseChain.then(chainResults => {
                   this.setState({ currentQueryIndex: qIndex })
-                  return runCypher(query).catch(error => {console.log(error)})
+                  return runCypher(query)
+                  .catch(error => {if (error.code !== "Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists") throw new Error(error)})
                   .then(currentResult => {
                       this.setState({
                           completedQueryIndexes: { ...this.state.completedQueryIndexes, [qIndex]: true }
