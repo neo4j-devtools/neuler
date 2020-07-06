@@ -62,8 +62,7 @@ export const triangleCountOld = ({streamCypher, storeCypher, fetchCypher, parame
           return {
             properties: parseProperties(properties),
             labels: labels,
-            triangles: record.get('triangles').toNumber(),
-            coefficient: record.get('coefficient'),
+            triangles: record.get('triangles').toNumber()
           }
         })
       } else {
@@ -85,6 +84,27 @@ export const triangleCountNew = ({streamCypher, storeCypher, fetchCypher, parame
             properties: parseProperties(properties),
             labels: labels,
             triangles: record.get('triangles').toNumber()
+          }
+        })
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
+    }
+  })
+}
+
+export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+  return runAlgorithm({
+    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
+      if (result.records) {
+        return result.records.map(record => {
+          const {properties, labels} = record.get('node')
+
+          return {
+            properties: parseProperties(properties),
+            labels: labels,
+            coefficient: record.get('coefficient')
           }
         })
       } else {

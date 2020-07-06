@@ -37,7 +37,7 @@ class Algorithms extends Component {
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
-    if (this.props.currentAlgorithm !== nextProps.currentAlgorithm) {
+    if (JSON.stringify(this.props.currentAlgorithm) !== JSON.stringify(nextProps.currentAlgorithm)) {
       const { activeGroup, activeAlgorithm, metadata } = nextProps
       const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
       this.setState({ parameters })

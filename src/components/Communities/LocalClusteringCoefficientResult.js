@@ -13,7 +13,7 @@ export default ({ task }) => (
         <Table.Row>
           <Table.HeaderCell>Labels</Table.HeaderCell>
           <Table.HeaderCell>Properties</Table.HeaderCell>
-          <Table.HeaderCell>Triangles</Table.HeaderCell>
+          <Table.HeaderCell>Coefficient</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -22,7 +22,7 @@ export default ({ task }) => (
           <Table.Row key={idx}>
             <Table.Cell>{result.labels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels}/></Table.Cell>
-            <Table.Cell>{result.triangles}</Table.Cell>
+            <Table.Cell>{result.coefficient}</Table.Cell>
           </Table.Row>
         ) :
         <Table.Row key="loading-centrality-result">
