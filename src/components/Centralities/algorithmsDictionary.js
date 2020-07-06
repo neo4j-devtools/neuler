@@ -133,9 +133,7 @@ const baseApproxBetweenness = {
   ResultView: CentralityResult,
   parametersBuilder: centralityParams,
   getFetchQuery: getFetchCypher,
-  description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`,
-  parametersBuilder: centralityParams,
-  getFetchQuery: getFetchCypher
+  description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
 }
 
 const oldApproxBetweenness = {
@@ -191,10 +189,10 @@ export default {
 
         baseBetweenness.streamQuery = streamQueryOutline(version > "2" ? newStreamQuery : oldStreamQuery)
         baseBetweenness.storeQuery = version > "2" ? newStoreQuery : oldStoreQuery
-        
+
         return baseBetweenness
       }
-      
+
       case "Approx Betweenness": {
         return Object.assign({}, baseApproxBetweenness, version > "2" ? newApproxBetweenness : oldApproxBetweenness)
       }
