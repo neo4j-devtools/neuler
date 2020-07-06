@@ -194,7 +194,7 @@ const FeedbackSecondScreen = (props) => {
           </Form>
 
           <Button onClick={(e) => {props.submit(reason, moreInformation); e.preventDefault()}}>Submit</Button>
-          <Button onClick={(e) => {props.skip(); e.preventDefault()}}>Skip</Button>
+          {/*<Button onClick={(e) => {props.skip(); e.preventDefault()}}>Skip</Button>*/}
 
         </div>
 
