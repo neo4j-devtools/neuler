@@ -8,6 +8,7 @@ import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
+import NewApproxBetweennessForm from "./NewApproxBetweennessForm"
 
 
 let algorithms = {
@@ -87,41 +88,6 @@ let algorithms = {
     getFetchQuery: getFetchCypher,
     description: `a variant of the PageRank algorithm`
   },
-  'Betweenness': {
-    Form: BetweennesForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      direction: 'Natural',
-      persist: true,
-      writeProperty: "betweenness",
-      concurrency: 8
-    },
-    parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`),
-    storeQuery: `CALL gds.alpha.betweenness.write($config)`,
-    getFetchQuery: getFetchCypher,
-    description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
-  },
-  'Approx Betweenness': {
-    Form: ApproxBetweennessForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      strategy: "random",
-      direction: "Natural",
-      persist: true,
-      concurrency: 8,
-      maxDepth: null,
-      probability: null,
-      writeProperty: "approxBetweenness"
-    },
-    parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.sampled.stream($config) YIELD nodeId, centrality AS score`),
-    storeQuery: `CALL gds.alpha.betweenness.sampled.write($config)`,
-    getFetchQuery: getFetchCypher,
-    description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
-  },
   "Closeness": {
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
@@ -146,6 +112,60 @@ let algorithms = {
 -                  formula had when dealing with unconnected graphs.`
   }
 };
+
+const baseBetweenness = {
+  Form: BetweennesForm,
+  service: runAlgorithm,
+  ResultView: CentralityResult,
+  parameters: {
+    direction: 'Natural',
+    persist: true,
+    writeProperty: "betweenness",
+    concurrency: 8
+  },
+  parametersBuilder: centralityParams,
+  getFetchQuery: getFetchCypher,
+  description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
+}
+
+const baseApproxBetweenness = {
+  service: runAlgorithm,
+  ResultView: CentralityResult,
+  parametersBuilder: centralityParams,
+  getFetchQuery: getFetchCypher,
+  description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`,
+  parametersBuilder: centralityParams,
+  getFetchQuery: getFetchCypher
+}
+
+const oldApproxBetweenness = {
+  Form: ApproxBetweennessForm,
+  parameters: {
+    strategy: "random",
+    direction: "Natural",
+    persist: true,
+    concurrency: 8,
+    maxDepth: null,
+    probability: null,
+    writeProperty: "approxBetweenness"
+  },
+  streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.sampled.stream($config) YIELD nodeId, centrality AS score`),
+  storeQuery: `CALL gds.alpha.betweenness.sampled.write($config)`
+}
+
+const newApproxBetweenness = {
+  Form: NewApproxBetweennessForm,
+  parameters: {
+    samplingSize: 100,
+    direction: "Natural",
+    persist: true,
+    concurrency: 8,
+    writeProperty: "approxBetweenness"
+  },
+  streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($config) YIELD nodeId, score`),
+  storeQuery: `CALL gds.betweenness.write($config)`
+}
+
 export default {
   algorithmList: [
     "Degree",
@@ -157,5 +177,29 @@ export default {
     "Closeness",
     // "Harmonic"
   ],
-  algorithmDefinitions: algorithm => algorithms[algorithm],
+  algorithmDefinitions: (algorithm, gdsVersion) => {
+    const version = gdsVersion.split(".")[1]
+    switch (algorithm) {
+      case "Betweenness": {
+        const oldStreamQuery = `CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`
+
+        const newStreamQuery = `CALL gds.betweenness.stream($config) YIELD nodeId, score`
+
+        const oldStoreQuery = `CALL gds.alpha.betweenness.write($config)`
+
+        const newStoreQuery = `CALL gds.betweenness.write($config)`
+
+        baseBetweenness.streamQuery = streamQueryOutline(version > "2" ? newStreamQuery : oldStreamQuery)
+        baseBetweenness.storeQuery = version > "2" ? newStoreQuery : oldStoreQuery
+        
+        return baseBetweenness
+      }
+      
+      case "Approx Betweenness": {
+        return Object.assign({}, baseApproxBetweenness, version > "2" ? newApproxBetweenness : oldApproxBetweenness)
+      }
+      default:
+        return algorithms[algorithm]
+    }
+  },
 }

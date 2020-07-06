@@ -192,7 +192,7 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
   return params
 }
 
-export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties}) => {
+export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
@@ -200,6 +200,7 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   const parsedIterations = maxIterations == null ? null : int(maxIterations)
   // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
+  const parsedSamplingSize = samplingSize == null ? null : int(samplingSize)
 
   const config = {
     dampingFactor: parseFloat(dampingFactor) || null,
@@ -208,7 +209,8 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
     probability: parsedProbability && parsedProbability > 0 ? parsedProbability : null,
     strategy: strategy,
     write: true,
-    normalization: normalization || null
+    normalization: normalization || null,
+    samplingSize: parsedSamplingSize || null
   }
 
   if (persist) {
