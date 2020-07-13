@@ -8,7 +8,7 @@ export default class extends Component {
     }
 
     render() {
-        const {onChange, labelOptions, relationshipType, relationshipTypeOptions, weightProperty, clusteringCoefficientProperty, writeProperty, defaultValue, concurrency, direction, persist} = this.props
+        const {onChange, labelOptions, relationshipType, relationshipTypeOptions, clusteringCoefficientProperty, direction, persist} = this.props
 
         return (
             <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -17,18 +17,18 @@ export default class extends Component {
               <label>Label</label>
               <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
             </Form.Field>
-    
+
             <Form.Field>
               <label>Relationship Type</label>
               <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
             </Form.Field>
-    
+
             {relationshipType ?
               <Form.Field>
                 <label>Relationship Orientation</label>
                 <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={this.state.relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
               </Form.Field> : null }
-        
+
             <Form.Group inline>
               <Form.Field inline>
                 <label style={{ 'width': '10em' }}>Store results</label>
@@ -45,8 +45,8 @@ export default class extends Component {
                   : null
               }
             </Form.Group>
-    
-    
+
+
           </Form>
         )
     }

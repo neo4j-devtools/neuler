@@ -7,7 +7,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, maxIterations, tolerance, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, maxIterations, tolerance, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, defaultValue, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -62,8 +62,6 @@ export default class extends Component {
               : null
           }
         </Form.Group>
-
-
 
 
         <Form.Field inline>

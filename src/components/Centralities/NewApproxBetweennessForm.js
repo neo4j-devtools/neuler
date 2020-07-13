@@ -2,9 +2,9 @@ import React from 'react'
 import {Form} from "semantic-ui-react"
 import CentralityForm from "./CentralityForm"
 
-export default ({ onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, relationshipType, writeProperty, direction, persist, concurrency, maxDepth, strategy, probability, samplingSize }) => (
+export default ({ onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, relationshipType, writeProperty, direction, persist,  maxDepth, strategy, probability, samplingSize }) => (
   <Form size='mini' style={{ marginBottom: '1em' }}>
-    <CentralityForm onChange={onChange} relationshipType={relationshipType} direction={direction} persist={persist} concurrency={concurrency} writeProperty={writeProperty} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions} relationshipOrientationOptions={relationshipOrientationOptions} />
+    <CentralityForm onChange={onChange} relationshipType={relationshipType} direction={direction} persist={persist}  writeProperty={writeProperty} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions} relationshipOrientationOptions={relationshipOrientationOptions} />
     <Form.Field inline>
       <label style={{ 'width': '8em' }}>Sampling size</label>
       <input

@@ -8,12 +8,12 @@ export default class extends Component {
   }
 
   render() {
-    const {onChange, labelOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, direction, persist} = this.props
+    const {onChange, labelOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff,  direction, persist} = this.props
 
     return (
       <Form size='mini' style={{marginBottom: '1em'}}>
         <SimilarityForm onChange={onChange} direction={direction} writeProperty={writeProperty} persist={persist}
-                        concurrency={concurrency} labelOptions={labelOptions} writeRelationshipType={writeRelationshipType} similarityCutoff={similarityCutoff}
+                        labelOptions={labelOptions} writeRelationshipType={writeRelationshipType} similarityCutoff={similarityCutoff}
                         degreeCutoff = {degreeCutoff}
                         relationshipTypeOptions={relationshipTypeOptions}/>
 

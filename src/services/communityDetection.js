@@ -1,12 +1,11 @@
 import {runCypher} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 
-const baseParameters = (label, relationshipType, direction, concurrency, limit) => {
+const baseParameters = (label, relationshipType, direction, limit) => {
   return {
     label: label || null,
     relationshipType: relationshipType || null,
     direction: direction || 'Outgoing',
-    concurrency: parseInt(concurrency) || null,
     limit: parseInt(limit) || 50
   }
 }
@@ -115,8 +114,8 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
   })
 }
 
-export const balancedTriads = ({label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, concurrency, limit}) => {
-  const baseParams = baseParameters(label, relationshipType, direction, concurrency, limit)
+export const balancedTriads = ({label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, limit}) => {
+  const baseParams = baseParameters(label, relationshipType, direction,  limit)
   const extraParams = {
     weightProperty: weightProperty || null,
     defaultValue: parseFloat(defaultValue) || 1.0,

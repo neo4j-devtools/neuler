@@ -78,7 +78,7 @@ ORDER BY coefficient DESC
 LIMIT toInteger($limit)`
 }
 
-export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
     config: {}
@@ -115,7 +115,7 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   return params
 }
 
-export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
+export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
   }
@@ -141,7 +141,7 @@ export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, di
 }
 
 
-export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, concurrency, limit, requiredProperties}) => {
+export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
     itemLabel: itemLabel || null,
@@ -167,8 +167,8 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
+export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
+  const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
 
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
   const parsedIterations = maxIterations == null ? null : int(maxIterations)
@@ -200,8 +200,8 @@ export const communityParams = ({label, relationshipType, direction, persist, ma
   return params
 }
 
-export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, concurrency, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize}) => {
-  const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
+export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize}) => {
+  const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
   const parsedMaxDepth = maxDepth == null ? null : int(maxDepth)
@@ -253,10 +253,8 @@ export const createRelationshipProjection = (relationshipType, direction, weight
     }
 }
 
-export const baseParameters = (label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue) => {
+export const baseParameters = (label, relationshipType, direction, limit, weightProperty, defaultValue) => {
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
-
-  // console.log("baseParameters...", neo.int(concurrency), neo.isInt(neo.int(concurrency)))
 
   return {
     limit: parseInt(limit) || 50,

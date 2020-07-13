@@ -1,7 +1,7 @@
 import React from 'react'
 import { Form, Input, Dropdown } from "semantic-ui-react"
 
-export default ({onChange, direction, persist, concurrency, writeProperty, labelOptions, relationshipTypeOptions}) => (
+export default ({onChange, direction, persist, writeProperty, labelOptions, relationshipTypeOptions}) => (
   <React.Fragment>
   <Form.Field>
     <label>Label</label>
@@ -50,18 +50,6 @@ export default ({onChange, direction, persist, concurrency, writeProperty, label
           : null
       }
     </Form.Group>
-    <Form.Field inline>
-      <label style={{ 'width': '10em' }}>Concurrency</label>
-      <input
-        type='number'
-        placeholder="Concurrency"
-        min={1}
-        max={1000}
-        step={1}
-        value={concurrency}
-        onChange={evt => onChange('concurrency', evt.target.value)}
-        style={{ 'width': '10em' }}
-      />
-    </Form.Field>
+
   </React.Fragment>
 )

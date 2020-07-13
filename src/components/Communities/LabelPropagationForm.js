@@ -8,7 +8,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipType, relationshipOrientationOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, relationshipType, relationshipOrientationOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, weightProperty, defaultValue, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -63,19 +63,7 @@ export default class extends Component {
               : null
           }
         </Form.Group>
-        <Form.Field inline>
-          <label style={{ 'width': '10em' }}>Concurrency</label>
-          <input
-            type='number'
-            placeholder="Concurrency"
-            min={1}
-            max={1000}
-            step={1}
-            value={concurrency}
-            onChange={evt => onChange('concurrency', evt.target.value)}
-            style={{ 'width': '10em' }}
-          />
-        </Form.Field>
+
 
       </Form>
     )

@@ -9,12 +9,12 @@ export default class extends Component {
     }
 
     render() {
-        const {onChange, labelOptions, relationshipType, relationshipTypeOptions, weightProperty, clusteringCoefficientProperty, writeProperty, defaultValue, concurrency, direction, persist} = this.props
+        const {onChange, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, direction, persist} = this.props
 
         return (
             <Form size='mini' style={{marginBottom: '1em'}}>
                 <CommunityForm onChange={onChange} direction={direction} persist={persist} writeProperty={writeProperty}
-                               concurrency={concurrency} labelOptions={labelOptions}
+                               labelOptions={labelOptions}
                                relationshipType={relationshipType} relationshipOrientationOptions={this.state.relationshipOrientationOptions}
                                relationshipTypeOptions={relationshipTypeOptions}/>
             </Form>

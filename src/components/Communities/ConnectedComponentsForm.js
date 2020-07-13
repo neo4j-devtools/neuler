@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Dropdown, Form, Input} from "semantic-ui-react"
-import CommunityForm from './CommunityForm'
 
 export default class extends Component {
   state = {
@@ -8,7 +7,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipType, relationshipOrientationOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, relationshipType, relationshipOrientationOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, weightProperty, defaultValue, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>

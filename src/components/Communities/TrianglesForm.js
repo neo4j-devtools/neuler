@@ -9,11 +9,11 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, relationshipType, labelOptions, relationshipTypeOptions, weightProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, relationshipType, labelOptions, relationshipTypeOptions, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
-        <StreamOnlyForm onChange={onChange} relationshipType={relationshipType} relationshipOrientationOptions={this.state.relationshipOrientationOptions} direction={direction} persist={persist} concurrency={concurrency} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
+        <StreamOnlyForm onChange={onChange} relationshipType={relationshipType} relationshipOrientationOptions={this.state.relationshipOrientationOptions} direction={direction} persist={persist} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
       </Form>
     )
   }

@@ -23,7 +23,7 @@ let algorithms = {
             writeProperty: "louvain",
             defaultValue: 1.0,
             relationshipWeightProperty: "weight",
-            concurrency: 8
+
         },
         streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
@@ -55,7 +55,7 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
             relationshipWeightProperty: "weight",
             propertyKeyLat: "latitude",
             propertyKeyLon: "longitude",
-            concurrency: 8
+
         },
         streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
@@ -84,7 +84,7 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
             persist: false,
             defaultValue: 1.0,
             relationshipWeightProperty: "weight",
-            concurrency: 8,
+
             delta: 3.0
         },
         streamQuery: `CALL db.propertyKeys() YIELD propertyKey
@@ -113,7 +113,7 @@ LIMIT toInteger($limit)`,
             persist: false,
             defaultValue: 1.0,
             relationshipWeightProperty: "weight",
-            concurrency: 8,
+
         },
         streamQuery: `CALL gds.alpha.allShortestPaths.stream($config)
 YIELD sourceNodeId, targetNodeId, distance AS cost

@@ -52,7 +52,6 @@ let algorithms = {
       defaultValue: 1.0,
       relationshipWeightProperty: null,
       seedProperty: null,
-      concurrency: 8
     },
     streamQuery: `CALL gds.louvain.stream($config)
 YIELD nodeId, communityId AS community, intermediateCommunityIds AS communities
@@ -109,7 +108,6 @@ LIMIT toInteger($limit)`,
     parameters: {
       persist: true,
       writeProperty: "unionFind",
-      concurrency: 8,
       defaultValue: 1.0,
       direction: 'Undirected',
     },
@@ -123,7 +121,7 @@ LIMIT toInteger($limit)`,
     parametersBuilder: communityParams,
     service: runAlgorithm,
     ResultView: CommunityResult,
-    parameters: {persist: true, writeProperty: "scc", concurrency: 8, defaultValue: 1.0, direction: 'Undirected',},
+    parameters: {persist: true, writeProperty: "scc", defaultValue: 1.0, direction: 'Undirected',},
     streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, componentId AS community`),
     storeQuery: `CALL gds.alpha.scc.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
@@ -145,7 +143,7 @@ const baseTriangles = {
   parametersBuilder: communityParams,
   service: triangles,
   ResultView: TrianglesResult,
-  parameters: {persist: false, direction: 'Undirected', concurrency: 8},
+  parameters: {persist: false, direction: 'Undirected'},
   storeQuery: ``,
   getFetchQuery: () => ``,
   description: "finds set of three nodes, where each node has a relationship to all other nodes"
@@ -170,7 +168,6 @@ const oldTriangleCount = {
   parameters: {
     persist: true,
     writeProperty: "trianglesCount",
-    concurrency: 8,
     direction: "Undirected"
   },
   getFetchQuery: getFetchTriangleCountCypher,
@@ -190,7 +187,6 @@ const newTriangleCount = {
   parameters: {
     persist: true,
     writeProperty: "trianglesCount",
-    concurrency: 8,
     direction: "Undirected"
   },
   getFetchQuery: getFetchNewTriangleCountCypher
@@ -215,7 +211,6 @@ const oldLocalClusteringCoefficient = {
   parameters: {
     persist: true,
     clusteringCoefficientProperty: "coefficient",
-    concurrency: 8,
     direction: "Undirected"
   },
   getFetchQuery: getFetchLocalClusteringCoefficientCypher
@@ -233,7 +228,6 @@ const newLocalClusteringCoefficient = {
   parameters: {
     persist: true,
     writeProperty: "coefficient",
-    concurrency: 8,
     direction: "Undirected"
   },
   getFetchQuery: getFetchNewLocalClusteringCoefficientCypher

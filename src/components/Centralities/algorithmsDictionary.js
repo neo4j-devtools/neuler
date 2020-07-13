@@ -21,7 +21,6 @@ let algorithms = {
       persist: true,
       writeProperty: "degree",
       defaultValue: 1.0,
-      concurrency: 8,
       relationshipWeightProperty: null
     },
     parametersBuilder: centralityParams,
@@ -59,7 +58,6 @@ let algorithms = {
       dampingFactor: 0.85,
       maxIterations: 20,
       defaultValue: 1.0,
-      concurrency: 8,
       relationshipWeightProperty: null
     },
     parametersBuilder: centralityParams,
@@ -79,7 +77,6 @@ let algorithms = {
       dampingFactor: 0.85,
       maxIterations: 20,
       defaultValue: 1.0,
-      concurrency: 8,
       relationshipWeightProperty: null
     },
     parametersBuilder: centralityParams,
@@ -92,7 +89,7 @@ let algorithms = {
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
-    parameters: { persist: true, writeProperty: "closeness", concurrency: 8, direction:"Natural"},
+    parameters: { persist: true, writeProperty: "closeness", direction:"Natural"},
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($config) YIELD nodeId, centrality AS score`),
     storeQuery: `CALL gds.alpha.closeness.write($config)`,
@@ -103,7 +100,7 @@ let algorithms = {
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
-    parameters: { persist: true, writeProperty: "harmonic", concurrency: 8, direction:"Natural"},
+    parameters: { persist: true, writeProperty: "harmonic", direction:"Natural"},
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.harmonic.stream($config) YIELD nodeId, centrality AS score`),
     storeQuery: `CALL gds.alpha.harmonic.stream($config)`,
@@ -121,7 +118,6 @@ const baseBetweenness = {
     direction: 'Natural',
     persist: true,
     writeProperty: "betweenness",
-    concurrency: 8
   },
   parametersBuilder: centralityParams,
   getFetchQuery: getFetchCypher,
@@ -142,7 +138,6 @@ const oldApproxBetweenness = {
     strategy: "random",
     direction: "Natural",
     persist: true,
-    concurrency: 8,
     maxDepth: null,
     probability: null,
     writeProperty: "approxBetweenness"
@@ -157,7 +152,6 @@ const newApproxBetweenness = {
     samplingSize: 100,
     direction: "Natural",
     persist: true,
-    concurrency: 8,
     writeProperty: "approxBetweenness"
   },
   streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($config) YIELD nodeId, score`),
