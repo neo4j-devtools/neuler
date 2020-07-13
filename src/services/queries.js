@@ -191,9 +191,7 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
   requiredProperties.push("nodeProperties")
-
-  console.log("communityParams",params, requiredProperties)
-
+  
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }

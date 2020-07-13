@@ -258,7 +258,6 @@ const TabExampleVerticalTabular = (props) => {
     }
 
     const params = { ...props.metadata.versions, taskId, algorithm, group}
-    console.log("params:", params)
     if(!!window.neo4jDesktopApi) {
       window.neo4jDesktopApi.sendMetrics('neuler-call-algorithm', algorithm, params)
     }
