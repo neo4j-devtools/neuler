@@ -33,6 +33,7 @@ import NewTriangleCountForm from "./NewTriangleCountForm";
 import LocalClusteringCoefficientForm from "./LocalClusteringCoefficientForm";
 import LocalClusteringCoefficientResult from "./LocalClusteringCoefficientResult";
 import NewLocalClusteringCoefficientForm from "./NewLocalClusteringCoefficientForm";
+import ModularityOptimizationForm from "./ModularityOptimizationForm";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
@@ -62,6 +63,25 @@ LIMIT toInteger($limit)`,
     storeQuery: `CALL gds.louvain.write($config)`,
     getFetchQuery: getFetchLouvainCypher,
     description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
+  },
+  "Modularity Optimization": {
+    Form: ModularityOptimizationForm,
+    parametersBuilder: communityParams,
+    service: runAlgorithm,
+    ResultView: CommunityResult,
+    parameters: {
+      direction: 'Undirected',
+      persist: true,
+      writeProperty: "modularityOptimization",
+      defaultValue: 1.0,
+      relationshipWeightProperty: null,
+      seedProperty: null,
+      concurrency: 8
+    },
+    streamQuery: communityStreamQueryOutline(`CALL gds.beta.modularityOptimization.stream($config) YIELD nodeId, communityId AS community`),
+    storeQuery: `CALL gds.beta.modularityOptimization.write($config)`,
+    getFetchQuery: getCommunityFetchCypher,
+    description: `detect communities in the graph based on their modularity.`
   },
   "Label Propagation": {
     Form: LabelPropagationForm,
@@ -222,6 +242,7 @@ const newLocalClusteringCoefficient = {
 export default {
   algorithmList: [
     "Louvain",
+    "Modularity Optimization",
     "Label Propagation",
     "Connected Components",
     "Strongly Connected Components",

@@ -103,6 +103,8 @@ class Algorithms extends Component {
         requiredProperties: Object.keys(this.state.parameters)
       })
 
+      console.log("parameters:", this.state.parameters, parameters)
+
       const persisted = this.state.parameters.persist
 
 

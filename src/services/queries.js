@@ -159,7 +159,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
     similarityCutoff: parseFloat(similarityCutoff),
     degreeCutoff: degreeCutoff == null ? null : int(degreeCutoff),
   }
-  
+
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
@@ -167,7 +167,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty: seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
@@ -177,8 +177,11 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
     write: true,
     clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
-    // intermediateCommunitiesWriteProperty: intermediateCommunitiesWriteProperty || null,
     seedProperty: seedProperty || ""
+  }
+
+  if(seedProperty) {
+    config.nodeProperties = [seedProperty]
   }
 
   if (persist) {
@@ -187,6 +190,9 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
 
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
+  requiredProperties.push("nodeProperties")
+
+  console.log("communityParams",params, requiredProperties)
 
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params

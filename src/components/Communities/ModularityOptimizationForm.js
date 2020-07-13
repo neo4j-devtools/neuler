@@ -64,17 +64,14 @@ export default class extends Component {
         </Form.Group>
 
 
+
+
         <Form.Field inline>
           <label style={{ 'width': '10em' }}>Seed Property</label>
           <Dropdown placeholder='Weight Property' defaultValue={seedProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)} />
 
         </Form.Field>
-          <Form.Field inline>
-            <label style={{ 'width': '10em' }}>Intermediate Communities?</label>
-            <input type='checkbox' checked={includeIntermediateCommunities} onChange={evt => {
-              onChange('includeIntermediateCommunities', evt.target.checked)
-            }}/>
-          </Form.Field>
+
       </Form>
     )
   }
