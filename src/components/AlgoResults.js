@@ -97,12 +97,33 @@ class HorizontalAlgoTab extends Component {
       <div>
         {task.completed && task.status === FAILED ? (
             <div>
-              <Menu attached='top' tabular>
+              <Menu attached='top' tabular pointing secondary
+                    style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div style={{ display: 'flex' }}>
                 <Menu.Item name='Error' active={activeItem === 'Error'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
                 <Menu.Item name='Code' active={activeItem === 'Code'}
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                </div>
+                <div style={{
+                  display: 'flex',
+                  alignItems: 'center'
+                }}>
+                  <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+                    <Icon name='angle left'/>
+                  </Button>
+                  <Header as='h3' style={{ margin: '0 1em' }}>
+                    {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
+                  </Header>
+                  <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+                    <Icon name='angle right'/>
+                  </Button>
+                </div>
               </Menu>
+
+
+
+
               <Segment attached='bottom'>
                 <div style={getStyle('Error')}>
                   <Message warning>
@@ -236,8 +257,9 @@ const TabExampleVerticalTabular = (props) => {
       fetchCypher = getFetchQuery(parameters.label, parameters.config)
     }
 
+    const params = { ...props.metadata.versions, taskId, algorithm, group}
     if(!!window.neo4jDesktopApi) {
-      window.neo4jDesktopApi.sendMetrics('neuler-call-algorithm', algorithm)
+      window.neo4jDesktopApi.sendMetrics('neuler-call-algorithm', algorithm, params)
     }
 
     service({
