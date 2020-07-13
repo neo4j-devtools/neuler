@@ -63,13 +63,6 @@ export default class extends Component {
           }
         </Form.Group>
 
-
-        <Form.Field inline>
-          <label style={{ 'width': '10em' }}>Seed Property</label>
-          <Dropdown placeholder='Seed Property' defaultValue={seedProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)} />
-
-        </Form.Field>
-
         <Form.Field inline>
           <label style={{ 'width': '8em' }}>Iterations</label>
           <input
@@ -80,15 +73,6 @@ export default class extends Component {
             value={maxIterations}
             onChange={evt => onChange('maxIterations', evt.target.value)}
             style={{ 'width': '5em' }}
-          />
-        </Form.Field>
-
-        <Form.Field inline>
-          <label style={{ 'width': '8em' }}>Tolerance</label>
-          <input
-            value={tolerance}
-            onChange={evt => onChange('tolerance', evt.target.value)}
-            style={{ 'width': '7em' }}
           />
         </Form.Field>
 

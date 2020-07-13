@@ -34,6 +34,7 @@ import LocalClusteringCoefficientForm from "./LocalClusteringCoefficientForm";
 import LocalClusteringCoefficientResult from "./LocalClusteringCoefficientResult";
 import NewLocalClusteringCoefficientForm from "./NewLocalClusteringCoefficientForm";
 import ModularityOptimizationForm from "./ModularityOptimizationForm";
+import K1ColoringForm from "./K1ColoringForm";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
@@ -82,6 +83,24 @@ LIMIT toInteger($limit)`,
     storeQuery: `CALL gds.beta.modularityOptimization.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: `detect communities in the graph based on their modularity.`
+  },
+  "K1-Coloring": {
+    Form: K1ColoringForm,
+    parametersBuilder: communityParams,
+    service: runAlgorithm,
+    ResultView: CommunityResult,
+    parameters: {
+      direction: 'Undirected',
+      persist: true,
+      writeProperty: "k1Coloring",
+      defaultValue: 1.0,
+      relationshipWeightProperty: null,
+      maxIterations: 10
+    },
+    streamQuery: communityStreamQueryOutline(`CALL gds.beta.k1coloring.stream($config) YIELD nodeId, color AS community`),
+    storeQuery: `CALL gds.beta.k1coloring.write($config)`,
+    getFetchQuery: getCommunityFetchCypher,
+    description: `assigns a color to each node trying to use as few colours as possible and making sure neighbors of a node have a different color to that node.`
   },
   "Label Propagation": {
     Form: LabelPropagationForm,
@@ -238,6 +257,7 @@ export default {
     "Louvain",
     "Modularity Optimization",
     "Label Propagation",
+    "K1-Coloring",
     "Connected Components",
     "Strongly Connected Components",
     "Triangles",
