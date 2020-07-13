@@ -7,7 +7,7 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
+    const { onChange, labelOptions, maxIterations, tolerance, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
@@ -70,6 +70,28 @@ export default class extends Component {
           <label style={{ 'width': '10em' }}>Seed Property</label>
           <Dropdown placeholder='Weight Property' defaultValue={seedProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)} />
 
+        </Form.Field>
+
+        <Form.Field inline>
+          <label style={{ 'width': '8em' }}>Iterations</label>
+          <input
+            type='number'
+            min={1}
+            max={50}
+            step={1}
+            value={maxIterations}
+            onChange={evt => onChange('maxIterations', evt.target.value)}
+            style={{ 'width': '5em' }}
+          />
+        </Form.Field>
+
+        <Form.Field inline>
+          <label style={{ 'width': '8em' }}>Tolerance</label>
+          <input
+            value={tolerance}
+            onChange={evt => onChange('tolerance', evt.target.value)}
+            style={{ 'width': '7em' }}
+          />
         </Form.Field>
 
       </Form>

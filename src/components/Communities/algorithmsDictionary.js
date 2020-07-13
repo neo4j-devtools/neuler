@@ -76,7 +76,8 @@ LIMIT toInteger($limit)`,
       defaultValue: 1.0,
       relationshipWeightProperty: null,
       seedProperty: null,
-      concurrency: 8
+      maxIterations: 10,
+      tolerance: 0.0001
     },
     streamQuery: communityStreamQueryOutline(`CALL gds.beta.modularityOptimization.stream($config) YIELD nodeId, communityId AS community`),
     storeQuery: `CALL gds.beta.modularityOptimization.write($config)`,
@@ -93,7 +94,6 @@ LIMIT toInteger($limit)`,
       persist: true,
       writeProperty: "lpa",
       defaultValue: 1.0,
-      concurrency: 8,
       relationshipWeightProperty: null
     },
     streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, communityId AS community`),

@@ -167,17 +167,21 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
+export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, concurrency, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, concurrency, limit, weightProperty, defaultValue)
 
-  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
+  const parsedIterations = maxIterations == null ? null : int(maxIterations)
+  const parsedTolerance = tolerance == null ? null : parseFloat(tolerance)
+
 
   const config = {
     write: true,
     clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
-    seedProperty: seedProperty || ""
+    seedProperty: seedProperty || "",
+    maxIterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
+    tolerance: parsedTolerance && parsedTolerance > 0 ? parsedTolerance : null,
   }
 
   if(seedProperty) {
@@ -191,7 +195,7 @@ export const communityParams = ({label, relationshipType, direction, persist, wr
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
   requiredProperties.push("nodeProperties")
-  
+
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
