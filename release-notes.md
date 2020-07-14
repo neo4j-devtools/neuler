@@ -1,6 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
-## 0.1.24 (2020-06-06)
+## 0.1.25 (2020-07-14)
+
+* Added K1-Coloring and Modularity Optimization
+
+## 0.1.24 (2020-07-06)
 
 * Update betweeness centrality for GDS 1.3
 * Catch constraint already exists in Neo4j 4.x+

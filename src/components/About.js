@@ -2,7 +2,7 @@ import {Container, Message} from "semantic-ui-react"
 import React, {Component} from 'react'
 import {connect} from "react-redux";
 
-export const NEULER_VERSION = "0.1.24"
+export const NEULER_VERSION = "0.1.25"
 
 class About extends Component {
     render() {
