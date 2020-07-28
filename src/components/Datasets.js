@@ -240,7 +240,7 @@ LOAD CSV WITH HEADERS FROM "https://github.com/neo4j-apps/neuler/raw/master/samp
 AS row
 MERGE (r:Recipe{name:row.recipe})
 WITH r,row.ingredients as ingredients
-UNWIND ingredients as ingredient
+UNWIND split(ingredients,',') as ingredient
 MERGE (i:Ingredient{name:ingredient})
 MERGE (r)-[:CONTAINS_INGREDIENT]->(i)`
         ]
