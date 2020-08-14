@@ -225,6 +225,25 @@ FOREACH (follower IN value.followers |
   MERGE(f2:User {id: follower})
   MERGE (u)<-[:FOLLOWS]-(f2));`
         ]
+    },
+
+    "Recipes": {
+        name: "Recipes",
+        author: "DBpedia",
+        authorLink: "https://wiki.dbpedia.org/",
+        description: `A dataset containing recipes and their ingredients.`,
+        queries: [
+            `CREATE CONSTRAINT ON (r:Recipe) ASSERT r.name IS UNIQUE`,
+            `CREATE CONSTRAINT ON (i:Ingredient) ASSERT i.name IS UNIQUE`,
+            `USING PERIODIC COMMIT 1000
+LOAD CSV WITH HEADERS FROM "https://github.com/neo4j-apps/neuler/raw/master/sample-data/recipes/recipes.csv"
+AS row
+MERGE (r:Recipe{name:row.recipe})
+WITH r,row.ingredients as ingredients
+UNWIND split(ingredients,',') as ingredient
+MERGE (i:Ingredient{name:ingredient})
+MERGE (r)-[:CONTAINS_INGREDIENT]->(i)`
+        ]
     }
 
 }
