@@ -26,10 +26,10 @@ const TableView = ({ task, gdsVersion }) => {
 
 const VisView = ({ task, active }) => (
   <div style={tabContentStyle}>
-    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.label} active={active}
+    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.config.nodeProjection} active={active}
                      algorithm={task.algorithm}
                      limit={task.parameters.limit}
-                     relationshipType={task.parameters.relationshipType}
+                     relationshipType={task.parameters.config.relationshipProjection.relType.type}
                      writeProperty={(task.parameters.config || {}).writeProperty}/>
   </div>
 )
