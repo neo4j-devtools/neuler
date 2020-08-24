@@ -2,6 +2,7 @@ import React from 'react'
 import stringifyObject from 'stringify-object';
 import {isInt} from "neo4j-driver"
 import Clipboard from 'react-clipboard.js';
+import {sendMetrics} from "./metrics/sendMetrics";
 
 class RenderParams extends React.Component {
   extractValue(parameters, key) {
@@ -38,6 +39,7 @@ class RenderParams extends React.Component {
       )}
 
       <Clipboard onSuccess={(event) => {
+        sendMetrics('neuler-code-view', "copied-code", {type: "parameter-value"})
         event.trigger.textContent = "Copied";
         setTimeout( () => {
           event.trigger.textContent = 'Copy';

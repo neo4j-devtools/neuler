@@ -13,6 +13,7 @@ import NewApproxBetweennessForm from "./NewApproxBetweennessForm"
 
 let algorithms = {
   "Degree": {
+    algorithmName: "gds.alpha.degree",
     Form: DegreeForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
@@ -30,6 +31,7 @@ let algorithms = {
     description: `detects the number of direct connections a node has`
   },
   "Eigenvector": {
+    algorithmName: "gds.alpha.eigenvector",
     Form: PageRankForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
@@ -48,6 +50,7 @@ let algorithms = {
     description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
   },
   "Page Rank": {
+    algorithmName: "gds.pageRank",
     Form: PageRankForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
@@ -67,6 +70,7 @@ let algorithms = {
     description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
   },
   'Article Rank': {
+    algorithmName: "gds.alpha.articleRank",
     Form: PageRankForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
@@ -86,6 +90,7 @@ let algorithms = {
     description: `a variant of the PageRank algorithm`
   },
   "Closeness": {
+    algorithmName: "gds.alpha.closeness",
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
@@ -97,6 +102,7 @@ let algorithms = {
     description: `detect nodes that are able to spread information very efficiently through a graph`
   },
   "Harmonic": {
+    algorithmName: "gds.alpha.harmonic",
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,

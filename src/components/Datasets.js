@@ -14,6 +14,7 @@ import {
 import React, {Component} from 'react'
 import {runCypher} from "../services/stores/neoStore"
 import {connect} from "react-redux";
+import {sendMetrics} from "./metrics/sendMetrics";
 
 
 class Datasets extends Component {
@@ -62,9 +63,8 @@ class Datasets extends Component {
                   completed: completed
               })
 
-              if(!!window.neo4jDesktopApi) {
-                  window.neo4jDesktopApi.sendMetrics('neuler-loaded-dataset', selectedDataset )
-              }
+              sendMetrics('neuler-loaded-dataset', selectedDataset )
+
               this.props.onComplete()
           })
     }

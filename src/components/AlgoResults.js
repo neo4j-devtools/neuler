@@ -4,12 +4,15 @@ import {connect} from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
-import CodeView from './CodeView'
+import CodeView, {stringfyParam} from './CodeView'
 
 import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
 import html2canvas from "html2canvas";
 import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
+import {filterParameters} from "../services/queries";
+import * as neo from 'neo4j-driver'
+import {sendMetrics} from "./metrics/sendMetrics";
 
 const tabContentStyle = {
   height: '85vh',
@@ -60,9 +63,7 @@ class HorizontalAlgoTab extends Component {
   }
 
   handleMenuItemClick = (e, { name }) => {{
-    if(!!window.neo4jDesktopApi) {
-      window.neo4jDesktopApi.sendMetrics('neuler-click-view', name)
-    }
+    sendMetrics('neuler-click-view', name)
     this.setState({ activeItem: name })
   }}
 
@@ -258,9 +259,7 @@ const TabExampleVerticalTabular = (props) => {
     }
 
     const params = { ...props.metadata.versions, taskId, algorithm, group}
-    if(!!window.neo4jDesktopApi) {
-      window.neo4jDesktopApi.sendMetrics('neuler-call-algorithm', algorithm, params)
-    }
+    sendMetrics('neuler-call-algorithm', algorithm, params)
 
     service({
       streamCypher: streamQuery,
@@ -279,7 +278,27 @@ const TabExampleVerticalTabular = (props) => {
 
     })
 
-    props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
+    const graphProperties = filterParameters(parameters.config, ["relationshipWeightProperty"])
+    const algorithmProperties = filterParameters(parameters.config, ["maxIterations", "normalization", "writeProperty", "dampingFactor", "samplingSize"])
+
+    Object.keys(algorithmProperties).forEach(key => {
+      if(neo.isInt(algorithmProperties[key])) {
+        algorithmProperties[key] = algorithmProperties[key].toNumber()
+      }
+    })
+
+    const generatedName = `in-memory-graph-${Date.now()}`
+    const createGraph = `CALL gds.graph.create("${generatedName}", $config.nodeProjection, $config.relationshipProjection, ${stringfyParam(graphProperties)});`
+    const dropGraph = `CALL gds.graph.drop("${generatedName}");`
+
+    const storeAlgorithmNamedGraph = `CALL ${algorithmDefinition.algorithmName}.write("${generatedName}", ${stringfyParam(algorithmProperties)})`;
+    const streamAlgorithmNamedGraph =streamQuery.replace("$config", `"${generatedName}", ${stringfyParam(algorithmProperties)}`)
+
+    props.runTask(
+        taskId,
+        persisted ? [storeQuery, fetchCypher] : [streamQuery],
+        persisted ? [createGraph, storeAlgorithmNamedGraph, fetchCypher, dropGraph] : [createGraph, streamAlgorithmNamedGraph, dropGraph]
+    )
   }
 
   const tasks = props.tasks
@@ -394,8 +413,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  runTask: (taskId, query) => {
-    dispatch(runTask({ taskId, query }))
+  runTask: (taskId, query, namedGraphQueries) => {
+    dispatch(runTask({ taskId, query, namedGraphQueries }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
