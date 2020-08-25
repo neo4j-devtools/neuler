@@ -264,6 +264,7 @@ const TabExampleVerticalTabular = (props) => {
       parameters,
       persisted
     }).then(result => {
+      sendMetrics('neuler', "completed-algorithm-call", params)
       props.completeTask(taskId, result)
       if (persisted) {
         props.onComplete()

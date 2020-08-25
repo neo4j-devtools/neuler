@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.26 (2020-08-25)
+
+* Added recipes sample graph
+* Code view now includes named graph
+
 ## 0.1.25 (2020-07-14)
 
 * Added K1-Coloring and Modularity Optimization
