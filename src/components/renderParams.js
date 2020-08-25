@@ -31,7 +31,7 @@ class RenderParams extends React.Component {
   }
 
   render() {
-    const {parameters} = this.props
+    const {parameters, activeTab} = this.props
     return <React.Fragment>
       {Object.keys(parameters).map(key =>
           <pre key={key}>:param {key} => ({this.extractValue(parameters, key)});
@@ -39,7 +39,7 @@ class RenderParams extends React.Component {
       )}
 
       <Clipboard onSuccess={(event) => {
-        sendMetrics('neuler-code-view', "copied-code", {type: "parameter-value"})
+        sendMetrics('neuler-code-view', "copied-code", {type: "parameter-value", tab: activeTab})
         event.trigger.textContent = "Copied";
         setTimeout( () => {
           event.trigger.textContent = 'Copy';

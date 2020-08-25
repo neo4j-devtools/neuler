@@ -288,7 +288,7 @@ const TabExampleVerticalTabular = (props) => {
     })
 
     const generatedName = `in-memory-graph-${Date.now()}`
-    const createGraph = `CALL gds.graph.create("${generatedName}", $config.nodeProjection, $config.relationshipProjection, ${stringfyParam(graphProperties)});`
+    const createGraph = `CALL gds.graph.create("${generatedName}", $config.nodeProjection, $config.relationshipProjection, ${stringfyParam(graphProperties)})`
     const dropGraph = `CALL gds.graph.drop("${generatedName}");`
 
     const storeAlgorithmNamedGraph = `CALL ${algorithmDefinition.algorithmName}.write("${generatedName}", ${stringfyParam(algorithmProperties)})`;

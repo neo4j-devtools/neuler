@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Tab, Button, Message, Popup, Segment} from "semantic-ui-react"
+import {Button, Divider, Message, Tab} from "semantic-ui-react"
 import RenderParams from "./renderParams"
 import {v4 as generateId} from 'uuid'
 import Clipboard from 'react-clipboard.js';
@@ -27,7 +27,8 @@ export const stringfyParam = value => {
 
 export default class extends Component {
     state = {
-        browserGuide: {}
+        browserGuide: {},
+        activeTab: "Anonymous Graph"
     }
 
     extractValue(parameters, key) {
@@ -93,49 +94,15 @@ export default class extends Component {
     }
 
     createPanes(task) {
-        const anonymous = task.query.map(query => {
-            return <Segment>
-                <pre>{query && removeSpacing(query.replace('\n  ', '\n'))}</pre>
-                <Clipboard onSuccess={(event) => {
-                    sendMetrics('neuler-code-view', "copied-code", {type: "query"})
-                    event.trigger.textContent = "Copied";
-                    setTimeout(() => {
-                        event.trigger.textContent = 'Copy';
-                    }, 2000);
-                }}
-                           button-className="code"
-                           data-clipboard-text={query && removeSpacing(query.replace('\n  ', '\n'))}>
-                    Copy
-                </Clipboard>
-            </Segment>
-        })
-
-        const named =
-            task.namedGraphQueries.map(query => {
-                const cleanQuery = removeSpacing(query.replace('\n  ', '\n'));
-                return <Segment>
-
-                    <pre>{query && cleanQuery}</pre>
-                    <Clipboard onSuccess={(event) => {
-                        sendMetrics('neuler-code-view', "copied-code", {type: "query"})
-                        event.trigger.textContent = "Copied";
-                        setTimeout(() => {
-                            event.trigger.textContent = 'Copy';
-                        }, 2000);
-                    }}
-                               button-className="code"
-                               data-clipboard-text={query && cleanQuery}>
-                        Copy
-                    </Clipboard>
-                </Segment>
-            })
+        const anonymous = this.renderQueries(task.query)
+        const named = this.renderQueries(task.namedGraphQueries);
 
         const activeDatabase = `\`${getActiveDatabase()}\``;
         const namedDatabaseParam =
-            hasNamedDatabase() ? <Segment>
-            <pre>:use {activeDatabase}</pre>
+            hasNamedDatabase() ? <Message>
+            <pre>:use {activeDatabase};</pre>
             <Clipboard onSuccess={(event) => {
-                sendMetrics('neuler-code-view', "copied-code", {type: "database-name"})
+                sendMetrics('neuler-code-view', "copied-code", {type: "database-name", tab: this.state.activeTab})
                 event.trigger.textContent = "Copied";
                 setTimeout(() => {
                     event.trigger.textContent = 'Copy';
@@ -145,16 +112,14 @@ export default class extends Component {
                        data-clipboard-text={`:use ${activeDatabase}`}>
                 Copy
             </Clipboard>
-
-        </Segment> : null
+        </Message> : null
 
         const params =
             task.parameters
-                ? <Segment>
-                    <RenderParams parameters={task.parameters}/>
-                </Segment>
+                ? <Message>
+                    <RenderParams parameters={task.parameters} activeTab={this.state.activeTab} />
+                </Message>
                 : null
-
 
         return [
             {
@@ -164,6 +129,20 @@ export default class extends Component {
                             An anonymous graph is created for the duration of the algorithm run. It is deleted before
                             the algorithm returns its results.
                         </p>
+
+                        {/*<Clipboard onSuccess={(event) => {*/}
+                        {/*    sendMetrics('neuler-code-view', "copied-code", {type: "all-fragments", tab: this.state.activeTab})*/}
+                        {/*    event.trigger.textContent = "Copied";*/}
+                        {/*    setTimeout(() => {*/}
+                        {/*        event.trigger.textContent = 'Copy All';*/}
+                        {/*    }, 2000);*/}
+                        {/*}}*/}
+                        {/*           button-className="code"*/}
+                        {/*           style={{marginRight: "10px"}}*/}
+                        {/*           data-clipboard-text={`:use ${activeDatabase}`}>*/}
+                        {/*    Copy All*/}
+                        {/*</Clipboard>*/}
+
                         {namedDatabaseParam}
                         {params}
                         {anonymous}
@@ -187,10 +166,37 @@ export default class extends Component {
         ]
     }
 
+    renderQueries(queries) {
+        return queries.map(query => {
+            const cleanQuery = removeSpacing(query.replace('\n  ', '\n')) + ";";
+            return <Message>
+
+                <pre>{query && cleanQuery}</pre>
+                <Clipboard onSuccess={(event) => {
+                    sendMetrics('neuler-code-view', "copied-code", {type: "query", tab: this.state.activeTab})
+                    event.trigger.textContent = "Copied";
+                    setTimeout(() => {
+                        event.trigger.textContent = 'Copy';
+                    }, 2000);
+                }}
+                           button-className="code"
+                           data-clipboard-text={query && cleanQuery}>
+                    Copy
+                </Clipboard>
+            </Message>
+        });
+    }
+
+    onTabChange(event, data) {
+        console.log(data)
+        this.setState({
+            activeTab: data.panes[data.activeIndex].menuItem
+        })
+    }
+
     render() {
         const {task} = this.props
         const {browserGuide} = this.state
-
         const taskGuide = browserGuide[task.taskId]
 
         return (
@@ -201,53 +207,48 @@ export default class extends Component {
             }}>
                 <h3>Generate Neo4j Browser Guide</h3>
                 <p>
-                    We can generate a Neo4j Browser guide that contains the code to reproduce the algorithm run:
+                    You can generate a Neo4j Browser guide that contains the code to reproduce the algorithm run:
                 </p>
 
                 {task.query ?
                     <div>
-                        <Segment>
-                            <Button basic color='green' icon='play' content='Send to Neo4j Browser'
-                                    onClick={() => this.openBrowser.bind(this)(task)}/>
-                            {taskGuide ? <Message>
-                                <p>
-                                    If the Neo4j Browser doesn't automatically open, you can copy/paste the following command into the Neo4j Browser:
-                                </p>
-                                <pre>{taskGuide}</pre>
+                        <Button basic color='green' icon='play' content='Send to Neo4j Browser'
+                                onClick={() => this.openBrowser.bind(this)(task)}/>
+                        {taskGuide ? <Message style={{margin: "1em 1em 0em 0em"}}>
+                            <p>
+                                If the Neo4j Browser doesn't automatically open, you can copy/paste the following
+                                command into the Neo4j Browser:
+                            </p>
+                            <pre>{taskGuide}</pre>
 
-                                <Clipboard onSuccess={(event) => {
-                                    sendMetrics('neuler-code-view', "copied-code", {type: "browser-guide"})
-                                    event.trigger.textContent = "Copied";
-                                    setTimeout(() => {
-                                        event.trigger.textContent = 'Copy';
-                                    }, 2000);
-                                }}
-                                           button-className="code"
-                                           data-clipboard-text={taskGuide}>
-                                    Copy
-                                </Clipboard>
-
-                            </Message> : null}
-                        </Segment>
+                            <Clipboard onSuccess={(event) => {
+                                sendMetrics('neuler-code-view', "copied-code", {type: "browser-guide"})
+                                event.trigger.textContent = "Copied";
+                                setTimeout(() => {
+                                    event.trigger.textContent = 'Copy';
+                                }, 2000);
+                            }}
+                                       button-className="code"
+                                       data-clipboard-text={taskGuide}>
+                                Copy
+                            </Clipboard>
+                        </Message> : null}
                     </div>
                     : null
                 }
+                <Divider />
 
                 <h3>Run code fragments</h3>
                 <p style={{margin: "1rem 0"}}>
-                    Alternatively, the algorithm run can be reproduced in the Neo4j Browser by running the following code fragments:
+                    Alternatively, you can reproduce the algorithm run by running the following code fragments:
                 </p>
 
 
                 {task.query ? <div>
-                        <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}/>
-
+                        <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}
+                             onTabChange={this.onTabChange.bind(this)}/>
                     </div>
                     : null}
-
-
-
-
             </div>
         )
     }
