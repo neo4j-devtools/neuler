@@ -4,14 +4,12 @@ import {connect} from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
-import CodeView, {stringfyParam} from './CodeView'
+import CodeView, {constructQueries} from './CodeView'
 
 import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
 import html2canvas from "html2canvas";
 import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
-import {filterParameters} from "../services/queries";
-import * as neo from 'neo4j-driver'
 import {sendMetrics} from "./metrics/sendMetrics";
 
 const tabContentStyle = {
@@ -121,8 +119,6 @@ class HorizontalAlgoTab extends Component {
                   </Button>
                 </div>
               </Menu>
-
-
 
 
               <Segment attached='bottom'>
@@ -278,26 +274,14 @@ const TabExampleVerticalTabular = (props) => {
 
     })
 
-    const graphProperties = filterParameters(parameters.config, ["relationshipWeightProperty"])
-    const algorithmProperties = filterParameters(parameters.config, ["maxIterations", "normalization", "writeProperty", "dampingFactor", "samplingSize"])
-
-    Object.keys(algorithmProperties).forEach(key => {
-      if(neo.isInt(algorithmProperties[key])) {
-        algorithmProperties[key] = algorithmProperties[key].toNumber()
-      }
-    })
-
-    const generatedName = `in-memory-graph-${Date.now()}`
-    const createGraph = `CALL gds.graph.create("${generatedName}", $config.nodeProjection, $config.relationshipProjection, ${stringfyParam(graphProperties)})`
-    const dropGraph = `CALL gds.graph.drop("${generatedName}");`
-
-    const storeAlgorithmNamedGraph = `CALL ${algorithmDefinition.algorithmName}.write("${generatedName}", ${stringfyParam(algorithmProperties)})`;
-    const streamAlgorithmNamedGraph =streamQuery.replace("$config", `"${generatedName}", ${stringfyParam(algorithmProperties)}`)
+    const constructedQueries = constructQueries(algorithmDefinition, parameters, streamQuery)
 
     props.runTask(
         taskId,
         persisted ? [storeQuery, fetchCypher] : [streamQuery],
-        persisted ? [createGraph, storeAlgorithmNamedGraph, fetchCypher, dropGraph] : [createGraph, streamAlgorithmNamedGraph, dropGraph]
+        persisted ?
+            [constructedQueries.createGraph, constructedQueries.storeAlgorithmNamedGraph, fetchCypher, constructedQueries.dropGraph] :
+            [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph]
     )
   }
 
@@ -317,94 +301,6 @@ const TabExampleVerticalTabular = (props) => {
     return null
   }
 }
-
-
-// class TabExampleVerticalTabular extends Component {
-//   state = {
-//     page: 0
-//   }
-//
-//   prevResult() {
-//     this.setState(({ page }) => ({ page: Math.max(0, page - 1) }))
-//   }
-//
-//   nextResult() {
-//     const length = (this.props.tasks || []).length
-//     this.setState(({ page }) => ({ page: Math.min(length - 1, page + 1) }))
-//   }
-//
-//   componentWillReceiveProps(nextProps, nextContext) {
-//     if (nextProps.tasks.length !== this.props.tasks.length) {
-//       this.setState({ page: 0 })
-//       const task = nextProps.tasks[0]
-//       if (task.status === ADDED) {
-//         this.onRunAlgo(task)
-//       }
-//     }
-//   }
-//
-//   onRunAlgo(task) {
-//     const { taskId, group, algorithm, parameters, persisted } = task
-//     const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, this.props.metadata.versions.gdsVersion);
-//     const { service, getFetchQuery } = algorithmDefinition
-//
-//     let fetchCypher
-//
-//     let streamQuery = algorithmDefinition.streamQuery
-//     let storeQuery = algorithmDefinition.storeQuery
-//
-//     if (group === "Similarity") {
-//       const { itemLabel, relationshipType, categoryLabel, weightProperty } = parameters
-//       streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
-//       storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
-//
-//       fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType, parameters.config)
-//       delete parameters.itemLabel
-//       delete parameters.relationshipType
-//       delete parameters.categoryLabel
-//     } else {
-//       fetchCypher = getFetchQuery(parameters.label, parameters.config)
-//     }
-//
-//
-//     service({
-//       streamCypher: streamQuery,
-//       storeCypher: storeQuery,
-//       fetchCypher,
-//       parameters,
-//       persisted
-//     }).then(result => {
-//       this.props.completeTask(taskId, result)
-//       if (persisted) {
-//         this.props.onComplete()
-//       }
-//     }).catch(exc => {
-//       console.log('ERROR IN SERVICE', exc)
-//       this.props.completeTask(taskId, [], exc.toString())
-//
-//     })
-//
-//     this.props.runTask(taskId, persisted ? [storeQuery, fetchCypher] : [streamQuery])
-//   }
-//
-//   render() {
-//     const tasks = this.props.tasks
-//     const page = this.state.page
-//     if (tasks && tasks.length > 0) {
-//       const currentTask = tasks[this.state.page]
-//       return <HorizontalAlgoTab
-//         task={currentTask}
-//         prevResult={this.prevResult.bind(this)}
-//         nextResult={this.nextResult.bind(this)}
-//         currentPage={page + 1}
-//         totalPages={tasks.length}
-//         gdsVersion={this.props.metadata.versions.gdsVersion}
-//       />
-//     } else {
-//       return null
-//     }
-//   }
-// }
 
 const mapStateToProps = state => ({
   tasks: state.tasks,

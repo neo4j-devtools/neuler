@@ -9,6 +9,21 @@ import SingleSourceShortestPathForm from "./SingleSourceShortestPathForm";
 import AllPairsShortestPathForm from "./AllPairsShortestPathForm";
 import AllPairsShortestPathResult from "./AllPairsShortestPathResult";
 
+const findStartEndNodes = () => `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
+WITH start
+LIMIT 1
+CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
+WITH start, end
+LIMIT 1
+`
+
+const findStartNode = () => `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
+WITH start
+LIMIT 1
+`
+
+
+
 let algorithms = {
     "Shortest Path": {
         Form: ShortestPathForm,
@@ -25,17 +40,14 @@ let algorithms = {
             relationshipWeightProperty: "weight",
 
         },
-        streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
-WITH start
-LIMIT 1
-CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
-WITH start, end
-LIMIT 1        
-WITH $config AS config, start, end
+        streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
 WITH config { .*, startNode: start, endNode: end} as config
 CALL gds.alpha.shortestPath.stream(config)
 YIELD nodeId, cost
 RETURN gds.util.asNode(nodeId) AS node, cost`,
+        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.alpha.shortestPath.stream("${namedGraph}", {startNode: start, endNode: end})
+YIELD nodeId, cost
+RETURN gds.util.asNode(nodeId) AS node, cost;`,
         storeQuery: ``,
         getFetchQuery: () => "",
         description: `The Shortest Path algorithm calculates the shortest (weighted) path between a pair of nodes. `
@@ -57,17 +69,14 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
             propertyKeyLon: "longitude",
 
         },
-        streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
-WITH start
-LIMIT 1
-CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
-WITH start, end
-LIMIT 1            
-WITH $config AS config, start, end
+        streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
 WITH config { .*, startNode: start, endNode: end} as config
 CALL gds.alpha.shortestPath.astar.stream(config)
 YIELD nodeId, cost
 RETURN gds.util.asNode(nodeId) AS node, cost`,
+        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.alpha.shortestPath.astar.stream("${namedGraph}", {startNode: start, endNode: end})
+YIELD nodeId, cost
+RETURN gds.util.asNode(nodeId) AS node, cost;`,
         storeQuery: ``,
         getFetchQuery: () => "",
         description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
@@ -87,16 +96,15 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
 
             delta: 3.0
         },
-        streamQuery: `CALL db.propertyKeys() YIELD propertyKey
-MATCH (start) WHERE start[propertyKey] contains $startNode
-WITH start
-LIMIT 1
-WITH $config AS config, start
+        streamQuery: findStartNode() + `WITH $config AS config, start
 WITH config { .*, startNode: start} as config
 CALL gds.alpha.shortestPath.deltaStepping.stream(config)
 YIELD nodeId, distance AS cost
 RETURN gds.util.asNode(nodeId) AS node, cost
 LIMIT toInteger($limit)`,
+        namedGraphStreamQuery: (namedGraph) => findStartNode() + `CALL gds.alpha.shortestPath.deltaStepping.stream("${namedGraph}", {startNode: start, delta: $config.delta})
+YIELD nodeId, distance AS cost
+RETURN gds.util.asNode(nodeId) AS node, cost`,
         storeQuery: ``,
         getFetchQuery: () => "",
         description: `The Single Source Shortest Path (SSSP) algorithm calculates the shortest (weighted) path from a node to all other nodes in the graph..`

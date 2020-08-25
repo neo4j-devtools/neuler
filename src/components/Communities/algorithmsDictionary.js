@@ -38,6 +38,7 @@ const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
 let algorithms = {
   "Louvain": {
+    algorithmName: "gds.louvain",
     Form: LouvainForm,
     parametersBuilder: communityParams,
     service: runAlgorithm,
@@ -63,6 +64,7 @@ LIMIT toInteger($limit)`,
     description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
   },
   "Modularity Optimization": {
+    algorithmName: "gds.beta.modularityOptimization",
     Form: ModularityOptimizationForm,
     parametersBuilder: communityParams,
     service: runAlgorithm,
@@ -83,6 +85,7 @@ LIMIT toInteger($limit)`,
     description: `detect communities in the graph based on their modularity.`
   },
   "K1-Coloring": {
+    algorithmName: "gds.beta.k1coloring",
     Form: K1ColoringForm,
     parametersBuilder: communityParams,
     service: runAlgorithm,
@@ -101,6 +104,7 @@ LIMIT toInteger($limit)`,
     description: `assigns a color to each node trying to use as few colours as possible and making sure neighbors of a node have a different color to that node.`
   },
   "Label Propagation": {
+    algorithmName: "gds.labelPropagation",
     Form: LabelPropagationForm,
     parametersBuilder: communityParams,
     service: runAlgorithm,
@@ -118,6 +122,7 @@ LIMIT toInteger($limit)`,
     description: "a fast algorithm for finding communities in a graph"
   },
   "Connected Components": {
+    algorithmName: "gds.wcc",
     Form: ConnectedComponentsForm,
     parametersBuilder: communityParams,
     service: runAlgorithm,
@@ -134,6 +139,7 @@ LIMIT toInteger($limit)`,
     description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
   },
   "Strongly Connected Components": {
+    algorithmName: "gds.alpha.scc",
     Form: StronglyConnectedComponentsForm,
     parametersBuilder: communityParams,
     service: runAlgorithm,
@@ -172,6 +178,7 @@ const baseTriangleCount = {
 }
 
 const oldTriangleCount = {
+  algorithmName: "gds.alpha.triangleCount",
   Form: TriangleCountForm,
   service: triangleCountOld,
   ResultView: TriangleCountResult,
@@ -191,6 +198,7 @@ const oldTriangleCount = {
 }
 
 const newTriangleCount = {
+  algorithmName: "gds.triangleCount",
   Form: NewTriangleCountForm,
   service: triangleCountNew,
   ResultView: NewTriangleCountResult,
@@ -217,6 +225,7 @@ const baseLocalClusteringCoefficient = {
 }
 
 const oldLocalClusteringCoefficient = {
+  algorithmName: "gds.alpha.triangleCount",
   Form: LocalClusteringCoefficientForm,
   streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
         YIELD nodeId, coefficient
@@ -234,6 +243,7 @@ const oldLocalClusteringCoefficient = {
 }
 
 const newLocalClusteringCoefficient = {
+  algorithmName: "gds.localClusteringCoefficient",
   Form: NewLocalClusteringCoefficientForm,
   streamQuery: removeSpacing(`CALL gds.localClusteringCoefficient.stream($config)
         YIELD nodeId, localClusteringCoefficient AS coefficient

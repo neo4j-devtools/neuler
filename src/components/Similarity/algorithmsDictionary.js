@@ -45,6 +45,7 @@ LIMIT toInteger($limit)`
 
 const algorithms = {
   "Jaccard": {
+    algorithmName: "gds.nodeSimilarity",
     Form: JaccardForm,
     parametersBuilder: nodeSimilarityParams,
     service: runAlgorithm,
@@ -66,6 +67,7 @@ LIMIT toInteger($limit)`,
     description: `measures similarities between sets. It is defined as the size of the intersection divided by the size of the union of two sets.`
   },
   "Overlap": {
+    algorithmName: "gds.alpha.similarity",
     Form: OverlapForm,
     parametersBuilder: similarityParams,
     service: runAlgorithm,
@@ -85,6 +87,7 @@ LIMIT toInteger($limit)`,
   },
 
   "Cosine": {
+    algorithmName: "gds.alpha.similarity.cosine",
     Form: CosineForm,
     parametersBuilder: similarityParams,
     service: runAlgorithm,
@@ -105,6 +108,7 @@ LIMIT toInteger($limit)`,
   },
 
   "Pearson": {
+    algorithmName: "gds.alpha.similarity.pearson",
     Form: PearsonForm,
     parametersBuilder: similarityParams,
     service: runAlgorithm,
@@ -125,6 +129,7 @@ LIMIT toInteger($limit)`,
   },
 
   "Euclidean": {
+    algorithmName: "gds.alpha.similarity.euclidean",
     Form: EuclideanForm,
     parametersBuilder: similarityParams,
     service: runAlgorithm,

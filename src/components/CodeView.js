@@ -7,11 +7,42 @@ import stringifyObject from "stringify-object";
 import * as neo from 'neo4j-driver'
 import {getActiveDatabase, hasNamedDatabase} from "../services/stores/neoStore";
 import {sendMetrics} from "./metrics/sendMetrics";
+import {filterParameters} from "../services/queries";
 
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
 
-
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
+
+export const constructQueries = (algorithmDefinition, parameters, streamQuery) => {
+    const graphProperties = filterParameters(parameters.config, ["relationshipWeightProperty"])
+    const algorithmProperties = filterParameters(parameters.config, [
+        "writeProperty", "writeRelationshipType",
+        "maxIterations", "normalization", "dampingFactor", "samplingSize",
+        "similarityCutoff", "degreeCutoff", "includeIntermediateCommunities", "seedProperty"
+    ])
+
+    Object.keys(algorithmProperties).forEach(key => {
+        if (neo.isInt(algorithmProperties[key])) {
+            algorithmProperties[key] = algorithmProperties[key].toNumber()
+        }
+    })
+
+    const generatedName = `in-memory-graph-${Date.now()}`
+    const createGraph = `CALL gds.graph.create("${generatedName}", $config.nodeProjection, $config.relationshipProjection, ${stringfyParam(graphProperties)})`
+    const dropGraph = `CALL gds.graph.drop("${generatedName}")`
+
+    const storeAlgorithmNamedGraph = `CALL ${algorithmDefinition.algorithmName}.write("${generatedName}", ${stringfyParam(algorithmProperties)})`;
+    const streamAlgorithmNamedGraph = algorithmDefinition.namedGraphStreamQuery ?
+        algorithmDefinition.namedGraphStreamQuery(generatedName) :
+        streamQuery.replace("$config", `"${generatedName}", ${stringfyParam(algorithmProperties)}`)
+
+    return {
+        createGraph,
+        dropGraph,
+        storeAlgorithmNamedGraph,
+        streamAlgorithmNamedGraph
+    }
+}
 
 export const stringfyParam = value => {
     if (!value) {
@@ -92,33 +123,36 @@ export default class extends Component {
             })
     }
 
+    renderNamedDatabaseParam = () => {
+        const activeDatabase = `\`${getActiveDatabase()}\``;
+        return hasNamedDatabase() ? <Message>
+                <pre>:use {activeDatabase};</pre>
+                <Clipboard onSuccess={(event) => {
+                    sendMetrics('neuler-code-view', "copied-code", {type: "database-name", tab: this.state.activeTab})
+                    event.trigger.textContent = "Copied";
+                    setTimeout(() => {
+                        event.trigger.textContent = 'Copy';
+                    }, 2000);
+                }}
+                           button-className="code"
+                           data-clipboard-text={`:use ${activeDatabase};`}>
+                    Copy
+                </Clipboard>
+            </Message> : null
+    }
+    renderParams = (task) => {
+        return task.parameters
+            ? <Message>
+                <RenderParams parameters={task.parameters} activeTab={this.state.activeTab} />
+            </Message>
+            : null
+    }
+
     createPanes(task) {
         const anonymous = this.renderQueries(task.query)
         const named = this.renderQueries(task.namedGraphQueries);
-
-        const activeDatabase = `\`${getActiveDatabase()}\``;
-        const namedDatabaseParam =
-            hasNamedDatabase() ? <Message>
-            <pre>:use {activeDatabase};</pre>
-            <Clipboard onSuccess={(event) => {
-                sendMetrics('neuler-code-view', "copied-code", {type: "database-name", tab: this.state.activeTab})
-                event.trigger.textContent = "Copied";
-                setTimeout(() => {
-                    event.trigger.textContent = 'Copy';
-                }, 2000);
-            }}
-                       button-className="code"
-                       data-clipboard-text={`:use ${activeDatabase};`}>
-                Copy
-            </Clipboard>
-        </Message> : null
-
-        const params =
-            task.parameters
-                ? <Message>
-                    <RenderParams parameters={task.parameters} activeTab={this.state.activeTab} />
-                </Message>
-                : null
+        const namedDatabaseParam = this.renderNamedDatabaseParam()
+        const params = this.renderParams(task)
 
         return [
             {
@@ -128,20 +162,6 @@ export default class extends Component {
                             An anonymous graph is created for the duration of the algorithm run. It is deleted before
                             the algorithm returns its results.
                         </p>
-
-                        {/*<Clipboard onSuccess={(event) => {*/}
-                        {/*    sendMetrics('neuler-code-view', "copied-code", {type: "all-fragments", tab: this.state.activeTab})*/}
-                        {/*    event.trigger.textContent = "Copied";*/}
-                        {/*    setTimeout(() => {*/}
-                        {/*        event.trigger.textContent = 'Copy All';*/}
-                        {/*    }, 2000);*/}
-                        {/*}}*/}
-                        {/*           button-className="code"*/}
-                        {/*           style={{marginRight: "10px"}}*/}
-                        {/*           data-clipboard-text={`:use ${activeDatabase}`}>*/}
-                        {/*    Copy All*/}
-                        {/*</Clipboard>*/}
-
                         {namedDatabaseParam}
                         {params}
                         {anonymous}
@@ -165,7 +185,7 @@ export default class extends Component {
         ]
     }
 
-    renderQueries(queries) {
+    renderQueries = queries => {
         return queries.map(query => {
             const cleanQuery = removeSpacing(query.replace('\n  ', '\n')) + ";";
             return <Message>
@@ -186,10 +206,38 @@ export default class extends Component {
         });
     }
 
-    onTabChange(event, data) {
+    onTabChange = (event, data) => {
         this.setState({
             activeTab: data.panes[data.activeIndex].menuItem
         })
+    }
+
+    codeFragments = (task) => {
+        console.log("task:", task)
+        const noNamedGraph = {
+            "Similarity": ["Cosine", "Pearson", "Euclidean"]
+        }
+
+        if(!task.query) {
+            return null
+        }
+
+        if(noNamedGraph[task.group] && noNamedGraph[task.group].includes(task.algorithm)) {
+            const anonymous = this.renderQueries(task.query)
+            const namedDatabaseParam = this.renderNamedDatabaseParam()
+            const params = this.renderParams(task)
+
+            return  <React.Fragment>
+                {namedDatabaseParam}
+                {params}
+                {anonymous}
+            </React.Fragment>
+        } else {
+            return <div>
+                    <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}
+                         onTabChange={this.onTabChange.bind(this)}/>
+                </div>
+        }
     }
 
     render() {
@@ -208,44 +256,44 @@ export default class extends Component {
                     You can generate a Neo4j Browser guide that contains the code to reproduce the algorithm run:
                 </p>
 
-                {task.query ?
-                    <div>
-                        <Button basic color='green' icon='play' content='Send to Neo4j Browser'
-                                onClick={() => this.openBrowser.bind(this)(task)}/>
-                        {taskGuide ? <Message style={{margin: "1em 1em 0em 0em"}}>
-                            <p>
-                                If the Neo4j Browser doesn't automatically open, you can copy/paste the following
-                                command into the Neo4j Browser:
-                            </p>
-                            <pre>{taskGuide}</pre>
+                {
+                    task.query ?
+                        <div>
+                            <Button basic color='green' icon='play' content='Send to Neo4j Browser'
+                                    onClick={() => this.openBrowser.bind(this)(task)}/>
+                            {taskGuide ? <Message style={{margin: "1em 1em 0em 0em"}}>
+                                <p>
+                                    If the Neo4j Browser doesn't automatically open, you can copy/paste the following
+                                    command into the Neo4j Browser:
+                                </p>
+                                <pre>{taskGuide}</pre>
 
-                            <Clipboard onSuccess={(event) => {
-                                sendMetrics('neuler-code-view', "copied-code", {type: "browser-guide"})
-                                event.trigger.textContent = "Copied";
-                                setTimeout(() => {
-                                    event.trigger.textContent = 'Copy';
-                                }, 2000);
-                            }}
-                                       button-className="code"
-                                       data-clipboard-text={taskGuide}>
-                                Copy
-                            </Clipboard>
-                        </Message> : null}
-                    </div>
-                    : null
+                                <Clipboard onSuccess={(event) => {
+                                    sendMetrics('neuler-code-view', "copied-code", {type: "browser-guide"})
+                                    event.trigger.textContent = "Copied";
+                                    setTimeout(() => {
+                                        event.trigger.textContent = 'Copy';
+                                    }, 2000);
+                                }}
+                                           button-className="code"
+                                           data-clipboard-text={taskGuide}>
+                                    Copy
+                                </Clipboard>
+                            </Message> : null}
+                        </div>
+                        : null
                 }
+
                 <Divider />
 
                 <h3>Run code fragments</h3>
                 <p style={{margin: "1rem 0"}}>
-                    Alternatively, you can reproduce the algorithm run by running the following code fragments:
+                    Or you can reproduce the algorithm run by running the following code fragments:
                 </p>
 
-                {task.query ? <div>
-                        <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}
-                             onTabChange={this.onTabChange.bind(this)}/>
-                    </div>
-                    : null}
+                {
+                    this.codeFragments(task)
+                }
             </div>
         )
     }

@@ -1,7 +1,7 @@
 import { isInt, isDate, isDateTime, isLocalDateTime, isLocalTime, isDuration } from "neo4j-driver"
 
 export const parseProperties = (properties) => {
-  return Object.keys(properties).reduce((props, propKey) => {
+  let props = Object.keys(properties).reduce((props, propKey) => {
     let value = properties[propKey]
 
     if (isInt(value)) {
@@ -13,7 +13,7 @@ export const parseProperties = (properties) => {
     } else {
       props[propKey] = value
     }
-
     return props
   }, {})
+  return props;
 }

@@ -43,7 +43,7 @@ const PropertiesView = ({ labels, properties, hideProp, resetLabelsProperties, h
         .filter(key => !hiddenProps.includes(key))
         .map(key =>
           <Grid.Column key={key} style={{ maxWidth: '20em', padding: '0.5em' }}>
-            <PropertyCell propertyKey={key} value={properties[key]} hideProp={key => hideProp(labels, key)}
+            <PropertyCell propertyKey={key} value={properties[key].toString()} hideProp={key => hideProp(labels, key)}
                           labels={labels}/>
           </Grid.Column>
         )

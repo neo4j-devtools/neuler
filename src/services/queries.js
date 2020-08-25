@@ -4,15 +4,13 @@ export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, score
 RETURN node, score
 ORDER BY score DESC
-LIMIT toInteger($limit)
-`
+LIMIT toInteger($limit)`
 
 export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, community
 RETURN node, community
 ORDER BY community DESC
-LIMIT toInteger($limit)
-`
+LIMIT toInteger($limit)`
 
 export const getFetchCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
