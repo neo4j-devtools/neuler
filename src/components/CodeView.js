@@ -78,18 +78,23 @@ export default class extends Component {
             : 'null';
     }
 
-    constructPayload(parameters, query, guid) {
+    constructPayload(parameters, query, guid, supportsNamedGraph, namedGraphQueries) {
         return {
             uuid: guid,
             params: Object.keys(parameters).map(key => `:param ${key} => (${this.extractValue(parameters, key)});`).join('\n'),
-            query: query
+            query: query,
+            supportsNamedGraph,
+            namedGraphQueries
         }
     }
 
-    generateGuide(parameters, query, taskId) {
+    generateGuide(task) {
+        const {parameters, query, namedGraphQueries, taskId, algorithm, group} = task
         const guid = generateId()
 
-        const payload = this.constructPayload(parameters, query, guid)
+        const supportsNamedGraph = this.supportsNamedGraph(group, algorithm)
+
+        const payload = this.constructPayload(parameters, query, guid, supportsNamedGraph, namedGraphQueries)
 
         return fetch(generateGuidesUrl, {
             method: "POST",
@@ -116,8 +121,7 @@ export default class extends Component {
     }
 
     openBrowser(task) {
-        const {parameters, query, taskId} = task
-        this.generateGuide(parameters, query, taskId)
+        this.generateGuide(task)
             .then(guideId => {
                 window.open(`neo4j-desktop://graphapps/neo4j-browser?cmd=play&arg=neuler/user-content-${guideId}.html`, '_self')
             })
@@ -212,31 +216,33 @@ export default class extends Component {
         })
     }
 
-    codeFragments = (task) => {
-        console.log("task:", task)
+    supportsNamedGraph = (group, algorithm) => {
         const noNamedGraph = {
-            "Similarity": ["Cosine", "Pearson", "Euclidean"]
+            "Similarity": ["Cosine", "Pearson", "Euclidean", "Overlap"]
         }
+        return !(noNamedGraph[group] && noNamedGraph[group].includes(algorithm))
+    }
 
+    codeFragments = (task) => {
         if(!task.query) {
             return null
         }
 
-        if(noNamedGraph[task.group] && noNamedGraph[task.group].includes(task.algorithm)) {
+        if (this.supportsNamedGraph(task.group, task.algorithm)) {
+            return <div>
+                <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}
+                     onTabChange={this.onTabChange.bind(this)}/>
+            </div>
+        } else {
             const anonymous = this.renderQueries(task.query)
             const namedDatabaseParam = this.renderNamedDatabaseParam()
             const params = this.renderParams(task)
 
-            return  <React.Fragment>
+            return <React.Fragment>
                 {namedDatabaseParam}
                 {params}
                 {anonymous}
             </React.Fragment>
-        } else {
-            return <div>
-                    <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}
-                         onTabChange={this.onTabChange.bind(this)}/>
-                </div>
         }
     }
 

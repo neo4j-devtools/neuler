@@ -150,9 +150,9 @@ RETURN gds.util.asNode(nodeId) AS node, cost;`)
         expect(queries.streamAlgorithmNamedGraph).toEqual(`CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
 LIMIT 1
-CALL gds.alpha.shortestPath.deltaStepping.stream("in-memory-graph-123", {startNode: start})
-YIELD nodeId, cost
-RETURN gds.util.asNode(nodeId) AS node, cost;`)
+CALL gds.alpha.shortestPath.deltaStepping.stream("in-memory-graph-123", {startNode: start, delta: $config.delta})
+YIELD nodeId, distance AS cost
+RETURN gds.util.asNode(nodeId) AS node, cost`)
         expect(queries.createGraph).toEqual('CALL gds.graph.create("in-memory-graph-123", $config.nodeProjection, $config.relationshipProjection, {})')
         expect(queries.dropGraph).toEqual('CALL gds.graph.drop("in-memory-graph-123")')
 
