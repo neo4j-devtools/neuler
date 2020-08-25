@@ -32,7 +32,7 @@ class RenderParams extends React.Component {
 
   render() {
     const {parameters, activeTab} = this.props
-    return <React.Fragment>
+    return <React.Fragment key={activeTab}>
       {Object.keys(parameters).map(key =>
           <pre key={key}>:param {key} => ({this.extractValue(parameters, key)});
       </pre>
