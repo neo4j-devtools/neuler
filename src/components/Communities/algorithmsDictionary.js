@@ -1,17 +1,14 @@
 import React from "react"
 import LouvainForm from "./LouvainForm"
 import {
-  connectedComponents,
-  louvain,
-  lpa,
+  localClusteringCoefficient,
   runAlgorithm,
-  stronglyConnectedComponents,
-  triangleCount, triangleCountNew, triangleCountOld,
-  triangles, localClusteringCoefficient
+  triangleCountNew,
+  triangleCountOld,
+  triangles
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
 import LabelPropagationForm from "./LabelPropagationForm"
-import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import ConnectedComponentsForm from "./ConnectedComponentsForm"
 import StronglyConnectedComponentsForm from "./StronglyConnectedComponentsForm"
 import TrianglesForm from "./TrianglesForm"
@@ -23,10 +20,11 @@ import {
   communityParams,
   communityStreamQueryOutline,
   getCommunityFetchCypher,
-  getFetchLouvainCypher, getFetchNewTriangleCountCypher,
-  getFetchTriangleCountCypher,
   getFetchLocalClusteringCoefficientCypher,
-  getFetchNewLocalClusteringCoefficientCypher
+  getFetchLouvainCypher,
+  getFetchNewLocalClusteringCoefficientCypher,
+  getFetchNewTriangleCountCypher,
+  getFetchTriangleCountCypher
 } from "../../services/queries";
 import NewTriangleCountResult from "./NewTriangleCountResult";
 import NewTriangleCountForm from "./NewTriangleCountForm";

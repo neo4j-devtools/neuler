@@ -9,7 +9,7 @@ import {connect} from "react-redux"
 
 import {ConnectModal} from './components/ConnectModal';
 
-import {onNeo4jVersion, setDriver} from "./services/stores/neoStore"
+import {onNeo4jVersion} from "./services/stores/neoStore"
 import {loadMetadata, loadVersions} from "./services/metadata"
 import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersions} from "./ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"

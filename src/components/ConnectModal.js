@@ -21,7 +21,7 @@ class ConnectForm extends Component {
       <Modal size='tiny' open={open} onClose={onClose} closeOnDimmerClick={false}>
         <Modal.Header>Connect to the active graph</Modal.Header>
         <Modal.Content>
-          <Form error={!!errorMsg}>
+          <Form error={!!errorMsg} onSubmit={this.onSubmit}>
             <Form.Field>
               <label>Username</label>
               <Form.Input

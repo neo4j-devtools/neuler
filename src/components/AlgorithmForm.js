@@ -11,10 +11,6 @@ import * as PropTypes from "prop-types";
 import {limit} from "../ducks/settings"
 
 class Algorithms extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
   state = {
     collapsed: false,
     parameters: {},

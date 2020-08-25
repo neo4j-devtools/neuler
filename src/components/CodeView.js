@@ -55,7 +55,6 @@ export default class extends Component {
         }
     }
 
-
     generateGuide(parameters, query, taskId) {
         const guid = generateId()
 
@@ -109,7 +108,7 @@ export default class extends Component {
                 }, 2000);
             }}
                        button-className="code"
-                       data-clipboard-text={`:use ${activeDatabase}`}>
+                       data-clipboard-text={`:use ${activeDatabase};`}>
                 Copy
             </Clipboard>
         </Message> : null
@@ -188,7 +187,6 @@ export default class extends Component {
     }
 
     onTabChange(event, data) {
-        console.log(data)
         this.setState({
             activeTab: data.panes[data.activeIndex].menuItem
         })
@@ -242,7 +240,6 @@ export default class extends Component {
                 <p style={{margin: "1rem 0"}}>
                     Alternatively, you can reproduce the algorithm run by running the following code fragments:
                 </p>
-
 
                 {task.query ? <div>
                         <Tab menu={{color: "blue", secondary: true}} panes={this.createPanes(task)}

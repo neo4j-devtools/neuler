@@ -1,11 +1,9 @@
-import { Grid } from "semantic-ui-react"
-import React, { Component } from 'react'
+import React, {Component} from 'react'
 import AlgorithmForm from './AlgorithmForm'
 import AlgoResults from './AlgoResults'
 
 class MainContent extends Component {
   state = {
-
   }
 
   componentDidCatch(error, info) {

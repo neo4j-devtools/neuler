@@ -26,7 +26,7 @@ class RenderParams extends React.Component {
 
     return Object.keys(parameters)
       .map(key => `:param ${key} => (${this.extractValue(parameters, key)})`)
-      .join(";\n")
+      .join(";\n") + ";"
 
   }
 
@@ -39,7 +39,7 @@ class RenderParams extends React.Component {
       )}
 
       <Clipboard onSuccess={(event) => {
-        sendMetrics('neuler-code-view', "copied-code", {type: "parameter-value", tab: activeTab})
+        sendMetrics('neuler-code-view', "copied-code", {type: "parameters", tab: activeTab})
         event.trigger.textContent = "Copied";
         setTimeout( () => {
           event.trigger.textContent = 'Copy';
