@@ -36,7 +36,7 @@ class App extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     if (this.props.connectionInfo !== nextProps.connectionInfo
       && nextProps.connectionInfo.status === CONNECTED) {
       this.onConnected()

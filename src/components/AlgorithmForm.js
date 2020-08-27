@@ -32,7 +32,7 @@ class Algorithms extends Component {
     this.loadMetadata(metadata)
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     if (JSON.stringify(this.props.currentAlgorithm) !== JSON.stringify(nextProps.currentAlgorithm)) {
       const { activeGroup, activeAlgorithm, metadata } = nextProps
       const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)

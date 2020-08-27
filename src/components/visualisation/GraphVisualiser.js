@@ -172,7 +172,7 @@ limit toInteger(${limit})`
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.writeProperty !== nextProps.writeProperty && nextProps.writeProperty) {
       this.updateNodeSize(nextProps.writeProperty)
       this.updateNodeColor(nextProps.writeProperty)

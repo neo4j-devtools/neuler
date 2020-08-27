@@ -71,7 +71,7 @@ class HorizontalAlgoTab extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
+  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     if (nextProps.task.error) {
       this.setState({ activeItem: 'Error' })
     } else if (this.state.activeItem === 'Error') {
