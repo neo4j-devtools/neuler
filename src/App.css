@@ -38,3 +38,14 @@ div.loading-message {
 h1.loading {
   font-size: 3rem;
 }
+
+span.label {
+  background: #efefef;
+  color: rgb(48, 51, 58);
+  display: inline-block;
+  padding: .2rem .8rem;
+  border-radius: 0.25rem;
+  font-weight: 600;
+  font-size: 0.7rem;
+  margin: .2rem;
+}
