@@ -107,10 +107,11 @@ class Home extends Component {
                             this.state.activeDatabaseSelected ?
                                 (this.hasNodesAndRelationships(this.props.metadata)) ?
                                     <div>
-                                        <p>
-                                            This database contains the following:
-                                        </p>
-
+                                        <Message color="green" style={{color: "#000000"}}>
+                                            <Message.Header>
+                                                Database Contents
+                                            </Message.Header>
+<Message.Content>
                                         <Table basic='very' celled collapsing>
                                             <Table.Body>
                                                 <Table.Row>
@@ -131,18 +132,23 @@ class Home extends Component {
                                                 </Table.Row>
                                             </Table.Body>
                                         </Table>
+</Message.Content>
+                                        </Message>
                                     </div>
                                     :
 
                                     <div>
                                         <Message color='purple'>
                                             <Message.Header>
-                                            This database does not contain any {this.whatIsMissing(this.props.metadata)}.
+                                            Missing: {this.whatIsMissing(this.props.metadata)}.
                                             </Message.Header>
                                             <Message.Content>
                                                 <div>
                                                 <p>
+                                                    This database does not contain any {this.whatIsMissing(this.props.metadata)}.
                                                     You need to load some data, otherwise the graph algorithms won't return any results.
+                                                </p>
+                                                <p>
                                                     If you don't have any data, you can load one of the sample graphs.
                                                 </p>
 
