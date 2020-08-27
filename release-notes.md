@@ -1,5 +1,11 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.27 (2020-08-27)
+
+* Show what's in the selected db on home screen
+* Make sample graphs more prominent if db is empty
+* Update instructions for installing missing GDS plugin
+
 ## 0.1.26 (2020-08-25)
 
 * Added recipes sample graph
