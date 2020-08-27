@@ -1,4 +1,16 @@
-import {Message, Loader, Dimmer, Button, Card, CardGroup, Container, Divider, Dropdown, Header, Icon, Table} from "semantic-ui-react"
+import {
+    Button,
+    Card,
+    CardGroup,
+    Container,
+    Divider,
+    Dropdown,
+    Header,
+    Icon,
+    Loader,
+    Message,
+    Table
+} from "semantic-ui-react"
 import React, {Component} from 'react'
 
 import {selectGroup} from "../ducks/algorithms"
@@ -104,8 +116,7 @@ class Home extends Component {
                                                 <Table.Row>
                                                     <Table.Cell style={{width: "150px"}}>Node Labels</Table.Cell>
                                                     <Table.Cell>{
-                                                        this.props.metadata.labels.map(value => <span
-                                                            className="label">{value.label}</span>)
+                                                        this.props.metadata.labels.map(value => <span key={value.label} className="label">{value.label}</span>)
 
                                                     }
                                                     </Table.Cell>
@@ -113,8 +124,7 @@ class Home extends Component {
                                                 <Table.Row>
                                                     <Table.Cell style={{width: "150px"}}>Relationship Types</Table.Cell>
                                                     <Table.Cell>{
-                                                        this.props.metadata.relationshipTypes.map(value => <span
-                                                            className="label">{value.label}</span>)
+                                                        this.props.metadata.relationshipTypes.map(value => <span key={value.label} className="label">{value.label}</span>)
 
                                                     }
                                                     </Table.Cell>

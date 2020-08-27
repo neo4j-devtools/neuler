@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
-import { Grid, Form, Button, Icon, Select, Loader, Input } from "semantic-ui-react"
+import {Grid, Loader} from "semantic-ui-react"
 import NeoVis from "./neovis"
-import { getDriver } from "../../services/stores/neoStore"
+import {getDriver} from "../../services/stores/neoStore"
 import VisConfigurationBar from './VisConfigurationBar'
 
 const captionCandidates = ['name', 'title']

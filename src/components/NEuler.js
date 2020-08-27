@@ -18,10 +18,6 @@ import {FeedbackForm} from "./Feedback/FeedbackForm";
 
 
 class NEuler extends Component {
-  constructor(props, context) {
-    super(props, context);
-  }
-
   state = {
     status: 'groups',
     content: 'centralities'
@@ -58,7 +54,7 @@ class NEuler extends Component {
   }
 
   render() {
-    const { activeGroup, activeAlgorithm, selectAlgorithm, limit } = this.props
+    const { activeGroup, activeAlgorithm, selectAlgorithm } = this.props
 
     const {header, view} = this.selectComponent(activeGroup)
 

@@ -79,6 +79,4 @@ export default (state = [], action) => {
     default:
       return state
   }
-
-  return state
 }

@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import {Form, Grid, Label, Icon, Button} from 'semantic-ui-react'
-import { hideProperty, resetLabelsProperties } from "../ducks/settings"
-import { connect } from 'react-redux'
+import React, {Component} from 'react'
+import {Form, Grid, Icon, Label} from 'semantic-ui-react'
+import {hideProperty, resetLabelsProperties} from "../ducks/settings"
+import {connect} from 'react-redux'
 
 const cellStyle = {
   maxWidth: '20em',

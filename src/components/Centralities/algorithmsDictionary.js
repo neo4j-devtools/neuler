@@ -1,10 +1,9 @@
 import PageRankForm from './PageRankForm'
 import {runAlgorithm} from "../../services/centralities"
-import { centralityParams, getFetchCypher, streamQueryOutline } from '../../services/queries'
+import {centralityParams, getFetchCypher, streamQueryOutline} from '../../services/queries'
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
-import {Card} from "semantic-ui-react/dist/commonjs/views/Card"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"

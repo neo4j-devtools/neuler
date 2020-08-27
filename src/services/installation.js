@@ -1,4 +1,4 @@
-import {runCypher, runCypherDefaultDatabase} from "./stores/neoStore"
+import {runCypherDefaultDatabase} from "./stores/neoStore"
 
 
 export const checkGraphAlgorithmsInstalled = () => {

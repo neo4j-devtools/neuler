@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import { Form, Label, Input } from "semantic-ui-react"
-import PathFindingForm from './PathFindingForm'
+import {Form} from "semantic-ui-react"
 import StreamOnlyForm from "./StreamOnlyForm";
 
 export default class extends Component {

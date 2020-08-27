@@ -1,4 +1,4 @@
-import { Button, Form, Icon, Input, Select } from "semantic-ui-react"
+import {Button, Form, Icon, Select} from "semantic-ui-react"
 import React from "react"
 
 export default ({ labels, captions, nodeSize, nodeColor, updateCaption, updateNodeSize, updateNodeColor, onUpdateConfig }) => {

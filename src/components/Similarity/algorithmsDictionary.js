@@ -1,4 +1,3 @@
-import React from "react"
 import {constructSimilarityMaps, constructWeightedSimilarityMaps, runAlgorithm,} from "../../services/similarity"
 import {nodeSimilarityParams, similarityParams} from "../../services/queries";
 import JaccardForm from "./JaccardForm";

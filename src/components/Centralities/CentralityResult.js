@@ -1,9 +1,7 @@
 import React from 'react'
-import {Button, Tab, Table} from "semantic-ui-react"
+import {Loader, Tab, Table} from "semantic-ui-react"
 import PropertiesView from '../PropertiesView'
 
-import { Loader } from 'semantic-ui-react'
-import html2canvas from "html2canvas";
 const LoaderExampleInlineCentered = () => <Loader active inline='centered'>Algorithm running</Loader>
 
 export default ({ task }) => (

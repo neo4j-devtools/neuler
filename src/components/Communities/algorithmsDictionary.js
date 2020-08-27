@@ -1,4 +1,3 @@
-import React from "react"
 import LouvainForm from "./LouvainForm"
 import {
   localClusteringCoefficient,

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Form, Input, Dropdown } from "semantic-ui-react"
+import {Dropdown, Form} from "semantic-ui-react"
 
 export default ({onChange, relationshipType, direction, persist, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => (
   <React.Fragment>

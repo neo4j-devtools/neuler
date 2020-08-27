@@ -92,7 +92,7 @@ class Datasets extends Component {
                                         {sampleGraphs[key].name}
                                     </Card.Header>
                                     <Card.Meta>
-                                        Author: <a target="_blank" href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
+                                        Author: <a target="_blank" rel="noopener noreferrer" href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
                                     </Card.Meta>
                                     <Card.Description>
                                         {sampleGraphs[key].description}

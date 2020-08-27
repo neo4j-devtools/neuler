@@ -14,6 +14,7 @@ import {loadMetadata, loadVersions} from "./services/metadata"
 import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersions} from "./ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
+import {sendMetrics} from "./components/metrics/sendMetrics";
 
 
 class App extends Component {
@@ -44,9 +45,7 @@ class App extends Component {
 
   onConnected() {
     loadVersions().then(versions => {
-      if(!!window.neo4jDesktopApi) {
-        window.neo4jDesktopApi.sendMetrics('neuler-connected', true, versions)
-      }
+      sendMetrics("neuler-connected", true, versions)
 
       this.props.setGds(versions)
       onNeo4jVersion(versions.neo4jVersion)
@@ -93,6 +92,8 @@ class App extends Component {
                 </CheckGraphAlgorithmsInstalled>)
       case
       CONNECTING:
+        return placeholder
+      default:
         return placeholder
     }
   }

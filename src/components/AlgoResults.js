@@ -60,10 +60,10 @@ class HorizontalAlgoTab extends Component {
     activeItem: this.props.error ? 'Error' : 'Table'
   }
 
-  handleMenuItemClick = (e, { name }) => {{
+  handleMenuItemClick = (e, { name }) => {
     sendMetrics('neuler-click-view', name)
     this.setState({ activeItem: name })
-  }}
+  }
 
   componentDidMount() {
     if (this.props.task.error) {
@@ -157,7 +157,7 @@ class HorizontalAlgoTab extends Component {
                            onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
 
                 <Menu.Item active={activeItem === 'Printscreen'}
-                           onClick={(() => printElement(this.panelRef.current)).bind(this)}>
+                           onClick={(() => printElement(this.panelRef.current))}>
                   <Image src='images/Camera2.png'/>
 
                 </Menu.Item>

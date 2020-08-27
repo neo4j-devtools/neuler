@@ -192,7 +192,7 @@ export default class extends Component {
     renderQueries = queries => {
         return queries.map(query => {
             const cleanQuery = removeSpacing(query.replace('\n  ', '\n')) + ";";
-            return <Message>
+            return <Message key={cleanQuery}>
 
                 <pre>{query && cleanQuery}</pre>
                 <Clipboard onSuccess={(event) => {

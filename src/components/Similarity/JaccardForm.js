@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
 import {Dropdown, Form, Input} from "semantic-ui-react"
-import SimilarityForm from "./SimilarityForm";
 
 export default class extends Component {
   state = {

@@ -1,6 +1,5 @@
 import React, {Component} from 'react'
-import {Form, Label, Input, Dropdown} from "semantic-ui-react"
-import CommunityForm from './CommunityForm'
+import {Dropdown, Form, Input} from "semantic-ui-react"
 
 export default class extends Component {
   state = {
