@@ -16,7 +16,7 @@ import React, {Component} from 'react'
 import {selectGroup} from "../ducks/algorithms"
 import {connect} from "react-redux";
 import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata";
-import {getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
+import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
 
 class Home extends Component {
@@ -30,11 +30,13 @@ class Home extends Component {
     }
 
     onRefresh() {
+        this.setState({activeDatabaseSelected: false})
         loadMetadata(this.props.metadata.versions.neo4jVersion).then(metadata => {
             this.props.setLabels(metadata.labels)
             this.props.setRelationshipTypes(metadata.relationships)
             this.props.setPropertyKeys(metadata.propertyKeys)
             this.props.setDatabases(metadata.databases)
+            this.setState({activeDatabaseSelected: true})
         })
     }
 
@@ -89,13 +91,15 @@ class Home extends Component {
                             <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection
                                       style={{"width": "290px"}}
                                       options={databaseOptions} onChange={(evt, data) => {
-                                setActiveDatabase(data.value);
-                                onActiveDatabase(data.value);
-                                this.onRefresh()
+                                if(data.value !== getActiveDatabase()) {
+                                    setActiveDatabase(data.value);
+                                    onActiveDatabase(data.value);
+                                    this.onRefresh()
+                                }
                             }}/>
                             {hasNamedDatabase() ?
                                 <Button  icon style={{marginLeft: "10px"}} onClick={ () => {
-                                    this.onRefresh.bind(this)
+                                    this.onRefresh()
                                 }}>
                                     <Icon className="refresh" size="large"/>
                                 </Button> : null}
@@ -173,7 +177,12 @@ class Home extends Component {
 
                                     </div>
 
-                                :  <Loader active inline />
+                                :  <Message>
+                                    <Message.Header>Refreshing</Message.Header>
+                                    <Message.Content>
+                                        <Loader active inline style={{padding:"5px 0"}} />
+                                    </Message.Content>
+                                    </Message>
 
                         }
 

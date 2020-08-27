@@ -123,7 +123,7 @@ class Datasets extends Component {
                                 <div>
 
                                     {sampleGraphs[selectedDataset].queries.map((query, queryIndex) => (
-                                      <Segment>
+                                      <Segment key={queryIndex}>
                                           {completedQueryIndexes[queryIndex] ? <Icon color='green' name='check'/> : null}
                                           <pre style={{ whiteSpace: 'pre-wrap' }}>{query}</pre>
                                           <Dimmer active={queryIndex === currentQueryIndex}>
