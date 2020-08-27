@@ -94,7 +94,7 @@ class Home extends Component {
                                 this.onRefresh()
                             }}/>
                             {hasNamedDatabase() ?
-                                <Button icon style={{marginLeft: "10px"}} onClick={ () => {
+                                <Button  icon style={{marginLeft: "10px"}} onClick={ () => {
                                     this.onRefresh.bind(this)
                                 }}>
                                     <Icon className="refresh" size="large"/>
@@ -132,7 +132,19 @@ class Home extends Component {
                                                 </Table.Row>
                                             </Table.Body>
                                         </Table>
-</Message.Content>
+
+                                                <Button size="tiny"  className="code" onClick={ (event, data) => {
+                                                    const target = event.target
+                                                    target.textContent = "Refreshing";
+                                                    setTimeout( () => {
+                                                        target.textContent = "Refresh";
+                                                    }, 2000);
+
+                                                    this.onRefresh()
+                                                }}>
+                                                    Refresh
+                                                </Button>
+                                            </Message.Content>
                                         </Message>
                                     </div>
                                     :

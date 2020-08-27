@@ -21,7 +21,7 @@ pre {
   position: relative;
 }
 
-button.code {
+button.code, table.ui button.code {
   position: absolute;
   top: 5px;
   right: 5px;
