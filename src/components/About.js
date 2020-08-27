@@ -1,4 +1,4 @@
-import {Container, Message} from "semantic-ui-react"
+import {Container, Message, Table} from "semantic-ui-react"
 import React, {Component} from 'react'
 import {connect} from "react-redux";
 
@@ -12,23 +12,38 @@ class About extends Component {
 
         return (<div style={containerStyle}>
                 <Container fluid>
-                    <h3>Versions</h3>
-                    <Message>
+                    <h2>Versions</h2>
 
-                        <p>
-                            NEuler: <strong>{NEULER_VERSION}</strong>
-                        </p>
-
-                        <p>
-                            Graph Data Science Library: <strong>{this.props.metadata.versions.gdsVersion}</strong>
-                        </p>
-
-                        <p>
-                            Neo4j Server: <strong>{this.props.metadata.versions.neo4jVersion}</strong>
-                        </p>
-
-
-                    </Message>
+                    <Table basic='very' celled collapsing>
+                        <Table.Header>
+                            <Table.Row>
+                                <Table.HeaderCell>
+                                    Component
+                                </Table.HeaderCell>
+                                <Table.HeaderCell>
+                                    Version
+                                </Table.HeaderCell>
+                            </Table.Row>
+                        </Table.Header>
+                        <Table.Body>
+                            <Table.Row>
+                                <Table.Cell>NEuler</Table.Cell>
+                                <Table.Cell>
+                                    {NEULER_VERSION}
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell >Graph Data Science Library</Table.Cell>
+                                <Table.Cell>{this.props.metadata.versions.gdsVersion}
+                                </Table.Cell>
+                            </Table.Row>
+                            <Table.Row>
+                                <Table.Cell >Neo4j Server</Table.Cell>
+                                <Table.Cell>{this.props.metadata.versions.neo4jVersion}
+                                </Table.Cell>
+                            </Table.Row>
+                        </Table.Body>
+                    </Table>
 
                 </Container>
             </div>

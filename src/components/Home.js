@@ -76,7 +76,7 @@ class Home extends Component {
 
         return (<div style={containerStyle}>
                 <Container fluid>
-                    <Header as={"h3"}>
+                    <Header as={"h2"}>
                         Select Database
                     </Header>
 
@@ -163,7 +163,7 @@ class Home extends Component {
 
                     <Divider />
 
-                    <Header as={"h3"}>
+                    <Header as={"h2"}>
                         Getting Started
                     </Header>
                     <p>
