@@ -78,12 +78,10 @@ class Datasets extends Component {
 
         return (<div style={containerStyle}>
                 <Container fluid>
-                    <Message>
-                        Below are some sample graphs that are useful for learning how to use the graph algorithms
-                        library.
-                        Note that clicking on Load will import data into your graph, so don't do this on a production
-                        database.
-                    </Message>
+                    <p>
+                        Below are some sample graphs that are useful for learning how to use the Graph Data Science library.
+
+                    </p>
 
                     <CardGroup>
                         {Object.keys(sampleGraphs).map(key => (
@@ -118,7 +116,7 @@ class Datasets extends Component {
                             <Modal.Description>
                                 <Header>{sampleGraphs[selectedDataset].name}</Header>
                                 <Message warning>
-                                    <Message.Header>ACHTUNG!</Message.Header>
+                                    <Message.Header>WARNING</Message.Header>
                                     <p>Pressing the 'Yes, load it!' button below will run the following Cypher
                                         statements:</p>
                                 </Message>

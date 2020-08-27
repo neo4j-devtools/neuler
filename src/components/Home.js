@@ -54,7 +54,7 @@ class Home extends Component {
         return (<div style={containerStyle}>
                 <Container fluid>
                     <Header as={"h3"}>
-                        Use Database
+                        Select Database
                     </Header>
 
                     <div>

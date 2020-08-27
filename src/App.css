@@ -30,3 +30,11 @@
     transform: rotate(360deg);
   }
 }
+
+div.loading-message {
+  font-size: 2rem;
+}
+
+h1.loading {
+  font-size: 3rem;
+}

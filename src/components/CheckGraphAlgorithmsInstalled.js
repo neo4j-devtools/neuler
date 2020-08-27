@@ -16,16 +16,19 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     return props.children;
   } else {
     return <Dimmer active>
-      <Loader size='massive'>
-        <div align="center">
-          <p>This application relies on the Graph Data Science Library.
-            <br/>You can install it via the 'Plugins' tab in the project view.</p>
-        </div>
-        <div align="center" style={{margin: "10px"}}>
-          <Image src='images/gds-plugin.png' size='big'/>
 
+          <h1 className="loading">Graph Data Science Library Missing</h1>
+
+        <div align="center" style={{margin: "10px"}}>
+          <Image src='images/new-gds-plugin.png' />
         </div>
-      </Loader>
+
+        <div align="center" className="loading-message">
+          <p>
+            This application relies on the Graph Data Science Library.
+            <br/>You can install it via the 'Plugins' tab of your database.
+          </p>
+        </div>
 
     </Dimmer>
   }
