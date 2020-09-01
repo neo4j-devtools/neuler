@@ -25,7 +25,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
             <h1>APOC Library Missing</h1>
 
             <div align="center" style={{margin: "10px"}}>
-                <Image src='images/new-gds-plugin.png'/>
+                <Image src='images/apoc-plugin.png'/>
             </div>
 
             <div align="center" className="loading-message">

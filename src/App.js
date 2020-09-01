@@ -52,6 +52,10 @@ class App extends Component {
   UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
     if (this.props.connectionInfo !== nextProps.connectionInfo
       && nextProps.connectionInfo.status === CONNECTED) {
+      this.setState({
+        currentStep: CHECKING_GDS_PLUGIN,
+        currentStepFailed: false
+      })
       this.onConnected()
     }
   }
@@ -119,21 +123,26 @@ class App extends Component {
     const placeholder =
       <Loader size='massive'>Loading</Loader>
 
+    const tryingToConnect = <div style={{padding: "20px"}}>
+      <Message grey attached header="Trying to connect" content="Trying to connect to active database. This should only take a few seconds. If it takes longer than that, check that you have a running database."/>
+    </div>
+
     switch(currentStep) {
       case CONNECTING_TO_DATABASE:
         switch (connectionStatus) {
           case INITIAL:
           case DISCONNECTED:
             if (!!window.neo4jDesktopApi) {
-              return placeholder
+              return tryingToConnect
             } else {
               return connectModal
             }
-          case
-          CONNECTING:
-            return placeholder
+          case CONNECTED:
+
+          case CONNECTING:
+            return tryingToConnect
           default:
-            return placeholder
+            return tryingToConnect
         }
       case CHECKING_GDS_PLUGIN:
         return <CheckGraphAlgorithmsInstalled
@@ -194,8 +203,8 @@ class App extends Component {
       }
     }
 
-
     const {  connectionInfo } = this.props
+    console.log("connectionInfo:", connectionInfo)
 
     const extra = this.renderExtra(connectionInfo.status)
 

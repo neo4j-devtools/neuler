@@ -25,7 +25,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
             <h1>Graph Data Science Library Missing</h1>
 
             <div align="center" style={{margin: "10px"}}>
-                <Image src='images/new-gds-plugin.png'/>
+                <Image src='images/gds-plugin.png'/>
             </div>
 
             <div align="center" className="loading-message">
