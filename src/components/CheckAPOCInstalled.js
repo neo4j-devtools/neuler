@@ -9,7 +9,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
 
     checkApocInstalled().then(result => {
         if (!result) {
-            props.didNotFindPlugin();
+            props.didNotFindPlugin("apoc");
         } else {
             props.apocInstalled();
         }

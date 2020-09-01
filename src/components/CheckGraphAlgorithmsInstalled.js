@@ -9,7 +9,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
 
     checkGraphAlgorithmsInstalled().then(result => {
         if (!result) {
-            props.didNotFindPlugin();
+            props.didNotFindPlugin("gds");
         } else {
             props.gdsInstalled();
         }

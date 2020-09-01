@@ -16,7 +16,7 @@ import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersi
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
-import {checkGraphAlgorithmsInstalled} from "./services/installation";
+import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
 
 
 const ALL_DONE = "all-done";
@@ -61,21 +61,25 @@ class App extends Component {
   }
 
   onConnected() {
-    checkGraphAlgorithmsInstalled().then((result) => {
-      if(result) {
-        loadVersions().then(versions => {
-          sendMetrics("neuler-connected", true, versions)
+    checkGraphAlgorithmsInstalled().then((gdsInstalled) => {
+      checkApocInstalled().then(apocInstalled => {
+        if (apocInstalled && gdsInstalled) {
+          loadVersions().then(versions => {
+            sendMetrics("neuler-connected", true, versions)
 
-          this.props.setGds(versions)
-          onNeo4jVersion(versions.neo4jVersion)
-          loadMetadata(versions.neo4jVersion).then(metadata => {
-            this.props.setLabels(metadata.labels)
-            this.props.setRelationshipTypes(metadata.relationships)
-            this.props.setPropertyKeys(metadata.propertyKeys)
-            this.props.setDatabases(metadata.databases)
-          })
-        });
-      }
+            this.props.setGds(versions)
+            onNeo4jVersion(versions.neo4jVersion)
+            loadMetadata(versions.neo4jVersion).then(metadata => {
+              this.props.setLabels(metadata.labels)
+              this.props.setRelationshipTypes(metadata.relationships)
+              this.props.setPropertyKeys(metadata.propertyKeys)
+              this.props.setDatabases(metadata.databases)
+            })
+          });
+        } else {
+          sendMetrics("neuler", "neuler-connected-incomplete", {gdsInstalled, apocInstalled})
+        }
+      })
     });
   }
 
@@ -160,7 +164,7 @@ class App extends Component {
     }
   }
 
-  failedCurrentStep() {
+  failedCurrentStep(library) {
     this.setState(
         { currentStepFailed: true}
     )
