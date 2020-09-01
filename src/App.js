@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Container, Dimmer, Divider, Icon, Loader, Segment, Message} from "semantic-ui-react"
+import {Container, Divider, Icon, Loader, Message, Segment} from "semantic-ui-react"
 
 import './App.css'
 import CheckGraphAlgorithmsInstalled from "./components/CheckGraphAlgorithmsInstalled"
@@ -100,28 +100,10 @@ class App extends Component {
 
   renderExtra(connectionStatus) {
     const {setConnected} = this.props
-
     const {currentStep} = this.state
 
-    const connectModal = <ConnectModal
-        key="modal"
-        errorMsg={this.state.errorMsg}
-        onSubmit={(username, password) => {
-          const credentials = {username, password}
-          tryConnect(credentials)
-              .then(() => {
-                this.setState({
-                  currentStep: CHECKING_GDS_PLUGIN
-                })
-                setConnected(credentials)
-              })
-              .catch(setDisconnected)
-        }}
-        show={true}
-    />
-
     const placeholder =
-      <Loader size='massive'>Loading</Loader>
+      <Loader size='massive'>Checking plugin is installed</Loader>
 
     const tryingToConnect = <div style={{padding: "20px"}}>
       <Message grey attached header="Trying to connect" content="Trying to connect to active database. This should only take a few seconds. If it takes longer than that, check that you have a running database."/>
@@ -135,10 +117,23 @@ class App extends Component {
             if (!!window.neo4jDesktopApi) {
               return tryingToConnect
             } else {
-              return connectModal
+              return <ConnectModal
+                  key="modal"
+                  errorMsg={this.state.errorMsg}
+                  onSubmit={(username, password) => {
+                    const credentials = {username, password}
+                    tryConnect(credentials)
+                        .then(() => {
+                          this.setState({
+                            currentStep: CHECKING_GDS_PLUGIN
+                          })
+                          setConnected(credentials)
+                        })
+                        .catch(setDisconnected)
+                  }}
+                  show={true}
+              />
             }
-          case CONNECTED:
-
           case CONNECTING:
             return tryingToConnect
           default:
@@ -153,8 +148,7 @@ class App extends Component {
       case CHECKING_APOC_PLUGIN:
         return <CheckAPOCInstalled
             didNotFindPlugin={this.failedCurrentStep.bind(this)}
-            apocInstalled={this.apocInstalled.bind(this)}
-        >
+            apocInstalled={this.apocInstalled.bind(this)}>
           {placeholder}
         </CheckAPOCInstalled>;
       case ALL_DONE:
@@ -204,7 +198,6 @@ class App extends Component {
     }
 
     const {  connectionInfo } = this.props
-    console.log("connectionInfo:", connectionInfo)
 
     const extra = this.renderExtra(connectionInfo.status)
 
