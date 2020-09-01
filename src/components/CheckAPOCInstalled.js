@@ -1,17 +1,17 @@
 import React, {useState} from 'react'
 import {Dimmer, Image} from "semantic-ui-react"
 
-import {checkGraphAlgorithmsInstalled} from "../services/installation"
+import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "../services/installation"
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
     const [algorithmsInstalled, setAlgorithmsInstalled] = useState(true)
 
-    checkGraphAlgorithmsInstalled().then(result => {
+    checkApocInstalled().then(result => {
         if (!result) {
             props.didNotFindPlugin();
         } else {
-            props.gdsInstalled();
+            props.apocInstalled();
         }
 
         setAlgorithmsInstalled(result)
@@ -22,7 +22,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     } else {
         return <React.Fragment>
 
-            <h1>Graph Data Science Library Missing</h1>
+            <h1>APOC Library Missing</h1>
 
             <div align="center" style={{margin: "10px"}}>
                 <Image src='images/new-gds-plugin.png'/>
@@ -30,7 +30,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
 
             <div align="center" className="loading-message">
                 <p>
-                    This application relies on the Graph Data Science Library.
+                    This application relies on the APOC Library.
                     <br/>You can install it via the 'Plugins' tab of your database.
                 </p>
             </div>

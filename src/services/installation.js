@@ -1,5 +1,10 @@
 import {runCypherDefaultDatabase} from "./stores/neoStore"
 
+export const checkApocInstalled = () => {
+  return runCypherDefaultDatabase(findApocProceduresCypher)
+      .then(result => (parseResultStream(result)))
+      .catch(handleException)
+}
 
 export const checkGraphAlgorithmsInstalled = () => {
   return runCypherDefaultDatabase(findGraphAlgosProceduresCypher)
@@ -16,6 +21,13 @@ const findGraphAlgosProceduresCypher = `
 CALL dbms.procedures()
 YIELD name
 WHERE name STARTS WITH "gds"
+RETURN count(*) AS count
+`
+
+const findApocProceduresCypher = `
+CALL dbms.procedures()
+YIELD name
+WHERE name STARTS WITH "apoc"
 RETURN count(*) AS count
 `
 

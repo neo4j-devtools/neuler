@@ -1,8 +1,9 @@
 import React, {Component} from 'react'
-import {Container, Dimmer, Divider, Icon, Loader, Segment} from "semantic-ui-react"
+import {Container, Dimmer, Divider, Icon, Loader, Segment, Message} from "semantic-ui-react"
 
 import './App.css'
 import CheckGraphAlgorithmsInstalled from "./components/CheckGraphAlgorithmsInstalled"
+import CheckAPOCInstalled from "./components/CheckAPOCInstalled"
 import NEuler from "./components/NEuler"
 import {selectAlgorithm} from "./ducks/algorithms"
 import {connect} from "react-redux"
@@ -15,6 +16,7 @@ import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersi
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
+import {checkGraphAlgorithmsInstalled} from "./services/installation";
 
 
 const ALL_DONE = "all-done";
@@ -32,7 +34,8 @@ class App extends Component {
 
     this.state = {
       errorMsg: "Could not get a connection! Check that you entered the correct credentials and that the database is running.",
-      currentStep: CONNECTING_TO_DATABASE
+      currentStep: CONNECTING_TO_DATABASE,
+      currentStepFailed: false
     }
 
     const { setConnected, setDisconnected } = this.props
@@ -54,28 +57,34 @@ class App extends Component {
   }
 
   onConnected() {
-    loadVersions().then(versions => {
-      sendMetrics("neuler-connected", true, versions)
+    checkGraphAlgorithmsInstalled().then((result) => {
+      if(result) {
+        loadVersions().then(versions => {
+          sendMetrics("neuler-connected", true, versions)
 
-      this.props.setGds(versions)
-      onNeo4jVersion(versions.neo4jVersion)
-      loadMetadata(versions.neo4jVersion).then(metadata => {
-        this.props.setLabels(metadata.labels)
-        this.props.setRelationshipTypes(metadata.relationships)
-        this.props.setPropertyKeys(metadata.propertyKeys)
-        this.props.setDatabases(metadata.databases)
-      })
+          this.props.setGds(versions)
+          onNeo4jVersion(versions.neo4jVersion)
+          loadMetadata(versions.neo4jVersion).then(metadata => {
+            this.props.setLabels(metadata.labels)
+            this.props.setRelationshipTypes(metadata.relationships)
+            this.props.setPropertyKeys(metadata.propertyKeys)
+            this.props.setDatabases(metadata.databases)
+          })
+        });
+      }
     });
   }
 
   renderIcon(step) {
-    const {currentStep} = this.state
+    const {currentStep, currentStepFailed} = this.state
 
     const currentIndex = this.steps.indexOf(currentStep)
     const stepIndex = this.steps.indexOf(step)
 
     if(step === this.state.currentStep) {
-      return <Loader active inline  className="loading-icon" size="large" />;
+      return currentStepFailed ?
+          <Icon size="big" name='close' color='red' className="loading-icon" /> :
+          <Loader active inline  className="loading-icon" size="large" />;
     } else {
       if(stepIndex > currentIndex) {
         return <Icon size="big" name='circle notch' color='grey' className="loading-icon" />
@@ -88,9 +97,7 @@ class App extends Component {
   renderExtra(connectionStatus) {
     const {setConnected} = this.props
 
-    const placeholder = <Dimmer active>
-      <Loader size='massive'>Connecting to active database</Loader>
-    </Dimmer>
+    const {currentStep} = this.state
 
     const connectModal = <ConnectModal
         key="modal"
@@ -100,7 +107,7 @@ class App extends Component {
           tryConnect(credentials)
               .then(() => {
                 this.setState({
-                  step: CHECKING_GDS_PLUGIN
+                  currentStep: CHECKING_GDS_PLUGIN
                 })
                 setConnected(credentials)
               })
@@ -108,27 +115,86 @@ class App extends Component {
         }}
         show={true}
     />
-    switch (connectionStatus) {
-      case INITIAL:
-      case DISCONNECTED:
-        if (!!window.neo4jDesktopApi) {
-          return placeholder
-        } else {
-          return connectModal
+
+    const placeholder =
+      <Loader size='massive'>Loading</Loader>
+
+    switch(currentStep) {
+      case CONNECTING_TO_DATABASE:
+        switch (connectionStatus) {
+          case INITIAL:
+          case DISCONNECTED:
+            if (!!window.neo4jDesktopApi) {
+              return placeholder
+            } else {
+              return connectModal
+            }
+          case
+          CONNECTING:
+            return placeholder
+          default:
+            return placeholder
         }
-      case
-      CONNECTING:
-        return placeholder
+      case CHECKING_GDS_PLUGIN:
+        return <CheckGraphAlgorithmsInstalled
+            didNotFindPlugin={this.failedCurrentStep.bind(this)}
+            gdsInstalled={this.gdsInstalled.bind(this)}>
+          {placeholder}
+        </CheckGraphAlgorithmsInstalled>;
+      case CHECKING_APOC_PLUGIN:
+        return <CheckAPOCInstalled
+            didNotFindPlugin={this.failedCurrentStep.bind(this)}
+            apocInstalled={this.apocInstalled.bind(this)}
+        >
+          {placeholder}
+        </CheckAPOCInstalled>;
+      case ALL_DONE:
+        return <div style={{padding: "20px"}}>
+          <Message grey attached header="Neuler ready to launch" content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
+          </div>
       default:
-        return placeholder
+        return <Message>Unknown State</Message>;
     }
   }
 
+  failedCurrentStep() {
+    this.setState(
+        { currentStepFailed: true}
+    )
+  }
+
+  gdsInstalled() {
+    this.setState({
+      currentStepFailed: false,
+      currentStep: CHECKING_APOC_PLUGIN
+    })
+  }
+
+  apocInstalled() {
+    this.setState({
+      currentStepFailed: false,
+      currentStep: ALL_DONE
+    })
+  }
+
+
   render() {
-    const {currentStep} = this.state
+    const {currentStep, showNeuler} = this.state
+
     if(currentStep === ALL_DONE) {
-      return <NEuler key="app" {...this.props} />;
+      if(showNeuler) {
+        return <NEuler key="app" {...this.props} />;
+      } else {
+        const that = this;
+        setTimeout(function () {
+          that.setState({
+            showNeuler: true
+          });
+        }, 1500);
+      }
     }
+
+
     const {  connectionInfo } = this.props
 
     const extra = this.renderExtra(connectionInfo.status)
