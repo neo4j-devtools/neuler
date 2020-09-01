@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.28 (2020-09-01)
+
+* Updated launch sequence to explain missing dependencies
+
 ## 0.1.27 (2020-08-27)
 
 * Show what's in the selected db on home screen
@@ -51,7 +55,7 @@
 
 ## 0.1.16 (2020-03-24)
 
-* Updated to use the Graph Data Science Library 
+* Updated to use the Graph Data Science Library
 
 ## 0.1.15 (2020-03-17)
 
@@ -59,7 +63,7 @@
 
 ## 0.1.14 (2019-11-04)
 
-* Fix issue with algorithm parameter rendering on latest version of Neo4j Browser 
+* Fix issue with algorithm parameter rendering on latest version of Neo4j Browser
 
 ## 0.1.13 (2019-10-29)
 
@@ -71,7 +75,7 @@
 
 ## 0.1.11 (2019-05-17)
 
-- Redesign left menu to use icons 
+- Redesign left menu to use icons
 - Added European Roads and Twitter sample graphs
 - Screenshot functionality
 
