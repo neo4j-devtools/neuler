@@ -78,7 +78,7 @@ class Datasets extends Component {
         const { selectedDataset, currentQueryIndex, completedQueryIndexes, completed, loadSampleGraphCollapsed, runAlgorithmsCollapsed } = this.state
         const { selectGroup, selectAlgorithm } = this.props
         const selectedStyle = {background: "#e5f9e7"};
-        const buttonStyle = { borderRadius: '0', background: "white", float: "right", height: "23px", width: "23px" };
+        const buttonStyle = { borderRadius: '0', background: "#f8f8f9", float: "right", height: "23px", width: "23px" };
 
         const headerStyle = {cursor: "pointer", background: "#f8f8f9"};
         return (<div style={containerStyle}>
