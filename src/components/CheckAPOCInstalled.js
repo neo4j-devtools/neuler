@@ -1,7 +1,7 @@
 import React, {useState} from 'react'
-import {Dimmer, Image} from "semantic-ui-react"
+import {Image} from "semantic-ui-react"
 
-import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "../services/installation"
+import {checkApocInstalled} from "../services/installation"
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {

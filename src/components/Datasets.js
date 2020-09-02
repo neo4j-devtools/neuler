@@ -15,15 +15,18 @@ import React, {Component} from 'react'
 import {runCypher} from "../services/stores/neoStore"
 import {connect} from "react-redux";
 import {sendMetrics} from "./metrics/sendMetrics";
+import Clipboard from "react-clipboard.js";
 
 
 class Datasets extends Component {
     state = {
         open: false,
-        selectedDataset: "Game of Thrones",
+        selectedDataset: null,
         currentQueryIndex: -1,
         completedQueryIndexes: {},
-        completed: []
+        completed: [],
+        loadSampleGraphCollapsed: false,
+        runAlgorithmsCollapsed: true
     }
 
     resetState() {
@@ -34,7 +37,14 @@ class Datasets extends Component {
         })
     }
 
-    show = (dimmer, datasetName) => () => this.setState({dimmer, open: true, selectedDataset: datasetName})
+    show = (dimmer, datasetName) => () => this.setState({
+        currentQueryIndex: -1,
+        completedQueryIndexes: {},
+        completed: [],
+        selectedDataset: datasetName,
+        loadSampleGraphCollapsed: false,
+        runAlgorithmsCollapsed: true
+    })
     close = () => this.resetState()
 
     loadDataset() {
@@ -60,7 +70,8 @@ class Datasets extends Component {
               completed.push(selectedDataset)
               this.setState({
                   currentQueryIndex: -1,
-                  completed: completed
+                  completed: completed,
+                  runAlgorithmsCollapsed: false
               })
 
               sendMetrics('neuler-loaded-dataset', selectedDataset )
@@ -74,88 +85,143 @@ class Datasets extends Component {
             margin: "1em",
         }
 
-        const { open, dimmer, selectedDataset, currentQueryIndex, completedQueryIndexes, completed } = this.state
+        const { selectedDataset, currentQueryIndex, completedQueryIndexes, completed, loadSampleGraphCollapsed, runAlgorithmsCollapsed } = this.state
+        const selectedStyle = {background: "#e5f9e7"};
+
+        const minimiseIcon = "minus"
+        const maximiseIcon = "plus"
+
+        let toggleIcon = 'minus'
+
+        const collapsed = true
+
+        if (collapsed) {
+            // containerStyle.height = '15em';
+            toggleIcon = 'plus'
+        }
+
+        const buttonStyle = { borderRadius: '0', background: "white", float: "right", height: "23px", width: "23px" };
+
 
         return (<div style={containerStyle}>
                 <Container fluid>
                     <p>
                         Below are some sample graphs that are useful for learning how to use the Graph Data Science library.
-
                     </p>
 
                     <CardGroup>
-                        {Object.keys(sampleGraphs).map(key => (
-                            <Card key={sampleGraphs[key].name}>
-                                <Card.Content>
-                                    <Icon name='sitemap'/>
-                                    <Card.Header>
-                                        {sampleGraphs[key].name}
-                                    </Card.Header>
-                                    <Card.Meta>
-                                        Author: <a target="_blank" rel="noopener noreferrer" href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
-                                    </Card.Meta>
-                                    <Card.Description>
-                                        {sampleGraphs[key].description}
-                                    </Card.Description>
-                                </Card.Content>
-                                <Card.Content extra>
-                                    <div className='ui two buttons'>
-                                        <Button basic color='green' onClick={this.show(true, sampleGraphs[key].name)}>
-                                            Load
-                                        </Button>
-                                    </div>
-                                </Card.Content>
-                            </Card>
-                        ))}
+                        {Object.keys(sampleGraphs).map(key => {
+
+                            return (
+                                <Card key={sampleGraphs[key].name} raised={sampleGraphs[key].name === selectedDataset}>
+                                    <Card.Content
+                                        style={sampleGraphs[key].name === selectedDataset ? selectedStyle : null}>
+                                        <Icon name='sitemap'/>
+                                        <Card.Header>
+                                            {sampleGraphs[key].name}
+                                        </Card.Header>
+                                        <Card.Meta>
+                                            Author: <a target="_blank" rel="noopener noreferrer"
+                                                       href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
+                                        </Card.Meta>
+                                        <Card.Description>
+                                            {sampleGraphs[key].description}
+                                        </Card.Description>
+                                    </Card.Content>
+                                    <Card.Content extra
+                                                  style={sampleGraphs[key].name === selectedDataset ? selectedStyle : null}>
+                                        <div className='ui two buttons'>
+                                            <Button basic color='green'
+                                                    onClick={this.show(true, sampleGraphs[key].name)}>
+                                                Select
+                                            </Button>
+                                        </div>
+                                    </Card.Content>
+                                </Card>
+                            );
+                        })}
 
                     </CardGroup>
 
-                    <Modal dimmer={dimmer} open={open} onClose={this.close}>
-                        <Modal.Header>Are you sure you want to load this sample graph?</Modal.Header>
-                        <Modal.Content >
-                            <Modal.Description>
-                                <Header>{sampleGraphs[selectedDataset].name}</Header>
-                                <Message warning>
-                                    <Message.Header>WARNING</Message.Header>
-                                    <p>Pressing the 'Yes, load it!' button below will run the following Cypher
-                                        statements:</p>
+                    {selectedDataset ?
+                    <Card fluid>
+                        <Card.Content >
+                            <Card.Header>
+                                Load Sample Graph
+                                <Button style={buttonStyle} icon size='medium'
+                                        onClick={() => this.setState(({ loadSampleGraphCollapsed }) => ({ loadSampleGraphCollapsed: !loadSampleGraphCollapsed }))}>
+                                    <Icon name={loadSampleGraphCollapsed ? "plus" : "minus"} style={{}} />
+                                </Button>
+                            </Card.Header>
+                        </Card.Content>
+                        <Card.Content style={loadSampleGraphCollapsed? {display: "none"} : null}>
+                            <Card.Description>
+                                <Message color='purple'>
+                                    <Message.Header>
+                                        Do you want to load the sample graph?
+                                    </Message.Header>
+                                    <Message.Content>
+                                        <p>Pressing the 'Yes, load it!' button below will run the following Cypher
+                                            statements:</p>
+                                    </Message.Content>
                                 </Message>
-                                <div>
 
+                                <div>
                                     {sampleGraphs[selectedDataset].queries.map((query, queryIndex) => (
-                                      <Segment key={queryIndex}>
+                                      <Message key={queryIndex}>
                                           {completedQueryIndexes[queryIndex] ? <Icon color='green' name='check'/> : null}
-                                          <pre style={{ whiteSpace: 'pre-wrap' }}>{query}</pre>
+                                          <pre style={{ whiteSpace: 'pre-wrap' }}>{query};</pre>
+                                          <Clipboard onSuccess={(event) => {
+                                              sendMetrics('neuler-sample-graphs', "copied-code", {type: "sample-graph-query", graph: selectedDataset})
+                                              event.trigger.textContent = "Copied";
+                                              setTimeout(() => {
+                                                  event.trigger.textContent = 'Copy';
+                                              }, 2000);
+                                          }}
+                                                     button-className="code"
+                                                     data-clipboard-text={query}>
+                                              Copy
+                                          </Clipboard>
                                           <Dimmer active={queryIndex === currentQueryIndex}>
                                               <Loader>Running</Loader>
                                           </Dimmer>
-                                      </Segment>
+
+                                      </Message>
+
                                     ))}
 
                                 </div>
 
-                            </Modal.Description>
-                        </Modal.Content>
-                        <Modal.Actions>
-                            {completed.includes(selectedDataset)
-                              ? <Button positive
-                                        content="Done"
-                                        onClick={this.close}/>
-                              : <div>
-                                  <Button
-                                    disabled={currentQueryIndex >= 0}
-                                    positive
-                                    color='green'
-                                    content="Yes, load it!"
-                                    onClick={this.loadDataset.bind(this)}
-                                  />
-                                  <Button disabled={currentQueryIndex >= 0} color='black' onClick={this.close}>
-                                      No, get me outta here!
-                                  </Button>
-                              </div>
-                            }
-                        </Modal.Actions>
-                    </Modal>
+                                {completed.includes(selectedDataset)
+                                    ? null
+                                    : <div style={{padding: "12px 0 0 0"}}>
+                                        <Button
+                                            disabled={currentQueryIndex >= 0}
+                                            positive
+                                            color='green'
+                                            content="Yes, load it!"
+                                            onClick={this.loadDataset.bind(this)}
+                                        />
+
+                                    </div>
+                                }
+                            </Card.Description>
+                        </Card.Content>
+                        <Card.Content>
+                            <Card.Header>
+                                Run Graph Algorithms
+                                <Button style={buttonStyle} icon size='medium'
+                                        onClick={() => this.setState(({ runAlgorithmsCollapsed }) => ({ runAlgorithmsCollapsed: !runAlgorithmsCollapsed }))}>
+                                    <Icon name={runAlgorithmsCollapsed ? "plus" : "minus"} style={{}}/>
+                                </Button>
+                            </Card.Header>
+                        </Card.Content>
+                        <Card.Content style={runAlgorithmsCollapsed? {display: "none"} : null}>
+                            <Card.Description>
+                                <p>The following algorithms are well suited to the {selectedDataset} sample graph:</p>
+                            </Card.Description>
+                        </Card.Content>
+                    </Card> : null}
 
                 </Container>
             </div>

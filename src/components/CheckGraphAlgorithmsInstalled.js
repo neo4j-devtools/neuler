@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Dimmer, Image} from "semantic-ui-react"
+import {Image} from "semantic-ui-react"
 
 import {checkGraphAlgorithmsInstalled} from "../services/installation"
 

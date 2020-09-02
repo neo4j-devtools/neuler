@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Render} from 'graph-app-kit/components/Render'
-import {Button, Form, Input, Modal, Message, Segment} from 'semantic-ui-react'
+import {Button, Form, Input, Message} from 'semantic-ui-react'
 
 class ConnectForm extends Component {
     state = {
@@ -16,7 +16,7 @@ class ConnectForm extends Component {
     };
 
     render() {
-        const {open, errorMsg, onClose} = this.props
+        const {errorMsg} = this.props
         const {username, password} = this.state
         return (
             <div style={{padding: "20px"}}>
