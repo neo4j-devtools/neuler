@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.29 (2020-09-02)
+
+* Add suggested algorithms to run on sample graphs
+* Bug fix for visualisation screen
+
 ## 0.1.28 (2020-09-01)
 
 * Updated launch sequence to explain missing dependencies

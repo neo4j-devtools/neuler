@@ -206,7 +206,11 @@ class Datasets extends Component {
                                                 </Card.Content>
                                                 <Card.Content extra>
                                                     <div className='ui two buttons'>
-                                                        <Button basic color='green' onClick={() => { selectGroup(item.category); selectAlgorithm(item.name) }}>
+                                                        <Button basic color='green' onClick={() => {
+                                                            sendMetrics('neuler-sample-graphs', "try-out-algorithm", {category: item.category, name: item.name});
+                                                            selectGroup(item.category);
+                                                            selectAlgorithm(item.name);
+                                                        }}>
                                                             Try it out
                                                         </Button>
                                                     </div>
