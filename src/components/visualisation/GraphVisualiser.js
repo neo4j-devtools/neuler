@@ -98,15 +98,15 @@ export default class extends Component {
 
   generateCypher(label, relationshipType, writeProperty, limit, hideLonelyNodes = true) {
     if (hideLonelyNodes) {
-      return `match path = (n${label ? ':' + label : ''})-[${relationshipType ? ':' + relationshipType : ''}]-()
+      return `match path = (n${label !== '*' ? ':' + label : ''})-[${relationshipType !== '*' ? ':' + relationshipType : ''}]-()
 return path
 limit toInteger(${limit})`
     } else {
-      return `match path = (n${label ? ':' + label : ''})
+      return `match path = (n${label !== '*' ? ':' + label : ''})
 where not(n["${writeProperty}"] is null)
 return path
 union
-match path = ()-[${relationshipType ? ':'+relationshipType : ''}]-()
+match path = ()-[${relationshipType !== '*' ? ':' + relationshipType : ''}]-()
 return path
 limit toInteger(${limit})`
     }
