@@ -1,6 +1,21 @@
 import {connect} from "react-redux";
 import React from "react";
 
+const randomColor = require('randomcolor');
+const tenOf = (color) => {
+    return randomColor({
+        count: 10,
+        hue: color,
+        luminosity: 'light',
+    });
+}
+
+const colors = tenOf("green").concat(tenOf("blue")).concat(tenOf("orange")).concat(tenOf("red")).concat(tenOf("yellow"));
+
+export const selectRandomColor = () => {
+    return colors[Math.floor(Math.random() * 50)]
+}
+
 const getNested = (obj, ...args) => {
     return args.reduce((obj, level) => obj && obj[level], obj)
 }

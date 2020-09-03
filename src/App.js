@@ -17,8 +17,8 @@ import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnec
 import {initializeConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
 import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
-import {addDatabase, addLabel, initLabel} from "./ducks/settings";
-import {selectRandomColor} from "./components/Home";
+import {addDatabase, initLabel} from "./ducks/settings";
+import {selectRandomColor} from "./components/NodeLabel";
 
 
 const ALL_DONE = "all-done";

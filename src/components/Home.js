@@ -19,22 +19,9 @@ import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelation
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
-import NodeLabel from "./NodeLabel";
+import NodeLabel, {selectRandomColor} from "./NodeLabel";
 
-const randomColor = require('randomcolor');
-const tenOf = (color) => {
-    return randomColor({
-        count: 10,
-        hue: color,
-        luminosity: 'light',
-    });
-}
 
-const colors = tenOf("green").concat(tenOf("blue")).concat(tenOf("orange")).concat(tenOf("red")).concat(tenOf("yellow"));
-
-export const selectRandomColor = () => {
-    return colors[Math.floor(Math.random() * 50)]
-}
 
 class Home extends Component {
     constructor(props) {
