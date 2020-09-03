@@ -178,7 +178,6 @@ limit toInteger(${limit})`
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
-    console.table(nextProps)
     if (this.props.writeProperty !== nextProps.writeProperty && nextProps.writeProperty) {
       if (nextProps.group === 'Centralities' || centralityLikeAlgos.includes(nextProps.algorithm)){
         this.updateNodeColor(null)
