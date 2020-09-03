@@ -3,7 +3,6 @@ import {Grid} from 'semantic-ui-react'
 import {hideProperty, resetLabelsProperties} from "../ducks/settings"
 import {connect} from 'react-redux'
 import NodeLabel from "./NodeLabel";
-import {getActiveDatabase} from "../services/stores/neoStore";
 
 export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   const keys = Object.keys(hiddenPropertiesMap);
