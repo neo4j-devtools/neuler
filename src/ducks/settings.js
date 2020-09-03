@@ -8,7 +8,8 @@ const HIDE_PROPERTY = `${NAME}/HIDE_PROPERTY`
 const RESET_LABELS = `${NAME}/RESET_LABELS`
 
 const ADD_DATABASE = `${NAME}/ADD_DATABASE`
-const ADD_LABEL = `${NAME}/ADD_LABEL`
+const INIT_LABEL = `${NAME}/INIT_LABEL`
+const UPDATE_LABEL = `${NAME}/UPDATE_LABEL`
 
 const getBlacklist = () => {
   const blacklist = new Set()
@@ -44,8 +45,15 @@ export const addDatabase = database => ({
   database
 })
 
-export const addLabel = (database, label, color) => ({
-  type: ADD_LABEL,
+export const initLabel = (database, label, color) => ({
+  type: INIT_LABEL,
+  database,
+  label,
+  color
+})
+
+export const updateLabel = (database, label, color) => ({
+  type: UPDATE_LABEL,
   database,
   label,
   color
@@ -119,13 +127,24 @@ export default (state = getInitialState(), action) => {
         ...state,
         labels
       }
-    case ADD_LABEL:
+    case INIT_LABEL:
       let initialLabels = {...state.labels}
-      initialLabels[action.database][action.label] = action.color
+
+      if(!(action.label in initialLabels[action.database])) {
+        initialLabels[action.database][action.label] = action.color
+      }
 
       return {
         ...state,
         labels: initialLabels
+      }
+    case UPDATE_LABEL:
+      let initLabels = {...state.labels}
+      initLabels[action.database][action.label] = action.color
+
+      return {
+        ...state,
+        labels: initLabels
       }
     default:
       return state

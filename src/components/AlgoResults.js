@@ -11,7 +11,7 @@ import html2canvas from "html2canvas";
 import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
 import {sendMetrics} from "./metrics/sendMetrics";
-import {generateCellStyle} from "./PropertiesView";
+import {NodeLabel} from "./Home";
 
 const tabContentStyle = {
   height: '85vh',
@@ -26,7 +26,7 @@ const TableView = ({task, gdsVersion}) => {
 
   return <div style={tabContentStyle}>
     {labels.length > 0 ? <div>
-      {labels.map(label => <span style={generateCellStyle([label])} className="label-results">{label}</span>)}
+      {labels.map(label => <NodeLabel labels={[label]} caption={label} />)}
     </div>  : null}
 
     <ResultView task={task}/>

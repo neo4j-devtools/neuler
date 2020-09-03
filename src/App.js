@@ -17,7 +17,8 @@ import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnec
 import {initializeConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
 import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
-import {addDatabase, addLabel} from "./ducks/settings";
+import {addDatabase, addLabel, initLabel} from "./ducks/settings";
+import {selectRandomColor} from "./components/Home";
 
 
 const ALL_DONE = "all-done";
@@ -81,7 +82,7 @@ class App extends Component {
               })
 
               metadata.labels.forEach(label => {
-                this.props.addLabel(this.props.metadata.activeDatabase, label.label, "#ccc")
+                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor())
               })
 
             })
@@ -267,7 +268,7 @@ const mapDispatchToProps = dispatch => ({
   setDisconnected: () => dispatch(setDisconnected()),
 
   addDatabase: database => dispatch(addDatabase(database)),
-  addLabel: (database, label, color) => dispatch(addLabel(database, label, color))
+  initLabel: (database, label, color) => dispatch(initLabel(database, label, color))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

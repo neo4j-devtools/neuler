@@ -58,18 +58,7 @@ i.loading-icon, div.large.loader.loading-icon {
 
 i.loading-icon.icon { font-size: 2.3em;}
 
-span.label {
-  background: #ccc;
-  color: rgb(48, 51, 58);
-  display: inline-block;
-  padding: .2rem .8rem;
-  border-radius: 0.25rem;
-  font-weight: 600;
-  font-size: 0.8rem;
-  margin: .2rem;
-}
-
-span.label-results {
+span.label, span.label-results {
   color: #000000;
   display: inline-block;
   padding: .2rem .8rem;

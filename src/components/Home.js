@@ -18,10 +18,20 @@ import {connect} from "react-redux";
 import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata";
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
-import {addDatabase, addLabel} from "../ducks/settings";
+import {addDatabase, initLabel} from "../ducks/settings";
+
+export const selectRandomColor = () => {
+    const colors = [
+        "#FBF3FB", "#E0BBE4", "#FFDFD3", "#A4C3D2", "#ECC3EB",
+        "#ffb347", "#efff47", "#FAF3DD", "#8FC1A9", "#9DBAD5",
+        "#D5B79A", "#FADFD8", "#94C6FF", "#98FFFB", "#ECFFF1",
+        "#FFBF00", "#E9D66B", "#A3C1AD", "#FFFDD0", "#E9967A"
+    ]
+
+    return colors[Math.floor(Math.random() * 20)]
+}
 
 class Home extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
@@ -43,7 +53,7 @@ class Home extends Component {
             })
 
             metadata.labels.forEach(label => {
-                this.props.addLabel(this.props.metadata.activeDatabase, label.label, "#ccc")
+                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor())
             })
 
             this.setState({activeDatabaseSelected: true})
@@ -121,17 +131,17 @@ class Home extends Component {
                             this.state.activeDatabaseSelected ?
                                 (this.hasNodesAndRelationships(this.props.metadata)) ?
                                     <div>
-                                        <Message color="green" style={{color: "#000000"}}>
+                                        <Message color="white" style={{color: "#000000"}}>
                                             <Message.Header>
                                                 Database Contents
                                             </Message.Header>
-<Message.Content>
+                                            <Message.Content>
                                         <Table basic='very' celled collapsing>
                                             <Table.Body>
                                                 <Table.Row>
                                                     <Table.Cell style={{width: "150px"}}>Node Labels</Table.Cell>
                                                     <Table.Cell>{
-                                                        this.props.metadata.labels.map(value => <span key={value.label} className="label">{value.label}</span>)
+                                                        this.props.metadata.labels.map(value => <NodeLabel labels={[value.label]} caption={value.label} />)
 
                                                     }
                                                     </Table.Cell>
@@ -139,7 +149,7 @@ class Home extends Component {
                                                 <Table.Row>
                                                     <Table.Cell style={{width: "150px"}}>Relationship Types</Table.Cell>
                                                     <Table.Cell>{
-                                                        this.props.metadata.relationshipTypes.map(value => <span key={value.label} className="label">{value.label}</span>)
+                                                        this.props.metadata.relationshipTypes.map(value => <span style={{"background": "#ccc"}} key={value.label} className="label">{value.label}</span>)
 
                                                     }
                                                     </Table.Cell>
@@ -297,11 +307,33 @@ class Home extends Component {
     }
 }
 
+export const generateCellStyle = (labels, labelBackgrounds) => {
+    let style = {
+        maxWidth: '40em',
+        overflow: 'hidden',
+        cursor: "pointer"
+    };
+
+    let [label] = labels;
+    style.background = labelBackgrounds[label] || "#efefef"
+    return style;
+}
+
+const NodeLabelView = ({labels, globalLabels, caption, metadata}) => {
+    const labelBackgrounds = globalLabels[metadata.activeDatabase]
+    return <span key={caption}  style={generateCellStyle(labels, labelBackgrounds)} className="label">{caption}</span>
+}
+
+export const NodeLabel = connect(state => ({
+    globalLabels: state.settings.labels,
+    metadata: state.metadata,
+}))(NodeLabelView)
+
 
 const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,
     metadata: state.metadata,
-    settings: state.settings
+    labels: state.settings.labels
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -313,7 +345,7 @@ const mapDispatchToProps = dispatch => ({
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
 
     addDatabase: database => dispatch(addDatabase(database)),
-    addLabel: (database, label, color) => dispatch(addLabel(database, label, color))
+    initLabel: (database, label, color) => dispatch(initLabel(database, label, color))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
