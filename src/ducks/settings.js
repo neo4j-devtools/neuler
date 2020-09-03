@@ -131,7 +131,9 @@ export default (state = getInitialState(), action) => {
       let initialLabels = {...state.labels}
 
       if(!(action.label in initialLabels[action.database])) {
-        initialLabels[action.database][action.label] = action.color
+        initialLabels[action.database][action.label] = {
+          color: action.color
+        }
       }
 
       return {

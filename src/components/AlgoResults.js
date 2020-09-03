@@ -11,7 +11,7 @@ import html2canvas from "html2canvas";
 import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
 import {sendMetrics} from "./metrics/sendMetrics";
-import {NodeLabel} from "./Home";
+import NodeLabel from "./NodeLabel";
 
 const tabContentStyle = {
   height: '85vh',

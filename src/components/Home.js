@@ -19,16 +19,21 @@ import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelation
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
+import NodeLabel from "./NodeLabel";
+
+const randomColor = require('randomcolor');
+const tenOf = (color) => {
+    return randomColor({
+        count: 10,
+        hue: color,
+        luminosity: 'light',
+    });
+}
+
+const colors = tenOf("green").concat(tenOf("blue")).concat(tenOf("orange")).concat(tenOf("red")).concat(tenOf("yellow"));
 
 export const selectRandomColor = () => {
-    const colors = [
-        "#FBF3FB", "#E0BBE4", "#FFDFD3", "#A4C3D2", "#ECC3EB",
-        "#ffb347", "#efff47", "#FAF3DD", "#8FC1A9", "#9DBAD5",
-        "#D5B79A", "#FADFD8", "#94C6FF", "#98FFFB", "#ECFFF1",
-        "#FFBF00", "#E9D66B", "#A3C1AD", "#FFFDD0", "#E9967A"
-    ]
-
-    return colors[Math.floor(Math.random() * 20)]
+    return colors[Math.floor(Math.random() * 50)]
 }
 
 class Home extends Component {
@@ -307,27 +312,6 @@ class Home extends Component {
     }
 }
 
-export const generateCellStyle = (labels, labelBackgrounds) => {
-    let style = {
-        maxWidth: '40em',
-        overflow: 'hidden',
-        cursor: "pointer"
-    };
-
-    let [label] = labels;
-    style.background = labelBackgrounds[label] || "#efefef"
-    return style;
-}
-
-const NodeLabelView = ({labels, globalLabels, caption, metadata}) => {
-    const labelBackgrounds = globalLabels[metadata.activeDatabase]
-    return <span key={caption}  style={generateCellStyle(labels, labelBackgrounds)} className="label">{caption}</span>
-}
-
-export const NodeLabel = connect(state => ({
-    globalLabels: state.settings.labels,
-    metadata: state.metadata,
-}))(NodeLabelView)
 
 
 const mapStateToProps = state => ({
