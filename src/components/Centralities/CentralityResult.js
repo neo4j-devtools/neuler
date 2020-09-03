@@ -10,8 +10,7 @@ export default ({ task }) => (
     <Table color='green'>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Labels</Table.HeaderCell>
-          <Table.HeaderCell>Properties</Table.HeaderCell>
+          <Table.HeaderCell>Node</Table.HeaderCell>
           <Table.HeaderCell>Score</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -19,7 +18,6 @@ export default ({ task }) => (
       { task.result ?
         task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
-            <Table.Cell>{result.labels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels}/></Table.Cell>
             <Table.Cell>{result.score}</Table.Cell>
           </Table.Row>

@@ -11,6 +11,7 @@ import html2canvas from "html2canvas";
 import {ReImg} from 'reimg'
 import {v4 as generateId} from 'uuid'
 import {sendMetrics} from "./metrics/sendMetrics";
+import {generateCellStyle} from "./PropertiesView";
 
 const tabContentStyle = {
   height: '85vh',
@@ -18,9 +19,16 @@ const tabContentStyle = {
   overflowX: 'hidden'
 }
 
-const TableView = ({ task, gdsVersion }) => {
-  const { ResultView } = getAlgorithmDefinitions(task.group, task.algorithm, gdsVersion)
+const TableView = ({task, gdsVersion}) => {
+  const {ResultView} = getAlgorithmDefinitions(task.group, task.algorithm, gdsVersion)
+
+  const labels = task.result ? [...new Set(task.result.flatMap(result => result.labels))] : []
+
   return <div style={tabContentStyle}>
+    {labels.length > 0 ? <div>
+      {labels.map(label => <span style={generateCellStyle([label])} className="label-results">{label}</span>)}
+    </div>  : null}
+
     <ResultView task={task}/>
   </div>
 }
