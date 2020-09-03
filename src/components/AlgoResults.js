@@ -31,7 +31,8 @@ const VisView = ({ task, active }) => (
                      algorithm={task.algorithm}
                      limit={task.parameters.limit}
                      relationshipType={task.parameters.config.relationshipProjection.relType.type}
-                     writeProperty={(task.parameters.config || {}).writeProperty}/>
+                     writeProperty={(task.parameters.config || {}).writeProperty}
+                     group={task.group}/>
   </div>
 )
 
