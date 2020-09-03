@@ -9,6 +9,7 @@ import {getCurrentAlgorithm} from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
 import {limit} from "../ducks/settings"
+import {getActiveDatabase} from "../services/stores/neoStore";
 
 class Algorithms extends Component {
   state = {
@@ -220,7 +221,8 @@ const mapDispatchToProps = dispatch => ({
       taskId,
       parameters,
       persisted,
-      startTime: new Date()
+      startTime: new Date(),
+      database: getActiveDatabase()
     }
     dispatch(addTask({ ...task }))
   }

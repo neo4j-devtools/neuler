@@ -8,14 +8,15 @@ export const RUNNING = 'RUNNING'
 export const COMPLETED = 'COMPLETED'
 export const FAILED = 'FAILED'
 
-export const addTask = ({taskId, group, algorithm, startTime, parameters, query, persisted}) => ({
+export const addTask = ({taskId, group, algorithm, startTime, parameters, query, persisted, database}) => ({
   type: ADD_TASK,
   taskId,
   group,
   algorithm,
   startTime,
   parameters,
-  persisted
+  persisted,
+  database
 })
 
 export const runTask = ({taskId, query, namedGraphQueries}) => ({
@@ -45,7 +46,8 @@ export default (state = [], action) => {
         parameters: action.parameters,
         status: ADDED,
         completed: false,
-        persisted: action.persisted
+        persisted: action.persisted,
+        database: action.database
       })
       return newState
     case RUN_TASK:

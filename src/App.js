@@ -12,13 +12,20 @@ import {ConnectModal} from './components/ConnectModal';
 
 import {onNeo4jVersion} from "./services/stores/neoStore"
 import {loadMetadata, loadVersions} from "./services/metadata"
-import {setDatabases, setLabels, setPropertyKeys, setRelationshipTypes, setVersions} from "./ducks/metadata"
+import {
+  setDatabases,
+  setLabels,
+  setNodePropertyKeys,
+  setPropertyKeys,
+  setRelationshipTypes,
+  setVersions
+} from "./ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
 import {initializeConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
 import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
 import {addDatabase, initLabel} from "./ducks/settings";
-import {selectRandomColor} from "./components/NodeLabel";
+import {selectCaption, selectRandomColor} from "./components/NodeLabel";
 
 
 const ALL_DONE = "all-done";
@@ -75,6 +82,7 @@ class App extends Component {
               this.props.setLabels(metadata.labels)
               this.props.setRelationshipTypes(metadata.relationships)
               this.props.setPropertyKeys(metadata.propertyKeys)
+              this.props.setNodePropertyKeys(metadata.nodePropertyKeys)
               this.props.setDatabases(metadata.databases)
 
               metadata.databases.forEach(database => {
@@ -82,7 +90,8 @@ class App extends Component {
               })
 
               metadata.labels.forEach(label => {
-                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor())
+                console.log(metadata.nodePropertyKeys)
+                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
               })
 
             })
@@ -262,13 +271,14 @@ const mapDispatchToProps = dispatch => ({
   setLabels: labels => dispatch(setLabels(labels)),
   setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
   setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+  setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
   setGds: version => dispatch(setVersions(version)),
   setDatabases: databases => dispatch(setDatabases(databases)),
   setConnected: credentials => dispatch(setConnected(credentials)),
   setDisconnected: () => dispatch(setDisconnected()),
 
   addDatabase: database => dispatch(addDatabase(database)),
-  initLabel: (database, label, color) => dispatch(initLabel(database, label, color))
+  initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

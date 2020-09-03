@@ -45,11 +45,12 @@ export const addDatabase = database => ({
   database
 })
 
-export const initLabel = (database, label, color) => ({
+export const initLabel = (database, label, color, propertyKeys) => ({
   type: INIT_LABEL,
   database,
   label,
-  color
+  color,
+  propertyKeys
 })
 
 export const updateLabel = (database, label, color) => ({
@@ -132,7 +133,8 @@ export default (state = getInitialState(), action) => {
 
       if(!(action.label in initialLabels[action.database])) {
         initialLabels[action.database][action.label] = {
-          color: action.color
+          color: action.color,
+          propertyKeys: action.propertyKeys
         }
       }
 

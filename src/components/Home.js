@@ -15,11 +15,18 @@ import React, {Component} from 'react'
 
 import {selectGroup} from "../ducks/algorithms"
 import {connect} from "react-redux";
-import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata";
+import {
+    setActiveDatabase,
+    setDatabases,
+    setLabels,
+    setNodePropertyKeys,
+    setPropertyKeys,
+    setRelationshipTypes
+} from "../ducks/metadata";
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
-import NodeLabel, {selectRandomColor} from "./NodeLabel";
+import NodeLabel, {selectCaption, selectRandomColor} from "./NodeLabel";
 
 
 
@@ -38,6 +45,7 @@ class Home extends Component {
             this.props.setLabels(metadata.labels)
             this.props.setRelationshipTypes(metadata.relationships)
             this.props.setPropertyKeys(metadata.propertyKeys)
+            this.props.setNodePropertyKeys(metadata.nodePropertyKeys)
             this.props.setDatabases(metadata.databases)
 
             metadata.databases.forEach(database => {
@@ -45,7 +53,8 @@ class Home extends Component {
             })
 
             metadata.labels.forEach(label => {
-                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor())
+                console.log(metadata.nodePropertyKeys)
+                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
             })
 
             this.setState({activeDatabaseSelected: true})
@@ -314,9 +323,9 @@ const mapDispatchToProps = dispatch => ({
     setLabels: labels => dispatch(setLabels(labels)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
-
+    setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
     addDatabase: database => dispatch(addDatabase(database)),
-    initLabel: (database, label, color) => dispatch(initLabel(database, label, color))
+    initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

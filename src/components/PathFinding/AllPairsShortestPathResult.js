@@ -22,9 +22,9 @@ export default ({ task }) => (
           task.result && task.result.length > 0 ? task.result.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell>{result.sourceLabels.join(', ')}</Table.Cell>
-            <Table.Cell> <PropertiesView properties={result.sourceProperties} labels={result.sourceLabels}/></Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.sourceProperties} labels={result.sourceLabels} database={task.database}/></Table.Cell>
             <Table.Cell>{result.targetLabels.join(', ')}</Table.Cell>
-            <Table.Cell> <PropertiesView properties={result.targetProperties} labels={result.targetLabels}/></Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.targetProperties} labels={result.targetLabels} database={task.database}/></Table.Cell>
             <Table.Cell>{result.cost}</Table.Cell>
           </Table.Row>) :
               (<Table.Row key={"no-results"}>

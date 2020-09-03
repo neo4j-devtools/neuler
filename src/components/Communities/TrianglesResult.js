@@ -24,11 +24,11 @@ export default ({ task }) => (
          task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell>{result.nodeALabels.join(', ')}</Table.Cell>
-            <Table.Cell> <PropertiesView properties={result.nodeAProperties} labels={result.nodeALabels}/></Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.nodeAProperties} labels={result.nodeALabels} database={task.database}/></Table.Cell>
             <Table.Cell>{result.nodeBLabels.join(', ')}</Table.Cell>
-            <Table.Cell> <PropertiesView properties={result.nodeBProperties} labels={result.nodeBLabels}/></Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.nodeBProperties} labels={result.nodeBLabels} database={task.database}/></Table.Cell>
             <Table.Cell>{result.nodeCLabels.join(', ')}</Table.Cell>
-            <Table.Cell> <PropertiesView properties={result.nodeCProperties} labels={result.nodeCLabels}/></Table.Cell>
+            <Table.Cell> <PropertiesView properties={result.nodeCProperties} labels={result.nodeCLabels} database={task.database}/></Table.Cell>
 
           </Table.Row>
         ) :

@@ -12,6 +12,12 @@ const tenOf = (color) => {
 
 const colors = tenOf("green").concat(tenOf("blue")).concat(tenOf("orange")).concat(tenOf("red")).concat(tenOf("yellow"));
 
+export const selectCaption = (propertyKeys) => {
+    const favouredCaptions = ["name", "title", "id", "value"]
+
+    return favouredCaptions.find(key => propertyKeys.includes(key)) || propertyKeys[Math.floor(Math.random() * propertyKeys.length)]
+}
+
 export const selectRandomColor = () => {
     return colors[Math.floor(Math.random() * 50)]
 }

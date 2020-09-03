@@ -24,6 +24,15 @@ ORDER BY propertyKey`, {})
     .catch(handleException)
 }
 
+export const loadNodePropertyKeys = () => {
+  return runCypher(`CALL apoc.meta.nodeTypeProperties()
+YIELD nodeLabels, propertyName
+UNWIND nodeLabels AS label
+RETURN label, collect(propertyName) AS propertyKeys`, {})
+      .then(parseNodePropertyKeysResultStream)
+      .catch(handleException)
+}
+
 
 export const loadVersions = () => {
   return runCypherDefaultDatabase(`CALL dbms.components() 
@@ -51,9 +60,11 @@ export const loadMetadata = (neo4jVersion) => {
   return loadDatabases(neo4jVersion).then(databases => {
     return loadLabels().then(labels => {
       return loadRelationshipTypes().then(relationships => {
-        return loadPropertyKeys().then(propertyKeys => ({
-          labels, relationships, propertyKeys, databases
-        }))
+        return loadPropertyKeys().then(propertyKeys => {
+          return loadNodePropertyKeys().then(nodePropertyKeys => ({
+          labels, relationships, propertyKeys, nodePropertyKeys, databases
+          }))
+        })
       })
     })
   })
@@ -79,6 +90,18 @@ const parseRelTypesResultStream = result => {
         label: record.get("relationshipType")
       }
     })
+  } else {
+    console.error(result.error)
+    throw new Error(result.error)
+  }
+}
+
+const parseNodePropertyKeysResultStream = result => {
+  if (result.records) {
+    return result.records.reduce((map, record) => {
+      map[record.get("label")] = record.get("propertyKeys")
+      return map;
+    }, {})
   } else {
     console.error(result.error)
     throw new Error(result.error)

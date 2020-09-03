@@ -23,9 +23,9 @@ export default ({task}) => (
           (task.result && task.result.length > 0 ?  task.result.map((result, idx) =>
             <Table.Row key={idx}>
               <Table.Cell>{result.fromLabels.join(', ')}</Table.Cell>
-              <Table.Cell> <PropertiesView properties={result.fromProperties} labels={result.fromLabels}/></Table.Cell>
+              <Table.Cell> <PropertiesView properties={result.fromProperties} labels={result.fromLabels} database={task.database}/></Table.Cell>
               <Table.Cell>{result.toLabels.join(', ')}</Table.Cell>
-              <Table.Cell> <PropertiesView properties={result.toProperties} labels={result.toLabels}/></Table.Cell>
+              <Table.Cell> <PropertiesView properties={result.toProperties} labels={result.toLabels} database={task.database}/></Table.Cell>
               <Table.Cell>{result.similarity}</Table.Cell>
             </Table.Row>
           ) : (<Table.Row key={"no-results"}>

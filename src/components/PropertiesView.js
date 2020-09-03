@@ -3,6 +3,7 @@ import {Grid} from 'semantic-ui-react'
 import {hideProperty, resetLabelsProperties} from "../ducks/settings"
 import {connect} from 'react-redux'
 import NodeLabel from "./NodeLabel";
+import {getActiveDatabase} from "../services/stores/neoStore";
 
 export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   const keys = Object.keys(hiddenPropertiesMap);
@@ -18,9 +19,10 @@ export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   return Array.from(hiddenProps)
 }
 
-const PropertiesView = ({ labels, properties, hideProp, resetLabelsProperties, hiddenProperties = {} }) => {
-  const hiddenProps = extractHiddenProperties(labels, hiddenProperties)
-  const caption = Object.keys(properties).filter(key => !hiddenProps.includes(key)).map(key => properties[key].toString()).join(", ");
+const PropertiesView = ({ labels, globalLabels, properties, database }) => {
+  const [firstLabel] = labels
+  const captionProps = globalLabels[database][firstLabel].propertyKeys
+  const caption = Object.keys(properties).filter(key => captionProps.includes(key)).map(key => properties[key].toString()).join(", ");
 
   return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <Grid columns={4} style={{ width: '100%' }}>
@@ -32,7 +34,8 @@ const PropertiesView = ({ labels, properties, hideProp, resetLabelsProperties, h
 }
 
 const mapStateToProps = state => ({
-  hiddenProperties: state.settings.hiddenProperties
+  hiddenProperties: state.settings.hiddenProperties,
+  globalLabels: state.settings.labels
 })
 
 const mapDispatchToProps = dispatch => ({

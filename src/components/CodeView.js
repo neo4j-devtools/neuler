@@ -127,8 +127,7 @@ export default class extends Component {
             })
     }
 
-    renderNamedDatabaseParam = () => {
-        const activeDatabase = `\`${getActiveDatabase()}\``;
+    renderNamedDatabaseParam = (activeDatabase) => {
         return hasNamedDatabase() ? <Message>
                 <pre>:use {activeDatabase};</pre>
                 <Clipboard onSuccess={(event) => {
@@ -155,7 +154,7 @@ export default class extends Component {
     createPanes(task) {
         const anonymous = this.renderQueries(task.query)
         const named = this.renderQueries(task.namedGraphQueries);
-        const namedDatabaseParam = this.renderNamedDatabaseParam()
+        const namedDatabaseParam = this.renderNamedDatabaseParam(task.database)
         const params = this.renderParams(task)
 
         return [

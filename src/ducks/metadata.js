@@ -4,6 +4,7 @@ export const SET_METADATA = `${NAME}/SET_METADATA`
 export const SET_LABELS = `${NAME}/SET_LABELS`
 export const SET_RELATIONSHIPTYPES = `${NAME}/SET_RELATIONSHIPTYPES`
 export const SET_PROPERTY_KEYS = `${NAME}/SET_PROPERTY_KEYS`
+export const SET_NODE_PROPERTY_KEYS = `${NAME}/SET_NODE_PROPERTY_KEYS`
 export const SET_VERSIONS = `${NAME}/SET_VERSIONS`
 export const SET_DATABASES = `${NAME}/SET_DATABASES`
 export const SET_ACTIVE_DATABASE = `${NAME}/SET_ACTIVE_DATABASE`
@@ -27,6 +28,11 @@ export const setRelationshipTypes = relationshipTypes => ({
 export const setPropertyKeys = propertyKeys => ({
   type: SET_PROPERTY_KEYS,
   propertyKeys: propertyKeys
+})
+
+export const setNodePropertyKeys = nodePropertyKeys => ({
+  type: SET_NODE_PROPERTY_KEYS,
+  nodePropertyKeys: nodePropertyKeys
 })
 
 export const setVersions = version => ({
@@ -72,6 +78,11 @@ export default (state = initialState, action) => {
       return {
         ...state,
         propertyKeys: action.propertyKeys
+      }
+    case SET_NODE_PROPERTY_KEYS:
+      return {
+        ...state,
+        nodePropertyKeys: action.nodePropertyKeys
       }
     case SET_VERSIONS:
       return {

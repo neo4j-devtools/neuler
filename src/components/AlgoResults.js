@@ -26,7 +26,7 @@ const TableView = ({task, gdsVersion}) => {
 
   return <div style={tabContentStyle}>
     {labels.length > 0 ? <div>
-      {labels.map(label => <NodeLabel labels={[label]} caption={label} />)}
+      {labels.map(label => <NodeLabel key={label} labels={[label]} caption={label} />)}
     </div>  : null}
 
     <ResultView task={task}/>
