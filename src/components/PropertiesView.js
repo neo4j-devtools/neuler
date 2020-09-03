@@ -25,7 +25,8 @@ export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
 export const generateCellStyle = (labels) => {
   let style = {
     maxWidth: '40em',
-    overflow: 'hidden'
+    overflow: 'hidden',
+    cursor: "pointer"
   };
 
   const labelBackgrounds = {

@@ -17,6 +17,7 @@ import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnec
 import {initializeConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
 import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
+import {addDatabase, addLabel} from "./ducks/settings";
 
 
 const ALL_DONE = "all-done";
@@ -74,6 +75,15 @@ class App extends Component {
               this.props.setRelationshipTypes(metadata.relationships)
               this.props.setPropertyKeys(metadata.propertyKeys)
               this.props.setDatabases(metadata.databases)
+
+              metadata.databases.forEach(database => {
+                this.props.addDatabase(database.name)
+              })
+
+              metadata.labels.forEach(label => {
+                this.props.addLabel(this.props.metadata.activeDatabase, label.label, "#ccc")
+              })
+
             })
           });
         } else {
@@ -254,7 +264,10 @@ const mapDispatchToProps = dispatch => ({
   setGds: version => dispatch(setVersions(version)),
   setDatabases: databases => dispatch(setDatabases(databases)),
   setConnected: credentials => dispatch(setConnected(credentials)),
-  setDisconnected: () => dispatch(setDisconnected())
+  setDisconnected: () => dispatch(setDisconnected()),
+
+  addDatabase: database => dispatch(addDatabase(database)),
+  addLabel: (database, label, color) => dispatch(addLabel(database, label, color))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(App)

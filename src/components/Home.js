@@ -18,6 +18,7 @@ import {connect} from "react-redux";
 import {setActiveDatabase, setDatabases, setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata";
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
+import {addDatabase, addLabel} from "../ducks/settings";
 
 class Home extends Component {
 
@@ -36,6 +37,15 @@ class Home extends Component {
             this.props.setRelationshipTypes(metadata.relationships)
             this.props.setPropertyKeys(metadata.propertyKeys)
             this.props.setDatabases(metadata.databases)
+
+            metadata.databases.forEach(database => {
+                this.props.addDatabase(database.name)
+            })
+
+            metadata.labels.forEach(label => {
+                this.props.addLabel(this.props.metadata.activeDatabase, label.label, "#ccc")
+            })
+
             this.setState({activeDatabaseSelected: true})
         })
     }
@@ -290,7 +300,8 @@ class Home extends Component {
 
 const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,
-    metadata: state.metadata
+    metadata: state.metadata,
+    settings: state.settings
 })
 
 const mapDispatchToProps = dispatch => ({
@@ -299,7 +310,10 @@ const mapDispatchToProps = dispatch => ({
     setDatabases: databases => dispatch(setDatabases(databases)),
     setLabels: labels => dispatch(setLabels(labels)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
-    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys))
+    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+
+    addDatabase: database => dispatch(addDatabase(database)),
+    addLabel: (database, label, color) => dispatch(addLabel(database, label, color))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

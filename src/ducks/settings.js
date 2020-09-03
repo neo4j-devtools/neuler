@@ -7,6 +7,9 @@ const LIMIT = `${NAME}/LIMIT`
 const HIDE_PROPERTY = `${NAME}/HIDE_PROPERTY`
 const RESET_LABELS = `${NAME}/RESET_LABELS`
 
+const ADD_DATABASE = `${NAME}/ADD_DATABASE`
+const ADD_LABEL = `${NAME}/ADD_LABEL`
+
 const getBlacklist = () => {
   const blacklist = new Set()
 
@@ -30,9 +33,23 @@ const getInitialState = () => {
     hiddenProperties: {
       '_ALL_NEULER_': getBlacklist()
     },
-    limit: 42
+    limit: 42,
+    labels: {
+    }
   }
 }
+
+export const addDatabase = database => ({
+  type: ADD_DATABASE,
+  database
+})
+
+export const addLabel = (database, label, color) => ({
+  type: ADD_LABEL,
+  database,
+  label,
+  color
+})
 
 export const limit = limit => ({
   type: LIMIT,
@@ -91,6 +108,24 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         hiddenProperties
+      }
+    case ADD_DATABASE:
+      let labels = { ...state.labels }
+      if(!(action.database in labels)) {
+        labels[action.database] = {}
+      }
+
+      return {
+        ...state,
+        labels
+      }
+    case ADD_LABEL:
+      let initialLabels = {...state.labels}
+      initialLabels[action.database][action.label] = action.color
+
+      return {
+        ...state,
+        labels: initialLabels
       }
     default:
       return state
