@@ -4,11 +4,12 @@ import {connect} from "react-redux";
 import {selectGroup} from "../../ducks/algorithms";
 import {SketchPicker} from 'react-color';
 import reactCSS from 'reactcss'
+import {updateLabelColor} from "../../ducks/settings";
 
-const UpdateNodeLabel = ({metadata, selectGroup, open, setOpen, label, globalLabels}) => {
+const UpdateNodeLabel = ({updateLabelColor, database, open, setOpen, label, globalLabels}) => {
     const [displayColorPicker, setDisplayColorPicker] = React.useState(false)
 
-    const nodeLabel = globalLabels[metadata.activeDatabase][label]
+    const nodeLabel = globalLabels[database][label]
     const [color, setColor] = React.useState(nodeLabel.color)
 
     const styles = reactCSS({
@@ -17,7 +18,7 @@ const UpdateNodeLabel = ({metadata, selectGroup, open, setOpen, label, globalLab
                 width: '36px',
                 height: '14px',
                 borderRadius: '2px',
-                background: `${nodeLabel.color}`,
+                background: `${color}`,
             },
             swatch: {
                 padding: '5px',
@@ -46,27 +47,31 @@ const UpdateNodeLabel = ({metadata, selectGroup, open, setOpen, label, globalLab
                   onOpen={() => setOpen(true)}
                   centered={false}
                   closeIcon
-                  closeOnDimmerClick={false}
-                  closeOnDocumentClick={false}
-                  dimmer={false}
                   size="small">
         <Modal.Header>
             Update {label}
         </Modal.Header>
         <Modal.Content>
             <div>
-                <p>
+                <div>
                     Color: <div>
                     <div style={styles.swatch} onClick={() => setDisplayColorPicker(true)}>
                         <div style={styles.color}/>
                     </div>
                     {displayColorPicker ? <div style={styles.popover}>
                         <div style={styles.cover} onClick={() => setDisplayColorPicker(false)}/>
-                        <SketchPicker color={color} onChange={(c) => () => setColor(c)}/>
+                        <SketchPicker
+                            color={color}
+                            onChange={(c) =>  setColor(c.hex)}
+                            onChangeComplete={(c) => {
+                                setColor(c.hex)
+                                updateLabelColor(database, label, c.hex)
+                            }}
+                        />
                     </div> : null}
 
                 </div>
-                </p>
+                </div>
                 <p>
                     Captions: {nodeLabel.propertyKeys}
                 </p>
@@ -84,7 +89,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group))
+    selectGroup: group => dispatch(selectGroup(group)),
+    updateLabelColor: (database, label, color) => dispatch(updateLabelColor(database, label, color))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateNodeLabel)

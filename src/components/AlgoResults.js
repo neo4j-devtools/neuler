@@ -25,8 +25,8 @@ const TableView = ({task, gdsVersion}) => {
   const labels = task.result ? [...new Set(task.result.flatMap(result => result.labels))] : []
 
   return <div style={tabContentStyle}>
-    {labels.length > 0 ? <div>
-      {labels.map(label => <NodeLabel key={label} labels={[label]} caption={label} />)}
+    {labels.length > 0 ? <div style={{display: "flex"}}>
+      {labels.map(label => <NodeLabel key={label} labels={[label]} caption={label} database={task.database} />)}
     </div>  : null}
 
     <ResultView task={task}/>

@@ -26,7 +26,7 @@ const PropertiesView = ({ labels, globalLabels, properties, database }) => {
   return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
     <Grid columns={4} style={{ width: '100%' }}>
       <Grid.Column key={caption} style={{maxWidth: '40em', padding: '0.5em'}}>
-        <NodeLabel labels={labels} caption={caption} />
+        <NodeLabel labels={labels} caption={caption} database={database} />
       </Grid.Column>
     </Grid>
   </div>

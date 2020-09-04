@@ -16,8 +16,8 @@ const SelectedDatabase = ({metadata, onRefresh}) => {
                     <Table.Body>
                         <Table.Row>
                             <Table.Cell style={{width: "150px"}}>Node Labels</Table.Cell>
-                            <Table.Cell>{
-                                metadata.labels.map(value => <NodeLabel labels={[value.label]} caption={value.label} />)
+                            <Table.Cell style={{display: "flex"}}>{
+                                metadata.labels.map(value => <NodeLabel database={metadata.activeDatabase} labels={[value.label]} caption={value.label} />)
                             }
                             </Table.Cell>
                         </Table.Row>

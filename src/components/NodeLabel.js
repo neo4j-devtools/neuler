@@ -14,7 +14,7 @@ const tenOf = (color) => {
 const colors = tenOf("green").concat(tenOf("blue")).concat(tenOf("orange")).concat(tenOf("red")).concat(tenOf("yellow"));
 
 export const selectCaption = (propertyKeys) => {
-    if(!propertyKeys) {
+    if (!propertyKeys) {
         return [];
     }
 
@@ -42,15 +42,18 @@ export const generateCellStyle = (labels, labelBackgrounds) => {
     return style;
 }
 
-const NodeLabel = ({labels, globalLabels, caption, metadata}) => {
+const NodeLabel = ({labels, database, globalLabels, caption, metadata}) => {
     const [open, setOpen] = React.useState(false)
     let [label] = labels;
 
     const labelBackgrounds = globalLabels[metadata.activeDatabase]
-    return <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(labels, labelBackgrounds)} className="label">
+    return <div>
+        <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(labels, labelBackgrounds)}
+              className="label">
         {caption}
-        <UpdateNodeLabel open={open} setOpen={setOpen} label={label} />
     </span>
+        <UpdateNodeLabel database={database} open={open} setOpen={setOpen} label={label}/>
+    </div>
 }
 
 export default connect(state => ({
