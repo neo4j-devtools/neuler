@@ -4,27 +4,26 @@ import {connect} from "react-redux";
 import {selectGroup} from "../../ducks/algorithms";
 
 
-const WhatIsMissing = ({metadata}) => {
+const whatIsMissing = (metadata) => {
+    const hasNodeLabels = metadata.labels.length > 0;
+    const hasRelationshipTypes = metadata.relationshipTypes.length > 0;
 
-    const whatIsMissing = (metadata) => {
-        const hasNodeLabels = metadata.labels.length > 0;
-        const hasRelationshipTypes = metadata.relationshipTypes.length > 0;
-
-        if(!hasNodeLabels && !hasRelationshipTypes) {
-            return "nodes or relationships"
-        }
-
-        if(!hasNodeLabels) {
-            return "nodes";
-        }
-
-        if(!hasRelationshipTypes) {
-            return "relationships"
-        }
-
-        return null
+    if(!hasNodeLabels && !hasRelationshipTypes) {
+        return "nodes or relationships"
     }
 
+    if(!hasNodeLabels) {
+        return "nodes";
+    }
+
+    if(!hasRelationshipTypes) {
+        return "relationships"
+    }
+
+    return null
+}
+
+const WhatIsMissing = ({metadata, selectGroup}) => {
     return <div>
         <Message color='purple'>
             <Message.Header>

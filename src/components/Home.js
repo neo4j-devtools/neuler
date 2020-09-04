@@ -28,6 +28,7 @@ import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
 import NodeLabel, {selectCaption, selectRandomColor} from "./NodeLabel";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
+import SelectedDatabase from "./Onboarding/SelectedDatabase";
 
 
 
@@ -114,59 +115,14 @@ class Home extends Component {
                     <div style={{paddingTop: "10px"}}>
                         {
                             this.state.activeDatabaseSelected ?
-                                (this.hasNodesAndRelationships(this.props.metadata)) ?
-                                    <div>
-                                        <Message color="white" style={{color: "#000000"}}>
-                                            <Message.Header>
-                                                Database Contents
-                                            </Message.Header>
-                                            <Message.Content>
-                                        <Table basic='very' celled collapsing>
-                                            <Table.Body>
-                                                <Table.Row>
-                                                    <Table.Cell style={{width: "150px"}}>Node Labels</Table.Cell>
-                                                    <Table.Cell>{
-                                                        this.props.metadata.labels.map(value => <NodeLabel labels={[value.label]} caption={value.label} />)
-
-                                                    }
-                                                    </Table.Cell>
-                                                </Table.Row>
-                                                <Table.Row>
-                                                    <Table.Cell style={{width: "150px"}}>Relationship Types</Table.Cell>
-                                                    <Table.Cell>{
-                                                        this.props.metadata.relationshipTypes.map(value => <span style={{"background": "#ccc"}} key={value.label} className="label">{value.label}</span>)
-
-                                                    }
-                                                    </Table.Cell>
-                                                </Table.Row>
-                                            </Table.Body>
-                                        </Table>
-
-                                                <Button size="tiny"  className="code" onClick={ (event, data) => {
-                                                    const target = event.target
-                                                    target.textContent = "Refreshing";
-                                                    setTimeout( () => {
-                                                        target.textContent = "Refresh";
-                                                    }, 2000);
-
-                                                    this.onRefresh()
-                                                }}>
-                                                    Refresh
-                                                </Button>
-                                            </Message.Content>
-                                        </Message>
-                                    </div>
-                                    :
-
-                                    <WhatIsMissing  />
-
-
-                                :  <Message>
+                                (this.hasNodesAndRelationships(this.props.metadata)) ? <SelectedDatabase onRefresh={this.onRefresh.bind(this)} /> :
+                                    <WhatIsMissing/>
+                                : <Message>
                                     <Message.Header>Refreshing</Message.Header>
                                     <Message.Content>
-                                        <Loader active inline style={{padding:"5px 0"}} />
+                                        <Loader active inline style={{padding: "5px 0"}}/>
                                     </Message.Content>
-                                    </Message>
+                                </Message>
 
                         }
 
