@@ -1,5 +1,6 @@
 import {connect} from "react-redux";
 import React from "react";
+import UpdateNodeLabel from "./Onboarding/UpdateNodeLabel";
 
 const randomColor = require('randomcolor');
 const tenOf = (color) => {
@@ -41,12 +42,18 @@ export const generateCellStyle = (labels, labelBackgrounds) => {
     return style;
 }
 
-const NodeLabelView = ({labels, globalLabels, caption, metadata}) => {
+const NodeLabel = ({labels, globalLabels, caption, metadata}) => {
+    const [open, setOpen] = React.useState(false)
+    let [label] = labels;
+
     const labelBackgrounds = globalLabels[metadata.activeDatabase]
-    return <span key={caption}  style={generateCellStyle(labels, labelBackgrounds)} className="label">{caption}</span>
+    return <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(labels, labelBackgrounds)} className="label">
+        {caption}
+        <UpdateNodeLabel open={open} setOpen={setOpen} label={label} />
+    </span>
 }
 
 export default connect(state => ({
     globalLabels: state.settings.labels,
     metadata: state.metadata,
-}))(NodeLabelView)
+}))(NodeLabel)
