@@ -10,12 +10,9 @@ export default ({ task }) => (
     <Table color='green'>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Node A Labels</Table.HeaderCell>
-          <Table.HeaderCell>Node A Properties</Table.HeaderCell>
-          <Table.HeaderCell>Node B Labels</Table.HeaderCell>
-          <Table.HeaderCell>Node B Properties</Table.HeaderCell>
-          <Table.HeaderCell>Node C Labels</Table.HeaderCell>
-          <Table.HeaderCell>Node C Properties</Table.HeaderCell>
+          <Table.HeaderCell>Node A</Table.HeaderCell>
+          <Table.HeaderCell>Node B</Table.HeaderCell>
+          <Table.HeaderCell>Node C</Table.HeaderCell>
 
         </Table.Row>
       </Table.Header>
@@ -23,17 +20,14 @@ export default ({ task }) => (
         {task.result ?
          task.result && task.result.map((result, idx) =>
           <Table.Row key={idx}>
-            <Table.Cell>{result.nodeALabels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.nodeAProperties} labels={result.nodeALabels} database={task.database}/></Table.Cell>
-            <Table.Cell>{result.nodeBLabels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.nodeBProperties} labels={result.nodeBLabels} database={task.database}/></Table.Cell>
-            <Table.Cell>{result.nodeCLabels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.nodeCProperties} labels={result.nodeCLabels} database={task.database}/></Table.Cell>
 
           </Table.Row>
         ) :
         <Table.Row key="loading-centrality-result">
-          <Table.Cell colSpan={6}>
+          <Table.Cell colSpan={3}>
             <LoaderExampleInlineCentered />
           </Table.Cell>
         </Table.Row>
