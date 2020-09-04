@@ -27,6 +27,7 @@ import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "
 import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
 import NodeLabel, {selectCaption, selectRandomColor} from "./NodeLabel";
+import WhatIsMissing from "./Onboarding/WhatIsMissing";
 
 
 
@@ -61,24 +62,7 @@ class Home extends Component {
         })
     }
 
-    whatIsMissing(metadata) {
-        const hasNodeLabels = metadata.labels.length > 0;
-        const hasRelationshipTypes = metadata.relationshipTypes.length > 0;
 
-        if(!hasNodeLabels && !hasRelationshipTypes) {
-            return "nodes or relationships"
-        }
-
-        if(!hasNodeLabels) {
-            return "nodes";
-        }
-
-        if(!hasRelationshipTypes) {
-            return "relationships"
-        }
-
-        return null
-    }
 
     hasNodesAndRelationships(metadata) {
         return (metadata.labels.length > 0 && metadata.relationshipTypes.length > 0)
@@ -174,29 +158,8 @@ class Home extends Component {
                                     </div>
                                     :
 
-                                    <div>
-                                        <Message color='purple'>
-                                            <Message.Header>
-                                            Missing: {this.whatIsMissing(this.props.metadata)}.
-                                            </Message.Header>
-                                            <Message.Content>
-                                                <div>
-                                                <p>
-                                                    This database does not contain any {this.whatIsMissing(this.props.metadata)}.
-                                                    You need to load some data, otherwise the graph algorithms won't return any results.
-                                                </p>
-                                                <p>
-                                                    If you don't have any data, you can load one of the sample graphs.
-                                                </p>
+                                    <WhatIsMissing  />
 
-                                                <Button primary onClick={() => selectGroup('Sample Graphs')}>
-                                                    View Sample Graphs
-                                                </Button>
-                                                </div>
-                                            </Message.Content>
-                                        </Message>
-
-                                    </div>
 
                                 :  <Message>
                                     <Message.Header>Refreshing</Message.Header>
