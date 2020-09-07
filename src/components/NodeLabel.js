@@ -54,13 +54,13 @@ const NodeLabel = ({labels, database, globalLabels, caption, metadata, readOnly}
     };
 
     return readOnly ? <div>
-        <span style={generateCellStyle(readOnlyStyle, labels, labelBackgrounds)}
+        <span title={labels} style={generateCellStyle(readOnlyStyle, labels, labelBackgrounds)}
               className="label">
         {caption}
     </span>
         </div>
         : <div>
-        <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(style, labels, labelBackgrounds)}
+        <span title={"Edit " + label} onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(style, labels, labelBackgrounds)}
               className="label">
         {caption}
     </span>
