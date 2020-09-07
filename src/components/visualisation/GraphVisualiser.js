@@ -5,6 +5,7 @@ import {getDriver} from "../../services/stores/neoStore"
 import VisConfigurationBar from './VisConfigurationBar'
 
 const captionCandidates = ['name', 'title']
+const centralityLikeAlgos = ['Triangle Count', 'Local Clustering Coefficient']
 
 export default class extends Component {
   state = {
@@ -12,7 +13,7 @@ export default class extends Component {
     labels: {},
     captions: {},
     nodeSize: null,
-    nodeColour: null,
+    nodeColor: null,
     relationshipThickness: "weight",
     cypher: null,
     limit: 50
@@ -167,15 +168,25 @@ limit toInteger(${limit})`
 
   componentDidMount() {
     if (this.props.writeProperty) {
-      this.updateNodeSize(this.props.writeProperty)
-      this.updateNodeColor(this.props.writeProperty)
+      if (this.props.group === 'Centralities' || centralityLikeAlgos.includes(this.props.algorithm)){
+        this.updateNodeSize(this.props.writeProperty)
+      } 
+      if (this.props.group === 'Community Detection' && !centralityLikeAlgos.includes(this.props.algorithm)){
+        this.updateNodeColor(this.props.writeProperty)
+      } 
     }
   }
 
   UNSAFE_componentWillReceiveProps(nextProps) {
     if (this.props.writeProperty !== nextProps.writeProperty && nextProps.writeProperty) {
-      this.updateNodeSize(nextProps.writeProperty)
-      this.updateNodeColor(nextProps.writeProperty)
+      if (nextProps.group === 'Centralities' || centralityLikeAlgos.includes(nextProps.algorithm)){
+        this.updateNodeColor(null)
+        this.updateNodeSize(nextProps.writeProperty)
+      } 
+      if (nextProps.group === 'Community Detection' && !centralityLikeAlgos.includes(nextProps.algorithm)){
+        this.updateNodeColor(nextProps.writeProperty)
+        this.updateNodeSize(null)
+      } 
     }
 
     if (nextProps.taskId !== this.props.taskId
