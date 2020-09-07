@@ -21,16 +21,21 @@ const UpdateNodeLabel = ({updateLabelColor, database, open, setOpen, label, glob
                 background: `${color}`,
             },
             swatch: {
+                position: "absolute",
                 padding: '5px',
                 background: '#fff',
                 borderRadius: '1px',
                 boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
                 display: 'inline-block',
                 cursor: 'pointer',
+                left: "100px",
+                top: "22px"
             },
             popover: {
                 position: 'absolute',
                 zIndex: '2',
+                left: "150px",
+                top: "22px"
             },
             cover: {
                 position: 'fixed',
@@ -43,7 +48,10 @@ const UpdateNodeLabel = ({updateLabelColor, database, open, setOpen, label, glob
     });
 
     return <Modal open={open}
-                  onClose={() => setOpen(false)}
+                  onClose={() => {
+                      setOpen(false);
+                      setDisplayColorPicker(false)
+                  }}
                   onOpen={() => setOpen(true)}
                   centered={false}
                   closeIcon
@@ -51,33 +59,35 @@ const UpdateNodeLabel = ({updateLabelColor, database, open, setOpen, label, glob
         <Modal.Header>
             Update {label}
         </Modal.Header>
-        <Modal.Content>
+        <Modal.Content style={{height: "500px", position: "relative"}}>
             <div>
-                <div>
-                    Color: <div>
-                    <div style={styles.swatch} onClick={() => setDisplayColorPicker(true)}>
-                        <div style={styles.color}/>
+                <div className="update-node-row">
+                    <p>Color:</p>
+                    <div>
+                        <div style={styles.swatch} onClick={() => setDisplayColorPicker(true)}>
+                            <div style={styles.color}/>
+                        </div>
+                        {displayColorPicker ? <div style={styles.popover}>
+                            <div style={styles.cover} onClick={() => setDisplayColorPicker(false)}/>
+                            <SketchPicker
+                                color={color}
+                                onChange={(c) => setColor(c.hex)}
+                                onChangeComplete={(c) => {
+                                    setColor(c.hex)
+                                    updateLabelColor(database, label, c.hex)
+                                }}
+                            />
+                        </div> : null}
+
                     </div>
-                    {displayColorPicker ? <div style={styles.popover}>
-                        <div style={styles.cover} onClick={() => setDisplayColorPicker(false)}/>
-                        <SketchPicker
-                            color={color}
-                            onChange={(c) =>  setColor(c.hex)}
-                            onChangeComplete={(c) => {
-                                setColor(c.hex)
-                                updateLabelColor(database, label, c.hex)
-                            }}
-                        />
-                    </div> : null}
-
                 </div>
+                <div className="update-node-row">
+                    <p>Captions:</p>
+                    <div>
+                        {nodeLabel.propertyKeys}
+                    </div>
                 </div>
-                <p>
-                    Captions: {nodeLabel.propertyKeys}
-                </p>
-                <p>
 
-                </p>
             </div>
         </Modal.Content>
     </Modal>

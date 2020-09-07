@@ -19,7 +19,7 @@ export const selectCaption = (propertyKeys) => {
     }
 
     const favouredCaptions = ["name", "title", "id", "value"]
-    return favouredCaptions.find(key => propertyKeys.includes(key)) || propertyKeys[Math.floor(Math.random() * propertyKeys.length)]
+    return favouredCaptions.filter(key => propertyKeys.includes(key)) || propertyKeys[Math.floor(Math.random() * propertyKeys.length)]
 }
 
 export const selectRandomColor = () => {
@@ -46,7 +46,7 @@ const NodeLabel = ({labels, database, globalLabels, caption, metadata}) => {
     const [open, setOpen] = React.useState(false)
     let [label] = labels;
 
-    const labelBackgrounds = globalLabels[metadata.activeDatabase]
+    const labelBackgrounds = globalLabels[database]
     return <div>
         <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(labels, labelBackgrounds)}
               className="label">

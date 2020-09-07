@@ -71,3 +71,12 @@ span.label, span.label-results {
 div.field div.ui.label {
   width: 100px;
 }
+
+div.update-node-row {
+  padding: 5px 0 5px 0;
+  display: flex;
+}
+
+div.update-node-row p {
+  width: 75px;
+}
