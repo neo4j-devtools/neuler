@@ -2,7 +2,8 @@
 
 ## 0.1.30 (2020-09-07)
 
-* Introduce perspectives-light - a way to choose the properties shown per node label in the results table view  
+* Introduce perspectives-light - a way to choose the properties shown per node label in the results table view
+* Updated graph viz to differ between centrality and community detection
 
 ## 0.1.29 (2020-09-02)
 
