@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.31 (2020-09-07)
+
+* Fix bug in property selection for node labels
+
 ## 0.1.30 (2020-09-07)
 
 * Introduce perspectives-light - a way to choose the properties shown per node label in the results table view
