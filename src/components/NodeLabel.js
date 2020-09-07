@@ -19,7 +19,8 @@ export const selectCaption = (propertyKeys) => {
     }
 
     const favouredCaptions = ["name", "title", "id", "value"]
-    return favouredCaptions.filter(key => propertyKeys.includes(key)) || propertyKeys[Math.floor(Math.random() * propertyKeys.length)]
+    const selectedFavouriteCaptions = favouredCaptions.filter(key => propertyKeys.includes(key)) || propertyKeys[Math.floor(Math.random() * propertyKeys.length)];
+    return selectedFavouriteCaptions.length > 0 ? selectedFavouriteCaptions : [propertyKeys[Math.floor(Math.random() * propertyKeys.length)]]
 }
 
 export const selectRandomColor = () => {
