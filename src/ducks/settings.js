@@ -10,6 +10,7 @@ const RESET_LABELS = `${NAME}/RESET_LABELS`
 const ADD_DATABASE = `${NAME}/ADD_DATABASE`
 const INIT_LABEL = `${NAME}/INIT_LABEL`
 const UPDATE_LABEL_COLOR = `${NAME}/UPDATE_LABEL_COLOR`
+const UPDATE_LABEL_PROPERTY_KEYS = `${NAME}/UPDATE_LABEL_PROPERTY_KEYS`
 
 const getBlacklist = () => {
   const blacklist = new Set()
@@ -58,6 +59,13 @@ export const updateLabelColor = (database, label, color) => ({
   database,
   label,
   color
+})
+
+export const updateLabelPropertyKeys = (database, label, propertyKeys) => ({
+  type: UPDATE_LABEL_PROPERTY_KEYS,
+  database,
+  label,
+  propertyKeys
 })
 
 export const limit = limit => ({
@@ -149,6 +157,14 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         labels: initLabels
+      }
+    case UPDATE_LABEL_PROPERTY_KEYS:
+      let startLabels = {...state.labels}
+      startLabels[action.database][action.label].propertyKeys = action.propertyKeys
+
+      return {
+        ...state,
+        labels: startLabels
       }
     default:
       return state

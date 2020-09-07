@@ -78,5 +78,12 @@ div.update-node-row {
 }
 
 div.update-node-row p {
-  width: 75px;
+  width: 80px;
+}
+
+.ui.checkbox label {
+  white-space: nowrap;
+  width: 200px;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
