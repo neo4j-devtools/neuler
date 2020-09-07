@@ -30,30 +30,43 @@ const getNested = (obj, ...args) => {
     return args.reduce((obj, level) => obj && obj[level], obj)
 }
 
-export const generateCellStyle = (labels, labelBackgrounds) => {
+export const generateCellStyle = (style, labels, labelBackgrounds) => {
+    let [label] = labels;
+    style.background = getNested(labelBackgrounds, label, "color") || "#efefef"
+    return style;
+}
+
+const NodeLabel = ({labels, database, globalLabels, caption, metadata, readOnly}) => {
+    const [open, setOpen] = React.useState(false)
+    let [label] = labels;
+
+    const labelBackgrounds = globalLabels[database]
+
     let style = {
         maxWidth: '40em',
         overflow: 'hidden',
         cursor: "pointer"
     };
 
-    let [label] = labels;
-    style.background = getNested(labelBackgrounds, label, "color") || "#efefef"
-    return style;
-}
+    let readOnlyStyle = {
+        maxWidth: '40em',
+        overflow: 'hidden',
+    };
 
-const NodeLabel = ({labels, database, globalLabels, caption, metadata}) => {
-    const [open, setOpen] = React.useState(false)
-    let [label] = labels;
-
-    const labelBackgrounds = globalLabels[database]
-    return <div>
-        <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(labels, labelBackgrounds)}
+    return readOnly ? <div>
+        <span style={generateCellStyle(readOnlyStyle, labels, labelBackgrounds)}
               className="label">
         {caption}
     </span>
-        <UpdateNodeLabel database={database} open={open} setOpen={setOpen} label={label}/>
-    </div>
+        </div>
+        : <div>
+        <span onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(style, labels, labelBackgrounds)}
+              className="label">
+        {caption}
+    </span>
+            <UpdateNodeLabel database={database} open={open} setOpen={setOpen} label={label}/>
+        </div>
+
 }
 
 export default connect(state => ({

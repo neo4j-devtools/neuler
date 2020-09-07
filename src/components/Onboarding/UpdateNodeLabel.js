@@ -1,11 +1,10 @@
-import {Modal, Button, Message, Checkbox, Grid} from "semantic-ui-react";
+import {Checkbox, Divider, Grid, Modal} from "semantic-ui-react";
 import React from "react";
 import {connect} from "react-redux";
 import {selectGroup} from "../../ducks/algorithms";
 import {SketchPicker} from 'react-color';
 import reactCSS from 'reactcss'
 import {updateLabelColor, updateLabelPropertyKeys} from "../../ducks/settings";
-import NodeLabel from "../NodeLabel";
 
 const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, label, globalLabels}) => {
     const [displayColorPicker, setDisplayColorPicker] = React.useState(false)
@@ -22,21 +21,18 @@ const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, l
                 background: `${color}`,
             },
             swatch: {
-                position: "absolute",
+
                 padding: '5px',
                 background: '#fff',
                 borderRadius: '1px',
                 boxShadow: '0 0 0 1px rgba(0,0,0,.1)',
                 display: 'inline-block',
                 cursor: 'pointer',
-                left: "100px",
-                top: "22px"
+
             },
             popover: {
                 position: 'absolute',
                 zIndex: '2',
-                left: "150px",
-                top: "22px"
             },
             cover: {
                 position: 'fixed',
@@ -60,10 +56,10 @@ const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, l
         <Modal.Header>
             Update {label}
         </Modal.Header>
-        <Modal.Content style={{height: "500px", position: "relative"}}>
+        <Modal.Content >
             <div>
                 <div className="update-node-row">
-                    <div><p>Color:</p></div>
+                    <h4>Color</h4>
                     <div>
                         <div style={styles.swatch} onClick={() => setDisplayColorPicker(true)}>
                             <div style={styles.color}/>
@@ -71,6 +67,7 @@ const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, l
                         {displayColorPicker ? <div style={styles.popover}>
                             <div style={styles.cover} onClick={() => setDisplayColorPicker(false)}/>
                             <SketchPicker
+                                disableAlpha={true}
                                 color={color}
                                 onChange={(c) => setColor(c.hex)}
                                 onChangeComplete={(c) => {
@@ -82,8 +79,9 @@ const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, l
 
                     </div>
                 </div>
+                <Divider />
                 <div className="update-node-row">
-                    <div><p>Captions:</p></div>
+                    <h4>Caption</h4>
                     <SelectCaption database={database} label={label} />
                 </div>
 
