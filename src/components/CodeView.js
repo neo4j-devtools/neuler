@@ -5,7 +5,7 @@ import {v4 as generateId} from 'uuid'
 import Clipboard from 'react-clipboard.js';
 import stringifyObject from "stringify-object";
 import * as neo from 'neo4j-driver'
-import {getActiveDatabase, hasNamedDatabase} from "../services/stores/neoStore";
+import {hasNamedDatabase} from "../services/stores/neoStore";
 import {sendMetrics} from "./metrics/sendMetrics";
 import {filterParameters} from "../services/queries";
 

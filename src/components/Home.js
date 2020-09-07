@@ -1,16 +1,4 @@
-import {
-    Button,
-    Card,
-    CardGroup,
-    Container,
-    Divider,
-    Dropdown,
-    Header,
-    Icon,
-    Loader,
-    Message,
-    Table
-} from "semantic-ui-react"
+import {Button, Card, CardGroup, Container, Divider, Dropdown, Header, Icon, Loader, Message} from "semantic-ui-react"
 import React, {Component} from 'react'
 
 import {selectGroup} from "../ducks/algorithms"
@@ -26,10 +14,9 @@ import {
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
-import NodeLabel, {selectCaption, selectRandomColor} from "./NodeLabel";
+import {selectCaption, selectRandomColor} from "./NodeLabel";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
-
 
 
 class Home extends Component {

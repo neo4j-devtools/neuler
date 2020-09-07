@@ -1,4 +1,3 @@
-
 import React, {Component} from 'react'
 import {Container, Header, Menu, Segment} from "semantic-ui-react"
 
@@ -14,7 +13,6 @@ import Home from "./Home";
 import About, {NEULER_VERSION} from "./About";
 import {onNeo4jVersion} from "../services/stores/neoStore";
 import {FeedbackForm} from "./Feedback/FeedbackForm";
-
 
 
 class NEuler extends Component {

@@ -90,7 +90,6 @@ class App extends Component {
               })
 
               metadata.labels.forEach(label => {
-                console.log(metadata.nodePropertyKeys)
                 this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
               })
 
