@@ -33,6 +33,7 @@ class NEuler extends Component {
         this.props.setLabels(metadata.labels)
         this.props.setRelationshipTypes(metadata.relationships)
         this.props.setPropertyKeys(metadata.propertyKeys)
+        this.props.setNodePropertyKeys(metadata.nodePropertyKeys)
         this.props.setDatabases(metadata.databases)
       })
     });
