@@ -26,7 +26,7 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
 
 const parseResultStream = result => {
   if (result.records) {
-    let rows = result.records.map(record => {
+    const rows = result.records.map(record => {
       const { properties, labels } = record.get('node')
       return {
         properties: parseProperties(properties),

@@ -16,7 +16,7 @@ export default ({ task }) => (
       </Table.Header>
       <Table.Body>
         {task.result ?
-          task.result && task.result.map((result, idx) =>
+          task.result && task.result.rows.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels} database={task.database} /></Table.Cell>
             <Table.Cell>{result.community}</Table.Cell>

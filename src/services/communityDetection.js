@@ -30,7 +30,7 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
 export const triangles = ({streamCypher, parameters}) => {
   return runStreamingAlgorithm(streamCypher, parameters, result => {
     if (result.records) {
-      return result.records.map(record => {
+      let rows = result.records.map(record => {
         const nodeA = record.get('nodeA')
         const nodeB = record.get('nodeB')
         const nodeC = record.get('nodeC')
@@ -43,7 +43,11 @@ export const triangles = ({streamCypher, parameters}) => {
           nodeCProperties: parseProperties(nodeC.properties),
           nodeCLabels: nodeC.labels,
         }
-      })
+      });
+      return {
+        rows: rows,
+        labels: [...new Set(rows.flatMap(result => result.nodeALabels.concat(result.nodeBLabels).concat(result.nodeCLabels)))]
+      }
     } else {
       console.error(result.error)
       throw new Error(result.error)
@@ -55,7 +59,7 @@ export const triangleCountOld = ({streamCypher, storeCypher, fetchCypher, parame
   return runAlgorithm({
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
-        return result.records.map(record => {
+        let rows = result.records.map(record => {
           const {properties, labels} = record.get('node')
 
           return {
@@ -63,7 +67,11 @@ export const triangleCountOld = ({streamCypher, storeCypher, fetchCypher, parame
             labels: labels,
             triangles: record.get('triangles').toNumber()
           }
-        })
+        });
+        return {
+          rows: rows,
+          labels: [...new Set(rows.flatMap(result => result.labels))]
+        }
       } else {
         console.error(result.error)
         throw new Error(result.error)
@@ -76,7 +84,7 @@ export const triangleCountNew = ({streamCypher, storeCypher, fetchCypher, parame
   return runAlgorithm({
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
-        return result.records.map(record => {
+        let rows = result.records.map(record => {
           const {properties, labels} = record.get('node')
 
           return {
@@ -84,7 +92,11 @@ export const triangleCountNew = ({streamCypher, storeCypher, fetchCypher, parame
             labels: labels,
             triangles: record.get('triangles').toNumber()
           }
-        })
+        });
+        return {
+          rows: rows,
+          labels: [...new Set(rows.flatMap(result => result.labels))]
+        }
       } else {
         console.error(result.error)
         throw new Error(result.error)
@@ -97,7 +109,7 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
   return runAlgorithm({
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
-        return result.records.map(record => {
+        const rows = result.records.map(record => {
           const {properties, labels} = record.get('node')
 
           return {
@@ -105,7 +117,11 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
             labels: labels,
             coefficient: record.get('coefficient')
           }
-        })
+        });
+        return {
+          rows: rows,
+          labels: [...new Set(rows.flatMap(result => result.labels))]
+        }
       } else {
         console.error(result.error)
         throw new Error(result.error)
@@ -114,34 +130,6 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
   })
 }
 
-export const balancedTriads = ({label, relationshipType, direction, persist, balancedProperty, unbalancedProperty, weightProperty, defaultValue, limit}) => {
-  const baseParams = baseParameters(label, relationshipType, direction,  limit)
-  const extraParams = {
-    weightProperty: weightProperty || null,
-    defaultValue: parseFloat(defaultValue) || 1.0,
-    write: true,
-    balancedProperty: balancedProperty || "balanced",
-    unbalancedProperty: unbalancedProperty || "unbalanced"
-  }
-
-  return runAlgorithm(balancedTriadsStreamCypher, balancedTriadsStoreCypher, getFetchBalancedTriadsCypher(baseParameters.label), {...baseParams, ...extraParams}, persist, result => {
-    if (result.records) {
-      return result.records.map(record => {
-        const {properties, labels} = record.get('node')
-
-        return {
-          properties: parseProperties(properties),
-          labels: labels,
-          balanced: record.get('balanced').toNumber(),
-          unbalanced: record.get('unbalanced').toNumber(),
-        }
-      })
-    } else {
-      console.error(result.error)
-      throw new Error(result.error)
-    }
-  })
-}
 
 const handleException = error => {
   console.error(error)
@@ -157,7 +145,7 @@ const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = p
 
 export const parseResultStream = (result) => {
   if (result.records) {
-    return result.records.map(record => {
+    const rows = result.records.map(record => {
       const {properties, labels} = record.get('node')
       const communities = record.has("communities") ? record.get("communities") : null
       return {
@@ -166,34 +154,13 @@ export const parseResultStream = (result) => {
         community: record.get('community').toNumber(),
         communities: communities ? communities.map(value => value.toNumber()).toString() : null
       }
-    })
+    });
+    return {
+      rows: rows,
+      labels: [...new Set(rows.flatMap(result => result.labels))]
+    }
   } else {
     console.error(result.error)
     throw new Error(result.error)
   }
 }
-
-const getFetchBalancedTriadsCypher = label => `MATCH (node${label ? ':' + label : ''})
-WHERE not(node[$balancedProperty] is null) AND not(node[$unbalancedProperty] is null)
-RETURN node, node[$balancedProperty] AS balanced, node[$unbalancedProperty] AS unbalanced
-ORDER BY balanced DESC
-LIMIT toInteger($limit)`
-
-const balancedTriadsStreamCypher = `
-  CALL algo.balancedTriads.stream($label, $relationshipType, {
-     direction: $direction
-    })
-  YIELD nodeId, balanced, unbalanced
-
-  WITH algo.getNodeById(nodeId) AS node, balanced, unbalanced
-  RETURN node, balanced, unbalanced
-  ORDER BY balanced DESC
-  LIMIT toInteger($limit)`
-
-const balancedTriadsStoreCypher = `
-  CALL algo.balancedTriads($label, $relationshipType, {
-     direction: $direction,
-     write: true,
-     balancedProperty: $balancedProperty,
-     unbalancedProperty: $unbalancedProperty
-    })`
