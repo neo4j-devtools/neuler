@@ -10,7 +10,7 @@ export const runStreamingAlgorithm = ({streamCypher, parameters, parseResultStre
 export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => {
     return runStreamingAlgorithm({streamCypher, parameters, parseResultStreamFn: result => {
         if (result.records) {
-            return result.records.map(record => {
+            let rows = result.records.map(record => {
                 const source = record.get('source')
                 const target = record.get('target')
 
@@ -21,7 +21,11 @@ export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => 
                     targetLabels: target.labels,
                     cost: record.get('cost')
                 }
-            })
+            });
+            return {
+                rows: rows,
+                labels: [...new Set(rows.flatMap(result => result.sourceLabels.concat(result.targetLabels)))]
+            }
         } else {
             console.error(result.error)
             throw new Error(result.error)
@@ -33,14 +37,18 @@ export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => 
 
 export const parseResultStream = (result) => {
     if (result.records) {
-        return result.records.map(record => {
+        let rows = result.records.map(record => {
             const { properties, labels } = record.get('node')
             return {
                 properties: parseProperties(properties),
                 labels: labels,
                 cost: record.get('cost')
             }
-        })
+        });
+        return {
+            rows: rows,
+            labels: [...new Set(rows.flatMap(result => result.labels))]
+        }
     } else {
         console.error(result.error)
         throw new Error(result.error)
