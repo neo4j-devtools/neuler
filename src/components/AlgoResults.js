@@ -104,91 +104,42 @@ class HorizontalAlgoTab extends Component {
     return (
       <div>
         {task.completed && task.status === FAILED ? (
-            <div>
-              <Menu attached='top' tabular pointing secondary
-                    style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex' }}>
-                <Menu.Item name='Error' active={activeItem === 'Error'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                <Menu.Item name='Code' active={activeItem === 'Code'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
-                  <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-                    <Icon name='angle left'/>
-                  </Button>
-                  <Header as='h3' style={{ margin: '0 1em' }}>
-                    {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-                  </Header>
-                  <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-                    <Icon name='angle right'/>
-                  </Button>
-                </div>
-              </Menu>
+                <div>
+                  <FailedTopBar
+                      task={task}
+                      activeItem={activeItem}
+                      prevResult={prevResult}
+                      nextResult={nextResult}
+                      currentPage={currentPage}
+                      totalPages={totalPages}
+                      handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+                  />
 
-
-              <Segment attached='bottom'>
-                <div style={getStyle('Error')}>
-                  <Message warning>
-                    <Message.Header>Algorithm failed to complete</Message.Header>
-                    <p>{task.error}</p>
-                  </Message>
+                  <Segment attached='bottom'>
+                    <div style={getStyle('Error')}>
+                      <Message warning>
+                        <Message.Header>Algorithm failed to complete</Message.Header>
+                        <p>{task.error}</p>
+                      </Message>
+                    </div>
+                    <div style={getStyle('Code')}>
+                      <CodeView task={task}/>
+                    </div>
+                  </Segment>
                 </div>
-                <div style={getStyle('Code')}>
-                  <CodeView task={task}/>
-                </div>
-              </Segment>
-            </div>
           )
           : <React.Fragment>
-            <Menu attached='top' tabular pointing secondary
-                  style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex' }}>
-
-                <Menu.Item name='Table' active={activeItem === 'Table'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-
-                {activeGroup === 'Centralities' ?
-                  <Menu.Item name='Chart' active={activeItem === 'Chart'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null}
-
-                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                  <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null
-                }
-
-                <Menu.Item name='Code' active={activeItem === 'Code'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-
-                <Menu.Item active={activeItem === 'Printscreen'}
-                           onClick={(() => printElement(this.panelRef.current))}>
-                  <Image src='images/Camera2.png'/>
-
-                </Menu.Item>
-
-              </div>
-
-              <div style={{
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-                  <Icon name='angle left'/>
-                </Button>
-                <Header as='h3' style={{ margin: '0 1em' }}>
-                  {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-                </Header>
-                <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-                  <Icon name='angle right'/>
-                </Button>
-              </div>
-
-            </Menu>
+              <SuccessTopBar
+                  task={task}
+                  activeItem={activeItem}
+                  activeGroup={activeGroup}
+                  prevResult={prevResult}
+                  nextResult={nextResult}
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  panelRef={this.panelRef}
+                  handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+              />
             <div ref={this.panelRef}>
               <Segment attached='bottom'>
                 <div style={getStyle('Table')}>
@@ -215,6 +166,72 @@ class HorizontalAlgoTab extends Component {
       </div>
     )
   }
+}
+
+const FailedTopBar = ({task, activeItem, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick}) => {
+return <Menu attached='top' tabular pointing secondary
+             style={{ display: 'flex', justifyContent: 'space-between' }}>
+  <div style={{ display: 'flex' }}>
+    <Menu.Item name='Error' active={activeItem === 'Error'} onClick={handleMenuItemClick}/>
+    <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
+  </div>
+  <div style={{
+    display: 'flex',
+    alignItems: 'center'
+  }}>
+    <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+      <Icon name='angle left'/>
+    </Button>
+    <Header as='h3' style={{ margin: '0 1em' }}>
+      {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
+    </Header>
+    <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+      <Icon name='angle right'/>
+    </Button>
+  </div>
+</Menu>
+}
+
+const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
+  return <Menu attached='top' tabular pointing secondary
+        style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <div style={{ display: 'flex' }}>
+
+      <Menu.Item name='Table' active={activeItem === 'Table'}  onClick={handleMenuItemClick}/>
+
+      {activeGroup === 'Centralities' ?
+          <Menu.Item name='Chart' active={activeItem === 'Chart'} onClick={handleMenuItemClick}/>
+          : null}
+
+      {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+          <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}  onClick={handleMenuItemClick}/>
+          : null
+      }
+
+      <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
+
+      <Menu.Item active={activeItem === 'Printscreen'} onClick={(() => printElement(panelRef.current))}>
+        <Image src='images/Camera2.png'/>
+      </Menu.Item>
+
+    </div>
+
+    <div style={{
+      display: 'flex',
+      alignItems: 'center'
+    }}>
+      <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+        <Icon name='angle left'/>
+      </Button>
+      <Header as='h3' style={{ margin: '0 1em' }}>
+        {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
+      </Header>
+      <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+        <Icon name='angle right'/>
+      </Button>
+    </div>
+
+  </Menu>
 }
 
 const TabExampleVerticalTabular = (props) => {
