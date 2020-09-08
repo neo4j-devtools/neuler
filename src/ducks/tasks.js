@@ -8,23 +8,25 @@ export const RUNNING = 'RUNNING'
 export const COMPLETED = 'COMPLETED'
 export const FAILED = 'FAILED'
 
-export const addTask = ({taskId, group, algorithm, startTime, parameters, query, persisted, database}) => ({
+export const addTask = ({taskId, group, algorithm, startTime, parameters, formParameters, query, persisted, database}) => ({
   type: ADD_TASK,
   taskId,
   group,
   algorithm,
   startTime,
   parameters,
+  formParameters,
   persisted,
   database
 })
 
-export const runTask = ({taskId, query, namedGraphQueries, parameters, persisted}) => ({
+export const runTask = ({taskId, query, namedGraphQueries, parameters, formParameters, persisted}) => ({
   type: RUN_TASK,
   taskId,
   query,
   namedGraphQueries,
   parameters,
+  formParameters,
   persisted
 })
 
@@ -46,6 +48,7 @@ export default (state = [], action) => {
         startTime: action.startTime,
         result: action.result,
         parameters: action.parameters,
+        formParameters: action.formParameters,
         status: ADDED,
         completed: false,
         persisted: action.persisted,
@@ -60,6 +63,7 @@ export default (state = [], action) => {
         theTask.query = action.query
         theTask.namedGraphQueries = action.namedGraphQueries
         theTask.parameters = action.parameters
+        theTask.formParameters = action.formParameters
         theTask.persisted = action.persisted
         return existingTasks
       } else {

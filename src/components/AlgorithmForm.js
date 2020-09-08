@@ -1,122 +1,88 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {connect} from 'react-redux'
 import {Button, Card, Form, Icon} from 'semantic-ui-react'
-
-import {v4 as generateTaskId} from 'uuid'
 import {addTask} from "../ducks/tasks"
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
-
-import * as PropTypes from "prop-types";
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {getActiveDatabase} from "../services/stores/neoStore";
 
-class Algorithms extends Component {
-  state = {
-    collapsed: false,
-    parameters: {},
-    labelOptions: [{ key: null, value: null, text: 'Any' }],
-    relationshipTypeOptions: [{ key: "*", value: "*", text: 'Any' }],
-    propertyKeyOptions: [],
-    relationshipOrientationOptions: [{ key: "Natural", value: "Natural", text: 'Natural' }],
-  }
+const Algorithms = (props) => {
+  const {task} = props
 
-  static contextTypes = {
-    driver: PropTypes.object
-  };
+  const [parameters, setParameters] = React.useState({})
+  const [labelOptions, setLabelOptions] = React.useState([{ key: null, value: null, text: 'Any' }])
+  const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
+  const [propertyKeyOptions, setPropertyKeyOptions] = React.useState([])
+  const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{ key: "Natural", value: "Natural", text: 'Natural' }])
 
-  componentDidMount() {
-    const { activeGroup, activeAlgorithm, metadata } = this.props
-
-    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
-    this.setState({ parameters })
-    this.loadMetadata(metadata)
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
-    if (JSON.stringify(this.props.currentAlgorithm) !== JSON.stringify(nextProps.currentAlgorithm)) {
-      const { activeGroup, activeAlgorithm, metadata } = nextProps
-      const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
-      this.setState({ parameters })
-    }
-
-    if (this.props.metadata !== nextProps.metadata) {
-      this.loadMetadata(nextProps.metadata)
-    }
-  }
-
-  loadMetadata(metadata) {
+  const loadMetadata = (metadata) => {
     const labels = metadata.labels.map(row => {
       return { key: row.label, value: row.label, text: row.label }
     })
     labels.unshift({ key: "*", value: "*", text: 'Any' })
-    this.setState({
-      labelOptions: labels,
-    })
+    setLabelOptions(labels)
 
     const relationshipTypes = metadata.relationshipTypes.map(row => {
       return { key: row.label, value: row.label, text: row.label }
     })
     relationshipTypes.unshift({ key: "*", value: "*", text: 'Any' })
-    this.setState({
-      relationshipTypeOptions: relationshipTypes
-    })
+    setRelationshipTypeOptions(relationshipTypes)
 
-    const propertyKeys = metadata.propertyKeys.map(row => {
-      return { key: row.propertyKey, value: row.propertyKey, text: row.propertyKey }
-    })
+    setPropertyKeyOptions(metadata.propertyKeys.map(row => {
+      return {key: row.propertyKey, value: row.propertyKey, text: row.propertyKey}
+    }))
 
-    this.setState({
-      propertyKeyOptions: propertyKeys
-    })
 
-    const relationshipOrientationOptions = [
+    setRelationshipOrientationOptions([
       {key: "Natural", value: "Natural", text: "Natural"},
       {key: "Reverse", value: "Reverse", text: "Reverse"},
       {key: "Undirected", value: "Undirected", text: "Undirected"},
-    ]
-    this.setState({
-      relationshipOrientationOptions: relationshipOrientationOptions
-    })
+    ])
   }
 
-  onChangeParam(key, value) {
-    const parameters = { ...this.state.parameters }
-    parameters[key] = value
-    this.setState({
-      parameters
-    })
+
+  React.useEffect(() => {
+    loadMetadata(props.metadata)
+  }, [props.metadata])
+
+  React.useEffect(() => {
+    setParameters(props.task.formParameters)
+  }, [props.task.taskId])
+
+  React.useEffect(() => {
+    const {parameters} = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
+    setParameters(parameters)
+  }, [JSON.stringify(props.currentAlgorithm)])
+
+    const { activeGroup, activeAlgorithm, metadata } = props
+
+
+  const onChangeParam = (key, value) =>  {
+    setParameters({...parameters, [key]: value})
   }
 
-  onRunAlgo() {
-    // const taskId = generateTaskId()
+  const onRunAlgo = () => {
+    const {task} = props
+    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
-    const { service, parametersBuilder } = this.props.currentAlgorithm
-    const { activeGroup, activeAlgorithm } = this.props
-
+    const { service, parametersBuilder } = currentAlgorithm
     if (service) {
-      const parameters = parametersBuilder({
-        ...this.state.parameters,
-        requiredProperties: Object.keys(this.state.parameters)
+      let formParameters = parameters;
+      const params = parametersBuilder({
+        ...formParameters,
+        requiredProperties: Object.keys(formParameters)
       })
 
-      const persisted = this.state.parameters.persist
-
-      // this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters, limit: this.props.limit, communityNodeLimit: this.props.communityNodeLimit }, persisted)
-
-      this.props.onRun({ ...parameters, limit: this.props.limit, communityNodeLimit: this.props.communityNodeLimit }, persisted)
+      const persisted = formParameters.persist
+      props.onRun({ ...params, limit: props.limit, communityNodeLimit: props.communityNodeLimit }, formParameters, persisted)
     }
   }
 
-  toggleCollapse() {
-    this.setState(({ collapsed }) => ({ collapsed: !collapsed }))
-  }
 
-  render() {
-    const { Form: AlgoForm, description, returnsCommunities } = this.props.currentAlgorithm
-    const { collapsed } = this.state
+    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
-    // const Feedback = <FeedbackForm page={`${this.props.activeAlgorithm}/Form`} />
+    const { Form: AlgoForm, description, returnsCommunities } = currentAlgorithm
 
     const containerStyle = {
       display: 'flex',
@@ -132,41 +98,28 @@ class Algorithms extends Component {
       padding: '0 0 0 1em'
     }
 
-    let toggleIcon = 'angle double left'
-
-    if (collapsed) {
-      // containerStyle.height = '15em';
-      toggleIcon = 'angle double right'
-    }
-
-    const collapseButton = <Button style={{height: collapsed ? '-webkit-fill-available' : null, borderRadius: '0'}}
-                                   icon size='mini' onClick={this.toggleCollapse.bind(this)}>
-      <Icon name={toggleIcon}/>
-    </Button>
-
-    return collapsed
-      ? collapseButton
-      : (
+    console.log("parameters", parameters)
+    return (
         <div style={containerStyle}>
           <Card style={{ boxShadow: 'none' }}>
             <Card.Content style={contentStyle}>
               <div style={{ paddingTop: '1em', paddingBottom: '1em' }}>
                 <Icon name='sitemap'/>
                 <Card.Header>
-                  {this.props.activeAlgorithm}
+                  {task.algorithm}
                 </Card.Header>
                 <Card.Meta>{description}
                 </Card.Meta>
               </div>
-              {collapseButton}
+
             </Card.Content>
             <Card.Content extra>
               <div style={{marginBottom: '1em'}}>
-                <AlgoForm {...this.state.parameters} labelOptions={this.state.labelOptions}
-                          relationshipTypeOptions={this.state.relationshipTypeOptions}
-                          relationshipOrientationOptions={this.state.relationshipOrientationOptions}
-                          propertyKeyOptions={this.state.propertyKeyOptions}
-                          onChange={this.onChangeParam.bind(this)}/>
+                <AlgoForm {...parameters} labelOptions={labelOptions}
+                          relationshipTypeOptions={relationshipTypeOptions}
+                          relationshipOrientationOptions={relationshipOrientationOptions}
+                          propertyKeyOptions={propertyKeyOptions}
+                          onChange={onChangeParam.bind(this)}/>
                 <Form size='mini'>
                   <Form.Field inline>
                     <label style={{ 'width': '8em' }}>Rows to show</label>
@@ -176,8 +129,8 @@ class Algorithms extends Component {
                       min={1}
                       max={1000}
                       step={1}
-                      value={this.props.limit}
-                      onChange={evt => this.props.updateLimit(parseInt(evt.target.value))}
+                      value={props.limit}
+                      onChange={evt => props.updateLimit(parseInt(evt.target.value))}
                     />
                   </Form.Field>
                   {returnsCommunities ?
@@ -189,15 +142,15 @@ class Algorithms extends Component {
                             min={1}
                             max={1000}
                             step={1}
-                            value={this.props.communityNodeLimit}
-                            onChange={evt => this.props.updateCommunityNodeLimit(parseInt(evt.target.value))}
+                            value={props.communityNodeLimit}
+                            onChange={evt => props.updateCommunityNodeLimit(parseInt(evt.target.value))}
                         />
                       </Form.Field> : null
                   }
                 </Form>
               </div>
               <div className='ui two buttons'>
-                <Button basic color='green' onClick={this.onRunAlgo.bind(this)}>
+                <Button basic color='green' onClick={onRunAlgo.bind(this)}>
                   Run
                 </Button>
                 <Button basic color='red'>
@@ -206,18 +159,10 @@ class Algorithms extends Component {
               </div>
             </Card.Content>
           </Card>
-          {/*{<div style={{ height: '100%', width: '1em', textAlign: 'center', paddingTop: '1em' }}>
-          <Button icon size='mini' onClick={this.toggleCollapse.bind(this)}>
-            <Icon name={toggleIcon}/>
-          </Button>
-        </div>}*/}
-
-          {/*{Feedback}*/}
 
         </div>
       )
   }
-}
 
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,

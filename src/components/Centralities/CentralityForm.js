@@ -5,7 +5,7 @@ export default ({relationshipType, onChange, direction, persist, writeProperty, 
   <React.Fragment>
     <Form.Field>
       <label>Label</label>
-      <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
+      <Dropdown placeholder='Label'  fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
     </Form.Field>
     <Form.Field>
       <label>Relationship Type</label>

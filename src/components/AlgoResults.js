@@ -90,9 +90,10 @@ class HorizontalAlgoTab extends Component {
                   <Segment attached='bottom'>
                     <div style={getStyle("Configure")}>
                       <AlgorithmForm
+                          task={task}
                           limit={this.props.limit}
-                          onRun={(newParameters, persisted) => {
-                            this.props.onRunAlgo(task, newParameters, persisted)
+                          onRun={(newParameters, formParameters, persisted) => {
+                            this.props.onRunAlgo(task, newParameters, formParameters, persisted)
                             this.handleMenuItemClick(null, {name: "Table"})
                           }} />
                     </div>
@@ -168,12 +169,12 @@ const TabExampleVerticalTabular = (props) => {
         ...params,
         limit: props.limit,
         communityNodeLimit: props.communityNodeLimit
-      }, persisted)
+      }, parameters, persisted)
     }
   }, [JSON.stringify(props.currentAlgorithm)])
 
 
-  const onRunAlgo = (task, parameters, persisted) => {
+  const onRunAlgo = (task, parameters, formParameters, persisted) => {
     const {taskId, group, algorithm} = task
     const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion);
     const {service, getFetchQuery} = algorithmDefinition
@@ -219,7 +220,6 @@ const TabExampleVerticalTabular = (props) => {
 
     const constructedQueries = constructQueries(algorithmDefinition, parameters, streamQuery)
 
-    console.log("parameters", parameters, "persisted", persisted)
     props.runTask(
         taskId,
         persisted ? [storeQuery, fetchCypher] : [streamQuery],
@@ -227,6 +227,7 @@ const TabExampleVerticalTabular = (props) => {
             [constructedQueries.createGraph, constructedQueries.storeAlgorithmNamedGraph, fetchCypher, constructedQueries.dropGraph] :
             [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph],
         parameters,
+        formParameters,
         persisted
     )
   }
@@ -260,8 +261,8 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  runTask: (taskId, query, namedGraphQueries, parameters, persisted) => {
-    dispatch(runTask({ taskId, query, namedGraphQueries, parameters, persisted }))
+  runTask: (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
+    dispatch(runTask({ taskId, query, namedGraphQueries, parameters, formParameters, persisted }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
@@ -269,12 +270,13 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   onComplete: () => {
     ownProps.onComplete()
   },
-  addTask: (taskId, group, algorithm, parameters, persisted) => {
+  addTask: (taskId, group, algorithm, parameters, formParameters, persisted) => {
     const task = {
       group,
       algorithm,
       taskId,
       parameters,
+      formParameters,
       persisted,
       startTime: new Date(),
       database: getActiveDatabase()
