@@ -3,11 +3,12 @@ import {Grid, Loader} from "semantic-ui-react"
 import NeoVis from "./neovis"
 import {getDriver} from "../../services/stores/neoStore"
 import VisConfigurationBar from './VisConfigurationBar'
+import {connect} from "react-redux";
 
 const captionCandidates = ['name', 'title']
 const centralityLikeAlgos = ['Triangle Count', 'Local Clustering Coefficient']
 
-export default class extends Component {
+class GraphVisualiser extends Component {
   state = {
     taskId: null,
     labels: {},
@@ -116,32 +117,29 @@ limit toInteger(${limit})`
   dataUpdated(props) {
     const { results, label, relationshipType, taskId, limit, writeProperty } = props
 
-    let captions = {}
     if (results && results.rows.length > 0) {
+      const selectCaption = (choices) => {
+        const captionCandidate = choices.find(choice => captionCandidates.includes(choice))
+        return captionCandidate ? captionCandidate : choices[0]
+      }
 
-      const labelProperties = results.rows.reduce((labelsMap, result) => {
-        if (result.labels) {
-          result.labels.forEach(label => {
-            if (!labelsMap[label]) {
-              labelsMap[label] = new Set()
-            }
-            Object.keys(result.properties).forEach((prop, idx) => {
-              if (captionCandidates.includes(prop)) {
-                captions[label] = prop
-              }
+      const allowed = results.labels
+      const nodePropertyKeys = this.props.metadata.nodePropertyKeys
+      const labelProperties = Object.keys(nodePropertyKeys)
+          .filter(key => allowed.includes(key))
+          .reduce((obj, key) => {
+            return {
+              ...obj,
+              [key]: nodePropertyKeys[key]
+            };
+          }, {});
 
-              labelsMap[label].add(prop)
-            })
-
-            if (!captions[label]) {
-              captions[label] = labelsMap[label][0]
-            }
-          })
-        }
-
-        return labelsMap
+      const captions = Object.keys(labelProperties).reduce((obj, key) => {
+        return {
+          ...obj,
+          [key]: selectCaption(labelProperties[key])
+        };
       }, {})
-      // console.log("labelProperties", labelProperties, "captions", captions)
 
       this.setState({
         cypher: this.generateCypher(label, relationshipType, writeProperty, limit), //, props.algorithm === 'Louvain'),
@@ -248,5 +246,11 @@ limit toInteger(${limit})`
     </Grid>
   }
 }
+
+const mapStateToProps = state => ({
+  metadata: state.metadata
+})
+
+export default connect(mapStateToProps)(GraphVisualiser)
 
 const LoaderExampleInlineCentered = ({active}) => <Loader active={active} inline='centered'>Rendering</Loader>
