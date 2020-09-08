@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.32 (2020-09-08)
+
+* Fix label rendering for similarity algos and some community detection/path finding
+
+
 ## 0.1.31 (2020-09-07)
 
 * Fix bug in property selection for node labels
