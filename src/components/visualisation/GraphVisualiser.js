@@ -117,9 +117,9 @@ limit toInteger(${limit})`
     const { results, label, relationshipType, taskId, limit, writeProperty } = props
 
     let captions = {}
-    if (results && results.length > 0) {
+    if (results && results.rows.length > 0) {
 
-      const labelProperties = results.reduce((labelsMap, result) => {
+      const labelProperties = results.rows.reduce((labelsMap, result) => {
         if (result.labels) {
           result.labels.forEach(label => {
             if (!labelsMap[label]) {
@@ -242,7 +242,7 @@ limit toInteger(${limit})`
       </Grid.Row>
       <Grid.Row>
          <LoaderExampleInlineCentered active={rendering}/>
-        <div style={{ width: '100%', height: '100%' }} id={'div_' + this.props.taskId} ref={this.visContainer}/>
+        <div style={{ width: '100%', minHeight: "500px" }} id={'div_' + this.props.taskId} ref={this.visContainer}/>
       </Grid.Row>
     </Grid>
   }
