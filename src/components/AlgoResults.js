@@ -22,7 +22,7 @@ const tabContentStyle = {
 const TableView = ({task, gdsVersion}) => {
   const {ResultView} = getAlgorithmDefinitions(task.group, task.algorithm, gdsVersion)
 
-  const labels = task.result ? [...new Set(task.result.flatMap(result => result.labels))] : []
+  const labels = task.result ? task.result.labels : []
 
   return <div style={tabContentStyle}>
     {labels.length > 0 ? <div style={{display: "flex"}}>
@@ -48,8 +48,8 @@ const LoaderExampleInlineCentered = ({ active }) => <Loader active={active} inli
 
 
 const ChartView = ({ task }) => {
-  if (task.result && task.result.length > 0) {
-    return <Chart data={task.result.map(result => ({
+  if (task.result && task.result.rows.length > 0) {
+    return <Chart data={task.result.rows.map(result => ({
       name: result.properties.name || 'Node',
       score: result.score
     }))}/>
