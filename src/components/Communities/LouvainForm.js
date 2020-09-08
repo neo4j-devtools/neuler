@@ -7,18 +7,18 @@ export default class extends Component {
   }
 
   render() {
-    const { onChange, labelOptions, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist } = this.props
+    const { onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist } = this.props
 
     return (
       <Form size='mini' style={{ marginBottom: '1em' }}>
         <Form.Field>
           <label>Label</label>
-          <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
+          <Dropdown placeholder='Label' value={label} fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
         </Form.Field>
 
         <Form.Field>
           <label>Relationship Type</label>
-          <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
+          <Dropdown placeholder='RelationshipType' value={relationshipType} fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
         </Form.Field>
 
         {relationshipType ?
