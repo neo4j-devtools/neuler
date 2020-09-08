@@ -14,7 +14,7 @@ const printElement = element => {
 
 
 export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
-    console.log("task", task)
+    // console.log("task", task)
     return <Menu attached='top' tabular pointing secondary
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>

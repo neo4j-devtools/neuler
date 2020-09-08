@@ -61,9 +61,9 @@ class HorizontalAlgoTab extends Component {
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
     return (
-      <div>
+      <div style={{padding: "10px"}}>
         {task.completed && task.status === FAILED ? (
-                <div>
+                <React.Fragment>
                   <FailedTopBar task={task} activeItem={activeItem} prevResult={prevResult} nextResult={nextResult}
                                 currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
                   />
@@ -79,7 +79,7 @@ class HorizontalAlgoTab extends Component {
                       <CodeView task={task}/>
                     </div>
                   </Segment>
-                </div>
+                </React.Fragment>
           )
             : <React.Fragment>
                 <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}

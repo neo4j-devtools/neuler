@@ -97,7 +97,7 @@ const Algorithms = (props) => {
       padding: '0 0 0 1em'
     }
 
-    console.log("parameters", parameters)
+    // console.log("parameters", parameters)
     return (
         <div style={containerStyle}>
           <Card style={{ boxShadow: 'none' }}>
