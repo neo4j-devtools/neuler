@@ -32,7 +32,7 @@ const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = p
 
 export const parseResultStream = (result) => {
   if (result.records) {
-    return result.records.map(record => {
+    let rows = result.records.map(record => {
       const from = record.get('from')
       const to = record.get('to')
       return {
@@ -43,7 +43,11 @@ export const parseResultStream = (result) => {
         similarity: record.get("similarity")
 
       }
-    })
+    });
+    return {
+      rows: rows,
+      labels: [...new Set(rows.flatMap(result => result.fromLabels.concat(result.toLabels)))]
+    }
   } else {
     console.error(result.error)
     throw new Error(result.error)
