@@ -19,11 +19,13 @@ export const addTask = ({taskId, group, algorithm, startTime, parameters, query,
   database
 })
 
-export const runTask = ({taskId, query, namedGraphQueries}) => ({
+export const runTask = ({taskId, query, namedGraphQueries, parameters, persisted}) => ({
   type: RUN_TASK,
   taskId,
   query,
-  namedGraphQueries
+  namedGraphQueries,
+  parameters,
+  persisted
 })
 
 export const completeTask = ({taskId, result, error}) => ({
@@ -57,6 +59,8 @@ export default (state = [], action) => {
         theTask.status = RUNNING
         theTask.query = action.query
         theTask.namedGraphQueries = action.namedGraphQueries
+        theTask.parameters = action.parameters
+        theTask.persisted = action.persisted
         return existingTasks
       } else {
         return state

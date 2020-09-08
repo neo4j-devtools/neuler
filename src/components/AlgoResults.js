@@ -5,13 +5,17 @@ import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
-import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
+import {ADDED, addTask, COMPLETED, completeTask, FAILED, RUNNING, runTask} from "../ducks/tasks"
 import {sendMetrics} from "./metrics/sendMetrics";
 import {FailedTopBar} from "./Results/FailedTopBar";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import {VisView} from "./Results/VisView";
 import {ChartView} from "./Results/ChartView";
+import AlgorithmForm from "./AlgorithmForm";
+import {v4 as generateTaskId} from "uuid";
+import {getCurrentAlgorithm} from "../ducks/algorithms";
+import {getActiveDatabase} from "../services/stores/neoStore";
 
 export const tabContentStyle = {
   height: '85vh',
@@ -27,7 +31,7 @@ class HorizontalAlgoTab extends Component {
 
 
   state = {
-    activeItem: this.props.error ? 'Error' : 'Table'
+    activeItem: "Configure"
   }
 
   handleMenuItemClick = (e, { name }) => {
@@ -77,33 +81,46 @@ class HorizontalAlgoTab extends Component {
                   </Segment>
                 </div>
           )
-          : <React.Fragment>
-              <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}
-                             nextResult={nextResult} currentPage={currentPage} totalPages={totalPages}
-                             panelRef={this.panelRef} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
-              />
-            <div ref={this.panelRef}>
-              <Segment attached='bottom'>
-                <div style={getStyle('Table')}>
-                  <TableView task={task} gdsVersion={this.props.gdsVersion}/>
+            : <React.Fragment>
+                <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}
+                               nextResult={nextResult} currentPage={currentPage} totalPages={totalPages}
+                               panelRef={this.panelRef} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+                />
+                <div ref={this.panelRef}>
+                  <Segment attached='bottom'>
+                    <div style={getStyle("Configure")}>
+                      <AlgorithmForm
+                          limit={this.props.limit}
+                          onRun={(newParameters, persisted) => {
+                            this.props.onRunAlgo(task, newParameters, persisted)
+                            this.handleMenuItemClick(null, {name: "Table"})
+                          }} />
+                    </div>
+
+
+                    <React.Fragment>
+                    <div style={getStyle('Table')}>
+                      <TableView task={task} gdsVersion={this.props.gdsVersion}/>
+                    </div>
+
+                    <div style={getStyle('Code')}>
+                      <CodeView task={task}/>
+                    </div>
+
+                    {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                        <div style={getStyle('Visualisation')}>
+                          <VisView task={task} active={activeItem === 'Visualisation'}/>
+                        </div> : null}
+
+                    {activeGroup === 'Centralities' ?
+                        <div style={getStyle('Chart')}>
+                          <ChartView task={task} active={activeItem === 'Chart'}/>
+                        </div> : null}
+
+                    </React.Fragment>
+                  </Segment>
                 </div>
-
-                <div style={getStyle('Code')}>
-                  <CodeView task={task}/>
-                </div>
-
-                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                  <div style={getStyle('Visualisation')}>
-                    <VisView task={task} active={activeItem === 'Visualisation'}/>
-                  </div> : null}
-
-                {activeGroup === 'Centralities' ?
-                  <div style={getStyle('Chart')}>
-                    <ChartView task={task} active={activeItem === 'Chart'}/>
-                  </div> : null}
-              </Segment>
-            </div>
-          </React.Fragment>
+            </React.Fragment>
         }
       </div>
     )
@@ -126,15 +143,38 @@ const TabExampleVerticalTabular = (props) => {
     setPage(0)
     if(props.tasks.length > 0) {
       const task = props.tasks[0]
-      if (task.status === ADDED) {
-        onRunAlgo(task)
-      }
+      // if (task.status === ADDED) {
+      //   onRunAlgo(task)
+      // }
     }
   }, [props.tasks.length])
 
+  useEffect(() => {
+    const taskId = generateTaskId()
+    const {activeGroup, activeAlgorithm, metadata} = props
 
-  const onRunAlgo = (task) => {
-    const {taskId, group, algorithm, parameters, persisted} = task
+    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
+
+    const { service, parametersBuilder } = props.currentAlgorithm
+    if (service) {
+      const params = parametersBuilder({
+        ...parameters,
+        requiredProperties: Object.keys(parameters)
+      })
+
+      const persisted = parameters.persist
+
+      props.addTask(taskId, activeGroup, activeAlgorithm, {
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }, persisted)
+    }
+  }, [JSON.stringify(props.currentAlgorithm)])
+
+
+  const onRunAlgo = (task, parameters, persisted) => {
+    const {taskId, group, algorithm} = task
     const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion);
     const {service, getFetchQuery} = algorithmDefinition
 
@@ -179,12 +219,15 @@ const TabExampleVerticalTabular = (props) => {
 
     const constructedQueries = constructQueries(algorithmDefinition, parameters, streamQuery)
 
+    console.log("parameters", parameters, "persisted", persisted)
     props.runTask(
         taskId,
         persisted ? [storeQuery, fetchCypher] : [streamQuery],
         persisted ?
             [constructedQueries.createGraph, constructedQueries.storeAlgorithmNamedGraph, fetchCypher, constructedQueries.dropGraph] :
-            [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph]
+            [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph],
+        parameters,
+        persisted
     )
   }
 
@@ -193,6 +236,7 @@ const TabExampleVerticalTabular = (props) => {
   if (tasks && tasks.length > 0) {
     const currentTask = tasks[page]
     return <HorizontalAlgoTab
+        onRunAlgo={onRunAlgo.bind(this)}
       task={currentTask}
       prevResult={prevResult.bind(this)}
       nextResult={nextResult.bind(this)}
@@ -209,17 +253,33 @@ const mapStateToProps = state => ({
   tasks: state.tasks,
   limit: state.settings.limit,
   metadata: state.metadata,
+  activeGroup: state.algorithms.group,
+  activeAlgorithm: state.algorithms.algorithm,
+  currentAlgorithm: getCurrentAlgorithm(state),
+  communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  runTask: (taskId, query, namedGraphQueries) => {
-    dispatch(runTask({ taskId, query, namedGraphQueries }))
+  runTask: (taskId, query, namedGraphQueries, parameters, persisted) => {
+    dispatch(runTask({ taskId, query, namedGraphQueries, parameters, persisted }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
   },
   onComplete: () => {
     ownProps.onComplete()
+  },
+  addTask: (taskId, group, algorithm, parameters, persisted) => {
+    const task = {
+      group,
+      algorithm,
+      taskId,
+      parameters,
+      persisted,
+      startTime: new Date(),
+      database: getActiveDatabase()
+    }
+    dispatch(addTask({ ...task }))
   }
 })
 

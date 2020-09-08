@@ -20,11 +20,8 @@ class MainContent extends Component {
 
     return   (
       <div style={mainStyle}>
-        <div>
-          <AlgorithmForm limit={limit} />
-        </div>
         <div style={{width: '100%'}}>
-          <AlgoResults onComplete={this.props.onComplete}  />
+          <AlgoResults limit={limit} onComplete={this.props.onComplete}  />
         </div>
       </div>
     )

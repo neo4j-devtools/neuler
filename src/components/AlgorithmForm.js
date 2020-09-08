@@ -89,7 +89,7 @@ class Algorithms extends Component {
   }
 
   onRunAlgo() {
-    const taskId = generateTaskId()
+    // const taskId = generateTaskId()
 
     const { service, parametersBuilder } = this.props.currentAlgorithm
     const { activeGroup, activeAlgorithm } = this.props
@@ -102,8 +102,9 @@ class Algorithms extends Component {
 
       const persisted = this.state.parameters.persist
 
+      // this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters, limit: this.props.limit, communityNodeLimit: this.props.communityNodeLimit }, persisted)
 
-      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters, limit: this.props.limit, communityNodeLimit: this.props.communityNodeLimit }, persisted)
+      this.props.onRun({ ...parameters, limit: this.props.limit, communityNodeLimit: this.props.communityNodeLimit }, persisted)
     }
   }
 
@@ -138,7 +139,7 @@ class Algorithms extends Component {
       toggleIcon = 'angle double right'
     }
 
-    const collapseButton = <Button style={{ height: collapsed ? '-webkit-fill-available' : null, borderRadius: '0' }}
+    const collapseButton = <Button style={{height: collapsed ? '-webkit-fill-available' : null, borderRadius: '0'}}
                                    icon size='mini' onClick={this.toggleCollapse.bind(this)}>
       <Icon name={toggleIcon}/>
     </Button>
