@@ -41,7 +41,6 @@ const Algorithms = (props) => {
     ])
   }
 
-
   React.useEffect(() => {
     loadMetadata(props.metadata)
   }, [props.metadata])
@@ -129,8 +128,11 @@ const Algorithms = (props) => {
                       min={1}
                       max={1000}
                       step={1}
-                      value={props.limit}
-                      onChange={evt => props.updateLimit(parseInt(evt.target.value))}
+                      value={parameters.limit}
+                      onChange={evt => {
+                        onChangeParam("limit", parseInt(evt.target.value))
+                        props.updateLimit(parseInt(evt.target.value))
+                      }}
                     />
                   </Form.Field>
                   {returnsCommunities ?
@@ -143,7 +145,10 @@ const Algorithms = (props) => {
                             max={1000}
                             step={1}
                             value={props.communityNodeLimit}
-                            onChange={evt => props.updateCommunityNodeLimit(parseInt(evt.target.value))}
+                            onChange={evt => {
+                              onChangeParam("communityNodeLimit", parseInt(evt.target.value))
+                              props.updateCommunityNodeLimit(parseInt(evt.target.value))
+                            }}
                         />
                       </Form.Field> : null
                   }
