@@ -55,9 +55,10 @@ let algorithms = {
     streamQuery: `CALL gds.louvain.stream($config)
 YIELD nodeId, communityId AS community, intermediateCommunityIds AS communities
 WITH gds.util.asNode(nodeId) AS node, community, communities
-RETURN node, community, communities
-ORDER BY community
-LIMIT toInteger($limit)`,
+WITH community, communities, collect(node) AS nodes
+RETURN community, communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
+ORDER BY size DESC
+LIMIT toInteger($limit);`,
     storeQuery: `CALL gds.louvain.write($config)`,
     getFetchQuery: getFetchLouvainCypher,
     description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`

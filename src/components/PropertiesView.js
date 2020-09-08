@@ -23,12 +23,8 @@ const PropertiesView = ({ labels, globalLabels, properties, database }) => {
   const captionProps = globalLabels[database][firstLabel].propertyKeys
   const caption = Object.keys(properties).filter(key => captionProps.includes(key)).map(key => properties[key].toString()).join(", ");
 
-  return <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+  return <NodeLabel labels={labels} caption={caption} database={database} readOnly={true} />
 
-        <NodeLabel labels={labels} caption={caption} database={database} readOnly={true} />
-
-
-  </div>
 }
 
 const mapStateToProps = state => ({

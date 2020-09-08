@@ -26,9 +26,11 @@ export const getFetchLouvainCypher = (label, config) => {
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
 WITH node, node.\`${config.writeProperty}\` AS community
-RETURN node, 
-       CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
-       CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
+WITH collect(node) AS nodes, 
+     CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
+     CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
+RETURN community, communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
+ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 
@@ -167,6 +169,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
 
 export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
+  params.communityNodeLimit =  10;
 
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
   const parsedIterations = maxIterations == null ? null : int(maxIterations)
@@ -250,6 +253,7 @@ export const createRelationshipProjection = (relationshipType, direction, weight
       }
     }
 }
+
 
 export const baseParameters = (label, relationshipType, direction, limit, weightProperty, defaultValue) => {
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty

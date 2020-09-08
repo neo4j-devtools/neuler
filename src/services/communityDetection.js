@@ -146,18 +146,18 @@ const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = p
 export const parseResultStream = (result) => {
   if (result.records) {
     const rows = result.records.map(record => {
-      const {properties, labels} = record.get('node')
+      const nodes = record.get('nodes')
       const communities = record.has("communities") ? record.get("communities") : null
       return {
-        properties: parseProperties(properties),
-        labels: labels,
+        nodes: nodes.map(node => { return { "properties": parseProperties(node.properties), "labels": node.labels } }) ,
+        size: record.get('size').toNumber(),
         community: record.get('community').toNumber(),
         communities: communities ? communities.map(value => value.toNumber()).toString() : null
       }
     });
     return {
       rows: rows,
-      labels: [...new Set(rows.flatMap(result => result.labels))]
+      labels: [...new Set(rows.flatMap(result => result.nodes.flatMap(node => node.labels)))]
     }
   } else {
     console.error(result.error)
