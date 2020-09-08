@@ -1,9 +1,12 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.33 (2020-09-08)
+
+* Community Detection algorithms now return results grouped by community
+
 ## 0.1.32 (2020-09-08)
 
 * Fix label rendering for similarity algos and some community detection/path finding
-
 
 ## 0.1.31 (2020-09-07)
 
