@@ -1,60 +1,22 @@
 import React, {Component, useEffect, useState} from 'react'
 import {Loader, Message, Segment} from 'semantic-ui-react'
 import {connect} from "react-redux"
-import GraphVisualiser from './visualisation/GraphVisualiser'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
 import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
 import {sendMetrics} from "./metrics/sendMetrics";
-import NodeLabel from "./NodeLabel";
 import {FailedTopBar} from "./Results/FailedTopBar";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
+import {TableView} from "./Results/TableView";
+import {VisView} from "./Results/VisView";
+import {ChartView} from "./Results/ChartView";
 
-const tabContentStyle = {
+export const tabContentStyle = {
   height: '85vh',
   overflowY: 'auto',
   overflowX: 'hidden'
-}
-
-const TableView = ({task, gdsVersion}) => {
-  const {ResultView} = getAlgorithmDefinitions(task.group, task.algorithm, gdsVersion)
-
-  const labels = task.result ? task.result.labels : []
-
-  return <div style={tabContentStyle}>
-    {labels.length > 0 ? <div style={{display: "flex"}}>
-      {labels.map(label => <NodeLabel key={label} labels={[label]} caption={label} database={task.database} />)}
-    </div>  : null}
-
-    <ResultView task={task}/>
-  </div>
-}
-
-const VisView = ({ task, active }) => (
-  <div style={tabContentStyle}>
-    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.config.nodeProjection} active={active}
-                     algorithm={task.algorithm}
-                     limit={task.parameters.limit}
-                     relationshipType={task.parameters.config.relationshipProjection.relType.type}
-                     writeProperty={(task.parameters.config || {}).writeProperty}
-                     group={task.group}/>
-  </div>
-)
-
-const LoaderExampleInlineCentered = ({ active }) => <Loader active={active} inline='centered'>Fetching Data</Loader>
-
-
-const ChartView = ({ task }) => {
-  if (task.result && task.result.rows.length > 0) {
-    return <Chart data={task.result.rows.map(result => ({
-      name: result.properties.name || 'Node',
-      score: result.score
-    }))}/>
-  } else {
-    return <LoaderExampleInlineCentered active={true}/>
-  }
 }
 
 class HorizontalAlgoTab extends Component {
@@ -92,26 +54,14 @@ class HorizontalAlgoTab extends Component {
     let activeItem = this.state.activeItem
 
     const activeGroup = task.group
-    const getStyle = name => name === activeItem
-      ? ({
-        display: ''
-      })
-      : ({
-        display: 'none'
-      })
+    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
     return (
       <div>
         {task.completed && task.status === FAILED ? (
                 <div>
-                  <FailedTopBar
-                      task={task}
-                      activeItem={activeItem}
-                      prevResult={prevResult}
-                      nextResult={nextResult}
-                      currentPage={currentPage}
-                      totalPages={totalPages}
-                      handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+                  <FailedTopBar task={task} activeItem={activeItem} prevResult={prevResult} nextResult={nextResult}
+                                currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
                   />
 
                   <Segment attached='bottom'>
@@ -128,16 +78,9 @@ class HorizontalAlgoTab extends Component {
                 </div>
           )
           : <React.Fragment>
-              <SuccessTopBar
-                  task={task}
-                  activeItem={activeItem}
-                  activeGroup={activeGroup}
-                  prevResult={prevResult}
-                  nextResult={nextResult}
-                  currentPage={currentPage}
-                  totalPages={totalPages}
-                  panelRef={this.panelRef}
-                  handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+              <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}
+                             nextResult={nextResult} currentPage={currentPage} totalPages={totalPages}
+                             panelRef={this.panelRef} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
               />
             <div ref={this.panelRef}>
               <Segment attached='bottom'>
