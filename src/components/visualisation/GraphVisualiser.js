@@ -141,6 +141,7 @@ limit toInteger(${limit})`
 
         return labelsMap
       }, {})
+      // console.log("labelProperties", labelProperties, "captions", captions)
 
       this.setState({
         cypher: this.generateCypher(label, relationshipType, writeProperty, limit), //, props.algorithm === 'Louvain'),

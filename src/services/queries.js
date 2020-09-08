@@ -8,9 +8,10 @@ LIMIT toInteger($limit)`
 
 export const communityStreamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, community
-RETURN node, community
-ORDER BY community DESC
-LIMIT toInteger($limit)`
+WITH collect(node) AS allNodes, community
+RETURN community, allNodes[0..$communityNodeLimit] AS nodes, size(allNodes) AS size 
+ORDER BY size DESC
+LIMIT toInteger($limit);`
 
 export const getFetchCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
@@ -26,10 +27,10 @@ export const getFetchLouvainCypher = (label, config) => {
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
 WITH node, node.\`${config.writeProperty}\` AS community
-WITH collect(node) AS nodes, 
+WITH collect(node) AS allNodes, 
      CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
      CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
-RETURN community, communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
+RETURN community, communities, allNodes[0..$communityNodeLimit] AS nodes, size(allNodes) AS size
 ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
@@ -38,7 +39,9 @@ export const getCommunityFetchCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
-RETURN node, node.\`${config.writeProperty}\` AS community
+WITH node.\`${config.writeProperty}\` AS community, collect(node) AS allNodes
+RETURN community, allNodes[0..$communityNodeLimit] AS nodes, size(allNodes) AS size
+ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 

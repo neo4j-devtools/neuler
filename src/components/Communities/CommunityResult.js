@@ -10,16 +10,20 @@ export default ({ task }) => (
     <Table color='green'>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Node</Table.HeaderCell>
           <Table.HeaderCell>Community</Table.HeaderCell>
+          <Table.HeaderCell>Size</Table.HeaderCell>
+          <Table.HeaderCell>Nodes</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
         {task.result ?
           task.result && task.result.rows.map((result, idx) =>
           <Table.Row key={idx}>
-            <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels} database={task.database} /></Table.Cell>
             <Table.Cell>{result.community}</Table.Cell>
+            <Table.Cell>{result.size}</Table.Cell>
+            <Table.Cell>
+              {result.nodes.map(node => <PropertiesView properties={node.properties} labels={node.labels} database={task.database}/>)}
+            </Table.Cell>
           </Table.Row>
         ) :
         <Table.Row key="loading-centrality-result">
