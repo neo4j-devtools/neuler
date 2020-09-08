@@ -1,5 +1,5 @@
 import React, {Component, useEffect, useState} from 'react'
-import {Button, Header, Icon, Image, Loader, Menu, Message, Segment} from 'semantic-ui-react'
+import {Loader, Message, Segment} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import GraphVisualiser from './visualisation/GraphVisualiser'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
@@ -7,11 +7,10 @@ import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
 import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
-import html2canvas from "html2canvas";
-import {ReImg} from 'reimg'
-import {v4 as generateId} from 'uuid'
 import {sendMetrics} from "./metrics/sendMetrics";
 import NodeLabel from "./NodeLabel";
+import {FailedTopBar} from "./Results/FailedTopBar";
+import {SuccessTopBar} from "./Results/SuccessTopBar";
 
 const tabContentStyle = {
   height: '85vh',
@@ -168,72 +167,6 @@ class HorizontalAlgoTab extends Component {
   }
 }
 
-const FailedTopBar = ({task, activeItem, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick}) => {
-return <Menu attached='top' tabular pointing secondary
-             style={{ display: 'flex', justifyContent: 'space-between' }}>
-  <div style={{ display: 'flex' }}>
-    <Menu.Item name='Error' active={activeItem === 'Error'} onClick={handleMenuItemClick}/>
-    <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
-  </div>
-  <div style={{
-    display: 'flex',
-    alignItems: 'center'
-  }}>
-    <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-      <Icon name='angle left'/>
-    </Button>
-    <Header as='h3' style={{ margin: '0 1em' }}>
-      {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-    </Header>
-    <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-      <Icon name='angle right'/>
-    </Button>
-  </div>
-</Menu>
-}
-
-const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
-  return <Menu attached='top' tabular pointing secondary
-        style={{ display: 'flex', justifyContent: 'space-between' }}>
-    <div style={{ display: 'flex' }}>
-
-      <Menu.Item name='Table' active={activeItem === 'Table'}  onClick={handleMenuItemClick}/>
-
-      {activeGroup === 'Centralities' ?
-          <Menu.Item name='Chart' active={activeItem === 'Chart'} onClick={handleMenuItemClick}/>
-          : null}
-
-      {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-          <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}  onClick={handleMenuItemClick}/>
-          : null
-      }
-
-      <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
-
-      <Menu.Item active={activeItem === 'Printscreen'} onClick={(() => printElement(panelRef.current))}>
-        <Image src='images/Camera2.png'/>
-      </Menu.Item>
-
-    </div>
-
-    <div style={{
-      display: 'flex',
-      alignItems: 'center'
-    }}>
-      <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-        <Icon name='angle left'/>
-      </Button>
-      <Header as='h3' style={{ margin: '0 1em' }}>
-        {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-      </Header>
-      <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-        <Icon name='angle right'/>
-      </Button>
-    </div>
-
-  </Menu>
-}
-
 const TabExampleVerticalTabular = (props) => {
   const [page, setPage] = useState(0)
 
@@ -347,11 +280,5 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
   }
 })
 
-const printElement = element => {
-  html2canvas(element).then(function (canvas) {
-    const guid = generateId()
-    ReImg.fromCanvas(canvas).downloadPng(`neuler-${guid}.png`);
-  })
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabExampleVerticalTabular)
