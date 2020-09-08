@@ -4,6 +4,7 @@ import communityDict from '../components/Communities/algorithmsDictionary'
 const NAME = 'SETTINGS'
 const SET = `${NAME}/SET`
 const LIMIT = `${NAME}/LIMIT`
+const COMMUNITY_NODE_LIMIT = `${NAME}/COMMUNITY_NODE_LIMIT`
 const HIDE_PROPERTY = `${NAME}/HIDE_PROPERTY`
 const RESET_LABELS = `${NAME}/RESET_LABELS`
 
@@ -36,6 +37,7 @@ const getInitialState = () => {
       '_ALL_NEULER_': getBlacklist()
     },
     limit: 42,
+    communityNodeLimit: 10,
     labels: {
     }
   }
@@ -73,6 +75,11 @@ export const limit = limit => ({
   limit
 })
 
+export const communityNodeLimit = limit => ({
+  type: COMMUNITY_NODE_LIMIT,
+  limit
+})
+
 export const set = (key, value) => ({
   type: SET,
   key,
@@ -96,6 +103,11 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         limit: action.limit
+      }
+    case COMMUNITY_NODE_LIMIT:
+      return {
+        ...state,
+        communityNodeLimit: action.limit
       }
     case SET:
       return {

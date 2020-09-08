@@ -8,7 +8,7 @@ import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
 
 import * as PropTypes from "prop-types";
-import {limit} from "../ducks/settings"
+import {communityNodeLimit, limit} from "../ducks/settings"
 import {getActiveDatabase} from "../services/stores/neoStore";
 
 class Algorithms extends Component {
@@ -103,7 +103,7 @@ class Algorithms extends Component {
       const persisted = this.state.parameters.persist
 
 
-      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters, limit: this.props.limit }, persisted)
+      this.props.addTask(taskId, activeGroup, activeAlgorithm, { ...parameters, limit: this.props.limit, communityNodeLimit: this.props.communityNodeLimit }, persisted)
     }
   }
 
@@ -112,7 +112,7 @@ class Algorithms extends Component {
   }
 
   render() {
-    const { Form: AlgoForm, description } = this.props.currentAlgorithm
+    const { Form: AlgoForm, description, returnsCommunities } = this.props.currentAlgorithm
     const { collapsed } = this.state
 
     // const Feedback = <FeedbackForm page={`${this.props.activeAlgorithm}/Form`} />
@@ -179,6 +179,20 @@ class Algorithms extends Component {
                       onChange={evt => this.props.updateLimit(parseInt(evt.target.value))}
                     />
                   </Form.Field>
+                  {returnsCommunities ?
+                      <Form.Field inline>
+                        <label style={{'width': '8em'}}>Community Node Limit</label>
+                        <input
+                            type='number'
+                            placeholder="# of nodes"
+                            min={1}
+                            max={1000}
+                            step={1}
+                            value={this.props.communityNodeLimit}
+                            onChange={evt => this.props.updateCommunityNodeLimit(parseInt(evt.target.value))}
+                        />
+                      </Form.Field> : null
+                  }
                 </Form>
               </div>
               <div className='ui two buttons'>
@@ -209,11 +223,13 @@ const mapStateToProps = state => ({
   activeAlgorithm: state.algorithms.algorithm,
   currentAlgorithm: getCurrentAlgorithm(state),
   metadata: state.metadata,
-  limit: state.settings.limit
+  limit: state.settings.limit,
+  communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = dispatch => ({
   updateLimit: value => dispatch(limit(value)),
+  updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
   addTask: (taskId, group, algorithm, parameters, persisted) => {
     const task = {
       group,

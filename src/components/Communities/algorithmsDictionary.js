@@ -61,7 +61,8 @@ ORDER BY size DESC
 LIMIT toInteger($limit);`,
     storeQuery: `CALL gds.louvain.write($config)`,
     getFetchQuery: getFetchLouvainCypher,
-    description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`
+    description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`,
+    returnsCommunities: true
   },
   "Modularity Optimization": {
     algorithmName: "gds.beta.modularityOptimization",
@@ -82,7 +83,8 @@ LIMIT toInteger($limit);`,
     streamQuery: communityStreamQueryOutline(`CALL gds.beta.modularityOptimization.stream($config) YIELD nodeId, communityId AS community`),
     storeQuery: `CALL gds.beta.modularityOptimization.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
-    description: `detect communities in the graph based on their modularity.`
+    description: `detect communities in the graph based on their modularity.`,
+    returnsCommunities: true
   },
   "K1-Coloring": {
     algorithmName: "gds.beta.k1coloring",
@@ -101,7 +103,8 @@ LIMIT toInteger($limit);`,
     streamQuery: communityStreamQueryOutline(`CALL gds.beta.k1coloring.stream($config) YIELD nodeId, color AS community`),
     storeQuery: `CALL gds.beta.k1coloring.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
-    description: `assigns a color to each node trying to use as few colours as possible and making sure neighbors of a node have a different color to that node.`
+    description: `assigns a color to each node trying to use as few colours as possible and making sure neighbors of a node have a different color to that node.`,
+    returnsCommunities: true
   },
   "Label Propagation": {
     algorithmName: "gds.labelPropagation",
@@ -119,7 +122,8 @@ LIMIT toInteger($limit);`,
     streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, communityId AS community`),
     storeQuery: `CALL gds.labelPropagation.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
-    description: "a fast algorithm for finding communities in a graph"
+    description: "a fast algorithm for finding communities in a graph",
+    returnsCommunities: true
   },
   "Connected Components": {
     algorithmName: "gds.wcc",
@@ -136,7 +140,8 @@ LIMIT toInteger($limit);`,
     streamQuery: communityStreamQueryOutline(`CALL gds.wcc.stream($config) YIELD nodeId, componentId AS community`),
     storeQuery: `CALL gds.wcc.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
-    description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set"
+    description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set",
+    returnsCommunities: true
   },
   "Strongly Connected Components": {
     algorithmName: "gds.alpha.scc",
@@ -148,7 +153,8 @@ LIMIT toInteger($limit);`,
     streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, componentId AS community`),
     storeQuery: `CALL gds.alpha.scc.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
-    description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set"
+    description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set",
+    returnsCommunities: true
   }
   /*,
 "Balanced Triads": {

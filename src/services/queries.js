@@ -170,9 +170,9 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
+export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, communityNodeLimit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
-  params.communityNodeLimit =  10;
+  params.communityNodeLimit =  parseInt(communityNodeLimit) || 10;
 
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
   const parsedIterations = maxIterations == null ? null : int(maxIterations)

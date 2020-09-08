@@ -78,9 +78,8 @@ class GraphVisualiser extends Component {
     const initVis = (taskId, config, driver) => {
       this.setState({ rendering: true })
       const neovis = new NeoVis(config, driver);
-      console.log('RENDERING')
+
       neovis.render(() => {
-        console.log('RENDERING DONE')
         this.setState({ rendering: false })
       });
       this.networks[taskId] = neovis
