@@ -61,25 +61,26 @@ class NEuler extends Component {
 
     return (
       <Container fluid style={{ display: 'flex' }}>
-          <AlgorithmsGroupMenu/>
+        <AlgorithmsGroupMenu/>
         <div style={{width: '100%'}}>
           <Segment basic inverted vertical={false}
-                   style={{ height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0' }}>
+                   style={{height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0'}}>
             {header ? <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
               {header}
             </Header> : null}
             <Menu inverted>
               {getAlgorithms(activeGroup).map(algorithm =>
-                <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm} onClick={() => selectAlgorithm(algorithm)}>
-                  {algorithm}
-                </Menu.Item>)}
+                  <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm}
+                             onClick={() => selectAlgorithm(algorithm)}>
+                    {algorithm}
+                  </Menu.Item>)}
             </Menu>
             <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
               NEuler
             </Header>
           </Segment>
           {view}
-          <FeedbackForm page={page} />
+          <FeedbackForm page={page}/>
         </div>
       </Container>
     )
