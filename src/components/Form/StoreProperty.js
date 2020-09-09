@@ -1,7 +1,7 @@
 import React from 'react'
 import {Checkbox, Form, Input, Label, Segment} from "semantic-ui-react";
 
-export const ResultsStorage = ({persist, onChange, writeProperty}) => {
+export const StoreProperty = ({persist, onChange, writeProperty}) => {
     return <Segment key={persist}>
         <Label as='a' attached='top left'>
             Store Results

@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraph, ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
-import {ResultsStorage} from "../Form/ResultsStorage";
+import {StoreProperty} from "../Form/StoreProperty";
 
 const PageRankForm = (props) => {
     const {label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, writeProperty, onChange, maxIterations, dampingFactor, weightProperty, defaultValue, direction, persist} = props
@@ -22,7 +22,7 @@ const PageRankForm = (props) => {
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <PageRankParameters maxIterations={maxIterations} dampingFactor={dampingFactor} onChange={onChange}/>
-            <ResultsStorage persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
 
         </Form>
     )

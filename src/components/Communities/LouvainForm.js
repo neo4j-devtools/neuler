@@ -1,7 +1,7 @@
 import React from 'react'
 import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
-import {ResultsStorage} from "../Form/ResultsStorage";
+import {StoreProperty} from "../Form/StoreProperty";
 
 const LouvainForm = ({onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
@@ -25,7 +25,7 @@ const LouvainForm = ({onChange, labelOptions, label, relationshipType, relations
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters {...parameterProps} />
-            <ResultsStorage persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
         </Form>
     )
 

@@ -21,7 +21,6 @@ const AlgoForm = ({onChange, relationshipType, label, relationshipOrientationOpt
 
             <ProjectedGraphWithWeights {...projectedGraphProps} />
 
-
             <Parameters startNode={startNode} onChange={onChange}/>
 
 

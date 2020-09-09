@@ -1,7 +1,7 @@
 import React from 'react'
 import {Form, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
-import {ResultsStorage} from "../Form/ResultsStorage";
+import {StoreProperty} from "../Form/StoreProperty";
 
 export default ({onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability}) => {
     const projectedGraphProps = {
@@ -18,7 +18,7 @@ export default ({onChange, labelOptions, relationshipTypeOptions, relationshipOr
         <ProjectedGraphWithNoWeights {...projectedGraphProps} />
         <ApproxBetweennessParameters strategy={strategy} maxDepth={maxDepth} probability={probability}
                                      onChange={onChange}/>
-        <ResultsStorage persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
     </Form>
 }
 

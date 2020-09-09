@@ -2,7 +2,7 @@ import React from 'react'
 import {Form, Label, Segment} from "semantic-ui-react"
 import CentralityForm from "./CentralityForm"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
-import {ResultsStorage} from "../Form/ResultsStorage";
+import {StoreProperty} from "../Form/StoreProperty";
 
 export default ({onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability, samplingSize}) => {
     const projectedGraphProps = {
@@ -18,7 +18,7 @@ export default ({onChange, labelOptions, relationshipTypeOptions, relationshipOr
     return <Form size='mini' style={{marginBottom: '1em'}}>
         <ProjectedGraphWithNoWeights {...projectedGraphProps} />
         <Parameters samplingSize={samplingSize} onChange={onChange}/>
-        <ResultsStorage persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
     </Form>
 }
 

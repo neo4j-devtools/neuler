@@ -1,7 +1,7 @@
 import React from 'react'
 import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
-import {ResultsStorage} from "../Form/ResultsStorage";
+import {StoreProperty} from "../Form/StoreProperty";
 
 const AlgoForm = ({onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
@@ -25,7 +25,7 @@ const AlgoForm = ({onChange, labelOptions, maxIterations, tolerance, label, rela
         <Form style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters {...parameterProps} />
-            <ResultsStorage persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
         </Form>
     )
 }
