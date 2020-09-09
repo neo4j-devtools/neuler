@@ -38,7 +38,7 @@ const Parameters = ({onChange, startNode}) => {
             <label style={{'width': '12em'}}>Start Node</label>
             <Form.Field inline>
                 <Popup size="tiny"
-                       trigger={<Input size='mini' basic="true" value={startNode} placeholder='Start Node'
+                       trigger={<Input basic="true" value={startNode} placeholder='Start Node'
                                        onChange={evt => onChange('startNode', evt.target.value)}/>}
                        content='Populate this field with the value of any property on any node'/>
             </Form.Field>
