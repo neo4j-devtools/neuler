@@ -1,6 +1,6 @@
-import React, {Component,} from 'react'
-import {Dropdown, Form, Label, Input, Segment} from "semantic-ui-react"
-import {ProjectedGraphWithNoWeights, ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
+import React from 'react'
+import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
+import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {ResultsStorage} from "../Form/ResultsStorage";
 
 const LouvainForm = ({onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist}) => {
@@ -37,13 +37,13 @@ const Parameters = ({propertyKeyOptions, seedProperty, includeIntermediateCommun
             Algorithm Parameters
         </Label>
         <Form.Field>
-            <label >Seed Property</label>
+            <label>Seed Property</label>
             <Dropdown placeholder='Weight Property' defaultValue={seedProperty} fluid search selection
                       options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)}/>
 
         </Form.Field>
         <Form.Field>
-            <label >Intermediate Communities?</label>
+            <label>Intermediate Communities?</label>
             <input type='checkbox' checked={includeIntermediateCommunities} onChange={evt => {
                 onChange('includeIntermediateCommunities', evt.target.checked)
             }}/>

@@ -35,8 +35,8 @@ const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, 
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Field>
-            <label style={{'width': '8em'}}>Iterations</label>
+        <Form.Field inline>
+            <label style={{'width': '12em'}}>Iterations</label>
             <input
                 type='number'
                 min={1}
@@ -48,8 +48,8 @@ const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, 
             />
         </Form.Field>
 
-        <Form.Field >
-            <label style={{'width': '8em'}}>Tolerance</label>
+        <Form.Field inline>
+            <label style={{'width': '12em'}}>Tolerance</label>
             <input
                 value={tolerance}
                 onChange={evt => onChange('tolerance', evt.target.value)}
@@ -57,7 +57,7 @@ const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, 
             />
         </Form.Field>
         <Form.Field inline>
-            <label style={{'width': '10em'}}>Seed Property</label>
+            <label style={{'width': '12em'}}>Seed Property</label>
             <Dropdown placeholder='Seed Property' defaultValue={seedProperty} fluid search selection
                       options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)}/>
 

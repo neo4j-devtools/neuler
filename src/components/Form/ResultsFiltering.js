@@ -7,8 +7,8 @@ export const ResultsFiltering = ({limit, communityNodeLimit, returnsCommunities,
             Results Filtering
         </Label>
         <Form>
-            <Form.Field>
-                <label >Rows to show</label>
+            <Form.Field inline>
+                <label style={{'width': '12em'}} >Rows to show</label>
                 <input
                     type='number'
                     placeholder="Rows"
@@ -20,8 +20,8 @@ export const ResultsFiltering = ({limit, communityNodeLimit, returnsCommunities,
                 />
             </Form.Field>
             {returnsCommunities ?
-                <Form.Field>
-                    <label>Community Node Limit</label>
+                <Form.Field inline>
+                    <label style={{'width': '12em'}}>Community Node Limit</label>
                     <input
                         type='number'
                         placeholder="# of nodes"
