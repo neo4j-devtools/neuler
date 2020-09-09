@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {Form, Input} from "semantic-ui-react"
-import {ProjectedGraph} from "../Form/ProjectedGraph";
+import React from 'react'
+import {Form} from "semantic-ui-react"
+import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {ResultsStorage} from "../Form/ResultsStorage";
 
 const DegreeForm = (props) => {
@@ -20,7 +20,7 @@ const DegreeForm = (props) => {
 
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
-            <ProjectedGraph {...projectedGraphProps} />
+            <ProjectedGraphWithWeights {...projectedGraphProps} />
             <ResultsStorage persist={persist} onChange={onChange} writeProperty={writeProperty}/>
         </Form>
     )

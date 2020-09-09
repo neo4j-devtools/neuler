@@ -1,7 +1,7 @@
 import {Dropdown, Form, Label, Segment} from "semantic-ui-react";
 import React from "react";
 
-export const ProjectedGraph = ({label, labelOptions, relationshipType, direction, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, defaultValue, onChange}) => {
+const ProjectedGraph = ({label, labelOptions, relationshipType, direction, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, defaultValue, onChange, showWeightProperty}) => {
     return <Segment>
         <Label as='a' attached='top left'>
             Projected Graph
@@ -26,7 +26,8 @@ export const ProjectedGraph = ({label, labelOptions, relationshipType, direction
                           onChange={(evt, data) => onChange("direction", data.value)}/>
             </Form.Field> : null}
 
-        {relationshipType ?
+
+        {showWeightProperty && relationshipType ?
             <Form.Field inline>
                 <label style={{'width': '8em'}}>Weight Property</label>
                 <Dropdown placeholder='Weight Property' defaultValue={weightProperty} fluid search selection
@@ -34,18 +35,35 @@ export const ProjectedGraph = ({label, labelOptions, relationshipType, direction
                           onChange={(evt, data) => onChange("weightProperty", data.value)}/>
             </Form.Field> : null}
 
-        {
-            weightProperty ?
-                <Form.Field inline>
-                    <label style={{'width': '8em'}}>Default weight</label>
-                    <input
-                        value={defaultValue}
-                        onChange={evt => onChange('defaultValue', evt.target.value)}
-                        style={{'width': '7em'}}
-                    />
-                </Form.Field>
-                : null
+        {showWeightProperty && weightProperty ?
+            <Form.Field inline>
+                <label style={{'width': '8em'}}>Default weight</label>
+                <input
+                    value={defaultValue}
+                    onChange={evt => onChange('defaultValue', evt.target.value)}
+                    style={{'width': '7em'}}
+                />
+            </Form.Field>
+            : null
 
         }
     </Segment>
+}
+
+export const ProjectedGraphWithWeights = (props) => {
+    const projectedGraphProps = {
+        ...props,
+        showWeightProperty: true
+    }
+
+    return <ProjectedGraph {...projectedGraphProps} />
+}
+
+export const ProjectedGraphWithNoWeights = (props) => {
+    const projectedGraphProps = {
+        ...props,
+        showWeightProperty: false
+    }
+
+    return <ProjectedGraph {...projectedGraphProps} />
 }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dropdown, Checkbox, Form, Input, Label, Segment} from "semantic-ui-react";
+import {Checkbox, Form, Input, Label, Segment} from "semantic-ui-react";
 
 export const ResultsStorage = ({persist, onChange, writeProperty}) => {
     return <Segment key={persist}>
