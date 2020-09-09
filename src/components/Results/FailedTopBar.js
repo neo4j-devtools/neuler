@@ -5,6 +5,7 @@ export const FailedTopBar = ({task, activeItem, prevResult, nextResult, currentP
     return <Menu attached='top' tabular pointing secondary
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
+            <Menu.Item name='Configure' active={activeItem === 'Configure'} onClick={handleMenuItemClick}/>
             <Menu.Item name='Error' active={activeItem === 'Error'} onClick={handleMenuItemClick}/>
             <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
         </div>

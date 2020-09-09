@@ -78,6 +78,15 @@ class HorizontalAlgoTab extends Component {
                   />
 
                   <Segment attached='bottom'>
+                    <div style={getStyle("Configure")}>
+                      <AlgorithmForm
+                          task={task}
+                          limit={this.props.limit}
+                          onRun={(newParameters, formParameters, persisted) => {
+                            this.props.onRunAlgo(task, newParameters, formParameters, persisted)
+                            this.handleMenuItemClick(null, {name: "Table"})
+                          }} />
+                    </div>
                     <div style={getStyle('Error')}>
                       <Message warning>
                         <Message.Header>Algorithm failed to complete</Message.Header>

@@ -15,7 +15,6 @@ const AlgoForm = ({onChange, relationshipType, label, direction, persist, labelO
 
   return <React.Fragment>
     <ProjectedGraphWithNoWeights {...projectedGraphProps} />
-
   </React.Fragment>
 }
 

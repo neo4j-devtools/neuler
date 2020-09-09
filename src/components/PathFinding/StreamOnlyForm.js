@@ -1,20 +1,21 @@
 import React from 'react'
 import {Dropdown, Form} from "semantic-ui-react"
+import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 
-export default ({onChange, relationshipType, direction, persist, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => (
-  <React.Fragment>
-  <Form.Field>
-    <label>Label</label>
-    <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
-  </Form.Field>
-  <Form.Field>
-    <label>Relationship Type</label>
-    <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
-  </Form.Field>
-    {relationshipType ?
-      <Form.Field>
-        <label>Relationship Orientation</label>
-        <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
-      </Form.Field> : null }
+const AlgoForm = ({onChange, relationshipType, label, direction, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {
+  const projectedGraphProps = {
+    label,
+    labelOptions,
+    relationshipType,
+    direction,
+    relationshipTypeOptions,
+    relationshipOrientationOptions,
+    onChange
+  }
+
+  return <React.Fragment>
+    <ProjectedGraphWithNoWeights {...projectedGraphProps} />
   </React.Fragment>
-)
+}
+
+export default AlgoForm
