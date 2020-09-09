@@ -73,7 +73,6 @@ const Algorithms = (props) => {
     const { Form: AlgoForm, description, returnsCommunities } = currentAlgorithm
 
     const containerStyle = {
-      width: '96%',
       overflow: 'hidden',
       height: '100%',
       marginRight: '0'
