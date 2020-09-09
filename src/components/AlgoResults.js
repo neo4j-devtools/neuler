@@ -1,5 +1,5 @@
 import React, {Component, useEffect, useState} from 'react'
-import {Loader, Message, Segment} from 'semantic-ui-react'
+import {Loader, Message, Segment, Header} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
@@ -60,8 +60,17 @@ class HorizontalAlgoTab extends Component {
     const activeGroup = task.group
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
+    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, this.props.metadata.versions.gdsVersion)
+    const { description } = currentAlgorithm
+
     return (
       <div style={{padding: "10px"}}>
+        <Header as="h3">
+          {task.algorithm}
+          <Header.Subheader>
+            {description}
+          </Header.Subheader>
+        </Header>
         {task.completed && task.status === FAILED ? (
                 <React.Fragment>
                   <FailedTopBar task={task} activeItem={activeItem} prevResult={prevResult} nextResult={nextResult}
@@ -156,6 +165,14 @@ const TabExampleVerticalTabular = (props) => {
 
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
 
+    const addLimits = (params) => {
+      return {
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }
+    }
+
     const { service, parametersBuilder } = props.currentAlgorithm
     if (service) {
       const params = parametersBuilder({
@@ -165,11 +182,7 @@ const TabExampleVerticalTabular = (props) => {
 
       const persisted = parameters.persist
 
-      props.addTask(taskId, activeGroup, activeAlgorithm, {
-        ...params,
-        limit: props.limit,
-        communityNodeLimit: props.communityNodeLimit
-      }, parameters, persisted)
+      props.addTask(taskId, activeGroup, activeAlgorithm, addLimits(params), addLimits(parameters), persisted)
     }
   }, [JSON.stringify(props.currentAlgorithm)])
 
@@ -237,6 +250,7 @@ const TabExampleVerticalTabular = (props) => {
   if (tasks && tasks.length > 0) {
     const currentTask = tasks[page]
     return <HorizontalAlgoTab
+        metadata={props.metadata}
         onRunAlgo={onRunAlgo.bind(this)}
       task={currentTask}
       prevResult={prevResult.bind(this)}
