@@ -7,7 +7,8 @@ export const ResultsStorage = ({persist, onChange, writeProperty}) => {
             Store Results
         </Label>
 
-        <Form.Field>
+        <Form.Field inline style={{  display: "flex", "align-items": "center"}}>
+            <label style={{'width': '12em'}}>Store results?</label>
             <Checkbox toggle checked={persist} onChange={(evt, data) => {
                 onChange('persist', data.checked)
             }}/>
@@ -15,9 +16,9 @@ export const ResultsStorage = ({persist, onChange, writeProperty}) => {
         </Form.Field>
         {
             persist ?
-                <Form.Field>
-                    <label style={{'width': '8em'}}>Write Property</label>
-                    <Input size='mini' basic="true" value={writeProperty} placeholder='Write Property'
+                <Form.Field inline>
+                    <label style={{'width': '12em'}}>Write Property</label>
+                    <Input basic="true" value={writeProperty} placeholder='Write Property'
                            onChange={evt => onChange('writeProperty', evt.target.value)}/>
                 </Form.Field>
                 : null
