@@ -100,7 +100,7 @@ const Algorithms = (props) => {
     // console.log("parameters", parameters)
     return (
         <div style={containerStyle}>
-          <Card style={{ boxShadow: 'none' }}>
+          <Card fluid style={{ boxShadow: 'none' }}>
             <Card.Content style={contentStyle}>
               <div style={{ paddingTop: '1em', paddingBottom: '1em' }}>
                 <Icon name='sitemap'/>
