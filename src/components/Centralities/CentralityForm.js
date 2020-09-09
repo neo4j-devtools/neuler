@@ -1,6 +1,5 @@
 import React from 'react'
-import { Form, Input, Dropdown } from "semantic-ui-react"
-import {ProjectedGraphWithNoWeights, ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
+import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {ResultsStorage} from "../Form/ResultsStorage";
 
 export default ({relationshipType, onChange, direction, persist, writeProperty, weightProperty, label, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {

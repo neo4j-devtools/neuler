@@ -103,8 +103,11 @@ const Algorithms = (props) => {
                           relationshipOrientationOptions={relationshipOrientationOptions}
                           propertyKeyOptions={propertyKeyOptions}
                           onChange={onChangeParam.bind(this)}/>
-                <ResultsFiltering limit={parameters.limit} communityNodeLimit={parameters.communityNodeLimit}
-                                  updateLimit={updateLimit} updateCommunityNodeLimit={updateCommunityNodeLimit} />
+                <ResultsFiltering limit={parameters.limit}
+                                  communityNodeLimit={parameters.communityNodeLimit}
+                                  returnsCommunities={returnsCommunities}
+                                  updateLimit={updateLimit}
+                                  updateCommunityNodeLimit={updateCommunityNodeLimit} />
               </div>
               <div className='ui two buttons'>
                 <Button basic color='green' onClick={onRunAlgo.bind(this)}>
