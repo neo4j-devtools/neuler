@@ -36,7 +36,7 @@ const PageRankParameters = ({maxIterations, dampingFactor, onChange}) => {
             Algorithm Parameters
         </Label>
         <Form.Field inline>
-            <label style={{'width': '8em'}}>Iterations</label>
+            <label style={{'width': '12em'}}>Iterations</label>
             <input
                 key={maxIterations}
                 type='number'
@@ -49,12 +49,12 @@ const PageRankParameters = ({maxIterations, dampingFactor, onChange}) => {
             />
         </Form.Field>
         <Form.Field inline>
-            <label style={{'width': '8em'}}>Damping Factor</label>
+            <label style={{'width': '12em'}}>Damping Factor</label>
             <input
                 key={dampingFactor}
                 value={dampingFactor}
                 onChange={evt => onChange('dampingFactor', evt.target.value)}
-                style={{'width': '5em'}}
+                style={{'width': '12em'}}
             />
         </Form.Field>
     </Segment>
