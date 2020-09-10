@@ -14,7 +14,7 @@ const printElement = element => {
 
 
 export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
-    return <Menu attached='top' tabular pointing secondary
+    return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
 
@@ -46,7 +46,8 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
 
         <div style={{
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            marginLeft: "auto"
         }}>
             <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
                 <Icon name='angle left'/>

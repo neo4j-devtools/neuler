@@ -2,7 +2,7 @@ import {Button, Header, Icon, Menu} from "semantic-ui-react";
 import React from "react";
 
 export const FailedTopBar = ({task, activeItem, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick}) => {
-    return <Menu attached='top' tabular pointing secondary
+    return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
             <Menu.Item name='Configure' active={activeItem === 'Configure'} onClick={handleMenuItemClick}/>
@@ -11,7 +11,8 @@ export const FailedTopBar = ({task, activeItem, prevResult, nextResult, currentP
         </div>
         <div style={{
             display: 'flex',
-            alignItems: 'center'
+            alignItems: 'center',
+            marginLeft: "auto"
         }}>
             <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
                 <Icon name='angle left'/>
