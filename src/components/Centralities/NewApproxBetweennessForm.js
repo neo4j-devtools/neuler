@@ -27,7 +27,7 @@ const Parameters = ({samplingSize, onChange}) => {
             Algorithm Parameters
         </Label>
         <Form.Field inline>
-            <label style={{'width': '8em'}}>Sampling size</label>
+            <label style={{'width': '12em'}}>Sampling size</label>
             <input
                 type='number'
                 min={1}

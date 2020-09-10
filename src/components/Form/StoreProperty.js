@@ -7,7 +7,7 @@ export const StoreProperty = ({persist, onChange, writeProperty, readOnly}) => {
             Store Results
         </Label>
 
-        <Form.Field inline style={{  display: "flex", alignItems: "center"}}>
+        <Form.Field className={readOnly ? "disabled" : null} inline style={{  display: "flex", alignItems: "center"}}>
             <label style={{'width': '12em'}}>Store results?</label>
             <Checkbox disabled={readOnly} toggle checked={persist} onChange={(evt, data) => {
                 onChange('persist', data.checked)
@@ -16,7 +16,7 @@ export const StoreProperty = ({persist, onChange, writeProperty, readOnly}) => {
         </Form.Field>
         {
             persist ?
-                <Form.Field inline>
+                <Form.Field inline className={readOnly ? "disabled" : null}>
                     <label style={{'width': '12em'}}>Write Property</label>
                     <Input disabled={readOnly} basic="true" value={writeProperty} placeholder='Write Property'
                            onChange={evt => onChange('writeProperty', evt.target.value)}/>

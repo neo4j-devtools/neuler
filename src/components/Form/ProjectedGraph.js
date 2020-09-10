@@ -6,12 +6,12 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
         <Label as='a' attached='top left'>
             Projected Graph
         </Label>
-        <Form.Field>
+        <Form.Field className={readOnly ? "disabled" : null} >
             <label>Label</label>
             <Dropdown disabled={readOnly} placeholder='Label' value={label} fluid search selection options={labelOptions}
                       onChange={(evt, data) => onChange("label", data.value)}/>
         </Form.Field>
-        <Form.Field>
+        <Form.Field className={readOnly ? "disabled" : null} >
             <label>Relationship Type</label>
             <Dropdown disabled={readOnly} placeholder='RelationshipType' value={relationshipType} fluid search selection
                       options={relationshipTypeOptions}
@@ -19,7 +19,7 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
         </Form.Field>
 
         {relationshipType ?
-            <Form.Field>
+            <Form.Field className={readOnly ? "disabled" : null} >
                 <label>Relationship Orientation</label>
                 <Dropdown disabled={readOnly} placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection
                           options={relationshipOrientationOptions}
@@ -27,7 +27,7 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
             </Form.Field> : null}
 
         {showWeightProperty && relationshipType ?
-            <Form.Field inline>
+            <Form.Field inline className={readOnly ? "disabled" : null} >
                 <label style={{'width': '8em'}}>Weight Property</label>
                 <Dropdown disabled={readOnly} placeholder='Weight Property' defaultValue={weightProperty} fluid search selection
                           options={propertyKeyOptions}
@@ -35,7 +35,7 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
             </Form.Field> : null}
 
         {showWeightProperty && weightProperty ?
-            <Form.Field inline>
+            <Form.Field inline className={readOnly ? "disabled" : null} >
                 <label style={{'width': '8em'}}>Default weight</label>
                 <Input disabled={readOnly} size='mini' basic="true" value={defaultValue} onChange={evt => onChange('defaultValue', evt.target.value)}/>
 
