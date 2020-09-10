@@ -48,7 +48,7 @@ const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, 
 
         <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Seed Property</label>
-            <Dropdown disabled={readOnly} placeholder='Seed Property' defaultValue={seedProperty} fluid search selection
+            <Dropdown disabled={readOnly} placeholder='Seed Property' defaultValue={seedProperty}  search selection
                       options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)}/>
 
         </Form.Field>

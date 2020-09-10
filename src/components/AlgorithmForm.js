@@ -123,15 +123,18 @@ const AlgoForm = (props) => {
                             updateCommunityNodeLimit={updateCommunityNodeLimit}/>
         </div>
         <div>
-          {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+            {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
 
-            {task.status !== ADDED &&
+            {task.status !== ADDED && task.completed &&
             <Button.Group>
                 <Button color='green' onClick={onRunAlgo}>Re-run Algorithm</Button>
-                <Button.Or />
+                <Button.Or/>
                 <Button color='blue' onClick={onCopyAlgo}>Make a copy</Button>
             </Button.Group>
             }
+
+            {task.status !== ADDED && !task.completed && <Button disabled color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+
         </div>
 
       </div>
