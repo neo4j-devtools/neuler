@@ -2,7 +2,7 @@ import React from 'react'
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
-export default ({relationshipType, onChange, direction, persist, writeProperty, weightProperty, label, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {
+export default ({relationshipType, readOnly, onChange, direction, persist, writeProperty, weightProperty, label, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -11,11 +11,12 @@ export default ({relationshipType, onChange, direction, persist, writeProperty, 
         relationshipTypeOptions,
         relationshipOrientationOptions,
         weightProperty,
-        onChange
+        onChange,
+        readOnly
     }
 
     return <React.Fragment>
         <ProjectedGraphWithNoWeights {...projectedGraphProps} />
-        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
     </React.Fragment>
 }

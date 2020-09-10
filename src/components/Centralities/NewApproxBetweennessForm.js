@@ -1,9 +1,9 @@
 import React from 'react'
-import {Form, Label, Segment} from "semantic-ui-react"
+import {Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
-export default ({onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability, samplingSize}) => {
+export default ({readOnly, onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability, samplingSize}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -11,31 +11,25 @@ export default ({onChange, labelOptions, relationshipTypeOptions, relationshipOr
         direction,
         relationshipTypeOptions,
         relationshipOrientationOptions,
-        onChange
+        onChange,
+        readOnly
     }
 
     return <Form size='mini' style={{marginBottom: '1em'}}>
         <ProjectedGraphWithNoWeights {...projectedGraphProps} />
-        <Parameters samplingSize={samplingSize} onChange={onChange}/>
-        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+        <Parameters samplingSize={samplingSize} onChange={onChange} readOnly={readOnly}/>
+        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
     </Form>
 }
 
-const Parameters = ({samplingSize, onChange}) => {
-    return <Segment key={samplingSize}>
+const Parameters = ({samplingSize, onChange, readOnly}) => {
+    return <Segment>
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Field inline>
-            <label style={{'width': '12em'}}>Sampling size</label>
-            <input
-                type='number'
-                min={1}
-                step={1}
-                value={samplingSize}
-                onChange={evt => onChange('samplingSize', evt.target.value)}
-                style={{'width': '8em'}}
-            />
-        </Form.Field>
+        <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Sampling size</label>}
+                    control={Input} type='number' value={samplingSize} onChange={evt => onChange('samplingSize', evt.target.value)}
+                    min={1} step={1} />
+
     </Segment>
 }
