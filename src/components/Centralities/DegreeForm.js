@@ -22,7 +22,7 @@ const DegreeForm = (props) => {
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
-            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
         </Form>
     )
 }

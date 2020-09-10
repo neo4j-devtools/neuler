@@ -79,27 +79,29 @@ const Algorithms = (props) => {
       marginRight: '0'
     }
 
-  const updateLimit = (evt) => {
-    onChangeParam("limit", parseInt(evt.target.value))
-    props.updateLimit(parseInt(evt.target.value))
+  const updateLimit = (evt, data) => {
+    onChangeParam("limit", parseInt(data.value))
+    props.updateLimit(parseInt(data.value))
   }
 
-  const updateCommunityNodeLimit = (evt) => {
-    onChangeParam("communityNodeLimit", parseInt(evt.target.value))
-    props.updateCommunityNodeLimit(parseInt(evt.target.value))
+  const updateCommunityNodeLimit = (evt, data) => {
+    onChangeParam("communityNodeLimit", parseInt(data.value))
+    props.updateCommunityNodeLimit(parseInt(data.value))
   }
 
-    return (
+  const readOnly = task.status !== ADDED;
+  return (
         <div style={containerStyle}>
               <div style={{marginBottom: '1em'}}>
                 <AlgoForm {...parameters} labelOptions={labelOptions}
                           relationshipTypeOptions={relationshipTypeOptions}
                           relationshipOrientationOptions={relationshipOrientationOptions}
                           propertyKeyOptions={propertyKeyOptions}
-                          readOnly={task.status !== ADDED}
+                          readOnly={readOnly}
                           onChange={onChangeParam.bind(this)}/>
                 <ResultsFiltering limit={parameters.limit}
                                   communityNodeLimit={parameters.communityNodeLimit}
+                                  readOnly={readOnly}
                                   returnsCommunities={returnsCommunities}
                                   updateLimit={updateLimit}
                                   updateCommunityNodeLimit={updateCommunityNodeLimit} />

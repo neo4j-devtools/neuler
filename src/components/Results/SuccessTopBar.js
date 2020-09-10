@@ -12,14 +12,12 @@ const printElement = element => {
     })
 }
 
-
 export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
     const message = task.status !== ADDED ? `Started at: ${task.startTime.toLocaleTimeString()}` : ""
 
     return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
-
             <Menu.Item name='Configure' active={activeItem === 'Configure'} onClick={handleMenuItemClick}/>
 
             {[RUNNING, COMPLETED].includes(task.status) ?
@@ -27,9 +25,9 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
                     <Menu.Item name='Table' active={activeItem === 'Table'} onClick={handleMenuItemClick}/>
 
                     {activeGroup === 'Centralities' ?
-
                         <Menu.Item name='Chart' active={activeItem === 'Chart'} onClick={handleMenuItemClick}/>
-                        : null}
+                        : null
+                    }
 
                     {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                         <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
@@ -43,7 +41,6 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
                         <Image src='images/Camera2.png'/>
                     </Menu.Item>
                 </React.Fragment> : null}
-
         </div>
 
         <div style={{
