@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Container, Divider, Icon, Loader, Message, Segment} from "semantic-ui-react"
 
 import './App.css'
@@ -13,15 +13,15 @@ import {ConnectModal} from './components/ConnectModal';
 import {onNeo4jVersion} from "./services/stores/neoStore"
 import {loadMetadata, loadVersions} from "./services/metadata"
 import {
-  setDatabases,
-  setLabels,
-  setNodePropertyKeys,
-  setPropertyKeys,
-  setRelationshipTypes,
-  setVersions
+    setDatabases,
+    setLabels,
+    setNodePropertyKeys,
+    setPropertyKeys,
+    setRelationshipTypes,
+    setVersions
 } from "./ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
-import {initializeConnection, initializeWebConnection, tryConnect} from "./services/connections"
+import {initializeWebConnection, tryConnect} from "./services/connections"
 import {sendMetrics} from "./components/metrics/sendMetrics";
 import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
 import {addDatabase, initLabel} from "./ducks/settings";
@@ -34,7 +34,6 @@ const CHECKING_GDS_PLUGIN = "gds";
 const CHECKING_APOC_PLUGIN = "apoc";
 
 const onConnected = (props) => {
-    console.log("onConnected", props)
     checkGraphAlgorithmsInstalled().then((gdsInstalled) => {
         checkApocInstalled().then(apocInstalled => {
             if (apocInstalled && gdsInstalled) {
@@ -67,6 +66,44 @@ const onConnected = (props) => {
     });
 }
 
+const LoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed}) => {
+    const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
+
+    const failedCurrentStep = () => {
+        setCurrentStepFailed(true)
+    }
+
+    const gdsInstalled = () => {
+        setCurrentStep(CHECKING_APOC_PLUGIN)
+        setCurrentStepFailed(false)
+
+    }
+
+    const apocInstalled = () => {
+        setCurrentStep(ALL_DONE)
+        setCurrentStepFailed(false)
+    }
+
+    switch (currentStep) {
+        case CONNECTING_TO_DATABASE:
+            return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep}
+                                         setConnected={setConnected} setDisconnected={setDisconnected}/>
+        case CHECKING_GDS_PLUGIN:
+            return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
+                                                  gdsInstalled={gdsInstalled}>{placeholder}</CheckGraphAlgorithmsInstalled>;
+        case CHECKING_APOC_PLUGIN:
+            return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep}
+                                       apocInstalled={apocInstalled}>{placeholder}</CheckAPOCInstalled>;
+        case ALL_DONE:
+            return <div style={{padding: "20px"}}>
+                <Message color="grey" attached header="Neuler ready to launch"
+                         content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
+            </div>
+        default:
+            return <Message>Unknown State</Message>;
+    }
+}
+
 const steps = [
     CONNECTING_TO_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
 ]
@@ -93,41 +130,6 @@ const NewApp = (props) => {
 
     }, [props.connectionInfo.status])
 
-
-    const renderExtra = (connectionStatus) => {
-        const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
-        switch (currentStep) {
-            case CONNECTING_TO_DATABASE:
-                return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep} setConnected={setConnected} setDisconnected={setDisconnected} />
-            case CHECKING_GDS_PLUGIN:
-                return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep} gdsInstalled={gdsInstalled}>{placeholder}</CheckGraphAlgorithmsInstalled>;
-            case CHECKING_APOC_PLUGIN:
-                return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep} apocInstalled={apocInstalled}>{placeholder}</CheckAPOCInstalled>;
-            case ALL_DONE:
-                return <div style={{padding: "20px"}}>
-                    <Message color="grey" attached header="Neuler ready to launch"
-                             content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
-                </div>
-            default:
-                return <Message>Unknown State</Message>;
-        }
-    }
-
-    const failedCurrentStep =(library) => {
-        setCurrentStepFailed(true)
-    }
-
-    const gdsInstalled = () => {
-        setCurrentStep(CHECKING_APOC_PLUGIN)
-        setCurrentStepFailed(false)
-
-    }
-
-    const apocInstalled =() => {
-        setCurrentStep(ALL_DONE)
-        setCurrentStepFailed(false)
-    }
-
     if(currentStep === ALL_DONE) {
         if(showNeuler) {
             return <NEuler key="app" {...props} />;
@@ -137,8 +139,6 @@ const NewApp = (props) => {
             }, 1500);
         }
     }
-
-    const extra = renderExtra(connectionInfo.status)
 
     return <Container fluid style={{display: 'flex'}}>
         <div style={{width: '100%'}}>
@@ -163,7 +163,7 @@ const NewApp = (props) => {
                 </div>
 
                 <div style={{textAlign: "center"}}>
-                    {extra}
+                    <LoadingArea connectionStatus={connectionInfo.status} currentStep={currentStep}  setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
                 </div>
 
             </Segment>
