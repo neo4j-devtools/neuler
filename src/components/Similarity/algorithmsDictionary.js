@@ -50,7 +50,7 @@ const algorithms = {
     service: runAlgorithm,
     ResultView: SimilarityResult,
     parameters: {
-      persist: false,
+      persist: true,
       writeProperty: "score",
       writeRelationshipType: "SIMILAR_JACCARD",
       similarityCutoff: 0.1,

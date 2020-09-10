@@ -3,7 +3,7 @@ import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
 import {Parameters} from "./Parameters";
 import {StorePropertyAndRelationshipType} from "../Form/StorePropertyAndRelationshipType";
 
-const AlgoForm = ({readOnly, onChange, itemLabel, categoryLabel, labelOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
+const AlgoForm = ({readOnly, onChange, children, itemLabel, categoryLabel, labelOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
 
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
@@ -20,7 +20,7 @@ const AlgoForm = ({readOnly, onChange, itemLabel, categoryLabel, labelOptions, r
             <StorePropertyAndRelationshipType persist={persist} onChange={onChange}
                                               writeProperty={writeProperty} readOnly={readOnly}
                                               writeRelationshipType={writeRelationshipType}
-            />
+            >{children}</StorePropertyAndRelationshipType>
 
         </Form>
     )

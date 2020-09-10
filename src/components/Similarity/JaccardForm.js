@@ -4,7 +4,7 @@ import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {StorePropertyAndRelationshipType} from "../Form/StorePropertyAndRelationshipType";
 import {Parameters} from "./Parameters";
 
-const AlgoForm = ({onChange, readOnly, relationshipType, label, propertyKeyOptions, labelOptions, relationshipOrientationOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
+const AlgoForm = ({onChange, readOnly, relationshipType, label, children, propertyKeyOptions, labelOptions, relationshipOrientationOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -22,7 +22,7 @@ const AlgoForm = ({onChange, readOnly, relationshipType, label, propertyKeyOptio
             <StorePropertyAndRelationshipType persist={persist} onChange={onChange}
                                               writeProperty={writeProperty}
                                               writeRelationshipType={writeRelationshipType} readOnly={readOnly}
-            />
+            >{children}</StorePropertyAndRelationshipType>
         </Form>
     )
 }

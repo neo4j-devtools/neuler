@@ -2,7 +2,7 @@ import React from 'react'
 import {Form} from "semantic-ui-react"
 import WeightedSimilarityForm from "./WeightedSimilarityForm";
 
-const AlgoForm = ({onChange, readOnly, labelOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
+const AlgoForm = ({children, onChange, readOnly, labelOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
 
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
@@ -11,7 +11,9 @@ const AlgoForm = ({onChange, readOnly, labelOptions, relationshipTypeOptions, pr
                                     labelOptions={labelOptions} writeRelationshipType={writeRelationshipType}
                                     similarityCutoff={similarityCutoff}
                                     degreeCutoff={degreeCutoff} propertyKeyOptions={propertyKeyOptions}
-                                    relationshipTypeOptions={relationshipTypeOptions}/>
+                                    relationshipTypeOptions={relationshipTypeOptions}>
+                {children}
+            </WeightedSimilarityForm>
 
         </Form>
     )

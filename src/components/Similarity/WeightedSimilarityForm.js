@@ -3,19 +3,24 @@ import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
 import {StorePropertyAndRelationshipType} from "../Form/StorePropertyAndRelationshipType";
 import {Parameters} from "./Parameters";
 
-const AlgoForm = ({readOnly, onChange, direction, itemLabel, categoryLabel,  persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions, propertyKeyOptions}) => {
+const AlgoForm = ({
+                      children, readOnly, onChange, direction, itemLabel, categoryLabel, persist, writeProperty, weightProperty,
+                      writeRelationshipType, similarityCutoff, degreeCutoff, labelOptions, relationshipTypeOptions, propertyKeyOptions
+                  }) => {
     return <React.Fragment>
         <SimilarityGraph
-            onChange={onChange} itemLabel={itemLabel} categoryLabel={categoryLabel} relationshipTypeOptions={relationshipTypeOptions} weightProperty={weightProperty}
+            onChange={onChange} itemLabel={itemLabel} categoryLabel={categoryLabel}
+            relationshipTypeOptions={relationshipTypeOptions} weightProperty={weightProperty}
             propertyKeyOptions={propertyKeyOptions} labelOptions={labelOptions} readOnly={readOnly}
         />
 
-        <Parameters onChange={onChange} similarityCutoff={similarityCutoff} degreeCutoff={degreeCutoff} readOnly={readOnly}/>
+        <Parameters onChange={onChange} similarityCutoff={similarityCutoff} degreeCutoff={degreeCutoff}
+                    readOnly={readOnly}/>
 
         <StorePropertyAndRelationshipType persist={persist} onChange={onChange}
                                           writeProperty={writeProperty} readOnly={readOnly}
                                           writeRelationshipType={writeRelationshipType}
-        />
+        >{children}</StorePropertyAndRelationshipType>
 
     </React.Fragment>
 }

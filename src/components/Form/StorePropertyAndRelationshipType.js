@@ -1,7 +1,7 @@
 import React from 'react'
-import {Checkbox, Form, Input, Label, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Form, Input, Label, Segment} from "semantic-ui-react";
 
-export const StorePropertyAndRelationshipType = ({persist, onChange, writeProperty, writeRelationshipType, readOnly}) => {
+export const StorePropertyAndRelationshipType = ({persist, onChange, writeProperty, writeRelationshipType, readOnly, children}) => {
     const [open, setOpen] = React.useState(true);
     const style = {display: open ? "" : "none"}
 
@@ -36,6 +36,8 @@ export const StorePropertyAndRelationshipType = ({persist, onChange, writeProper
                     </Form.Field>
                     : null
             }
+            <Divider />
+            {children}
         </Form>
     </Segment>
 }
