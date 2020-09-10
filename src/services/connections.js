@@ -1,7 +1,7 @@
 import {subscribeToDatabaseCredentialsForActiveGraph} from 'graph-app-kit/components/GraphAppBase'
 import {onDisconnected, onNewConnection, runCypherDefaultDatabase} from "./stores/neoStore"
 
-export const initializeConnection = (setConnected, setDisconnected) => {
+export const initializeDesktopConnection = (setConnected, setDisconnected) => {
     if (window.neo4jDesktopApi) {
         subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
             (credentials, activeProject, activeGraph) => {
@@ -14,17 +14,6 @@ export const initializeConnection = (setConnected, setDisconnected) => {
             }
         )
         window.neo4jDesktopApi.showMenuOnRightClick && window.neo4jDesktopApi.showMenuOnRightClick(false)
-    } else {
-        const credentials = {
-            username: 'neo4j',
-            password: 'neo4j'
-        }
-
-        tryConnect(credentials)
-            .then(() => setConnected(credentials))
-            .catch((error) => {
-                console.log(error)
-            })
     }
 }
 

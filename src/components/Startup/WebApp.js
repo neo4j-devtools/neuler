@@ -1,9 +1,9 @@
 import React from 'react'
 import {Container, Divider, Segment} from "semantic-ui-react"
 
-import './App.css'
-import NEuler from "./components/NEuler"
-import {selectAlgorithm} from "./ducks/algorithms"
+import '../../App.css'
+import NEuler from "../NEuler"
+import {selectAlgorithm} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {
     setDatabases,
@@ -12,19 +12,19 @@ import {
     setPropertyKeys,
     setRelationshipTypes,
     setVersions
-} from "./ducks/metadata"
-import {CONNECTED, setConnected, setDisconnected} from "./ducks/connection"
-import {initializeWebConnection} from "./services/connections"
-import {addDatabase, initLabel} from "./ducks/settings";
-import {LoadingArea} from "./components/Startup/LoadingArea";
-import {LoadingIcon} from "./components/Startup/LoadingIcon";
+} from "../../ducks/metadata"
+import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
+import {initializeWebConnection} from "../../services/connections"
+import {addDatabase, initLabel} from "../../ducks/settings";
+import {LoadingArea} from "./LoadingArea";
+import {LoadingIcon} from "./LoadingIcon";
 import {
     ALL_DONE,
     CHECKING_APOC_PLUGIN,
     CHECKING_GDS_PLUGIN,
     CONNECTING_TO_DATABASE,
     onConnected
-} from "./components/Startup/startup";
+} from "./startup";
 
 const NewApp = (props) => {
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
@@ -39,7 +39,6 @@ const NewApp = (props) => {
     }, [])
 
     React.useEffect(() => {
-        console.log("props.connectionInfo", props.connectionInfo)
         if (props.connectionInfo.status === CONNECTED) {
             setCurrentStep(CHECKING_GDS_PLUGIN)
             setCurrentStepFailed(false)
@@ -67,23 +66,26 @@ const NewApp = (props) => {
                 <Divider/>
                 <div style={{textAlign: "center", paddingTop: "10px", display: "flex", justifyContent: "center"}}>
                     <div className="loading">
-                        <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep} currentStepFailed={currentStepFailed} />
+                        <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
+                                     currentStepFailed={currentStepFailed}/>
                         <p>Connecting to database</p>
                     </div>
                     <div className="loading">
-                        <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep} currentStepFailed={currentStepFailed} />
+                        <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep}
+                                     currentStepFailed={currentStepFailed}/>
                         <p>Checking GDS plugin</p>
                     </div>
                     <div className="loading">
-                        <LoadingIcon step={CHECKING_APOC_PLUGIN} currentStep={currentStep} currentStepFailed={currentStepFailed} />
+                        <LoadingIcon step={CHECKING_APOC_PLUGIN} currentStep={currentStep}
+                                     currentStepFailed={currentStepFailed}/>
                         <p>Checking APOC plugin</p>
                     </div>
                 </div>
 
                 <div style={{textAlign: "center"}}>
-                    <LoadingArea
-                    setDisconnected={setDisconnected} setConnected={setConnected}
-                        connectionStatus={connectionInfo.status} currentStep={currentStep}  setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
+                    <LoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
+                                 connectionStatus={connectionInfo.status} currentStep={currentStep}
+                                 setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>
                 </div>
 
             </Segment>

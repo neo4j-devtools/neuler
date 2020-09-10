@@ -1,17 +1,17 @@
 import React, {Component} from 'react'
 import {Container, Divider, Icon, Loader, Message, Segment} from "semantic-ui-react"
 
-import './App.css'
-import CheckGraphAlgorithmsInstalled from "./components/CheckGraphAlgorithmsInstalled"
-import CheckAPOCInstalled from "./components/CheckAPOCInstalled"
-import NEuler from "./components/NEuler"
-import {selectAlgorithm} from "./ducks/algorithms"
+import '../../App.css'
+import CheckGraphAlgorithmsInstalled from "../CheckGraphAlgorithmsInstalled"
+import CheckAPOCInstalled from "../CheckAPOCInstalled"
+import NEuler from "../NEuler"
+import {selectAlgorithm} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 
-import {ConnectModal} from './components/ConnectModal';
+import {ConnectModal} from '../ConnectModal';
 
-import {onNeo4jVersion} from "./services/stores/neoStore"
-import {loadMetadata, loadVersions} from "./services/metadata"
+import {onNeo4jVersion} from "../../services/stores/neoStore"
+import {loadMetadata, loadVersions} from "../../services/metadata"
 import {
   setDatabases,
   setLabels,
@@ -19,13 +19,13 @@ import {
   setPropertyKeys,
   setRelationshipTypes,
   setVersions
-} from "./ducks/metadata"
-import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
-import {initializeConnection, tryConnect} from "./services/connections"
-import {sendMetrics} from "./components/metrics/sendMetrics";
-import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
-import {addDatabase, initLabel} from "./ducks/settings";
-import {selectCaption, selectRandomColor} from "./components/NodeLabel";
+} from "../../ducks/metadata"
+import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "../../ducks/connection"
+import {initializeDesktopConnection, tryConnect} from "../../services/connections"
+import {sendMetrics} from "../metrics/sendMetrics";
+import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "../../services/installation";
+import {addDatabase, initLabel} from "../../ducks/settings";
+import {selectCaption, selectRandomColor} from "../NodeLabel";
 
 
 const ALL_DONE = "all-done";
@@ -49,7 +49,7 @@ class App extends Component {
 
     const { setConnected, setDisconnected } = this.props
 
-    initializeConnection(setConnected, setDisconnected, (error) => this.setState({errorMsg: error}))
+    initializeDesktopConnection(setConnected, setDisconnected, (error) => this.setState({errorMsg: error}))
   }
 
   componentDidMount() {

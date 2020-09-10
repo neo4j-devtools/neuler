@@ -1,5 +1,4 @@
 import {Loader, Message} from "semantic-ui-react";
-import {setConnected, setDisconnected} from "../../ducks/connection";
 import CheckGraphAlgorithmsInstalled from "../CheckGraphAlgorithmsInstalled";
 import CheckAPOCInstalled from "../CheckAPOCInstalled";
 import React from "react";
@@ -16,7 +15,6 @@ export const LoadingArea = ({connectionStatus, currentStep, setCurrentStep, setC
     const gdsInstalled = () => {
         setCurrentStep(CHECKING_APOC_PLUGIN)
         setCurrentStepFailed(false)
-
     }
 
     const apocInstalled = () => {
@@ -30,10 +28,14 @@ export const LoadingArea = ({connectionStatus, currentStep, setCurrentStep, setC
                                          setConnected={setConnected} setDisconnected={setDisconnected}/>
         case CHECKING_GDS_PLUGIN:
             return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
-                                                  gdsInstalled={gdsInstalled}>{placeholder}</CheckGraphAlgorithmsInstalled>;
+                                                  gdsInstalled={gdsInstalled}>
+                {placeholder}
+            </CheckGraphAlgorithmsInstalled>;
         case CHECKING_APOC_PLUGIN:
             return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep}
-                                       apocInstalled={apocInstalled}>{placeholder}</CheckAPOCInstalled>;
+                                       apocInstalled={apocInstalled}>
+                {placeholder}
+            </CheckAPOCInstalled>;
         case ALL_DONE:
             return <div style={{padding: "20px"}}>
                 <Message color="grey" attached header="Neuler ready to launch"
