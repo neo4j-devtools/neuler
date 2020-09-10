@@ -127,9 +127,9 @@ const AlgoForm = (props) => {
 
             {task.status !== ADDED && task.completed &&
             <Button.Group>
-                <Button color='green' onClick={onRunAlgo}>Re-run Algorithm</Button>
+                <Button title="Run the algorithm again with the same parameters" color='green' onClick={onRunAlgo}>Re-run Algorithm</Button>
                 <Button.Or/>
-                <Button color='blue' onClick={onCopyAlgo}>Make a copy</Button>
+                <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Make a copy</Button>
             </Button.Group>
             }
 
