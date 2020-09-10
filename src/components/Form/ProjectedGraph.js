@@ -27,7 +27,7 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
             {relationshipType ?
                 <Form.Field className={readOnly ? "disabled" : null}>
                     <label>Relationship Orientation</label>
-                    <Dropdown disabled={readOnly} placeholder='RelationshipOrientation' defaultValue={direction} fluid
+                    <Dropdown disabled={readOnly} placeholder='RelationshipOrientation' value={direction} fluid
                               search selection
                               options={relationshipOrientationOptions}
                               onChange={(evt, data) => onChange("direction", data.value)}/>
@@ -36,7 +36,7 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
             {showWeightProperty && relationshipType ?
                 <Form.Field inline className={readOnly ? "disabled" : null}>
                     <label style={{'width': '8em'}}>Weight Property</label>
-                    <Dropdown disabled={readOnly} placeholder='Weight Property' defaultValue={weightProperty} fluid
+                    <Dropdown disabled={readOnly} placeholder='Weight Property' value={weightProperty} fluid
                               search selection
                               options={propertyKeyOptions}
                               onChange={(evt, data) => onChange("weightProperty", data.value)}/>

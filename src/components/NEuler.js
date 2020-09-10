@@ -60,7 +60,7 @@ class NEuler extends Component {
     const page = activeAlgorithm ? `${NEULER_VERSION}/${activeGroup}/${activeAlgorithm}` : `${NEULER_VERSION}/${activeGroup}`
 
     return (
-      <Container fluid style={{ display: 'flex' }}>
+      <Container fluid style={{ display: 'flex', background: "#fff" }}>
         <AlgorithmsGroupMenu/>
         <div style={{width: '100%'}}>
           <Segment basic inverted vertical={false}

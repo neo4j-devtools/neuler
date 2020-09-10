@@ -6,11 +6,12 @@ import {PersistGate} from 'redux-persist/integration/react'
 import {Dimmer, Loader} from 'semantic-ui-react'
 
 import './index.css';
-import App from './App';
+import DesktopApp from './DesktopApp';
 import * as serviceWorker from './serviceWorker';
 import {createStore} from "redux"
 import {Provider} from 'react-redux'
 import rootReducer from './ducks'
+import WebApp from "./WebApp";
 
 // Import apollo client nethods from services
 
@@ -32,10 +33,14 @@ const LoaderComponent = <Dimmer active>
   <Loader size='massive'>Connecting</Loader>
 </Dimmer>
 
+const isNeo4jDesktop = !!window.neo4jDesktopApi
+
+const app = isNeo4jDesktop ? <DesktopApp /> : <WebApp />
+
 ReactDOM.render(
   <Provider store={store}>
     <PersistGate loading={LoaderComponent} persistor={persistor}>
-        <App/>
+        {app}
     </PersistGate>
   </Provider>
 

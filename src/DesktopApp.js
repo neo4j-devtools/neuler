@@ -137,26 +137,7 @@ class App extends Component {
         switch (connectionStatus) {
           case INITIAL:
           case DISCONNECTED:
-            if (!!window.neo4jDesktopApi) {
               return tryingToConnect
-            } else {
-              return <ConnectModal
-                  key="modal"
-                  errorMsg={this.state.errorMsg}
-                  onSubmit={(username, password) => {
-                    const credentials = {username, password}
-                    tryConnect(credentials)
-                        .then(() => {
-                          this.setState({
-                            currentStep: CHECKING_GDS_PLUGIN
-                          })
-                          setConnected(credentials)
-                        })
-                        .catch(setDisconnected)
-                  }}
-                  show={true}
-              />
-            }
           case CONNECTING:
             return tryingToConnect
           default:

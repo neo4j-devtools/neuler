@@ -2,31 +2,47 @@ import {subscribeToDatabaseCredentialsForActiveGraph} from 'graph-app-kit/compon
 import {onDisconnected, onNewConnection, runCypherDefaultDatabase} from "./stores/neoStore"
 
 export const initializeConnection = (setConnected, setDisconnected) => {
-  if (window.neo4jDesktopApi) {
-    subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
-      (credentials, activeProject, activeGraph) => {
-        onNewConnection(credentials)
-        setConnected(credentials)
-      },
-      () => {
-        setDisconnected()
-        onDisconnected()
-      }
-    )
-    window.neo4jDesktopApi.showMenuOnRightClick && window.neo4jDesktopApi.showMenuOnRightClick(false)
-  } else {
+    if (window.neo4jDesktopApi) {
+        subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
+            (credentials, activeProject, activeGraph) => {
+                onNewConnection(credentials)
+                setConnected(credentials)
+            },
+            () => {
+                setDisconnected()
+                onDisconnected()
+            }
+        )
+        window.neo4jDesktopApi.showMenuOnRightClick && window.neo4jDesktopApi.showMenuOnRightClick(false)
+    } else {
+        const credentials = {
+            username: 'neo4j',
+            password: 'neo4j'
+        }
+
+        tryConnect(credentials)
+            .then(() => setConnected(credentials))
+            .catch((error) => {
+                console.log(error)
+            })
+    }
+}
+
+export const initializeWebConnection = (setConnected, setDisconnected, onError) => {
     const credentials = {
-      username: 'neo4j',
-      password: 'neo4j'
+        username: 'neo4j',
+        password: 'neo4j'
     }
 
     tryConnect(credentials)
-      .then(() => setConnected(credentials))
-      .catch((error) => {console.log(error)})
-  }
+        .then(() => setConnected(credentials))
+        .catch((error) => {
+            onError(error)
+        })
+
 }
 
 export const tryConnect = credentials => {
-  onNewConnection(credentials)
-  return runCypherDefaultDatabase("RETURN 1")
+    onNewConnection(credentials)
+    return runCypherDefaultDatabase("RETURN 1")
 }
