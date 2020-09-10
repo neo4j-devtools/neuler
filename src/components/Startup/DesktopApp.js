@@ -21,17 +21,89 @@ import {
   setVersions
 } from "../../ducks/metadata"
 import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "../../ducks/connection"
-import {initializeDesktopConnection, tryConnect} from "../../services/connections"
+import {initializeDesktopConnection, initializeWebConnection, tryConnect} from "../../services/connections"
 import {sendMetrics} from "../metrics/sendMetrics";
 import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "../../services/installation";
 import {addDatabase, initLabel} from "../../ducks/settings";
 import {selectCaption, selectRandomColor} from "../NodeLabel";
+import {onConnected} from "./startup";
+import {LoadingIcon} from "./LoadingIcon";
+import {WebAppLoadingArea} from "./WebAppLoadingArea";
+import {DesktopAppLoadingArea} from "./DesktopAppLoadingArea";
 
 
 const ALL_DONE = "all-done";
 const CONNECTING_TO_DATABASE = "database";
 const CHECKING_GDS_PLUGIN = "gds";
 const CHECKING_APOC_PLUGIN = "apoc";
+
+const NewApp = (props) => {
+  const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
+  const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
+  const [showNeuler, setShowNeuler] = React.useState(false)
+  const { setConnected, setDisconnected, connectionInfo } = props
+
+  React.useEffect(() => {
+    initializeDesktopConnection(setConnected, setDisconnected, (error) => {
+      setCurrentStepFailed(true)
+    })
+  }, [])
+
+  React.useEffect(() => {
+    if (props.connectionInfo.status === CONNECTED) {
+      setCurrentStep(CHECKING_GDS_PLUGIN)
+      setCurrentStepFailed(false)
+      onConnected(props)
+    }
+
+  }, [props.connectionInfo.status])
+
+  if(currentStep === ALL_DONE) {
+    if(showNeuler) {
+      return <NEuler key="app" {...props} />;
+    } else {
+      setTimeout(function () {
+        setShowNeuler(true)
+      }, 1500);
+    }
+  }
+
+  return <Container fluid style={{display: 'flex'}}>
+    <div style={{width: '100%'}}>
+      <Segment basic inverted vertical={false} style={{height: '100vh'}}>
+        <div style={{textAlign: "center"}}>
+          <h1 className="loading">Launching NEuler - The Graph Data Science Playground</h1>
+        </div>
+        <Divider/>
+        <div style={{textAlign: "center", paddingTop: "10px", display: "flex", justifyContent: "center"}}>
+          <div className="loading">
+            <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
+                         currentStepFailed={currentStepFailed}/>
+            <p>Connecting to database</p>
+          </div>
+          <div className="loading">
+            <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep}
+                         currentStepFailed={currentStepFailed}/>
+            <p>Checking GDS plugin</p>
+          </div>
+          <div className="loading">
+            <LoadingIcon step={CHECKING_APOC_PLUGIN} currentStep={currentStep}
+                         currentStepFailed={currentStepFailed}/>
+            <p>Checking APOC plugin</p>
+          </div>
+        </div>
+
+        <div style={{textAlign: "center"}}>
+          <DesktopAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
+                             connectionStatus={connectionInfo.status} currentStep={currentStep}
+                             setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>
+        </div>
+
+      </Segment>
+    </div>
+  </Container>
+}
+
 
 class App extends Component {
   steps = [
@@ -70,36 +142,7 @@ class App extends Component {
   }
 
   onConnected() {
-    checkGraphAlgorithmsInstalled().then((gdsInstalled) => {
-      checkApocInstalled().then(apocInstalled => {
-        if (apocInstalled && gdsInstalled) {
-          loadVersions().then(versions => {
-            sendMetrics("neuler-connected", true, versions)
-
-            this.props.setGds(versions)
-            onNeo4jVersion(versions.neo4jVersion)
-            loadMetadata(versions.neo4jVersion).then(metadata => {
-              this.props.setLabels(metadata.labels)
-              this.props.setRelationshipTypes(metadata.relationships)
-              this.props.setPropertyKeys(metadata.propertyKeys)
-              this.props.setNodePropertyKeys(metadata.nodePropertyKeys)
-              this.props.setDatabases(metadata.databases)
-
-              metadata.databases.forEach(database => {
-                this.props.addDatabase(database.name)
-              })
-
-              metadata.labels.forEach(label => {
-                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
-              })
-
-            })
-          });
-        } else {
-          sendMetrics("neuler", "neuler-connected-incomplete", {gdsInstalled, apocInstalled})
-        }
-      })
-    });
+    onConnected(this.props)
   }
 
   renderIcon(step) {

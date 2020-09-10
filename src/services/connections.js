@@ -1,7 +1,7 @@
 import {subscribeToDatabaseCredentialsForActiveGraph} from 'graph-app-kit/components/GraphAppBase'
 import {onDisconnected, onNewConnection, runCypherDefaultDatabase} from "./stores/neoStore"
 
-export const initializeDesktopConnection = (setConnected, setDisconnected) => {
+export const initializeDesktopConnection = (setConnected, setDisconnected, onError) => {
     if (window.neo4jDesktopApi) {
         subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
             (credentials, activeProject, activeGraph) => {

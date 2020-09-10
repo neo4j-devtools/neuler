@@ -16,7 +16,7 @@ import {
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
 import {initializeWebConnection} from "../../services/connections"
 import {addDatabase, initLabel} from "../../ducks/settings";
-import {LoadingArea} from "./LoadingArea";
+import {WebAppLoadingArea} from "./WebAppLoadingArea";
 import {LoadingIcon} from "./LoadingIcon";
 import {
     ALL_DONE,
@@ -83,9 +83,9 @@ const NewApp = (props) => {
                 </div>
 
                 <div style={{textAlign: "center"}}>
-                    <LoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
-                                 connectionStatus={connectionInfo.status} currentStep={currentStep}
-                                 setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>
+                    <WebAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
+                                       connectionStatus={connectionInfo.status} currentStep={currentStep}
+                                       setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>
                 </div>
 
             </Segment>

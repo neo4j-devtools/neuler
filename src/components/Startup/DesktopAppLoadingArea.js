@@ -3,9 +3,8 @@ import CheckGraphAlgorithmsInstalled from "../CheckGraphAlgorithmsInstalled";
 import CheckAPOCInstalled from "../CheckAPOCInstalled";
 import React from "react";
 import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE} from "./startup";
-import {ConnectingToDatabase} from "./ConnectingToDatabase";
 
-export const LoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected}) => {
+export const DesktopAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected}) => {
     const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
 
     const failedCurrentStep = () => {
@@ -44,4 +43,12 @@ export const LoadingArea = ({connectionStatus, currentStep, setCurrentStep, setC
         default:
             return <Message>Unknown State</Message>;
     }
+}
+
+const ConnectingToDatabase = () => {
+    return <div style={{padding: "20px"}}>
+        <Message color="grey" attached header="Trying to connect"
+                 content="Trying to connect to active database. This should only take a few seconds. If it takes longer than that, check that you have a running database."/>
+    </div>
+
 }
