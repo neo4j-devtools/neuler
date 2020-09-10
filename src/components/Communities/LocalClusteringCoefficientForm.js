@@ -33,7 +33,6 @@ export default class extends Component {
               <Form.Field inline>
                 <label style={{ 'width': '10em' }}>Store results</label>
                 <input type='checkbox' checked={persist} onChange={evt => {
-                  console.log(evt.target, evt)
                   onChange('persist', evt.target.checked)
                 }}/>
               </Form.Field>

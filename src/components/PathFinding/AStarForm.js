@@ -1,6 +1,5 @@
-import React, {Component} from 'react'
-import {Dropdown, Form, Input, Label, Popup, Segment} from "semantic-ui-react"
-import StreamOnlyForm from "./StreamOnlyForm";
+import React from 'react'
+import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 
 const AlgoForm = ({onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions, relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, propertyKeyLat, propertyKeyLon, direction, persist}) => {

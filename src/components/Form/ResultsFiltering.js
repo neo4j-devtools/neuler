@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dropdown, Form, Label, Segment} from "semantic-ui-react";
+import {Form, Label, Segment} from "semantic-ui-react";
 
 export const ResultsFiltering = ({limit, communityNodeLimit, returnsCommunities, updateCommunityNodeLimit, updateLimit}) => {
     return <Segment>

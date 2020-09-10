@@ -1,11 +1,11 @@
-import React, {Component, useEffect, useState} from 'react'
-import {Loader, Message, Segment, Header} from 'semantic-ui-react'
+import React, {useEffect, useState} from 'react'
+import {Header, Message, Segment} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
-import {ADDED, addTask, COMPLETED, completeTask, FAILED, removeTask, RUNNING, runTask} from "../ducks/tasks"
+import {ADDED, addTask, completeTask, FAILED, removeTask, runTask} from "../ducks/tasks"
 import {sendMetrics} from "./metrics/sendMetrics";
 import {FailedTopBar} from "./Results/FailedTopBar";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
@@ -146,14 +146,14 @@ const TabExampleVerticalTabular = (props) => {
     setPage(Math.min(length - 1, page + 1))
   }
 
+
   useEffect(() => {
-    setPage(0)
-  }, [props.tasks.length])
+      setPage(0)
+  }, [props.tasks.length, props.tasks.length > 0 && props.tasks[0].taskId])
 
   useEffect(() => {
     const latestTask = props.tasks[0]
     if(latestTask && latestTask.status === ADDED) {
-      console.log(latestTask.taskId)
       props.removeTask(latestTask.taskId)
     }
 

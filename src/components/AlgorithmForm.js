@@ -1,10 +1,11 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Button, Card, Form, Icon} from 'semantic-ui-react'
+import {Button} from 'semantic-ui-react'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultsFiltering} from "./Form/ResultsFiltering";
+import {ADDED} from "../ducks/tasks";
 
 const Algorithms = (props) => {
   const {task} = props
@@ -78,11 +79,6 @@ const Algorithms = (props) => {
       marginRight: '0'
     }
 
-    const contentStyle = {
-      display: 'flex',
-      padding: '0 0 0 1em'
-    }
-
   const updateLimit = (evt) => {
     onChangeParam("limit", parseInt(evt.target.value))
     props.updateLimit(parseInt(evt.target.value))
@@ -93,7 +89,6 @@ const Algorithms = (props) => {
     props.updateCommunityNodeLimit(parseInt(evt.target.value))
   }
 
-    console.log("parameters", parameters, "props.task.formParameters", props.task.formParameters)
     return (
         <div style={containerStyle}>
               <div style={{marginBottom: '1em'}}>
@@ -101,6 +96,7 @@ const Algorithms = (props) => {
                           relationshipTypeOptions={relationshipTypeOptions}
                           relationshipOrientationOptions={relationshipOrientationOptions}
                           propertyKeyOptions={propertyKeyOptions}
+                          readOnly={task.status !== ADDED}
                           onChange={onChangeParam.bind(this)}/>
                 <ResultsFiltering limit={parameters.limit}
                                   communityNodeLimit={parameters.communityNodeLimit}
@@ -109,11 +105,8 @@ const Algorithms = (props) => {
                                   updateCommunityNodeLimit={updateCommunityNodeLimit} />
               </div>
               <div className='ui two buttons'>
-                <Button basic color='green' onClick={onRunAlgo.bind(this)}>
+                <Button color='green' onClick={onRunAlgo.bind(this)}>
                   Run
-                </Button>
-                <Button basic color='red'>
-                  Reset
                 </Button>
               </div>
 

@@ -1,6 +1,6 @@
-import React, {Component} from 'react'
-import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
-import {ProjectedGraph, ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
+import React from 'react'
+import {Form, Label, Segment} from "semantic-ui-react"
+import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
 const PageRankForm = (props) => {

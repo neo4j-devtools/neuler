@@ -176,7 +176,7 @@ class App extends Component {
         </CheckAPOCInstalled>;
       case ALL_DONE:
         return <div style={{padding: "20px"}}>
-          <Message grey attached header="Neuler ready to launch" content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
+          <Message color="grey" attached header="Neuler ready to launch" content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
           </div>
       default:
         return <Message>Unknown State</Message>;
