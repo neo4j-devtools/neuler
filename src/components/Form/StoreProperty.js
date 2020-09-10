@@ -1,13 +1,13 @@
 import React from 'react'
-import {Checkbox, Form, Input, Label, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Form, Input, Label, Segment} from "semantic-ui-react";
 
-export const StoreProperty = ({persist, onChange, writeProperty, readOnly}) => {
+export const StoreProperty = ({persist, onChange, writeProperty, readOnly, children}) => {
     const [open, setOpen] = React.useState(true);
     const style = {display: open ? "" : "none"}
 
     return <Segment>
         <Label as='a' attached='top left' onClick={() => setOpen(!open)}>
-            Store Results
+            Results
         </Label>
         <Form style={style}>
             <Form.Field className={readOnly ? "disabled" : null} inline style={{display: "flex", alignItems: "center"}}>
@@ -26,6 +26,8 @@ export const StoreProperty = ({persist, onChange, writeProperty, readOnly}) => {
                     </Form.Field>
                     : null
             }
+            <Divider />
+            {children}
         </Form>
 
     </Segment>

@@ -4,7 +4,7 @@ import {Button} from 'semantic-ui-react'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
-import {ResultsFiltering} from "./Form/ResultsFiltering";
+import {ResultFilteringFields, ResultsFiltering} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
 
 const AlgoForm = (props) => {
@@ -114,13 +114,15 @@ const AlgoForm = (props) => {
                     relationshipOrientationOptions={relationshipOrientationOptions}
                     propertyKeyOptions={propertyKeyOptions}
                     readOnly={readOnly}
-                    onChange={onChangeParam.bind(this)}/>
-          <ResultsFiltering limit={parameters.limit}
-                            communityNodeLimit={parameters.communityNodeLimit}
-                            readOnly={readOnly}
-                            returnsCommunities={returnsCommunities}
-                            updateLimit={updateLimit}
-                            updateCommunityNodeLimit={updateCommunityNodeLimit}/>
+                    onChange={onChangeParam.bind(this)}>
+            <ResultFilteringFields limit={parameters.limit}
+                              communityNodeLimit={parameters.communityNodeLimit}
+                              readOnly={readOnly}
+                              returnsCommunities={returnsCommunities}
+                              updateLimit={updateLimit}
+                              updateCommunityNodeLimit={updateCommunityNodeLimit}/>
+          </AlgoForm>
+
         </div>
         <div>
             {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}

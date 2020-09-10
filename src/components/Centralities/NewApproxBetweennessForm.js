@@ -3,7 +3,7 @@ import {Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
-export default ({readOnly, onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability, samplingSize}) => {
+export default ({readOnly, onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability, samplingSize, children}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -18,7 +18,9 @@ export default ({readOnly, onChange, labelOptions, relationshipTypeOptions, rela
     return <Form size='mini' style={{marginBottom: '1em'}}>
         <ProjectedGraphWithNoWeights {...projectedGraphProps} />
         <Parameters samplingSize={samplingSize} onChange={onChange} readOnly={readOnly}/>
-        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
+        <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}>
+            {children}
+        </StoreProperty>
     </Form>
 }
 
