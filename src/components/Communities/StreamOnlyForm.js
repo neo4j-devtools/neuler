@@ -1,7 +1,7 @@
 import React from 'react'
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 
-const AlgoForm = ({onChange, relationshipType, label, direction, persist, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {
+const AlgoForm = ({onChange, readOnly, relationshipType, label, direction, persist, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {
   const projectedGraphProps = {
     label,
     labelOptions,
@@ -9,7 +9,8 @@ const AlgoForm = ({onChange, relationshipType, label, direction, persist, labelO
     direction,
     relationshipTypeOptions,
     relationshipOrientationOptions,
-    onChange
+    onChange,
+    readOnly
   }
 
   return <React.Fragment>

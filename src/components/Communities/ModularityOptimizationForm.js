@@ -1,9 +1,9 @@
 import React from 'react'
-import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
+import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
-const AlgoForm = ({onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist}) => {
+const AlgoForm = ({readOnly, onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -14,51 +14,41 @@ const AlgoForm = ({onChange, labelOptions, maxIterations, tolerance, label, rela
         propertyKeyOptions,
         weightProperty,
         defaultValue,
-        onChange
+        onChange,
+        readOnly
     }
 
     const parameterProps = {
-        propertyKeyOptions, seedProperty, maxIterations, onChange, tolerance
+        propertyKeyOptions, seedProperty, maxIterations, onChange, tolerance, readOnly
     }
 
     return (
         <Form style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters {...parameterProps} />
-            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
         </Form>
     )
 }
 
-const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, tolerance}) => {
+const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, tolerance, readOnly}) => {
     return <Segment key={propertyKeyOptions}>
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Field inline>
-            <label style={{'width': '12em'}}>Iterations</label>
-            <input
-                type='number'
-                min={1}
-                max={50}
-                step={1}
-                value={maxIterations}
-                onChange={evt => onChange('maxIterations', evt.target.value)}
-                style={{'width': '5em'}}
-            />
-        </Form.Field>
 
-        <Form.Field inline>
-            <label style={{'width': '12em'}}>Tolerance</label>
-            <input
-                value={tolerance}
-                onChange={evt => onChange('tolerance', evt.target.value)}
-                style={{'width': '7em'}}
-            />
-        </Form.Field>
-        <Form.Field inline>
+        <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Iterations</label>}
+                    control={Input} type='number' value={maxIterations}
+                    onChange={(evt, data) => onChange('maxIterations', data.value)} min={1} max={50} step={1}/>
+
+        <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Damping Factor</label>}
+                    control={Input} type='number' value={tolerance} step={0.001}
+                    onChange={(evt, data) => onChange('tolerance', data.value)}/>
+
+
+        <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Seed Property</label>
-            <Dropdown placeholder='Seed Property' defaultValue={seedProperty} fluid search selection
+            <Dropdown disabled={readOnly} placeholder='Seed Property' defaultValue={seedProperty} fluid search selection
                       options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)}/>
 
         </Form.Field>
