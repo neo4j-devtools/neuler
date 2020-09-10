@@ -1,17 +1,10 @@
 import React from 'react'
-import {Container, Divider, Icon, Loader, Message, Segment} from "semantic-ui-react"
+import {Container, Divider, Segment} from "semantic-ui-react"
 
 import './App.css'
-import CheckGraphAlgorithmsInstalled from "./components/CheckGraphAlgorithmsInstalled"
-import CheckAPOCInstalled from "./components/CheckAPOCInstalled"
 import NEuler from "./components/NEuler"
 import {selectAlgorithm} from "./ducks/algorithms"
 import {connect} from "react-redux"
-
-import {ConnectModal} from './components/ConnectModal';
-
-import {onNeo4jVersion} from "./services/stores/neoStore"
-import {loadMetadata, loadVersions} from "./services/metadata"
 import {
     setDatabases,
     setLabels,
@@ -20,93 +13,18 @@ import {
     setRelationshipTypes,
     setVersions
 } from "./ducks/metadata"
-import {CONNECTED, CONNECTING, DISCONNECTED, INITIAL, setConnected, setDisconnected} from "./ducks/connection"
-import {initializeWebConnection, tryConnect} from "./services/connections"
-import {sendMetrics} from "./components/metrics/sendMetrics";
-import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "./services/installation";
+import {CONNECTED, setConnected, setDisconnected} from "./ducks/connection"
+import {initializeWebConnection} from "./services/connections"
 import {addDatabase, initLabel} from "./ducks/settings";
-import {selectCaption, selectRandomColor} from "./components/NodeLabel";
-
-
-const ALL_DONE = "all-done";
-const CONNECTING_TO_DATABASE = "database";
-const CHECKING_GDS_PLUGIN = "gds";
-const CHECKING_APOC_PLUGIN = "apoc";
-
-const onConnected = (props) => {
-    checkGraphAlgorithmsInstalled().then((gdsInstalled) => {
-        checkApocInstalled().then(apocInstalled => {
-            if (apocInstalled && gdsInstalled) {
-                loadVersions().then(versions => {
-                    sendMetrics("neuler-connected", true, versions)
-
-                    props.setGds(versions)
-                    onNeo4jVersion(versions.neo4jVersion)
-                    loadMetadata(versions.neo4jVersion).then(metadata => {
-                        props.setLabels(metadata.labels)
-                        props.setRelationshipTypes(metadata.relationships)
-                        props.setPropertyKeys(metadata.propertyKeys)
-                        props.setNodePropertyKeys(metadata.nodePropertyKeys)
-                        props.setDatabases(metadata.databases)
-
-                        metadata.databases.forEach(database => {
-                            props.addDatabase(database.name)
-                        })
-
-                        metadata.labels.forEach(label => {
-                            props.initLabel(props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
-                        })
-
-                    })
-                });
-            } else {
-                sendMetrics("neuler", "neuler-connected-incomplete", {gdsInstalled, apocInstalled})
-            }
-        })
-    });
-}
-
-const LoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed}) => {
-    const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
-
-    const failedCurrentStep = () => {
-        setCurrentStepFailed(true)
-    }
-
-    const gdsInstalled = () => {
-        setCurrentStep(CHECKING_APOC_PLUGIN)
-        setCurrentStepFailed(false)
-
-    }
-
-    const apocInstalled = () => {
-        setCurrentStep(ALL_DONE)
-        setCurrentStepFailed(false)
-    }
-
-    switch (currentStep) {
-        case CONNECTING_TO_DATABASE:
-            return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep}
-                                         setConnected={setConnected} setDisconnected={setDisconnected}/>
-        case CHECKING_GDS_PLUGIN:
-            return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
-                                                  gdsInstalled={gdsInstalled}>{placeholder}</CheckGraphAlgorithmsInstalled>;
-        case CHECKING_APOC_PLUGIN:
-            return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep}
-                                       apocInstalled={apocInstalled}>{placeholder}</CheckAPOCInstalled>;
-        case ALL_DONE:
-            return <div style={{padding: "20px"}}>
-                <Message color="grey" attached header="Neuler ready to launch"
-                         content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
-            </div>
-        default:
-            return <Message>Unknown State</Message>;
-    }
-}
-
-const steps = [
-    CONNECTING_TO_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
-]
+import {LoadingArea} from "./components/Startup/LoadingArea";
+import {LoadingIcon} from "./components/Startup/LoadingIcon";
+import {
+    ALL_DONE,
+    CHECKING_APOC_PLUGIN,
+    CHECKING_GDS_PLUGIN,
+    CONNECTING_TO_DATABASE,
+    onConnected
+} from "./components/Startup/startup";
 
 const NewApp = (props) => {
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
@@ -163,68 +81,14 @@ const NewApp = (props) => {
                 </div>
 
                 <div style={{textAlign: "center"}}>
-                    <LoadingArea connectionStatus={connectionInfo.status} currentStep={currentStep}  setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
+                    <LoadingArea
+                    setDisconnected={setDisconnected} setConnected={setConnected}
+                        connectionStatus={connectionInfo.status} currentStep={currentStep}  setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
                 </div>
 
             </Segment>
         </div>
     </Container>
-}
-
-const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected}) => {
-    const errorMsgTemplate = "Could not get a connection! Check that you entered the correct credentials and that the database is running."
-    const [errorMessage, setErrorMessage] = React.useState(null)
-
-    const tryingToConnect = <div style={{padding: "20px"}}>
-        <Message color="grey" attached header="Trying to connect"
-                 content="Trying to connect to active database. This should only take a few seconds. If it takes longer than that, check that you have a running database."/>
-    </div>
-
-    switch (connectionStatus) {
-        case INITIAL:
-        case DISCONNECTED:
-            return <ConnectModal
-                key="modal"
-                errorMsg={errorMessage}
-                onSubmit={(username, password) => {
-                    setErrorMessage(null)
-                    const credentials = {username, password}
-                    tryConnect(credentials)
-                        .then(() => {
-                            setCurrentStep(CHECKING_GDS_PLUGIN)
-                            setConnected(credentials)
-                        })
-                        .catch(() => {
-                            setDisconnected()
-                            setErrorMessage(errorMsgTemplate)
-                        })
-                }}
-                show={true}
-            />
-
-        case CONNECTING:
-            return tryingToConnect
-        default:
-            return tryingToConnect
-    }
-
-}
-
-const LoadingIcon = ({step, currentStep, currentStepFailed}) => {
-    const currentIndex = steps.indexOf(currentStep)
-    const stepIndex = steps.indexOf(step)
-
-    if(step === currentStep) {
-        return currentStepFailed ?
-            <Icon size="big" name='close' color='red' className="loading-icon" /> :
-            <Loader active inline  className="loading-icon" size="large" />;
-    } else {
-        if(stepIndex > currentIndex) {
-            return <Icon size="big" name='circle notch' color='grey' className="loading-icon" />
-        } else {
-            return <Icon size="big" name='checkmark' color='green' className="loading-icon" />
-        }
-    }
 }
 
 const mapStateToProps = state => ({
