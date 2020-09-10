@@ -23,44 +23,33 @@ export const tabContentStyle = {
   overflowX: 'hidden'
 }
 
-class HorizontalAlgoTab extends Component {
-  constructor(props) {
-    super(props);
-    this.panelRef = React.createRef()
-  }
+const HorizontalAlgoTab = (props) => {
+  const { task, prevResult, nextResult, currentPage, totalPages } = props
 
+  const panelRef = React.createRef()
+  const [activeItem, setActiveItem] = React.useState("Configure")
 
-  state = {
-    activeItem: "Configure"
-  }
-
-  handleMenuItemClick = (e, { name }) => {
+  const handleMenuItemClick = (e, { name }) => {
     sendMetrics('neuler-click-view', name)
-    this.setState({ activeItem: name })
+    setActiveItem(name)
   }
 
-  componentDidMount() {
-    if (this.props.task.error) {
-      this.setState({ activeItem: 'Error' })
+  React.useEffect(() => {
+    if (task.status === ADDED) {
+      setActiveItem("Configure")
+    } else {
+      if (task.error) {
+        setActiveItem("Error")
+      } else {
+        setActiveItem("Table")
+      }
     }
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.task.error) {
-      this.setState({ activeItem: 'Error' })
-    } else if (this.state.activeItem === 'Error') {
-      this.setState({ activeItem: 'Table' })
-    }
-  }
-
-  render() {
-    const { task, prevResult, nextResult, currentPage, totalPages } = this.props
-    let activeItem = this.state.activeItem
+  }, [task.status])
 
     const activeGroup = task.group
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
-    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, this.props.metadata.versions.gdsVersion)
+    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
     const { description } = currentAlgorithm
 
     return (
@@ -74,17 +63,17 @@ class HorizontalAlgoTab extends Component {
         {task.completed && task.status === FAILED ? (
                 <React.Fragment>
                   <FailedTopBar task={task} activeItem={activeItem} prevResult={prevResult} nextResult={nextResult}
-                                currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+                                currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={handleMenuItemClick.bind(this)}
                   />
 
                   <Segment attached='bottom'>
                     <div style={getStyle("Configure")}>
                       <AlgorithmForm
                           task={task}
-                          limit={this.props.limit}
+                          limit={props.limit}
                           onRun={(newParameters, formParameters, persisted) => {
-                            this.props.onRunAlgo(task, newParameters, formParameters, persisted)
-                            this.handleMenuItemClick(null, {name: "Table"})
+                            props.onRunAlgo(task, newParameters, formParameters, persisted)
+                            handleMenuItemClick(null, {name: "Table"})
                           }} />
                     </div>
                     <div style={getStyle('Error')}>
@@ -102,24 +91,23 @@ class HorizontalAlgoTab extends Component {
             : <React.Fragment>
                 <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}
                                nextResult={nextResult} currentPage={currentPage} totalPages={totalPages}
-                               panelRef={this.panelRef} handleMenuItemClick={this.handleMenuItemClick.bind(this)}
+                               panelRef={panelRef} handleMenuItemClick={handleMenuItemClick.bind(this)}
                 />
-                <div ref={this.panelRef}>
+                <div ref={panelRef}>
                   <Segment attached='bottom'>
                     <div style={getStyle("Configure")}>
                       <AlgorithmForm
                           task={task}
-                          limit={this.props.limit}
+                          limit={props.limit}
                           onRun={(newParameters, formParameters, persisted) => {
-                            this.props.onRunAlgo(task, newParameters, formParameters, persisted)
-                            this.handleMenuItemClick(null, {name: "Table"})
+                            props.onRunAlgo(task, newParameters, formParameters, persisted)
                           }} />
                     </div>
 
 
                     <React.Fragment>
                     <div style={getStyle('Table')}>
-                      <TableView task={task} gdsVersion={this.props.gdsVersion}/>
+                      <TableView task={task} gdsVersion={props.gdsVersion}/>
                     </div>
 
                     <div style={getStyle('Code')}>
@@ -143,7 +131,7 @@ class HorizontalAlgoTab extends Component {
         }
       </div>
     )
-  }
+
 }
 
 const TabExampleVerticalTabular = (props) => {
