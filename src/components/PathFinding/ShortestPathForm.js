@@ -2,7 +2,7 @@ import React from 'react'
 import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 
-const AlgoForm = ({onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions, relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, direction, persist}) => {
+const AlgoForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions, relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -13,26 +13,27 @@ const AlgoForm = ({onChange, labelOptions, label, relationshipType, relationship
         propertyKeyOptions,
         weightProperty,
         defaultValue,
-        onChange
+        onChange,
+        readOnly
     }
 
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
-            <Parameters startNode={startNode} endNode={endNode} onChange={onChange} />
+            <Parameters startNode={startNode} endNode={endNode} onChange={onChange} readOnly={readOnly} />
         </Form>
     )
 
 }
 
-const Parameters = ({startNode, endNode, onChange}) => {
+const Parameters = ({startNode, endNode, onChange, readOnly}) => {
     return <Segment>
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Group inline>
+        <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Start Node</label>
-            <Form.Field inline>
+            <Form.Field >
                 <Popup size="tiny"
                        trigger={<Input basic="true" value={startNode} placeholder='Start Node'
                                        onChange={evt => onChange('startNode', evt.target.value)}/>}
@@ -41,7 +42,7 @@ const Parameters = ({startNode, endNode, onChange}) => {
             </Form.Field>
         </Form.Group>
 
-        <Form.Group inline>
+        <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>End Node</label>
             <Form.Field inline>
                 <Popup size="tiny" trigger={<Input basic="true" value={endNode} placeholder='End Node'

@@ -2,7 +2,7 @@ import React from 'react'
 import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 
-const AlgoForm = ({onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions, relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, propertyKeyLat, propertyKeyLon, direction, persist}) => {
+const AlgoForm = ({readOnly, onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions, relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, propertyKeyLat, propertyKeyLon, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -13,7 +13,8 @@ const AlgoForm = ({onChange, relationshipType, labelOptions, label, propertyKeyO
         propertyKeyOptions,
         weightProperty,
         defaultValue,
-        onChange
+        onChange,
+        readOnly
     }
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
@@ -21,17 +22,18 @@ const AlgoForm = ({onChange, relationshipType, labelOptions, label, propertyKeyO
             <Parameters onChange={onChange}
                         startNode={startNode} endNode={endNode}
                         propertyKeyLat={propertyKeyLat} propertyKeyLon={propertyKeyLon}
+                        readOnly={readOnly}
             />
         </Form>
     )
 }
 
-const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLon}) => {
+const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLon, readOnly}) => {
     return <Segment>
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Group inline>
+        <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Start Node</label>
             <Form.Field inline>
                 <Popup size="tiny"
@@ -40,7 +42,7 @@ const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLo
                        content='Populate this field with the value of any property on any node'/>
             </Form.Field>
         </Form.Group>
-        <Form.Group inline>
+        <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>End Node</label>
             <Form.Field inline>
                 <Popup size="tiny" trigger={<Input basic="true" value={endNode} placeholder='End Node'
@@ -50,7 +52,7 @@ const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLo
         </Form.Group>
 
 
-        <Form.Field inline>
+        <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Property Key Lat</label>
             <input
                 value={propertyKeyLat}
@@ -58,7 +60,7 @@ const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLo
                 style={{'width': '7em'}}
             />
         </Form.Field>
-        <Form.Field inline>
+        <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Property Key Lon</label>
             <input size='mini'
                    value={propertyKeyLon}

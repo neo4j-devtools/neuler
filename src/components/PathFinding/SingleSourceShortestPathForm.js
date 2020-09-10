@@ -2,7 +2,7 @@ import React from 'react'
 import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 
-const AlgoForm = ({onChange, relationshipType, label, relationshipOrientationOptions, propertyKeyOptions, labelOptions, relationshipTypeOptions, startNode, weightProperty, defaultValue, direction, persist}) => {
+const AlgoForm = ({onChange, readOnly, relationshipType, label, relationshipOrientationOptions, propertyKeyOptions, labelOptions, relationshipTypeOptions, startNode, weightProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -13,7 +13,8 @@ const AlgoForm = ({onChange, relationshipType, label, relationshipOrientationOpt
         propertyKeyOptions,
         weightProperty,
         defaultValue,
-        onChange
+        onChange,
+        readOnly
     }
 
     return (
@@ -21,19 +22,19 @@ const AlgoForm = ({onChange, relationshipType, label, relationshipOrientationOpt
 
             <ProjectedGraphWithWeights {...projectedGraphProps} />
 
-            <Parameters startNode={startNode} onChange={onChange}/>
+            <Parameters startNode={startNode} onChange={onChange} readOnly={readOnly}/>
 
 
         </Form>
     )
 }
 
-const Parameters = ({onChange, startNode}) => {
+const Parameters = ({onChange, startNode, readOnly}) => {
     return <Segment>
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Group inline>
+        <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Start Node</label>
             <Form.Field inline>
                 <Popup size="tiny"

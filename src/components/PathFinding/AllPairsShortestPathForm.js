@@ -2,7 +2,7 @@ import React from 'react'
 import {Form} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 
-const AlgoForm = ({onChange, labelOptions, relationshipType, label, propertyKeyOptions, relationshipOrientationOptions, relationshipTypeOptions, weightProperty, defaultValue, direction, persist}) => {
+const AlgoForm = ({onChange, readOnly, labelOptions, relationshipType, label, propertyKeyOptions, relationshipOrientationOptions, relationshipTypeOptions, weightProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -13,7 +13,8 @@ const AlgoForm = ({onChange, labelOptions, relationshipType, label, propertyKeyO
         propertyKeyOptions,
         weightProperty,
         defaultValue,
-        onChange
+        onChange,
+        readOnly
     }
 
     return (

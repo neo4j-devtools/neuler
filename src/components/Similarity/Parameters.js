@@ -1,12 +1,12 @@
 import {Form, Label, Segment} from "semantic-ui-react";
 import React from "react";
 
-export const Parameters = ({onChange, similarityCutoff, degreeCutoff}) => {
+export const Parameters = ({onChange, similarityCutoff, degreeCutoff, readOnly}) => {
     return <Segment>
         <Label as='a' attached='top left'>
             Algorithm Parameters
         </Label>
-        <Form.Field inline>
+        <Form.Field inline className={readOnly ? "disabled" : null}>
 
             <label style={{'width': '12em'}}>Similarity Cutoff</label>
             <input
@@ -15,7 +15,7 @@ export const Parameters = ({onChange, similarityCutoff, degreeCutoff}) => {
                 style={{'width': '7em'}}
             />
         </Form.Field>
-        <Form.Field inline>
+        <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Degree Cutoff</label>
             <input
                 value={degreeCutoff}
