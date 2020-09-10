@@ -7,7 +7,7 @@ import NodeLabel from "../NodeLabel";
 
 const SelectedDatabase = ({metadata, onRefresh}) => {
     return <div>
-        <Message color="white" style={{color: "#000000"}}>
+        <Message color="grey" style={{color: "#000000"}}>
             <Message.Header>
                 Database Contents
             </Message.Header>
@@ -17,7 +17,7 @@ const SelectedDatabase = ({metadata, onRefresh}) => {
                         <Table.Row>
                             <Table.Cell style={{width: "150px"}}>Node Labels</Table.Cell>
                             <Table.Cell style={{display: "flex"}}>{
-                                metadata.labels.map(value => <NodeLabel database={metadata.activeDatabase} labels={[value.label]} caption={value.label} />)
+                                metadata.labels.map(value => <NodeLabel key={value.label} database={metadata.activeDatabase} labels={[value.label]} caption={value.label} />)
                             }
                             </Table.Cell>
                         </Table.Row>

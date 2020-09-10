@@ -20,7 +20,7 @@ class ConnectForm extends Component {
         const {username, password} = this.state
         return (
             <div style={{padding: "20px"}}>
-                <Message grey attached header="Connect to the active graph"/>
+                <Message color="grey" attached header="Connect to the active graph"/>
                 <Form error={!!errorMsg} onSubmit={this.onSubmit} className='attached fluid segment'>
                     <Form.Field>
                         <Input

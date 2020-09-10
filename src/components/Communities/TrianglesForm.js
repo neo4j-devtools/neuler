@@ -1,20 +1,20 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Form} from "semantic-ui-react"
 import StreamOnlyForm from './StreamOnlyForm'
 
-export default class extends Component {
-  state = {
-    advanced: false,
-    relationshipOrientationOptions: [{ key: "Undirected", value: "Undirected", text: 'Undirected' }]
-  }
-
-  render() {
-    const { onChange, relationshipType, labelOptions, relationshipTypeOptions, direction, persist } = this.props
+const AlgoForm = ({readOnly, onChange, label, relationshipType, labelOptions, relationshipTypeOptions, direction, persist, children}) => {
+    const relationshipOrientationOptions = [{key: "Undirected", value: "Undirected", text: 'Undirected'}]
 
     return (
-      <Form size='mini' style={{ marginBottom: '1em' }}>
-        <StreamOnlyForm onChange={onChange} relationshipType={relationshipType} relationshipOrientationOptions={this.state.relationshipOrientationOptions} direction={direction} persist={persist} labelOptions={labelOptions} relationshipTypeOptions={relationshipTypeOptions}/>
-      </Form>
+        <Form size='mini' style={{marginBottom: '1em'}}>
+            <StreamOnlyForm label={label} readOnly={readOnly} onChange={onChange} relationshipType={relationshipType}
+                            relationshipOrientationOptions={relationshipOrientationOptions} direction={direction}
+                            persist={persist} labelOptions={labelOptions}
+                            relationshipTypeOptions={relationshipTypeOptions}>
+                {children}
+            </StreamOnlyForm>
+        </Form>
     )
-  }
 }
+
+export default AlgoForm

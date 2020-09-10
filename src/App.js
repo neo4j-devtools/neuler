@@ -176,7 +176,7 @@ class App extends Component {
         </CheckAPOCInstalled>;
       case ALL_DONE:
         return <div style={{padding: "20px"}}>
-          <Message grey attached header="Neuler ready to launch" content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
+          <Message color="grey" attached header="Neuler ready to launch" content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
           </div>
       default:
         return <Message>Unknown State</Message>;
@@ -226,12 +226,11 @@ class App extends Component {
 
     return <Container fluid style={{display: 'flex'}}>
       <div style={{width: '100%'}}>
-        <Segment basic inverted vertical={false}
-                 style={{height: '100vh' }}>
+        <Segment basic inverted vertical={false} style={{height: '100vh'}}>
           <div style={{textAlign: "center"}}>
             <h1 className="loading">Launching NEuler - The Graph Data Science Playground</h1>
           </div>
-          <Divider />
+          <Divider/>
           <div style={{textAlign: "center", paddingTop: "10px", display: "flex", justifyContent: "center"}}>
             <div className="loading">
               {this.renderIcon(CONNECTING_TO_DATABASE)}

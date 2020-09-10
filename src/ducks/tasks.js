@@ -2,28 +2,33 @@ const NAME = 'TASKS'
 const ADD_TASK = `${NAME}/ADD_TASK`
 const RUN_TASK = `${NAME}/RUN_TASK`
 const COMPLETE_TASK = `${NAME}/COMPLETE_TASK`
+const REMOVE_TASK = `${NAME}/REMOVE_TASK`
 
 export const ADDED = 'ADDED'
 export const RUNNING = 'RUNNING'
 export const COMPLETED = 'COMPLETED'
 export const FAILED = 'FAILED'
 
-export const addTask = ({taskId, group, algorithm, startTime, parameters, query, persisted, database}) => ({
+export const addTask = ({taskId, group, algorithm, startTime, parameters, formParameters, query, persisted, database}) => ({
   type: ADD_TASK,
   taskId,
   group,
   algorithm,
   startTime,
   parameters,
+  formParameters,
   persisted,
   database
 })
 
-export const runTask = ({taskId, query, namedGraphQueries}) => ({
+export const runTask = ({taskId, query, namedGraphQueries, parameters, formParameters, persisted}) => ({
   type: RUN_TASK,
   taskId,
   query,
-  namedGraphQueries
+  namedGraphQueries,
+  parameters,
+  formParameters,
+  persisted
 })
 
 export const completeTask = ({taskId, result, error}) => ({
@@ -31,6 +36,11 @@ export const completeTask = ({taskId, result, error}) => ({
   taskId,
   result,
   error
+})
+
+export const removeTask = ({taskId}) => ({
+  type: REMOVE_TASK,
+  taskId
 })
 
 export default (state = [], action) => {
@@ -44,31 +54,37 @@ export default (state = [], action) => {
         startTime: action.startTime,
         result: action.result,
         parameters: action.parameters,
+        formParameters: action.formParameters,
         status: ADDED,
         completed: false,
         persisted: action.persisted,
         database: action.database
       })
       return newState
-    case RUN_TASK:
+    case RUN_TASK: {
       const existingTasks = [...state]
       const theTask = existingTasks.find(task => task.taskId === action.taskId)
       if (theTask) {
         theTask.status = RUNNING
         theTask.query = action.query
         theTask.namedGraphQueries = action.namedGraphQueries
+        theTask.parameters = action.parameters
+        theTask.formParameters = action.formParameters
+        theTask.persisted = action.persisted
+        theTask.result = null
         return existingTasks
       } else {
         return state
       }
-    case COMPLETE_TASK:
+    }
+    case COMPLETE_TASK: {
       const tasks = [...state]
       const task = tasks.find(task => task.taskId === action.taskId)
       if (task) {
         if (action.error) {
           task.error = action.error
           task.status = FAILED
-        } else{
+        } else {
           task.status = COMPLETED
           task.result = action.result
         }
@@ -78,6 +94,11 @@ export default (state = [], action) => {
       } else {
         return state
       }
+    }
+    case REMOVE_TASK: {
+      const tasks = [...state]
+      return tasks.filter(task => task.taskId !== action.taskId)
+    }
     default:
       return state
   }

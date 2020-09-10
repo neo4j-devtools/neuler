@@ -112,7 +112,7 @@ const FeedbackFirstScreen = (props) => {
   }
 
   return <React.Fragment>
-    <h4 style={headerStyle}>Help us improve NEuler <Icon className="angle down large" onClick={() => props.setOpen(!props.open)}/></h4>
+    <h4 style={headerStyle} onClick={() => props.setOpen(!props.open)}>Help us improve NEuler <Icon className="angle down large" /></h4>
     <div style={outerStyle}>
       <form>
         <div style={innerStyle}><p>Were you able to do what you wanted?</p>

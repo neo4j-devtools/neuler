@@ -1,220 +1,143 @@
-import React, {Component, useEffect, useState} from 'react'
-import {Button, Header, Icon, Image, Loader, Menu, Message, Segment} from 'semantic-ui-react'
+import React, {useEffect, useState} from 'react'
+import {Header, Message, Segment} from 'semantic-ui-react'
 import {connect} from "react-redux"
-import GraphVisualiser from './visualisation/GraphVisualiser'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
-import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
-import {ADDED, completeTask, FAILED, runTask} from "../ducks/tasks"
-import html2canvas from "html2canvas";
-import {ReImg} from 'reimg'
-import {v4 as generateId} from 'uuid'
+import {ADDED, addTask, completeTask, FAILED, removeTask, runTask} from "../ducks/tasks"
 import {sendMetrics} from "./metrics/sendMetrics";
-import NodeLabel from "./NodeLabel";
+import {FailedTopBar} from "./Results/FailedTopBar";
+import {SuccessTopBar} from "./Results/SuccessTopBar";
+import {TableView} from "./Results/TableView";
+import {VisView} from "./Results/VisView";
+import {ChartView} from "./Results/ChartView";
+import AlgorithmForm from "./AlgorithmForm";
+import {v4 as generateTaskId} from "uuid";
+import {getCurrentAlgorithm} from "../ducks/algorithms";
+import {getActiveDatabase} from "../services/stores/neoStore";
 
-const tabContentStyle = {
+export const tabContentStyle = {
   height: '85vh',
   overflowY: 'auto',
   overflowX: 'hidden'
 }
 
-const TableView = ({task, gdsVersion}) => {
-  const {ResultView} = getAlgorithmDefinitions(task.group, task.algorithm, gdsVersion)
+const HorizontalAlgoTab = (props) => {
+  const { task, prevResult, nextResult, currentPage, totalPages } = props
 
-  const labels = task.result ? task.result.labels : []
+  const panelRef = React.createRef()
+  const [activeItem, setActiveItem] = React.useState("Configure")
 
-  return <div style={tabContentStyle}>
-    {labels.length > 0 ? <div style={{display: "flex"}}>
-      {labels.map(label => <NodeLabel key={label} labels={[label]} caption={label} database={task.database} />)}
-    </div>  : null}
-
-    <ResultView task={task}/>
-  </div>
-}
-
-const VisView = ({ task, active }) => (
-  <div style={tabContentStyle}>
-    <GraphVisualiser taskId={task.taskId} results={task.result} label={task.parameters.config.nodeProjection} active={active}
-                     algorithm={task.algorithm}
-                     limit={task.parameters.limit}
-                     relationshipType={task.parameters.config.relationshipProjection.relType.type}
-                     writeProperty={(task.parameters.config || {}).writeProperty}
-                     group={task.group}/>
-  </div>
-)
-
-const LoaderExampleInlineCentered = ({ active }) => <Loader active={active} inline='centered'>Fetching Data</Loader>
-
-
-const ChartView = ({ task }) => {
-  if (task.result && task.result.rows.length > 0) {
-    return <Chart data={task.result.rows.map(result => ({
-      name: result.properties.name || 'Node',
-      score: result.score
-    }))}/>
-  } else {
-    return <LoaderExampleInlineCentered active={true}/>
-  }
-}
-
-class HorizontalAlgoTab extends Component {
-  constructor(props) {
-    super(props);
-    this.panelRef = React.createRef()
-  }
-
-
-  state = {
-    activeItem: this.props.error ? 'Error' : 'Table'
-  }
-
-  handleMenuItemClick = (e, { name }) => {
+  const handleMenuItemClick = (e, { name }) => {
     sendMetrics('neuler-click-view', name)
-    this.setState({ activeItem: name })
+    setActiveItem(name)
   }
 
-  componentDidMount() {
-    if (this.props.task.error) {
-      this.setState({ activeItem: 'Error' })
+  React.useEffect(() => {
+    if (task.status === ADDED) {
+      setActiveItem("Configure")
+    } else {
+      if (task.error) {
+        setActiveItem("Error")
+      } else {
+        setActiveItem("Table")
+      }
     }
-  }
-
-  UNSAFE_componentWillReceiveProps(nextProps, nextContext) {
-    if (nextProps.task.error) {
-      this.setState({ activeItem: 'Error' })
-    } else if (this.state.activeItem === 'Error') {
-      this.setState({ activeItem: 'Table' })
-    }
-  }
-
-  render() {
-    const { task, prevResult, nextResult, currentPage, totalPages } = this.props
-    let activeItem = this.state.activeItem
+  }, [task.status])
 
     const activeGroup = task.group
-    const getStyle = name => name === activeItem
-      ? ({
-        display: ''
-      })
-      : ({
-        display: 'none'
-      })
+    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
+
+    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
+    const { description } = currentAlgorithm
 
     return (
-      <div>
+      <div style={{padding: "10px"}}>
+        <Header as="h3">
+          {task.algorithm}
+          <Header.Subheader>
+            {description}
+          </Header.Subheader>
+        </Header>
         {task.completed && task.status === FAILED ? (
-            <div>
-              <Menu attached='top' tabular pointing secondary
-                    style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div style={{ display: 'flex' }}>
-                <Menu.Item name='Error' active={activeItem === 'Error'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                <Menu.Item name='Code' active={activeItem === 'Code'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                </div>
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center'
-                }}>
-                  <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-                    <Icon name='angle left'/>
-                  </Button>
-                  <Header as='h3' style={{ margin: '0 1em' }}>
-                    {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-                  </Header>
-                  <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-                    <Icon name='angle right'/>
-                  </Button>
-                </div>
-              </Menu>
+                <React.Fragment>
+                  <FailedTopBar task={task} activeItem={activeItem} prevResult={prevResult} nextResult={nextResult}
+                                currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={handleMenuItemClick.bind(this)}
+                  />
 
-
-              <Segment attached='bottom'>
-                <div style={getStyle('Error')}>
-                  <Message warning>
-                    <Message.Header>Algorithm failed to complete</Message.Header>
-                    <p>{task.error}</p>
-                  </Message>
-                </div>
-                <div style={getStyle('Code')}>
-                  <CodeView task={task}/>
-                </div>
-              </Segment>
-            </div>
+                  <Segment attached='bottom'>
+                    <div style={getStyle("Configure")}>
+                      <AlgorithmForm
+                          task={task}
+                          limit={props.limit}
+                          onRun={(newParameters, formParameters, persisted) => {
+                            props.onRunAlgo(task, newParameters, formParameters, persisted)
+                          }}
+                          onCopy={(group, algorithm, newParameters, formParameters) => {
+                            props.onCopyAlgo(group, algorithm, newParameters, formParameters)
+                          }}
+                      />
+                    </div>
+                    <div style={getStyle('Error')}>
+                      <Message warning>
+                        <Message.Header>Algorithm failed to complete</Message.Header>
+                        <p>{task.error}</p>
+                      </Message>
+                    </div>
+                    <div style={getStyle('Code')}>
+                      <CodeView task={task}/>
+                    </div>
+                  </Segment>
+                </React.Fragment>
           )
-          : <React.Fragment>
-            <Menu attached='top' tabular pointing secondary
-                  style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <div style={{ display: 'flex' }}>
+            : <React.Fragment>
+                <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}
+                               nextResult={nextResult} currentPage={currentPage} totalPages={totalPages}
+                               panelRef={panelRef} handleMenuItemClick={handleMenuItemClick.bind(this)}
+                />
+                <div ref={panelRef}>
+                  <Segment attached='bottom'>
+                    <div style={getStyle("Configure")}>
+                      <AlgorithmForm
+                          task={task}
+                          limit={props.limit}
+                          onRun={(newParameters, formParameters, persisted) => {
+                            props.onRunAlgo(task, newParameters, formParameters, persisted)
+                          }}
+                          onCopy={(group, algorithm, newParameters, formParameters) => {
+                            props.onCopyAlgo(group, algorithm, newParameters, formParameters)
+                          }}
+                      />
+                    </div>
 
-                <Menu.Item name='Table' active={activeItem === 'Table'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
 
-                {activeGroup === 'Centralities' ?
-                  <Menu.Item name='Chart' active={activeItem === 'Chart'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null}
+                    <React.Fragment>
+                    <div style={getStyle('Table')}>
+                      <TableView task={task} gdsVersion={props.gdsVersion}/>
+                    </div>
 
-                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                  <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
-                             onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
-                  : null
-                }
+                    <div style={getStyle('Code')}>
+                      <CodeView task={task}/>
+                    </div>
 
-                <Menu.Item name='Code' active={activeItem === 'Code'}
-                           onClick={this.handleMenuItemClick.bind(this)}></Menu.Item>
+                    {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                        <div style={getStyle('Visualisation')}>
+                          <VisView task={task} active={activeItem === 'Visualisation'}/>
+                        </div> : null}
 
-                <Menu.Item active={activeItem === 'Printscreen'}
-                           onClick={(() => printElement(this.panelRef.current))}>
-                  <Image src='images/Camera2.png'/>
+                    {activeGroup === 'Centralities' ?
+                        <div style={getStyle('Chart')}>
+                          <ChartView task={task} active={activeItem === 'Chart'}/>
+                        </div> : null}
 
-                </Menu.Item>
-
-              </div>
-
-              <div style={{
-                display: 'flex',
-                alignItems: 'center'
-              }}>
-                <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-                  <Icon name='angle left'/>
-                </Button>
-                <Header as='h3' style={{ margin: '0 1em' }}>
-                  {`${task.algorithm} Started at: ${task.startTime.toLocaleTimeString()} - (${currentPage} / ${totalPages})`}
-                </Header>
-                <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-                  <Icon name='angle right'/>
-                </Button>
-              </div>
-
-            </Menu>
-            <div ref={this.panelRef}>
-              <Segment attached='bottom'>
-                <div style={getStyle('Table')}>
-                  <TableView task={task} gdsVersion={this.props.gdsVersion}/>
+                    </React.Fragment>
+                  </Segment>
                 </div>
-
-                <div style={getStyle('Code')}>
-                  <CodeView task={task}/>
-                </div>
-
-                {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                  <div style={getStyle('Visualisation')}>
-                    <VisView task={task} active={activeItem === 'Visualisation'}/>
-                  </div> : null}
-
-                {activeGroup === 'Centralities' ?
-                  <div style={getStyle('Chart')}>
-                    <ChartView task={task} active={activeItem === 'Chart'}/>
-                  </div> : null}
-              </Segment>
-            </div>
-          </React.Fragment>
+            </React.Fragment>
         }
       </div>
     )
-  }
+
 }
 
 const TabExampleVerticalTabular = (props) => {
@@ -229,19 +152,46 @@ const TabExampleVerticalTabular = (props) => {
     setPage(Math.min(length - 1, page + 1))
   }
 
-  useEffect(() => {
-    setPage(0)
-    if(props.tasks.length > 0) {
-      const task = props.tasks[0]
-      if (task.status === ADDED) {
-        onRunAlgo(task)
-      }
+  const addLimits = (params) => {
+    return {
+      ...params,
+      limit: props.limit,
+      communityNodeLimit: props.communityNodeLimit
     }
-  }, [props.tasks.length])
+  }
+
+  const addNewTask = (group, algorithm, parameters, formParameters) => {
+    const taskId = generateTaskId()
+    props.addTask(taskId, group, algorithm, parameters, formParameters, parameters.persist)
+  }
+
+  useEffect(() => {
+      setPage(0)
+  }, [props.tasks.length, props.tasks.length > 0 && props.tasks[0].taskId])
+
+  useEffect(() => {
+    const latestTask = props.tasks[0]
+    if(latestTask && latestTask.status === ADDED) {
+      props.removeTask(latestTask.taskId)
+    }
+
+    const {activeGroup, activeAlgorithm, metadata} = props
+    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
+    const { service, parametersBuilder } = props.currentAlgorithm
+    if (service) {
+      const params = parametersBuilder({
+        ...parameters,
+        requiredProperties: Object.keys(parameters)
+      })
+
+      addNewTask(activeGroup, activeAlgorithm, addLimits(params), addLimits(parameters))
+    }
+
+  }, [JSON.stringify(props.currentAlgorithm)])
 
 
-  const onRunAlgo = (task) => {
-    const {taskId, group, algorithm, parameters, persisted} = task
+  const onRunAlgo = (task, parameters, formParameters, persisted) => {
+    const {taskId, group, algorithm} = task
     const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion);
     const {service, getFetchQuery} = algorithmDefinition
 
@@ -291,7 +241,10 @@ const TabExampleVerticalTabular = (props) => {
         persisted ? [storeQuery, fetchCypher] : [streamQuery],
         persisted ?
             [constructedQueries.createGraph, constructedQueries.storeAlgorithmNamedGraph, fetchCypher, constructedQueries.dropGraph] :
-            [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph]
+            [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph],
+        parameters,
+        formParameters,
+        persisted
     )
   }
 
@@ -300,12 +253,15 @@ const TabExampleVerticalTabular = (props) => {
   if (tasks && tasks.length > 0) {
     const currentTask = tasks[page]
     return <HorizontalAlgoTab
-      task={currentTask}
-      prevResult={prevResult.bind(this)}
-      nextResult={nextResult.bind(this)}
-      currentPage={page + 1}
-      totalPages={tasks.length}
-      gdsVersion={props.metadata.versions.gdsVersion}
+        metadata={props.metadata}
+        onRunAlgo={onRunAlgo}
+        onCopyAlgo={addNewTask}
+        task={currentTask}
+        prevResult={prevResult}
+        nextResult={nextResult}
+        currentPage={page + 1}
+        totalPages={tasks.length}
+        gdsVersion={props.metadata.versions.gdsVersion}
     />
   } else {
     return null
@@ -316,25 +272,39 @@ const mapStateToProps = state => ({
   tasks: state.tasks,
   limit: state.settings.limit,
   metadata: state.metadata,
+  activeGroup: state.algorithms.group,
+  activeAlgorithm: state.algorithms.algorithm,
+  currentAlgorithm: getCurrentAlgorithm(state),
+  communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  runTask: (taskId, query, namedGraphQueries) => {
-    dispatch(runTask({ taskId, query, namedGraphQueries }))
+  runTask: (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
+    dispatch(runTask({ taskId, query, namedGraphQueries, parameters, formParameters, persisted }))
   },
   completeTask: (taskId, result, error) => {
     dispatch(completeTask({ taskId, result, error }))
   },
   onComplete: () => {
     ownProps.onComplete()
+  },
+  addTask: (taskId, group, algorithm, parameters, formParameters, persisted) => {
+    const task = {
+      group,
+      algorithm,
+      taskId,
+      parameters,
+      formParameters,
+      persisted,
+      startTime: new Date(),
+      database: getActiveDatabase()
+    }
+    dispatch(addTask({ ...task }))
+  },
+  removeTask: (taskId) => {
+    dispatch(removeTask({ taskId}))
   }
 })
 
-const printElement = element => {
-  html2canvas(element).then(function (canvas) {
-    const guid = generateId()
-    ReImg.fromCanvas(canvas).downloadPng(`neuler-${guid}.png`);
-  })
-}
 
 export default connect(mapStateToProps, mapDispatchToProps)(TabExampleVerticalTabular)

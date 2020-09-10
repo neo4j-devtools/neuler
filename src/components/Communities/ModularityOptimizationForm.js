@@ -1,98 +1,61 @@
-import React, {Component} from 'react'
-import {Dropdown, Form, Input} from "semantic-ui-react"
+import React from 'react'
+import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
+import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
+import {StoreProperty} from "../Form/StoreProperty";
 
-export default class extends Component {
-  state = {
-    advanced: false
-  }
+const AlgoForm = ({children, readOnly, onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,
+                      propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist}) => {
+    const projectedGraphProps = {
+        label,
+        labelOptions,
+        relationshipType,
+        direction,
+        relationshipTypeOptions,
+        relationshipOrientationOptions,
+        propertyKeyOptions,
+        weightProperty,
+        defaultValue,
+        onChange,
+        readOnly
+    }
 
-  render() {
-    const { onChange, labelOptions, maxIterations, tolerance, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions,  weightProperty, writeProperty, seedProperty, defaultValue, direction, persist } = this.props
+    const parameterProps = {
+        propertyKeyOptions, seedProperty, maxIterations, onChange, tolerance, readOnly
+    }
 
     return (
-      <Form size='mini' style={{ marginBottom: '1em' }}>
-        <Form.Field>
-          <label>Label</label>
-          <Dropdown placeholder='Label' fluid search selection options={labelOptions} onChange={(evt, data) => onChange("label", data.value)} />
-        </Form.Field>
-
-        <Form.Field>
-          <label>Relationship Type</label>
-          <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions} onChange={(evt, data) => onChange("relationshipType", data.value)} />
-        </Form.Field>
-
-        {relationshipType ?
-          <Form.Field>
-            <label>Relationship Orientation</label>
-            <Dropdown placeholder='RelationshipOrientation' defaultValue={direction} fluid search selection options={relationshipOrientationOptions} onChange={(evt, data) => onChange("direction", data.value)} />
-          </Form.Field> : null }
-
-
-          {relationshipType ?
-            <Form.Field inline>
-              <label style={{ 'width': '8em' }}>Weight Property</label>
-              <Dropdown placeholder='Weight Property' defaultValue={weightProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("weightProperty", data.value)} />
-            </Form.Field> : null }
-          {
-            weightProperty ?
-              <Form.Field inline>
-                <label style={{ 'width': '8em' }}>Default weight</label>
-                <input
-                  value={defaultValue}
-                  onChange={evt => onChange('defaultValue', evt.target.value)}
-                  style={{ 'width': '7em' }}
-                />
-              </Form.Field>
-              : null
-          }
-
-        <Form.Group inline>
-          <Form.Field inline>
-            <label style={{ 'width': '10em' }}>Store results</label>
-            <input type='checkbox' checked={persist} onChange={evt => {
-              console.log(evt.target, evt)
-              onChange('persist', evt.target.checked)
-            }}/>
-          </Form.Field>
-          {
-            persist ?
-              <Form.Field inline>
-                <Input size='mini' basic="true" value={writeProperty} placeholder='Write Property' onChange={evt => onChange('writeProperty', evt.target.value)}/>
-              </Form.Field>
-              : null
-          }
-        </Form.Group>
-
-
-        <Form.Field inline>
-          <label style={{ 'width': '10em' }}>Seed Property</label>
-          <Dropdown placeholder='Seed Property' defaultValue={seedProperty} fluid search selection options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)} />
-
-        </Form.Field>
-
-        <Form.Field inline>
-          <label style={{ 'width': '8em' }}>Iterations</label>
-          <input
-            type='number'
-            min={1}
-            max={50}
-            step={1}
-            value={maxIterations}
-            onChange={evt => onChange('maxIterations', evt.target.value)}
-            style={{ 'width': '5em' }}
-          />
-        </Form.Field>
-
-        <Form.Field inline>
-          <label style={{ 'width': '8em' }}>Tolerance</label>
-          <input
-            value={tolerance}
-            onChange={evt => onChange('tolerance', evt.target.value)}
-            style={{ 'width': '7em' }}
-          />
-        </Form.Field>
-
-      </Form>
+        <Form style={{marginBottom: '1em'}}>
+            <ProjectedGraphWithWeights {...projectedGraphProps} />
+            <Parameters {...parameterProps} />
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}>
+                {children}
+            </StoreProperty>
+        </Form>
     )
-  }
 }
+
+const Parameters = ({propertyKeyOptions, seedProperty, maxIterations, onChange, tolerance, readOnly}) => {
+    return <Segment key={propertyKeyOptions}>
+        <Label as='a' attached='top left'>
+            Algorithm Parameters
+        </Label>
+
+        <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Iterations</label>}
+                    control={Input} type='number' value={maxIterations}
+                    onChange={(evt, data) => onChange('maxIterations', data.value)} min={1} max={50} step={1}/>
+
+        <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Damping Factor</label>}
+                    control={Input} type='number' value={tolerance} step={0.001}
+                    onChange={(evt, data) => onChange('tolerance', data.value)}/>
+
+
+        <Form.Field inline className={readOnly ? "disabled" : null}>
+            <label style={{'width': '12em'}}>Seed Property</label>
+            <Dropdown disabled={readOnly} placeholder='Seed Property' defaultValue={seedProperty}  search selection
+                      options={propertyKeyOptions} onChange={(evt, data) => onChange("seedProperty", data.value)}/>
+
+        </Form.Field>
+    </Segment>
+}
+
+export default AlgoForm
