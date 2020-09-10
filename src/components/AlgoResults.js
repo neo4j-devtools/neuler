@@ -2,7 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {Header, Message, Segment} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
-import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
 import {ADDED, addTask, completeTask, FAILED, removeTask, runTask} from "../ducks/tasks"
@@ -247,10 +246,10 @@ const TabExampleVerticalTabular = (props) => {
     const currentTask = tasks[page]
     return <HorizontalAlgoTab
         metadata={props.metadata}
-        onRunAlgo={onRunAlgo.bind(this)}
+        onRunAlgo={onRunAlgo}
         task={currentTask}
-        prevResult={prevResult.bind(this)}
-        nextResult={nextResult.bind(this)}
+        prevResult={prevResult}
+        nextResult={nextResult}
         currentPage={page + 1}
         totalPages={tasks.length}
         gdsVersion={props.metadata.versions.gdsVersion}

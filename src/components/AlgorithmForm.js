@@ -7,7 +7,7 @@ import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultsFiltering} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
 
-const Algorithms = (props) => {
+const AlgoForm = (props) => {
   const {task} = props
 
   const [parameters, setParameters] = React.useState({})
@@ -71,7 +71,7 @@ const Algorithms = (props) => {
   }
 
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
-    const { Form: AlgoForm, description, returnsCommunities } = currentAlgorithm
+    const { Form: AlgoForm, returnsCommunities } = currentAlgorithm
 
     const containerStyle = {
       overflow: 'hidden',
@@ -91,28 +91,28 @@ const Algorithms = (props) => {
 
   const readOnly = task.status !== ADDED;
   return (
-        <div style={containerStyle}>
-              <div style={{marginBottom: '1em'}}>
-                <AlgoForm {...parameters} labelOptions={labelOptions}
-                          relationshipTypeOptions={relationshipTypeOptions}
-                          relationshipOrientationOptions={relationshipOrientationOptions}
-                          propertyKeyOptions={propertyKeyOptions}
-                          readOnly={readOnly}
-                          onChange={onChangeParam.bind(this)}/>
-                <ResultsFiltering limit={parameters.limit}
-                                  communityNodeLimit={parameters.communityNodeLimit}
-                                  readOnly={readOnly}
-                                  returnsCommunities={returnsCommunities}
-                                  updateLimit={updateLimit}
-                                  updateCommunityNodeLimit={updateCommunityNodeLimit} />
-              </div>
-              <div className='ui two buttons'>
-                <Button color='green' onClick={onRunAlgo.bind(this)}>
-                  Run
-                </Button>
-              </div>
-
+      <div style={containerStyle}>
+        <div style={{marginBottom: '1em'}}>
+          <AlgoForm {...parameters} labelOptions={labelOptions}
+                    relationshipTypeOptions={relationshipTypeOptions}
+                    relationshipOrientationOptions={relationshipOrientationOptions}
+                    propertyKeyOptions={propertyKeyOptions}
+                    readOnly={readOnly}
+                    onChange={onChangeParam.bind(this)}/>
+          <ResultsFiltering limit={parameters.limit}
+                            communityNodeLimit={parameters.communityNodeLimit}
+                            readOnly={readOnly}
+                            returnsCommunities={returnsCommunities}
+                            updateLimit={updateLimit}
+                            updateCommunityNodeLimit={updateCommunityNodeLimit}/>
         </div>
+        <div className='ui buttons'>
+          {task.status === ADDED ?
+              <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button> :
+              <Button color='green' onClick={onRunAlgo}>Re-run Algorithm</Button>}
+        </div>
+
+      </div>
       )
   }
 
@@ -130,4 +130,4 @@ const mapDispatchToProps = dispatch => ({
   updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(Algorithms)
+export default connect(mapStateToProps, mapDispatchToProps)(AlgoForm)

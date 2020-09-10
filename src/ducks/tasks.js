@@ -71,6 +71,7 @@ export default (state = [], action) => {
         theTask.parameters = action.parameters
         theTask.formParameters = action.formParameters
         theTask.persisted = action.persisted
+        theTask.result = null
         return existingTasks
       } else {
         return state

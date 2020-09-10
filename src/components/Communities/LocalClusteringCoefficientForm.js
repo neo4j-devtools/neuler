@@ -1,5 +1,5 @@
-import React, {Component} from 'react'
-import {Form, Dropdown, Input} from "semantic-ui-react"
+import React from 'react'
+import {Form} from "semantic-ui-react"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
