@@ -70,14 +70,30 @@ const AlgoForm = (props) => {
     }
   }
 
+  const onCopyAlgo = () => {
+    const {task} = props
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
-    const { Form: AlgoForm, returnsCommunities } = currentAlgorithm
 
-    const containerStyle = {
-      overflow: 'hidden',
-      height: '100%',
-      marginRight: '0'
+    const { service, parametersBuilder } = currentAlgorithm
+    if (service) {
+      let formParameters = parameters;
+      const params = parametersBuilder({
+        ...formParameters,
+        requiredProperties: Object.keys(formParameters)
+      })
+
+      props.onCopy(task.group, task.algorithm, { ...params, limit: props.limit, communityNodeLimit: props.communityNodeLimit }, formParameters)
     }
+  }
+
+  const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
+  const {Form: AlgoForm, returnsCommunities} = currentAlgorithm
+
+  const containerStyle = {
+    overflow: 'hidden',
+    height: '100%',
+    marginRight: '0'
+  }
 
   const updateLimit = (evt, data) => {
     onChangeParam("limit", parseInt(data.value))
@@ -106,10 +122,16 @@ const AlgoForm = (props) => {
                             updateLimit={updateLimit}
                             updateCommunityNodeLimit={updateCommunityNodeLimit}/>
         </div>
-        <div className='ui buttons'>
-          {task.status === ADDED ?
-              <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button> :
-              <Button color='green' onClick={onRunAlgo}>Re-run Algorithm</Button>}
+        <div>
+          {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+
+            {task.status !== ADDED &&
+            <Button.Group>
+                <Button color='green' onClick={onRunAlgo}>Re-run Algorithm</Button>
+                <Button.Or />
+                <Button color='blue' onClick={onCopyAlgo}>Make a copy</Button>
+            </Button.Group>
+            }
         </div>
 
       </div>

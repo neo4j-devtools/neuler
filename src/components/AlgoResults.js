@@ -72,8 +72,11 @@ const HorizontalAlgoTab = (props) => {
                           limit={props.limit}
                           onRun={(newParameters, formParameters, persisted) => {
                             props.onRunAlgo(task, newParameters, formParameters, persisted)
-                            handleMenuItemClick(null, {name: "Table"})
-                          }} />
+                          }}
+                          onCopy={(group, algorithm, newParameters, formParameters) => {
+                            props.onCopyAlgo(group, algorithm, newParameters, formParameters)
+                          }}
+                      />
                     </div>
                     <div style={getStyle('Error')}>
                       <Message warning>
@@ -100,7 +103,11 @@ const HorizontalAlgoTab = (props) => {
                           limit={props.limit}
                           onRun={(newParameters, formParameters, persisted) => {
                             props.onRunAlgo(task, newParameters, formParameters, persisted)
-                          }} />
+                          }}
+                          onCopy={(group, algorithm, newParameters, formParameters) => {
+                            props.onCopyAlgo(group, algorithm, newParameters, formParameters)
+                          }}
+                      />
                     </div>
 
 
@@ -145,6 +152,18 @@ const TabExampleVerticalTabular = (props) => {
     setPage(Math.min(length - 1, page + 1))
   }
 
+  const addLimits = (params) => {
+    return {
+      ...params,
+      limit: props.limit,
+      communityNodeLimit: props.communityNodeLimit
+    }
+  }
+
+  const addNewTask = (group, algorithm, parameters, formParameters) => {
+    const taskId = generateTaskId()
+    props.addTask(taskId, group, algorithm, parameters, formParameters, parameters.persist)
+  }
 
   useEffect(() => {
       setPage(0)
@@ -156,18 +175,8 @@ const TabExampleVerticalTabular = (props) => {
       props.removeTask(latestTask.taskId)
     }
 
-    const taskId = generateTaskId()
     const {activeGroup, activeAlgorithm, metadata} = props
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
-
-    const addLimits = (params) => {
-      return {
-        ...params,
-        limit: props.limit,
-        communityNodeLimit: props.communityNodeLimit
-      }
-    }
-
     const { service, parametersBuilder } = props.currentAlgorithm
     if (service) {
       const params = parametersBuilder({
@@ -175,10 +184,9 @@ const TabExampleVerticalTabular = (props) => {
         requiredProperties: Object.keys(parameters)
       })
 
-      const persisted = parameters.persist
-
-      props.addTask(taskId, activeGroup, activeAlgorithm, addLimits(params), addLimits(parameters), persisted)
+      addNewTask(activeGroup, activeAlgorithm, addLimits(params), addLimits(parameters))
     }
+
   }, [JSON.stringify(props.currentAlgorithm)])
 
 
@@ -247,6 +255,7 @@ const TabExampleVerticalTabular = (props) => {
     return <HorizontalAlgoTab
         metadata={props.metadata}
         onRunAlgo={onRunAlgo}
+        onCopyAlgo={addNewTask}
         task={currentTask}
         prevResult={prevResult}
         nextResult={nextResult}
