@@ -1,22 +1,6 @@
 import React from 'react'
 import {Form, Input, Label, Segment} from "semantic-ui-react";
 
-export const ResultsFiltering = (props) => {
-    const [open, setOpen] = React.useState(true);
-    const style = {display: open ? "" : "none"}
-
-    return <Segment>
-        <Label as='a' attached='top left' onClick={() => setOpen(!open)}>
-            Results Filtering
-        </Label>
-
-
-        <Form style={style}>
-            <ResultFilteringFields {...props} />
-        </Form>
-    </Segment>
-}
-
 export const ResultFilteringFields = ({limit, communityNodeLimit, returnsCommunities, updateCommunityNodeLimit, updateLimit, readOnly}) => {
     return <React.Fragment>
         <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Rows to show</label>}
@@ -30,4 +14,20 @@ export const ResultFilteringFields = ({limit, communityNodeLimit, returnsCommuni
             : null
         }
     </React.Fragment>
+}
+
+export const ResultsFilteringWrapper = ({children}) => {
+    const [open, setOpen] = React.useState(true);
+    const style = {display: open ? "" : "none"}
+
+    return <Segment>
+        <Label as='a' attached='top left' onClick={() => setOpen(!open)}>
+            Results
+        </Label>
+
+
+        <Form style={style}>
+            {children}
+        </Form>
+    </Segment>
 }

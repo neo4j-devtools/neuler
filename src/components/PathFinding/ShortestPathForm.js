@@ -1,8 +1,10 @@
 import React from 'react'
 import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
+import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
 
-const AlgoForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions, relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, direction, persist}) => {
+const AlgoForm = ({children, readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions,
+                      relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -21,6 +23,7 @@ const AlgoForm = ({readOnly, onChange, labelOptions, label, relationshipType, re
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters startNode={startNode} endNode={endNode} onChange={onChange} readOnly={readOnly} />
+            <ResultsFilteringWrapper>{children}</ResultsFilteringWrapper>
         </Form>
     )
 

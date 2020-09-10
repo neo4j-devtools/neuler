@@ -3,7 +3,8 @@ import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
-const AlgoForm = ({readOnly, onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist}) => {
+const AlgoForm = ({children, readOnly, onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,
+                      propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -26,7 +27,9 @@ const AlgoForm = ({readOnly, onChange, labelOptions, maxIterations, tolerance, l
         <Form style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters {...parameterProps} />
-            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}>
+                {children}
+            </StoreProperty>
         </Form>
     )
 }

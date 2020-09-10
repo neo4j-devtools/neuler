@@ -2,7 +2,7 @@ import React from 'react'
 import {Form} from "semantic-ui-react"
 import CommunityForm from './CommunityForm'
 
-const AlgoForm = ({readOnly, onChange, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, direction, persist}) => {
+const AlgoForm = ({readOnly, onChange, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, direction, persist, children}) => {
     const relationshipOrientationOptions = [{key: "Undirected", value: "Undirected", text: 'Undirected'}]
 
     return (
@@ -11,7 +11,9 @@ const AlgoForm = ({readOnly, onChange, labelOptions, relationshipType, relations
                            labelOptions={labelOptions}
                            relationshipType={relationshipType}
                            relationshipOrientationOptions={relationshipOrientationOptions}
-                           relationshipTypeOptions={relationshipTypeOptions}/>
+                           relationshipTypeOptions={relationshipTypeOptions}>
+                {children}
+            </CommunityForm>
 
         </Form>
     )

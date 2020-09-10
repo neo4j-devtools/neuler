@@ -4,7 +4,7 @@ import {Button} from 'semantic-ui-react'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
-import {ResultFilteringFields, ResultsFiltering} from "./Form/ResultsFiltering";
+import {ResultFilteringFields} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
 
 const AlgoForm = (props) => {

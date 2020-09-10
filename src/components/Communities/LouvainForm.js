@@ -3,7 +3,9 @@ import {Checkbox, Dropdown, Form, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
-const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist}) => {
+const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,
+                         propertyKeyOptions, weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist,
+                     children}) => {
     const projectedGraphProps = {
         label,
         labelOptions,
@@ -26,7 +28,9 @@ const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType,
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters {...parameterProps} />
-            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}/>
+            <StoreProperty persist={persist} onChange={onChange} writeProperty={writeProperty} readOnly={readOnly}>
+                {children}
+            </StoreProperty>
         </Form>
     )
 

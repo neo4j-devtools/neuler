@@ -1,8 +1,9 @@
 import React from 'react'
 import {Dropdown, Form} from "semantic-ui-react"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
+import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
 
-const AlgoForm = ({onChange, relationshipType, label, direction, labelOptions, relationshipTypeOptions, relationshipOrientationOptions}) => {
+const AlgoForm = ({onChange, relationshipType, label, direction, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, children}) => {
   const projectedGraphProps = {
     label,
     labelOptions,
@@ -15,6 +16,7 @@ const AlgoForm = ({onChange, relationshipType, label, direction, labelOptions, r
 
   return <React.Fragment>
     <ProjectedGraphWithNoWeights {...projectedGraphProps} />
+    <ResultsFilteringWrapper>{children}</ResultsFilteringWrapper>
   </React.Fragment>
 }
 
