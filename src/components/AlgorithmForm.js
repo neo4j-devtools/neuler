@@ -113,7 +113,7 @@ const Algorithms = (props) => {
                   Run
                 </Button>
                 <Button basic color='red'>
-                  Cancel
+                  Reset
                 </Button>
               </div>
 

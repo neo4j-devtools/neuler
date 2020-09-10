@@ -2,6 +2,7 @@ const NAME = 'TASKS'
 const ADD_TASK = `${NAME}/ADD_TASK`
 const RUN_TASK = `${NAME}/RUN_TASK`
 const COMPLETE_TASK = `${NAME}/COMPLETE_TASK`
+const REMOVE_TASK = `${NAME}/REMOVE_TASK`
 
 export const ADDED = 'ADDED'
 export const RUNNING = 'RUNNING'
@@ -37,6 +38,11 @@ export const completeTask = ({taskId, result, error}) => ({
   error
 })
 
+export const removeTask = ({taskId}) => ({
+  type: REMOVE_TASK,
+  taskId
+})
+
 export default (state = [], action) => {
   switch (action.type) {
     case ADD_TASK:
@@ -55,7 +61,7 @@ export default (state = [], action) => {
         database: action.database
       })
       return newState
-    case RUN_TASK:
+    case RUN_TASK: {
       const existingTasks = [...state]
       const theTask = existingTasks.find(task => task.taskId === action.taskId)
       if (theTask) {
@@ -69,14 +75,15 @@ export default (state = [], action) => {
       } else {
         return state
       }
-    case COMPLETE_TASK:
+    }
+    case COMPLETE_TASK: {
       const tasks = [...state]
       const task = tasks.find(task => task.taskId === action.taskId)
       if (task) {
         if (action.error) {
           task.error = action.error
           task.status = FAILED
-        } else{
+        } else {
           task.status = COMPLETED
           task.result = action.result
         }
@@ -86,6 +93,11 @@ export default (state = [], action) => {
       } else {
         return state
       }
+    }
+    case REMOVE_TASK: {
+      const tasks = [...state]
+      return tasks.filter(task => task.taskId !== action.taskId)
+    }
     default:
       return state
   }

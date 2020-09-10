@@ -5,7 +5,7 @@ import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import Chart from './visualisation/Chart'
 import CodeView, {constructQueries} from './CodeView'
 
-import {ADDED, addTask, COMPLETED, completeTask, FAILED, RUNNING, runTask} from "../ducks/tasks"
+import {ADDED, addTask, COMPLETED, completeTask, FAILED, removeTask, RUNNING, runTask} from "../ducks/tasks"
 import {sendMetrics} from "./metrics/sendMetrics";
 import {FailedTopBar} from "./Results/FailedTopBar";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
@@ -160,18 +160,17 @@ const TabExampleVerticalTabular = (props) => {
 
   useEffect(() => {
     setPage(0)
-    if(props.tasks.length > 0) {
-      const task = props.tasks[0]
-      // if (task.status === ADDED) {
-      //   onRunAlgo(task)
-      // }
-    }
   }, [props.tasks.length])
 
   useEffect(() => {
+    const latestTask = props.tasks[0]
+    if(latestTask && latestTask.status === ADDED) {
+      console.log(latestTask.taskId)
+      props.removeTask(latestTask.taskId)
+    }
+
     const taskId = generateTaskId()
     const {activeGroup, activeAlgorithm, metadata} = props
-
     const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
 
     const addLimits = (params) => {
@@ -261,12 +260,12 @@ const TabExampleVerticalTabular = (props) => {
     return <HorizontalAlgoTab
         metadata={props.metadata}
         onRunAlgo={onRunAlgo.bind(this)}
-      task={currentTask}
-      prevResult={prevResult.bind(this)}
-      nextResult={nextResult.bind(this)}
-      currentPage={page + 1}
-      totalPages={tasks.length}
-      gdsVersion={props.metadata.versions.gdsVersion}
+        task={currentTask}
+        prevResult={prevResult.bind(this)}
+        nextResult={nextResult.bind(this)}
+        currentPage={page + 1}
+        totalPages={tasks.length}
+        gdsVersion={props.metadata.versions.gdsVersion}
     />
   } else {
     return null
@@ -305,6 +304,9 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       database: getActiveDatabase()
     }
     dispatch(addTask({ ...task }))
+  },
+  removeTask: (taskId) => {
+    dispatch(removeTask({ taskId}))
   }
 })
 
