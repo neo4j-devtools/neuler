@@ -1,5 +1,5 @@
 import React from 'react'
-import {Checkbox, Divider, Form, Input, Label, Segment} from "semantic-ui-react";
+import {Checkbox, Divider, Form, Input} from "semantic-ui-react";
 import {OpenCloseSection} from "./OpenCloseSection";
 
 export const StoreProperty = ({persist, onChange, writeProperty, readOnly, children}) => {

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
+import {Form, Input, Popup} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
 import {OpenCloseSection} from "../Form/OpenCloseSection";

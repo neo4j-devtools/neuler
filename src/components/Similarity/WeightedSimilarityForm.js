@@ -1,5 +1,5 @@
 import React from 'react'
-import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
+import {Dropdown, Form} from "semantic-ui-react"
 import {StorePropertyAndRelationshipType} from "../Form/StorePropertyAndRelationshipType";
 import {Parameters} from "./Parameters";
 import {OpenCloseSection} from "../Form/OpenCloseSection";

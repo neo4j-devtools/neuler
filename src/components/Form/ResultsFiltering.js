@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Input, Label, Segment} from "semantic-ui-react";
+import {Form, Input} from "semantic-ui-react";
 import {OpenCloseSection} from "./OpenCloseSection";
 
 export const ResultFilteringFields = ({limit, communityNodeLimit, returnsCommunities, updateCommunityNodeLimit, updateLimit, readOnly}) => {

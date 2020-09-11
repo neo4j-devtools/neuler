@@ -1,5 +1,5 @@
 import React from 'react'
-import {Checkbox, Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
+import {Checkbox, Dropdown, Form} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 import {OpenCloseSection} from "../Form/OpenCloseSection";

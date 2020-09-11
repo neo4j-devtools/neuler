@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Input, Label, Segment} from "semantic-ui-react"
+import {Form, Input} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 import {OpenCloseSection} from "../Form/OpenCloseSection";

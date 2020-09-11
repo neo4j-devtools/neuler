@@ -1,4 +1,4 @@
-import {Dropdown, Form, Input, Label, Segment} from "semantic-ui-react";
+import {Dropdown, Form, Input} from "semantic-ui-react";
 import React from "react";
 import {OpenCloseSection} from "./OpenCloseSection";
 
