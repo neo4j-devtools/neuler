@@ -11,7 +11,8 @@ const AlgoForm = ({
         <SimilarityGraph
             onChange={onChange} itemLabel={itemLabel} categoryLabel={categoryLabel}
             relationshipTypeOptions={relationshipTypeOptions} weightProperty={weightProperty}
-            propertyKeyOptions={propertyKeyOptions} labelOptions={labelOptions} readOnly={readOnly} relationshipType={relationshipType}
+            propertyKeyOptions={propertyKeyOptions} labelOptions={labelOptions} readOnly={readOnly}
+            relationshipType={relationshipType}
         />
 
         <Parameters onChange={onChange} similarityCutoff={similarityCutoff} degreeCutoff={degreeCutoff}
@@ -26,33 +27,40 @@ const AlgoForm = ({
 }
 
 const SimilarityGraph = ({itemLabel, labelOptions, onChange, relationshipTypeOptions, relationshipType, categoryLabel, weightProperty, propertyKeyOptions, readOnly}) => {
+    const [open, setOpen] = React.useState(true);
+    const style = {display: open ? "" : "none"}
+
     return <Segment>
-        <Label as='a' attached='top left'>
+        <Label as='a' attached='top left' onClick={() => setOpen(!open)}>
             Projected Graph
         </Label>
-        <Form.Field inline className={readOnly ? "disabled" : null}>
-            <label style={{'width': '12em'}}>Item Label</label>
-            <Dropdown value={itemLabel} placeholder='Item Label'  search selection options={labelOptions}
-                      onChange={(evt, data) => onChange("itemLabel", data.value)}/>
-        </Form.Field>
-        <Form.Field inline className={readOnly ? "disabled" : null}>
-            <label style={{'width': '12em'}}>Relationship Type</label>
-            <Dropdown placeholder='RelationshipType'  search selection options={relationshipTypeOptions} value={relationshipType}
-                      onChange={(evt, data) => onChange("relationshipType", data.value)}/>
-        </Form.Field>
+        <Form style={style}>
+            <Form.Field inline className={readOnly ? "disabled" : null}>
+                <label style={{'width': '12em'}}>Item Label</label>
+                <Dropdown value={itemLabel} placeholder='Item Label' search selection options={labelOptions}
+                          onChange={(evt, data) => onChange("itemLabel", data.value)}/>
+            </Form.Field>
+            <Form.Field inline className={readOnly ? "disabled" : null}>
+                <label style={{'width': '12em'}}>Relationship Type</label>
+                <Dropdown placeholder='RelationshipType' search selection options={relationshipTypeOptions}
+                          value={relationshipType}
+                          onChange={(evt, data) => onChange("relationshipType", data.value)}/>
+            </Form.Field>
 
-        <Form.Field inline className={readOnly ? "disabled" : null}>
-            <label style={{'width': '12em'}}>Weight Property</label>
-            <Dropdown placeholder='Weight Property' value={weightProperty}  search selection
-                      options={propertyKeyOptions} onChange={(evt, data) => onChange("weightProperty", data.value)}/>
+            <Form.Field inline className={readOnly ? "disabled" : null}>
+                <label style={{'width': '12em'}}>Weight Property</label>
+                <Dropdown placeholder='Weight Property' value={weightProperty} search selection
+                          options={propertyKeyOptions}
+                          onChange={(evt, data) => onChange("weightProperty", data.value)}/>
 
-        </Form.Field>
+            </Form.Field>
 
-        <Form.Field inline className={readOnly ? "disabled" : null}>
-            <label style={{'width': '12em'}}>Category Label</label>
-            <Dropdown value={categoryLabel} placeholder='Category Label'  search selection options={labelOptions}
-                      onChange={(evt, data) => onChange("categoryLabel", data.value)}/>
-        </Form.Field>
+            <Form.Field inline className={readOnly ? "disabled" : null}>
+                <label style={{'width': '12em'}}>Category Label</label>
+                <Dropdown value={categoryLabel} placeholder='Category Label' search selection options={labelOptions}
+                          onChange={(evt, data) => onChange("categoryLabel", data.value)}/>
+            </Form.Field>
+        </Form>
     </Segment>
 }
 

@@ -1,7 +1,8 @@
 import React from 'react'
-import {Checkbox, Dropdown, Form, Label, Segment} from "semantic-ui-react"
+import {Checkbox, Dropdown, Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
+import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,
                          propertyKeyOptions, weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist,
@@ -37,10 +38,7 @@ const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType,
 }
 
 const Parameters = ({propertyKeyOptions, seedProperty, includeIntermediateCommunities, onChange, readOnly}) => {
-    return <Segment key={propertyKeyOptions}>
-        <Label as='a' attached='top left'>
-            Algorithm Parameters
-        </Label>
+    return <OpenCloseSection title="Algorithm Parameters">
         <Form.Field inline>
             <label style={{'width': '12em'}}>Seed Property</label>
             <Dropdown disabled={readOnly} placeholder='Seed Property' defaultValue={seedProperty}  search selection
@@ -55,6 +53,6 @@ const Parameters = ({propertyKeyOptions, seedProperty, includeIntermediateCommun
             }}/>
 
         </Form.Field>
-    </Segment>
+    </OpenCloseSection>
 }
 export default LouvainForm

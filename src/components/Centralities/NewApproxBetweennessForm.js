@@ -1,7 +1,8 @@
 import React from 'react'
-import {Form, Input, Label, Segment} from "semantic-ui-react"
+import {Form, Input} from "semantic-ui-react"
 import {ProjectedGraphWithNoWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
+import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 export default ({readOnly, onChange, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, label, relationshipType, writeProperty, direction, persist, maxDepth, strategy, probability, samplingSize, children}) => {
     const projectedGraphProps = {
@@ -25,13 +26,11 @@ export default ({readOnly, onChange, labelOptions, relationshipTypeOptions, rela
 }
 
 const Parameters = ({samplingSize, onChange, readOnly}) => {
-    return <Segment>
-        <Label as='a' attached='top left'>
-            Algorithm Parameters
-        </Label>
+    return <OpenCloseSection title="Algorithm Parameters">
         <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Sampling size</label>}
-                    control={Input} type='number' value={samplingSize} onChange={evt => onChange('samplingSize', evt.target.value)}
-                    min={1} step={1} />
-
-    </Segment>
+                    control={Input} type='number' value={samplingSize}
+                    onChange={evt => onChange('samplingSize', evt.target.value)}
+                    min={1} step={1}/>
+    </OpenCloseSection>
 }
+
