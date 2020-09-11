@@ -4,7 +4,11 @@ import CheckAPOCInstalled from "../CheckAPOCInstalled";
 import React from "react";
 import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE} from "./startup";
 
-export const DesktopAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected}) => {
+export const DesktopAppLoadingArea = ({
+                                          connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed,
+                                          setConnected, setDisconnected,
+                                          currentStepFailed
+                                      }) => {
     const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
 
     const failedCurrentStep = () => {
@@ -24,7 +28,9 @@ export const DesktopAppLoadingArea = ({connectionStatus, currentStep, setCurrent
     switch (currentStep) {
         case CONNECTING_TO_DATABASE:
             return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep}
-                                         setConnected={setConnected} setDisconnected={setDisconnected}/>
+                                         setConnected={setConnected} setDisconnected={setDisconnected}
+                                         currentStepFailed={currentStepFailed}
+            />
         case CHECKING_GDS_PLUGIN:
             return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
                                                   gdsInstalled={gdsInstalled}>
@@ -37,18 +43,38 @@ export const DesktopAppLoadingArea = ({connectionStatus, currentStep, setCurrent
             </CheckAPOCInstalled>;
         case ALL_DONE:
             return <div style={{padding: "20px"}}>
-                <Message color="grey" attached header="Neuler ready to launch"
-                         content="Connected to active database and all dependencies found. Neuler will launch shortly"/>
+                <Message color="grey" >
+                    <Message.Header>
+                        Neuler ready to launch
+                    </Message.Header>
+                    <Message.Content>
+                        Connected to active graph and all dependencies found. Neuler will launch shortly
+                    </Message.Content>
+                </Message>
             </div>
         default:
             return <Message>Unknown State</Message>;
     }
 }
 
-const ConnectingToDatabase = () => {
+const ConnectingToDatabase = ({currentStepFailed}) => {
     return <div style={{padding: "20px"}}>
-        <Message color="grey" attached header="Trying to connect"
-                 content="Trying to connect to active database. This should only take a few seconds. If it takes longer than that, check that you have a running database."/>
+        {currentStepFailed ? <Message color="red" attached header="Trying to connect">
+            <Message.Header>
+                Unable to connect to active graph
+            </Message.Header>
+            <Message.Content>
+                 Check that you have a running database before reloading the Graph Data Science Playground.
+            </Message.Content>
+        </Message> :
+            <Message color="grey" attached header="Trying to connect">
+                <Message.Header>
+                    Trying to connect to active graph
+                </Message.Header>
+                <Message.Content>
+                    This should only take a few seconds. If it takes longer than that, check that you have a running database.
+                </Message.Content>
+            </Message>}
     </div>
 
 }

@@ -25,12 +25,15 @@ import {
     CONNECTING_TO_DATABASE,
     onConnected
 } from "./startup";
+import {getDriver} from "../../services/stores/neoStore";
 
 const NewApp = (props) => {
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
     const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
     const [showNeuler, setShowNeuler] = React.useState(false)
     const { setConnected, setDisconnected, connectionInfo } = props
+
+    const [serverInfo, setServerInfo] = React.useState(null)
 
     React.useEffect(() => {
         initializeWebConnection(setConnected, setDisconnected, (error) => {
@@ -43,6 +46,7 @@ const NewApp = (props) => {
             setCurrentStep(CHECKING_GDS_PLUGIN)
             setCurrentStepFailed(false)
             onConnected(props)
+            getDriver().verifyConnectivity().then(value => setServerInfo(value.address))
         }
 
     }, [props.connectionInfo.status])
@@ -57,6 +61,8 @@ const NewApp = (props) => {
         }
     }
 
+    const smallStyle = {fontSize: "1.2rem", lineHeight: "20px", fontStyle: "italic"}
+
     return <Container fluid style={{display: 'flex'}}>
         <div style={{width: '100%'}}>
             <Segment basic inverted vertical={false} style={{height: '100vh'}}>
@@ -68,7 +74,9 @@ const NewApp = (props) => {
                     <div className="loading">
                         <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
                                      currentStepFailed={currentStepFailed}/>
-                        <p>Connecting to database</p>
+                        <p>Connecting to database
+
+                        </p>
                     </div>
                     <div className="loading">
                         <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep}
@@ -81,6 +89,16 @@ const NewApp = (props) => {
                         <p>Checking APOC plugin</p>
                     </div>
                 </div>
+
+                <div style={{...smallStyle, paddingBottom: "10px", textAlign: "center", color: "#ccc"}}>
+                        <div style={smallStyle}>
+                        {serverInfo ? <React.Fragment>
+                            Connected to: {serverInfo}
+                        </React.Fragment> : null}
+                        </div>
+                </div>
+
+                <Divider />
 
                 <div style={{textAlign: "center"}}>
                     <WebAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
