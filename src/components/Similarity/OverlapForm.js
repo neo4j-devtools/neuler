@@ -3,13 +3,14 @@ import {Dropdown, Form, Label, Segment} from "semantic-ui-react"
 import {Parameters} from "./Parameters";
 import {StorePropertyAndRelationshipType} from "../Form/StorePropertyAndRelationshipType";
 
-const AlgoForm = ({readOnly, onChange, children, itemLabel, categoryLabel, labelOptions, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
+const AlgoForm = ({readOnly, onChange, children, itemLabel, categoryLabel, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, writeRelationshipType, similarityCutoff, degreeCutoff, direction, persist}) => {
 
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
             <SimilarityGraph onChange={onChange}
                              relationshipTypeOptions={relationshipTypeOptions}
                              itemLabel={itemLabel}
+                             relationshipType={relationshipType}
                              categoryLabel={categoryLabel}
                              readOnly={readOnly}
                              labelOptions={labelOptions}
@@ -26,24 +27,24 @@ const AlgoForm = ({readOnly, onChange, children, itemLabel, categoryLabel, label
     )
 }
 
-const SimilarityGraph = ({labelOptions, onChange, relationshipTypeOptions, itemLabel, categoryLabel, readOnly}) => {
+const SimilarityGraph = ({labelOptions, onChange, relationshipTypeOptions, itemLabel, categoryLabel, readOnly, relationshipType}) => {
     return <Segment>
         <Label as='a' attached='top left'>
             Projected Graph
         </Label>
-        <Form.Field className={readOnly ? "disabled" : null}>
-            <label>Item Label</label>
-            <Dropdown value={itemLabel} placeholder='Item Label' fluid search selection options={labelOptions}
+        <Form.Field inline className={readOnly ? "disabled" : null}>
+            <label style={{'width': '12em'}}>Item Label</label>
+            <Dropdown value={itemLabel} placeholder='Item Label'  search selection options={labelOptions}
                       onChange={(evt, data) => onChange("itemLabel", data.value)}/>
         </Form.Field>
-        <Form.Field className={readOnly ? "disabled" : null}>
-            <label>Relationship Type</label>
-            <Dropdown placeholder='RelationshipType' fluid search selection options={relationshipTypeOptions}
+        <Form.Field inline className={readOnly ? "disabled" : null}>
+            <label style={{'width': '12em'}}>Relationship Type</label>
+            <Dropdown placeholder='RelationshipType'  search selection options={relationshipTypeOptions} value={relationshipType}
                       onChange={(evt, data) => onChange("relationshipType", data.value)}/>
         </Form.Field>
-        <Form.Field className={readOnly ? "disabled" : null}>
-            <label>Category Label</label>
-            <Dropdown value={categoryLabel} placeholder='Category Label' fluid search selection options={labelOptions}
+        <Form.Field inline className={readOnly ? "disabled" : null}>
+            <label style={{'width': '12em'}}>Category Label</label>
+            <Dropdown value={categoryLabel} placeholder='Category Label'  search selection options={labelOptions}
                       onChange={(evt, data) => onChange("categoryLabel", data.value)}/>
         </Form.Field>
     </Segment>

@@ -4,7 +4,7 @@ import WeightedSimilarityForm from "./WeightedSimilarityForm";
 
 const AlgoForm = ({
                       readOnly, children, onChange, labelOptions, relationshipTypeOptions, propertyKeyOptions, writeProperty, writeRelationshipType,
-                      similarityCutoff, degreeCutoff, direction, persist
+                      similarityCutoff, degreeCutoff, direction, persist, itemLabel, categoryLabel, relationshipType
                   }) => {
 
     return (
@@ -13,6 +13,7 @@ const AlgoForm = ({
                                     persist={persist} readOnly={readOnly}
                                     labelOptions={labelOptions} writeRelationshipType={writeRelationshipType}
                                     similarityCutoff={similarityCutoff}
+                                    itemLabel={itemLabel} categoryLabel={categoryLabel} relationshipType={relationshipType}
                                     degreeCutoff={degreeCutoff} propertyKeyOptions={propertyKeyOptions}
                                     relationshipTypeOptions={relationshipTypeOptions}>{children}</WeightedSimilarityForm>
 
