@@ -17,6 +17,8 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Reverse',
       persist: true,
       writeProperty: "degree",
@@ -35,6 +37,8 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Natural',
       persist: true,
       writeProperty: "eigenvector",
@@ -54,6 +58,8 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Natural',
       persist: true,
       writeProperty: "pagerank",
@@ -74,6 +80,8 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Natural',
       persist: true,
       writeProperty: "articlerank",
@@ -93,7 +101,7 @@ let algorithms = {
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
-    parameters: { persist: true, writeProperty: "closeness", direction:"Natural"},
+    parameters: {       label: "*", relationshipType: "*", persist: true, writeProperty: "closeness", direction:"Natural"},
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($config) YIELD nodeId, centrality AS score`),
     storeQuery: `CALL gds.alpha.closeness.write($config)`,
@@ -105,7 +113,7 @@ let algorithms = {
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
-    parameters: { persist: true, writeProperty: "harmonic", direction:"Natural"},
+    parameters: {       label: "*", relationshipType: "*", persist: true, writeProperty: "harmonic", direction:"Natural"},
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.harmonic.stream($config) YIELD nodeId, centrality AS score`),
     storeQuery: `CALL gds.alpha.harmonic.stream($config)`,
@@ -120,6 +128,8 @@ const baseBetweenness = {
   service: runAlgorithm,
   ResultView: CentralityResult,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     direction: 'Natural',
     persist: true,
     writeProperty: "betweenness",
@@ -140,6 +150,8 @@ const baseApproxBetweenness = {
 const oldApproxBetweenness = {
   Form: ApproxBetweennessForm,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     strategy: "random",
     direction: "Natural",
     persist: true,
@@ -154,6 +166,8 @@ const oldApproxBetweenness = {
 const newApproxBetweenness = {
   Form: NewApproxBetweennessForm,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     samplingSize: 100,
     direction: "Natural",
     persist: true,

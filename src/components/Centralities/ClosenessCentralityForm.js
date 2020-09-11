@@ -2,9 +2,9 @@ import React from 'react'
 import {Form} from "semantic-ui-react"
 import CentralityForm from "./CentralityForm"
 
-export default ({ readOnly, onChange, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, direction, persist, maxDepth, relationshipOrientationOptions, children }) => (
+export default ({ label, readOnly, onChange, labelOptions, relationshipType, relationshipTypeOptions, writeProperty, direction, persist, maxDepth, relationshipOrientationOptions, children }) => (
   <Form size='mini' style={{ marginBottom: '1em' }}>
-    <CentralityForm readOnly={readOnly} onChange={onChange} direction={direction} relationshipType={relationshipType} writeProperty={writeProperty} persist={persist} labelOptions={labelOptions} relationshipOrientationOptions={relationshipOrientationOptions} relationshipTypeOptions={relationshipTypeOptions} >
+    <CentralityForm label={label} readOnly={readOnly} onChange={onChange} direction={direction} relationshipType={relationshipType} writeProperty={writeProperty} persist={persist} labelOptions={labelOptions} relationshipOrientationOptions={relationshipOrientationOptions} relationshipTypeOptions={relationshipTypeOptions} >
         {children}
     </CentralityForm>
   </Form>

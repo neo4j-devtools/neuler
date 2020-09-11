@@ -43,6 +43,8 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: LouvainResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Undirected',
       persist: true,
       writeProperty: "louvain",
@@ -71,6 +73,8 @@ LIMIT toInteger($limit);`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Undirected',
       persist: true,
       writeProperty: "modularityOptimization",
@@ -93,6 +97,8 @@ LIMIT toInteger($limit);`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Undirected',
       persist: true,
       writeProperty: "k1Coloring",
@@ -113,6 +119,8 @@ LIMIT toInteger($limit);`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       direction: 'Undirected',
       persist: true,
       writeProperty: "lpa",
@@ -132,6 +140,8 @@ LIMIT toInteger($limit);`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
+      label: "*",
+      relationshipType: "*",
       persist: true,
       writeProperty: "unionFind",
       defaultValue: 1.0,
@@ -149,7 +159,7 @@ LIMIT toInteger($limit);`,
     parametersBuilder: communityParams,
     service: runAlgorithm,
     ResultView: CommunityResult,
-    parameters: {persist: true, writeProperty: "scc", defaultValue: 1.0, direction: 'Undirected',},
+    parameters: {label: "*",  relationshipType: "*",persist: true, writeProperty: "scc", defaultValue: 1.0, direction: 'Undirected',},
     streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, componentId AS community`),
     storeQuery: `CALL gds.alpha.scc.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
@@ -172,7 +182,7 @@ const baseTriangles = {
   parametersBuilder: communityParams,
   service: triangles,
   ResultView: TrianglesResult,
-  parameters: {persist: false, direction: 'Undirected'},
+  parameters: {label: "*", relationshipType: "*", persist: false, direction: 'Undirected'},
   storeQuery: ``,
   getFetchQuery: () => ``,
   description: "finds set of three nodes, where each node has a relationship to all other nodes"
@@ -196,6 +206,8 @@ const oldTriangleCount = {
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     persist: true,
     writeProperty: "trianglesCount",
     direction: "Undirected"
@@ -216,6 +228,8 @@ const newTriangleCount = {
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.triangleCount.write($config)`,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     persist: true,
     writeProperty: "trianglesCount",
     direction: "Undirected"
@@ -241,6 +255,8 @@ const oldLocalClusteringCoefficient = {
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     persist: true,
     clusteringCoefficientProperty: "coefficient",
     direction: "Undirected"
@@ -259,6 +275,8 @@ const newLocalClusteringCoefficient = {
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.localClusteringCoefficient.write($config)`,
   parameters: {
+    label: "*",
+    relationshipType: "*",
     persist: true,
     writeProperty: "coefficient",
     direction: "Undirected"

@@ -184,7 +184,9 @@ const TabExampleVerticalTabular = (props) => {
         requiredProperties: Object.keys(parameters)
       })
 
-      addNewTask(activeGroup, activeAlgorithm, addLimits(params), addLimits(parameters))
+      const formParameters = addLimits(parameters);
+      console.log("formParameters", formParameters)
+      addNewTask(activeGroup, activeAlgorithm, addLimits(params), formParameters)
     }
 
   }, [JSON.stringify(props.currentAlgorithm)])

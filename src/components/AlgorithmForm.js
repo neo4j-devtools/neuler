@@ -11,7 +11,7 @@ const AlgoForm = (props) => {
   const {task} = props
 
   const [parameters, setParameters] = React.useState({})
-  const [labelOptions, setLabelOptions] = React.useState([{ key: null, value: null, text: 'Any' }])
+  const [labelOptions, setLabelOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
   const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
   const [propertyKeyOptions, setPropertyKeyOptions] = React.useState([])
   const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{ key: "Natural", value: "Natural", text: 'Natural' }])
@@ -29,9 +29,11 @@ const AlgoForm = (props) => {
     relationshipTypes.unshift({ key: "*", value: "*", text: 'Any' })
     setRelationshipTypeOptions(relationshipTypes)
 
-    setPropertyKeyOptions(metadata.propertyKeys.map(row => {
+    const  propertyKeys = metadata.propertyKeys.map(row => {
       return {key: row.propertyKey, value: row.propertyKey, text: row.propertyKey}
-    }))
+    });
+    propertyKeys.unshift({ key: null, value: null, text: 'None' })
+    setPropertyKeyOptions(propertyKeys)
 
     setRelationshipOrientationOptions([
       {key: "Natural", value: "Natural", text: "Natural"},
@@ -109,7 +111,8 @@ const AlgoForm = (props) => {
   return (
       <div style={containerStyle}>
         <div style={{marginBottom: '1em'}}>
-          <AlgoForm {...parameters} labelOptions={labelOptions}
+          <AlgoForm {...parameters}
+                    labelOptions={labelOptions}
                     relationshipTypeOptions={relationshipTypeOptions}
                     relationshipOrientationOptions={relationshipOrientationOptions}
                     propertyKeyOptions={propertyKeyOptions}
