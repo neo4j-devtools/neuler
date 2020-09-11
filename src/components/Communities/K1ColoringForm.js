@@ -2,6 +2,7 @@ import React from 'react'
 import {Form, Input, Label, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
+import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const AlgoForm = ({readOnly, children, onChange, label, labelOptions, maxIterations, relationshipType, relationshipTypeOptions,
                       relationshipOrientationOptions, propertyKeyOptions, weightProperty, writeProperty, defaultValue, direction, persist}) => {
@@ -32,14 +33,11 @@ const AlgoForm = ({readOnly, children, onChange, label, labelOptions, maxIterati
 
 
 const Parameters = ({maxIterations, onChange, readOnly}) => {
-    return <Segment key={maxIterations}>
-        <Label as='a' attached='top left'>
-            Algorithm Parameters
-        </Label>
+    return <OpenCloseSection title="Algorithm Parameters">
         <Form.Field disabled={readOnly} inline label={<label style={{'width': '12em'}}>Iterations</label>}
                     control={Input} type='number' value={maxIterations}
                     onChange={(evt, data) => onChange('maxIterations', data.value)} min={1} max={50} step={1}/>
-    </Segment>
+    </OpenCloseSection>
 }
 
 export default AlgoForm

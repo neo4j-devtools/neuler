@@ -2,6 +2,7 @@ import React from 'react'
 import {Form, Input, Label, Popup, Segment} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
+import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const AlgoForm = ({children, readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions,
                       relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, direction, persist}) => {
@@ -30,10 +31,7 @@ const AlgoForm = ({children, readOnly, onChange, labelOptions, label, relationsh
 }
 
 const Parameters = ({startNode, endNode, onChange, readOnly}) => {
-    return <Segment>
-        <Label as='a' attached='top left'>
-            Algorithm Parameters
-        </Label>
+    return <OpenCloseSection title="Algorithm Parameters">
         <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Start Node</label>
             <Form.Field >
@@ -53,8 +51,7 @@ const Parameters = ({startNode, endNode, onChange, readOnly}) => {
                        content='Populate this field with the value of any property on any node'/>
             </Form.Field>
         </Form.Group>
-
-    </Segment>
+    </OpenCloseSection>
 }
 
 export default AlgoForm

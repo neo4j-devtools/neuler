@@ -1,5 +1,6 @@
 import React from 'react'
 import {Form, Input, Label, Segment} from "semantic-ui-react";
+import {OpenCloseSection} from "./OpenCloseSection";
 
 export const ResultFilteringFields = ({limit, communityNodeLimit, returnsCommunities, updateCommunityNodeLimit, updateLimit, readOnly}) => {
     return <React.Fragment>
@@ -17,17 +18,7 @@ export const ResultFilteringFields = ({limit, communityNodeLimit, returnsCommuni
 }
 
 export const ResultsFilteringWrapper = ({children}) => {
-    const [open, setOpen] = React.useState(true);
-    const style = {display: open ? "" : "none"}
-
-    return <Segment>
-        <Label as='a' attached='top left' onClick={() => setOpen(!open)}>
-            Results
-        </Label>
-
-
-        <Form style={style}>
-            {children}
-        </Form>
-    </Segment>
+    return <OpenCloseSection title="Results">
+        {children}
+    </OpenCloseSection>
 }
