@@ -13,7 +13,7 @@ const defaultIconStyle = {
 
 const menuStyle = {
     borderRadius: '0',
-    height: '100vh',
+    height: '100%',
     display: 'flex',
     justifyContent: 'space-between',
     width: '6em'
