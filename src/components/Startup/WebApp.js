@@ -65,7 +65,7 @@ const NewApp = (props) => {
 
     return <Container fluid style={{display: 'flex'}}>
         <div style={{width: '100%'}}>
-            <Segment basic inverted vertical={false} style={{height: '100vh'}}>
+            <Segment basic inverted vertical={false}>
                 <div style={{textAlign: "center"}}>
                     <h1 className="loading">Launching NEuler - The Graph Data Science Playground</h1>
                 </div>
