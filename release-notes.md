@@ -1,5 +1,12 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.34 (2020-09-14)
+
+* Save config of form across procedure runs
+* Clearer explanation of the form parameters configured per algorithm run
+* Updated startup flow to indicate when active graph is unavailable
+* Fixed bug on scrolling form
+
 ## 0.1.33 (2020-09-08)
 
 * Community Detection algorithms now return results grouped by community
