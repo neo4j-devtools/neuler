@@ -28,7 +28,7 @@ export const initializeWebConnection = (setConnected, setDisconnected, onError) 
 
     tryConnect(credentials)
         .then(() => setConnected(credentials))
-        .catch((error) => {
+        .catch((error)  => {
             onError(error)
         })
 
@@ -36,5 +36,7 @@ export const initializeWebConnection = (setConnected, setDisconnected, onError) 
 
 export const tryConnect = credentials => {
     onNewConnection(credentials)
+
+    // return Promise.resolve([]);
     return runCypherDefaultDatabase("RETURN 1")
 }

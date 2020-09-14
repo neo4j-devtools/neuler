@@ -76,7 +76,7 @@ class Home extends Component {
 
                     <div>
                         <p>
-                            Connected to: {this.state.serverInfo.address}
+                            Connected to: {this.props.connectionInfo.credentials.username + "@" + this.props.connectionInfo.credentials.host}
                         </p>
 
                         <Button as='div' labelPosition='left'>
@@ -218,7 +218,8 @@ class Home extends Component {
 const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,
     metadata: state.metadata,
-    labels: state.settings.labels
+    labels: state.settings.labels,
+    connectionInfo: state.connections,
 })
 
 const mapDispatchToProps = dispatch => ({

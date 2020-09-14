@@ -14,39 +14,28 @@ import {
     setVersions
 } from "../../ducks/metadata"
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
-import {initializeWebConnection} from "../../services/connections"
 import {addDatabase, initLabel} from "../../ducks/settings";
 import {WebAppLoadingArea} from "./WebAppLoadingArea";
 import {LoadingIcon} from "./LoadingIcon";
-import {
-    ALL_DONE,
-    CHECKING_APOC_PLUGIN,
-    CHECKING_GDS_PLUGIN,
-    CONNECTING_TO_DATABASE,
-    onConnected
-} from "./startup";
+import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE, onConnected} from "./startup";
 import {getDriver} from "../../services/stores/neoStore";
 
 const NewApp = (props) => {
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
-    const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
+    const [currentStepFailed, setCurrentStepFailed] = React.useState(true)
     const [showNeuler, setShowNeuler] = React.useState(false)
     const { setConnected, setDisconnected, connectionInfo } = props
 
     const [serverInfo, setServerInfo] = React.useState(null)
 
     React.useEffect(() => {
-        initializeWebConnection(setConnected, setDisconnected, (error) => {
-            setCurrentStepFailed(true)
-        })
-    }, [])
-
-    React.useEffect(() => {
         if (props.connectionInfo.status === CONNECTED) {
             setCurrentStep(CHECKING_GDS_PLUGIN)
             setCurrentStepFailed(false)
             onConnected(props)
-            getDriver().verifyConnectivity().then(value => setServerInfo(value.address))
+            getDriver().verifyConnectivity().then(value => {
+                setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
+            })
         }
 
     }, [props.connectionInfo.status])
@@ -63,7 +52,7 @@ const NewApp = (props) => {
 
     const smallStyle = {fontSize: "1.2rem", lineHeight: "20px", fontStyle: "italic"}
 
-    return <Container fluid style={{display: 'flex'}}>
+    return <Container fluid style={{display: 'flex', height: '100%', overflowY: 'auto'}}>
         <div style={{width: '100%'}}>
             <Segment basic inverted vertical={false}>
                 <div style={{textAlign: "center"}}>
@@ -74,7 +63,7 @@ const NewApp = (props) => {
                     <div className="loading">
                         <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
                                      currentStepFailed={currentStepFailed}/>
-                        <p>Connecting to database
+                        <p>Connecting to server
 
                         </p>
                     </div>
@@ -100,7 +89,7 @@ const NewApp = (props) => {
 
                 <Divider />
 
-                <div style={{textAlign: "center"}}>
+                <div>
                     <WebAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
                                        connectionStatus={connectionInfo.status} currentStep={currentStep}
                                        setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>

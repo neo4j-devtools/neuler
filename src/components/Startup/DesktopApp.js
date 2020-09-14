@@ -104,7 +104,7 @@ const NewApp = (props) => {
 
         <Divider />
 
-        <div style={{textAlign: "center"}}>
+        <div>
           <DesktopAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
                                  activeProject={activeProject} activeGraph={activeGraph}
                                  connectionStatus={connectionInfo.status} currentStep={currentStep}

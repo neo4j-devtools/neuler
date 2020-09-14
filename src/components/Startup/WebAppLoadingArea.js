@@ -40,7 +40,7 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
                 {placeholder}
             </CheckAPOCInstalled>;
         case ALL_DONE:
-            return <div style={{padding: "20px"}}>
+            return <div style={{padding: "20px", textAlign: "center"}}>
                 <Message color="grey" attached header="Neuler ready to launch"
                          content="Connected to database and all dependencies found. Neuler will launch shortly"/>
             </div>
@@ -52,6 +52,7 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
 const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected}) => {
     const errorMsgTemplate = "Could not get a connection! Check that you entered the correct credentials and that the database is running."
     const [errorMessage, setErrorMessage] = React.useState(null)
+    const [extraErrorMessage, setExtraErrorMessage] = React.useState(null)
 
     const tryingToConnect = <div style={{padding: "20px"}}>
         <Message color="grey" attached header="Trying to connect"
@@ -64,17 +65,24 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
             return <ConnectModal
                 key="modal"
                 errorMsg={errorMessage}
-                onSubmit={(username, password) => {
+                extraErrorMessage={extraErrorMessage}
+                clearErrorMessages={() => {
                     setErrorMessage(null)
-                    const credentials = {username, password}
+                    setExtraErrorMessage(null)
+                }}
+                onSubmit={(boltUri, username, password) => {
+                    setErrorMessage(null)
+                    setExtraErrorMessage(null)
+                    const credentials = {host: boltUri, username, password}
                     tryConnect(credentials)
                         .then(() => {
                             setCurrentStep(CHECKING_GDS_PLUGIN)
                             setConnected(credentials)
                         })
-                        .catch(() => {
+                        .catch((error) => {
                             setDisconnected()
                             setErrorMessage(errorMsgTemplate)
+                            setExtraErrorMessage(error.message)
                         })
                 }}
                 show={true}

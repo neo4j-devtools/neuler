@@ -20,7 +20,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     if (algorithmsInstalled) {
         return props.children;
     } else {
-        return <React.Fragment>
+        return <div style={{textAlign: "center"}}>
 
             <h1>Graph Data Science Library Missing</h1>
 
@@ -35,7 +35,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
                 </p>
             </div>
 
-        </React.Fragment>
+        </div>
     }
 }
 
