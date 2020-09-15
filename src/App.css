@@ -47,9 +47,26 @@ div.loading {
 }
 
 div.loading p {
-  width: 250px;
+  max-width: 250px;
   text-align: left;
   line-height: 42px;
+}
+
+div.loading-wrapper {
+  text-align: center;
+  padding-top: 10px;
+  display: flex;
+  justify-content: center;
+}
+
+@media screen and (max-width: 870px) {
+  div.loading-wrapper {
+    flex-flow: wrap;
+  }
+
+  div.loading {
+    flex: 1 100%;
+  }
 }
 
 i.loading-icon, div.large.loader.loading-icon {

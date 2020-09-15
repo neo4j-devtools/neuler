@@ -1,5 +1,13 @@
 import {subscribeToDatabaseCredentialsForActiveGraph} from 'graph-app-kit/components/GraphAppBase'
-import {onDisconnected, onNewConnection, runCypherDefaultDatabase} from "./stores/neoStore"
+import {
+    getDriver,
+    mainNeo4jVersion,
+    onDisconnected,
+    onNeo4jVersion,
+    onNewConnection,
+    runCypherDefaultDatabase,
+    runCypherSystemDatabase
+} from "./stores/neoStore"
 
 export const initializeDesktopConnection = (setConnected, setDisconnected, onError, setActiveProject, setActiveGraph, noActiveGraph) => {
     if (window.neo4jDesktopApi) {
@@ -20,23 +28,16 @@ export const initializeDesktopConnection = (setConnected, setDisconnected, onErr
     }
 }
 
-export const initializeWebConnection = (setConnected, setDisconnected, onError) => {
-    const credentials = {
-        username: 'neo4j',
-        password: 'neo4j'
-    }
-
-    tryConnect(credentials)
-        .then(() => setConnected(credentials))
-        .catch((error)  => {
-            onError(error)
-        })
-
-}
-
 export const tryConnect = credentials => {
     onNewConnection(credentials)
-
-    // return Promise.resolve([]);
-    return runCypherDefaultDatabase("RETURN 1")
+    return getDriver().verifyConnectivity().then(value => {
+        onNeo4jVersion(value.version.split("/")[1])
+        return Promise.resolve(mainNeo4jVersion())
+    }).then(version => {
+        if (version < 4) {
+            return runCypherDefaultDatabase("RETURN 1")
+        } else {
+            return runCypherSystemDatabase("show databases")
+        }
+    })
 }

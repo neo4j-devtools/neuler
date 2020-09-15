@@ -61,6 +61,7 @@ class Home extends Component {
         }
 
         const {selectGroup, setActiveDatabase, metadata} = this.props
+        const credentials = this.props.connectionInfo.credentials
 
         const databaseOptions= metadata.databases.map(value => {
             return {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
@@ -76,7 +77,7 @@ class Home extends Component {
 
                     <div>
                         <p>
-                            Connected to: {this.props.connectionInfo.credentials.username + "@" + this.props.connectionInfo.credentials.host}
+                            Connected to: {credentials.username + "@" + credentials.host}
                         </p>
 
                         <Button as='div' labelPosition='left'>

@@ -20,8 +20,6 @@ const ConnectForm = (props) => {
         {key: 'neo4j+ssc', value: 'neo4j+ssc', text: 'neo4j+ssc'},
     ]
 
-    console.log(extraErrorMessage)
-
     return (
         <div style={{padding: "20px", maxWidth: "1000px", margin: "auto"}}>
             <Message color="grey" attached={true} header="Connect to Neo4j Server"/>

@@ -20,8 +20,8 @@ export const getActiveDatabase = () => {
 }
 
 export const hasNamedDatabase = () => {
-  const version = getNeo4jVersion().split(".").slice(0, 1).join(".")
-  return version === "4"
+  const version = mainNeo4jVersion()
+  return version >= 4
 }
 
 export const onNewConnection = credentials => {
@@ -47,9 +47,13 @@ const getSession = (database) => {
   return getDriver().session({database: database})
 }
 
+export const mainNeo4jVersion = () => {
+  return parseInt(getNeo4jVersion().split(".").slice(0, 1).join("."));
+}
+
 export const runCypher = (cypher, parameters = {}) => {
-  const version = getNeo4jVersion().split(".").slice(0, 1).join(".")
-  if (version === "4") {
+  const version = mainNeo4jVersion()
+  if (version === 4) {
     return getSession(activeDatabase).run(cypher, parameters)
   } else {
     return getDriver().session().run(cypher, parameters)

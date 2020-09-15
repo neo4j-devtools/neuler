@@ -18,7 +18,6 @@ import {addDatabase, initLabel} from "../../ducks/settings";
 import {WebAppLoadingArea} from "./WebAppLoadingArea";
 import {LoadingIcon} from "./LoadingIcon";
 import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE, onConnected} from "./startup";
-import {getDriver} from "../../services/stores/neoStore";
 
 const NewApp = (props) => {
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
@@ -33,9 +32,7 @@ const NewApp = (props) => {
             setCurrentStep(CHECKING_GDS_PLUGIN)
             setCurrentStepFailed(false)
             onConnected(props)
-            getDriver().verifyConnectivity().then(value => {
-                setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
-            })
+            setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
         }
 
     }, [props.connectionInfo.status])
@@ -59,7 +56,7 @@ const NewApp = (props) => {
                     <h1 className="loading">Launching NEuler - The Graph Data Science Playground</h1>
                 </div>
                 <Divider/>
-                <div style={{textAlign: "center", paddingTop: "10px", display: "flex", justifyContent: "center"}}>
+                <div className="loading-wrapper">
                     <div className="loading">
                         <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
                                      currentStepFailed={currentStepFailed}/>
@@ -81,9 +78,7 @@ const NewApp = (props) => {
 
                 <div style={{...smallStyle, paddingBottom: "10px", textAlign: "center", color: "#ccc"}}>
                         <div style={smallStyle}>
-                        {serverInfo ? <React.Fragment>
-                            Connected to: {serverInfo}
-                        </React.Fragment> : null}
+                            {serverInfo ? <React.Fragment>Connected to: {serverInfo}</React.Fragment> : null}
                         </div>
                 </div>
 
