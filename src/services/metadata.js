@@ -1,4 +1,4 @@
-import {extractMainVersion, runCypher, runCypherDefaultDatabase, runCypherSystemDatabase} from "./stores/neoStore"
+import {extractMainVersion, runCypher, runCypherSystemDatabase} from "./stores/neoStore"
 
 export const loadLabels = () => {
   return runCypher("CALL db.labels()", {})
@@ -37,7 +37,7 @@ RETURN label, collect(propertyName) AS propertyKeys`, {})
 
 
 export const loadVersions = () => {
-  return runCypherDefaultDatabase(`CALL dbms.components() 
+  return runCypher(`CALL dbms.components() 
 YIELD versions
 UNWIND versions as version 
 RETURN version AS neo4jVersion, gds.version() AS gdsVersion

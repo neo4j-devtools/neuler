@@ -138,9 +138,9 @@ export default (state = getInitialState(), action) => {
         ...state,
         hiddenProperties
       }
-    case ADD_DATABASE:
-      let labels = { ...state.labels }
-      if(!(action.database in labels)) {
+    case ADD_DATABASE: {
+      let labels = {...state.labels}
+      if (!(action.database in labels)) {
         labels[action.database] = {}
       }
 
@@ -148,6 +148,7 @@ export default (state = getInitialState(), action) => {
         ...state,
         labels
       }
+    }
     case INIT_LABEL:
       let initialLabels = {...state.labels}
 

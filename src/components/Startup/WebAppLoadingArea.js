@@ -1,4 +1,4 @@
-import {Button, Dropdown, Loader, Message, Container, Form, Divider} from "semantic-ui-react";
+import {Button, Divider, Dropdown, Form, Loader, Message} from "semantic-ui-react";
 import CheckGraphAlgorithmsInstalled from "../CheckGraphAlgorithmsInstalled";
 import CheckAPOCInstalled from "../CheckAPOCInstalled";
 import React from "react";
@@ -7,7 +7,7 @@ import {CONNECTING, DISCONNECTED, INITIAL} from "../../ducks/connection";
 import {ConnectModal} from "../ConnectModal";
 import {tryConnect} from "../../services/connections";
 import {loadDatabases} from "../../services/metadata";
-import {getActiveDatabase, getNeo4jVersion, onActiveDatabase} from "../../services/stores/neoStore";
+import {getNeo4jVersion, onActiveDatabase} from "../../services/stores/neoStore";
 import {setActiveDatabase} from "../../ducks/metadata";
 import {connect} from "react-redux";
 import {Render} from "graph-app-kit/components/Render";
@@ -58,16 +58,20 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
 }
 
 const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFailed}) => {
-
     const [databases, setDatabases] = React.useState([])
     const [selectedDatabase, setSelectedDatabase] = React.useState(null)
-    const errorMessageTemplate = "No database selected. Pick a database to connect to from the dropdown above."
+    const [loadedDatabases, setLoadedDatabases] = React.useState(false)
 
     const [errorMessage, setErrorMessage] = React.useState(null)
+    const errorMessageTemplate = "No database selected. Pick a database to connect to from the dropdown above."
 
     React.useEffect(() => {
         loadDatabases(getNeo4jVersion()).then(databases => {
             setDatabases(databases)
+            setLoadedDatabases(true)
+            if(databases.length === 1) {
+                setSelectedDatabase(databases[0].name)
+            }
         })
     }, [])
 
@@ -76,7 +80,6 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
     })
 
     const onSubmit = () => {
-        console.log("selectedDatabase", selectedDatabase)
         if(!selectedDatabase) {
             setErrorMessage(errorMessageTemplate)
             setCurrentStepFailed(true)
@@ -87,40 +90,42 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
         }
     }
 
-    console.log("errorMessage", errorMessage)
 
     return <div style={{padding: "20px", maxWidth: "1000px", margin: "auto"}}>
         <Message color="grey" attached={true} header="Select database"/>
         <Form error={!!errorMessage}  className='attached fluid segment' onSubmit={onSubmit}>
-            {databaseOptions.length > 0 ?
-                <React.Fragment>
-                    <Dropdown placeholder='Database' fluid search selection
-                              style={{"width": "290px"}}
-                              options={databaseOptions} onChange={(evt, data) => {
-                        setErrorMessage(null)
-                        setSelectedDatabase(data.value)
-                    }}/>
-                    <Render if={errorMessage}>
-                        <Message error>
-                            <Message.Header>
-                                No database selected
-                            </Message.Header>
-                            <Message.Content>
-                                {errorMessage}
-                            </Message.Content>
-                        </Message>
-                    </Render>
-                    <Divider/>
-                    <Button
-                        positive
-                        icon='right arrow'
-                        labelPosition='right'
-                        content='Select database'
-                        onClick={onSubmit}
+            {databaseOptions.length > 0 &&
+            <React.Fragment>
+                <Dropdown placeholder='Database' fluid search selection value={selectedDatabase}
+                          style={{"width": "290px"}}
+                          options={databaseOptions} onChange={(evt, data) => {
+                    setErrorMessage(null)
+                    setSelectedDatabase(data.value)
+                }}/>
+                <Render if={errorMessage}>
+                    <Message error>
+                        <Message.Header>
+                            No database selected
+                        </Message.Header>
+                        <Message.Content>
+                            {errorMessage}
+                        </Message.Content>
+                    </Message>
+                </Render>
+                <Divider/>
+                <Button
+                    positive
+                    icon='right arrow'
+                    labelPosition='right'
+                    content='Select database'
+                    onClick={onSubmit}
 
-                    />
-                </React.Fragment>
-                : <Message>
+                />
+            </React.Fragment>
+            }
+
+            {loadedDatabases && databaseOptions.length === 0 &&
+            <Message>
                     <Message.Header>
                         No databases available
                     </Message.Header>
@@ -128,12 +133,22 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
                         The selected user does not have permissions to access any databases on this server
                     </Message.Content>
                 </Message>}
+
+            {!loadedDatabases &&
+            <Message>
+                <Message.Header>
+                    Loading databases
+                </Message.Header>
+                <Message.Content>
+                    <Loader active inline='centered'>Loading</Loader>
+                </Message.Content>
+            </Message>}
         </Form>
 
     </div>
 }
 
-const SelectDatabase = connect(state => ({}), dispatch => ({
+const SelectDatabase = connect(() => ({}), dispatch => ({
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
 }))(SelectDatabaseForm)
 

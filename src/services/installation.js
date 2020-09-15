@@ -1,13 +1,13 @@
-import {runCypherDefaultDatabase} from "./stores/neoStore"
+import {runCypher} from "./stores/neoStore"
 
 export const checkApocInstalled = () => {
-  return runCypherDefaultDatabase(findApocProceduresCypher)
+  return runCypher(findApocProceduresCypher)
       .then(result => (parseResultStream(result)))
       .catch(handleException)
 }
 
 export const checkGraphAlgorithmsInstalled = () => {
-  return runCypherDefaultDatabase(findGraphAlgosProceduresCypher)
+  return runCypher(findGraphAlgosProceduresCypher)
     .then(result => (parseResultStream(result)))
     .catch(handleException)
 }
