@@ -14,9 +14,10 @@ import {FeedbackForm} from "./Feedback/FeedbackForm";
 import {onConnected} from "./Startup/startup";
 
 
-const NEuler = ({activeGroup, activeAlgorithm, selectAlgorithm}) => {
+const NEuler = (props) => {
+    const {activeGroup, activeAlgorithm, selectAlgorithm} = props
     const onComplete = () => {
-        onConnected(this.props)
+        onConnected(props)
     }
 
     const selectComponent = (activeGroup) => {
