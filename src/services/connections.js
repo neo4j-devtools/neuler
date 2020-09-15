@@ -1,9 +1,7 @@
 import {subscribeToDatabaseCredentialsForActiveGraph} from 'graph-app-kit/components/GraphAppBase'
 import {
-    getDriver,
-    mainNeo4jVersion,
+    extractMainVersion,
     onDisconnected,
-    onNeo4jVersion,
     onNewConnection,
     runCypherDefaultDatabase,
     runCypherSystemDatabase
@@ -15,8 +13,9 @@ export const initializeDesktopConnection = (setConnected, setDisconnected, onErr
             (credentials, activeProject, activeGraph) => {
                 setActiveProject(activeProject.name)
                 setActiveGraph(activeGraph.name)
-                onNewConnection(credentials)
-                setConnected(credentials)
+                onNewConnection(credentials).then(version => {
+                    setConnected(credentials)
+                })
             },
             () => {
                 setDisconnected()
@@ -29,15 +28,13 @@ export const initializeDesktopConnection = (setConnected, setDisconnected, onErr
 }
 
 export const tryConnect = credentials => {
-    onNewConnection(credentials)
-    return getDriver().verifyConnectivity().then(value => {
-        onNeo4jVersion(value.version.split("/")[1])
-        return Promise.resolve(mainNeo4jVersion())
-    }).then(version => {
-        if (version < 4) {
+    return onNewConnection(credentials).then(version => {
+        const mainVersion = extractMainVersion(version)
+        if (mainVersion < 4) {
             return runCypherDefaultDatabase("RETURN 1")
         } else {
             return runCypherSystemDatabase("show databases")
         }
     })
+
 }

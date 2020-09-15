@@ -27,6 +27,11 @@ export const hasNamedDatabase = () => {
 export const onNewConnection = credentials => {
   neoDriver = driver(credentials.host || 'bolt://localhost:7687',
     auth.basic(credentials.username, credentials.password))
+
+  return neoDriver.verifyConnectivity().then(value => {
+    onNeo4jVersion(value.version.split("/")[1])
+    return Promise.resolve(getNeo4jVersion())
+  })
 }
 
 export const onNeo4jVersion = version => {

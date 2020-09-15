@@ -22,7 +22,7 @@ import {
     CHECKING_APOC_PLUGIN,
     CHECKING_GDS_PLUGIN,
     CONNECTING_TO_DATABASE,
-    onConnected, SELECT_DATABASE,
+    refreshMetadata, SELECT_DATABASE,
     webAppSteps
 } from "./startup";
 
@@ -47,7 +47,7 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if(currentStep === ALL_DONE) {
-            onConnected(props, () => setMetadataLoaded(true))
+            refreshMetadata(props, () => setMetadataLoaded(true))
         }
     }, [currentStep])
 

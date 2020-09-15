@@ -25,6 +25,8 @@ export const DesktopAppLoadingArea = ({
         setCurrentStepFailed(false)
     }
 
+    console.log("currentStep", currentStep)
+
     switch (currentStep) {
         case CONNECTING_TO_DATABASE:
             return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep}

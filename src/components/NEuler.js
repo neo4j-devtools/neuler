@@ -11,13 +11,13 @@ import {setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadat
 import Home from "./Home";
 import About, {NEULER_VERSION} from "./About";
 import {FeedbackForm} from "./Feedback/FeedbackForm";
-import {onConnected} from "./Startup/startup";
+import {refreshMetadata} from "./Startup/startup";
 
 
 const NEuler = (props) => {
     const {activeGroup, activeAlgorithm, selectAlgorithm} = props
     const onComplete = () => {
-        onConnected(props)
+        refreshMetadata(props)
     }
 
     const selectComponent = (activeGroup) => {

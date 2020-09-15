@@ -16,20 +16,23 @@ import {
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
 import {initializeDesktopConnection} from "../../services/connections"
 import {addDatabase, initLabel} from "../../ducks/settings";
-import {onConnected, steps, webAppSteps} from "./startup";
+import {
+  ALL_DONE,
+  CHECKING_APOC_PLUGIN,
+  CHECKING_GDS_PLUGIN,
+  CONNECTING_TO_DATABASE,
+  refreshMetadata,
+  steps
+} from "./startup";
 import {LoadingIcon} from "./LoadingIcon";
 import {DesktopAppLoadingArea} from "./DesktopAppLoadingArea";
-import {getDriver} from "../../services/stores/neoStore";
 
-const ALL_DONE = "all-done";
-const CONNECTING_TO_DATABASE = "database";
-const CHECKING_GDS_PLUGIN = "gds";
-const CHECKING_APOC_PLUGIN = "apoc";
 
 const NewApp = (props) => {
   const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
   const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
   const [showNeuler, setShowNeuler] = React.useState(false)
+  const [metadataLoaded, setMetadataLoaded] = React.useState(false)
   const { setConnected, setDisconnected, connectionInfo } = props
 
   const [activeProject, setActiveProject] = React.useState(null)
@@ -49,19 +52,24 @@ const NewApp = (props) => {
     if (props.connectionInfo.status === CONNECTED) {
       setCurrentStep(CHECKING_GDS_PLUGIN)
       setCurrentStepFailed(false)
-      onConnected(props)
-      getDriver().verifyConnectivity().then(value => setServerInfo(value.address))
+      setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
     }
 
   }, [props.connectionInfo.status])
 
-  if(currentStep === ALL_DONE) {
+  React.useEffect(() => {
+    if(currentStep === ALL_DONE) {
+      refreshMetadata(props, () => setMetadataLoaded(true))
+    }
+  }, [currentStep])
+
+  if(currentStep === ALL_DONE && metadataLoaded) {
     if(showNeuler) {
       return <NEuler key="app" {...props} />;
     } else {
       setTimeout(function () {
         setShowNeuler(true)
-      }, 1500);
+      }, 1000);
     }
   }
 
