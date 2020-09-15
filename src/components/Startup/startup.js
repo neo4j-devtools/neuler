@@ -17,7 +17,7 @@ export const webAppSteps = [
     CONNECTING_TO_DATABASE, SELECT_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
 ]
 
-export const onConnected = (props) => {
+export const onConnected = (props, finished = () => {}) => {
     checkGraphAlgorithmsInstalled().then((gdsInstalled) => {
         checkApocInstalled().then(apocInstalled => {
             if (apocInstalled && gdsInstalled) {
@@ -41,6 +41,7 @@ export const onConnected = (props) => {
                             props.initLabel(props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
                         })
 
+                        finished()
                     })
                 });
             } else {

@@ -31,6 +31,7 @@ const NewApp = (props) => {
     const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
     const [currentStepInProgress, setCurrentStepInProgress] = React.useState(false)
     const [showNeuler, setShowNeuler] = React.useState(false)
+    const [metadataLoaded, setMetadataLoaded] = React.useState(false)
     const { setConnected, setDisconnected, connectionInfo } = props
 
     const [serverInfo, setServerInfo] = React.useState(null)
@@ -46,17 +47,17 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if(currentStep === ALL_DONE) {
-            onConnected(props)
+            onConnected(props, () => setMetadataLoaded(true))
         }
     }, [currentStep])
 
-    if(currentStep === ALL_DONE) {
+    if(currentStep === ALL_DONE && metadataLoaded) {
         if(showNeuler) {
             return <NEuler key="app" {...props} />;
         } else {
             setTimeout(function () {
                 setShowNeuler(true)
-            }, 1500);
+            }, 1000);
         }
     }
 

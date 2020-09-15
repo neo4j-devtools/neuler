@@ -72,6 +72,12 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
             if(databases.length === 1) {
                 setSelectedDatabase(databases[0].name)
             }
+            if(databases.length > 1) {
+                const defaultDatabase = databases.find(database => database.default)
+                if(defaultDatabase) {
+                    setSelectedDatabase(defaultDatabase.name)
+                }
+            }
         })
     }, [])
 
@@ -135,14 +141,7 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
                 </Message>}
 
             {!loadedDatabases &&
-            <Message>
-                <Message.Header>
-                    Loading databases
-                </Message.Header>
-                <Message.Content>
-                    <Loader active inline='centered'>Loading</Loader>
-                </Message.Content>
-            </Message>}
+            <Loader active inline='centered'>Loading</Loader>}
         </Form>
 
     </div>
