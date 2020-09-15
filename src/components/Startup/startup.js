@@ -5,12 +5,18 @@ import {onNeo4jVersion} from "../../services/stores/neoStore";
 import {selectCaption, selectRandomColor} from "../NodeLabel";
 
 export const ALL_DONE = "all-done";
-export const CONNECTING_TO_DATABASE = "database";
+export const CONNECTING_TO_DATABASE = "connect-server";
+export const SELECT_DATABASE = "select-database";
 export const CHECKING_GDS_PLUGIN = "gds";
 export const CHECKING_APOC_PLUGIN = "apoc";
 export const steps = [
     CONNECTING_TO_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
 ]
+
+export const webAppSteps = [
+    CONNECTING_TO_DATABASE, SELECT_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
+]
+
 export const onConnected = (props) => {
     checkGraphAlgorithmsInstalled().then((gdsInstalled) => {
         checkApocInstalled().then(apocInstalled => {

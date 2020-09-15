@@ -1,14 +1,19 @@
-import {Loader, Message} from "semantic-ui-react";
+import {Button, Dropdown, Loader, Message, Container, Form, Divider} from "semantic-ui-react";
 import CheckGraphAlgorithmsInstalled from "../CheckGraphAlgorithmsInstalled";
 import CheckAPOCInstalled from "../CheckAPOCInstalled";
 import React from "react";
-import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE} from "./startup";
+import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE, SELECT_DATABASE} from "./startup";
 import {CONNECTING, DISCONNECTED, INITIAL} from "../../ducks/connection";
 import {ConnectModal} from "../ConnectModal";
 import {tryConnect} from "../../services/connections";
+import {loadDatabases} from "../../services/metadata";
+import {getActiveDatabase, getNeo4jVersion, onActiveDatabase} from "../../services/stores/neoStore";
+import {setActiveDatabase} from "../../ducks/metadata";
+import {connect} from "react-redux";
+import {Render} from "graph-app-kit/components/Render";
 
 
-export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected}) => {
+export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress}) => {
     const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
 
     const failedCurrentStep = () => {
@@ -27,8 +32,11 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
 
     switch (currentStep) {
         case CONNECTING_TO_DATABASE:
-            return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep}
+            return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}
+                                         setCurrentStepInProgress={setCurrentStepInProgress}
                                          setConnected={setConnected} setDisconnected={setDisconnected}/>
+        case SELECT_DATABASE:
+            return <SelectDatabase currentStep={currentStep} setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
         case CHECKING_GDS_PLUGIN:
             return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
                                                   gdsInstalled={gdsInstalled}>
@@ -49,7 +57,87 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
     }
 }
 
-const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected}) => {
+const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFailed}) => {
+
+    const [databases, setDatabases] = React.useState([])
+    const [selectedDatabase, setSelectedDatabase] = React.useState(null)
+    const errorMessageTemplate = "No database selected. Pick a database to connect to from the dropdown above."
+
+    const [errorMessage, setErrorMessage] = React.useState(null)
+
+    React.useEffect(() => {
+        loadDatabases(getNeo4jVersion()).then(databases => {
+            setDatabases(databases)
+        })
+    }, [])
+
+    const databaseOptions= databases.map(value => {
+        return  {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
+    })
+
+    const onSubmit = () => {
+        console.log("selectedDatabase", selectedDatabase)
+        if(!selectedDatabase) {
+            setErrorMessage(errorMessageTemplate)
+            setCurrentStepFailed(true)
+        } else {
+            setActiveDatabase(selectedDatabase);
+            onActiveDatabase(selectedDatabase);
+            setCurrentStep(CHECKING_GDS_PLUGIN)
+        }
+    }
+
+    console.log("errorMessage", errorMessage)
+
+    return <div style={{padding: "20px", maxWidth: "1000px", margin: "auto"}}>
+        <Message color="grey" attached={true} header="Select database"/>
+        <Form error={!!errorMessage}  className='attached fluid segment' onSubmit={onSubmit}>
+            {databaseOptions.length > 0 ?
+                <React.Fragment>
+                    <Dropdown placeholder='Database' fluid search selection
+                              style={{"width": "290px"}}
+                              options={databaseOptions} onChange={(evt, data) => {
+                        setErrorMessage(null)
+                        setSelectedDatabase(data.value)
+                    }}/>
+                    <Render if={errorMessage}>
+                        <Message error>
+                            <Message.Header>
+                                No database selected
+                            </Message.Header>
+                            <Message.Content>
+                                {errorMessage}
+                            </Message.Content>
+                        </Message>
+                    </Render>
+                    <Divider/>
+                    <Button
+                        positive
+                        icon='right arrow'
+                        labelPosition='right'
+                        content='Select database'
+                        onClick={onSubmit}
+
+                    />
+                </React.Fragment>
+                : <Message>
+                    <Message.Header>
+                        No databases available
+                    </Message.Header>
+                    <Message.Content>
+                        The selected user does not have permissions to access any databases on this server
+                    </Message.Content>
+                </Message>}
+        </Form>
+
+    </div>
+}
+
+const SelectDatabase = connect(state => ({}), dispatch => ({
+    setActiveDatabase: database => dispatch(setActiveDatabase(database)),
+}))(SelectDatabaseForm)
+
+const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected, setCurrentStepFailed, setCurrentStepInProgress}) => {
     const errorMsgTemplate = "Could not get a connection! Check that you entered the correct credentials and that the database is running."
     const [errorMessage, setErrorMessage] = React.useState(null)
     const [extraErrorMessage, setExtraErrorMessage] = React.useState(null)
@@ -71,15 +159,19 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
                     setExtraErrorMessage(null)
                 }}
                 onSubmit={(boltUri, username, password) => {
+                    setCurrentStepInProgress(true)
                     setErrorMessage(null)
                     setExtraErrorMessage(null)
                     const credentials = {host: boltUri, username, password}
                     tryConnect(credentials)
                         .then(() => {
-                            setCurrentStep(CHECKING_GDS_PLUGIN)
+                            setCurrentStepInProgress(false)
+                            setCurrentStep(SELECT_DATABASE)
                             setConnected(credentials)
                         })
                         .catch((error) => {
+                            setCurrentStepInProgress(false)
+                            setCurrentStepFailed(true)
                             setDisconnected()
                             setErrorMessage(errorMsgTemplate)
                             setExtraErrorMessage(error.message)

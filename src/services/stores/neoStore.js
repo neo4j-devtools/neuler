@@ -1,4 +1,4 @@
-import { driver, auth } from 'neo4j-driver'
+import {auth, driver} from 'neo4j-driver'
 
 let neoDriver
 let neo4jVersion
@@ -47,8 +47,12 @@ const getSession = (database) => {
   return getDriver().session({database: database})
 }
 
+export const extractMainVersion = (fullVersion) => {
+  return parseInt(fullVersion.split(".").slice(0, 1).join("."));
+}
+
 export const mainNeo4jVersion = () => {
-  return parseInt(getNeo4jVersion().split(".").slice(0, 1).join("."));
+  return extractMainVersion(getNeo4jVersion())
 }
 
 export const runCypher = (cypher, parameters = {}) => {

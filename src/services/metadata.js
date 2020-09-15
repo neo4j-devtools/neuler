@@ -1,4 +1,4 @@
-import {runCypher, runCypherDefaultDatabase, runCypherSystemDatabase} from "./stores/neoStore"
+import {extractMainVersion, runCypher, runCypherDefaultDatabase, runCypherSystemDatabase} from "./stores/neoStore"
 
 export const loadLabels = () => {
   return runCypher("CALL db.labels()", {})
@@ -47,9 +47,9 @@ LIMIT 1`, {})
 }
 
 export const loadDatabases = (neo4jVersion) => {
-  const version = neo4jVersion.split(".").slice(0, 1).join(".")
+  const version = extractMainVersion(neo4jVersion)
 
-  if(version === "4") {
+  if(version >= 4) {
     return runCypherSystemDatabase(`SHOW DATABASES`)
       .then(parseDatabasesResultStream)
       .catch(handleException)

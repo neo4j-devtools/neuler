@@ -16,12 +16,20 @@ import {
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
 import {addDatabase, initLabel} from "../../ducks/settings";
 import {WebAppLoadingArea} from "./WebAppLoadingArea";
-import {LoadingIcon} from "./LoadingIcon";
-import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE, onConnected} from "./startup";
+import {LoadingIcon, UserInputLoadingIcon} from "./LoadingIcon";
+import {
+    ALL_DONE,
+    CHECKING_APOC_PLUGIN,
+    CHECKING_GDS_PLUGIN,
+    CONNECTING_TO_DATABASE,
+    onConnected, SELECT_DATABASE,
+    webAppSteps
+} from "./startup";
 
 const NewApp = (props) => {
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
-    const [currentStepFailed, setCurrentStepFailed] = React.useState(true)
+    const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
+    const [currentStepInProgress, setCurrentStepInProgress] = React.useState(false)
     const [showNeuler, setShowNeuler] = React.useState(false)
     const { setConnected, setDisconnected, connectionInfo } = props
 
@@ -29,13 +37,18 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if (props.connectionInfo.status === CONNECTED) {
-            setCurrentStep(CHECKING_GDS_PLUGIN)
+            setCurrentStep(SELECT_DATABASE)
             setCurrentStepFailed(false)
-            onConnected(props)
             setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
         }
 
     }, [props.connectionInfo.status])
+
+    React.useEffect(() => {
+        if(currentStep === ALL_DONE) {
+            onConnected(props)
+        }
+    }, [currentStep])
 
     if(currentStep === ALL_DONE) {
         if(showNeuler) {
@@ -58,19 +71,28 @@ const NewApp = (props) => {
                 <Divider/>
                 <div className="loading-wrapper">
                     <div className="loading">
-                        <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
+                        <UserInputLoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
+                                     steps={webAppSteps} currentStepInProgress={currentStepInProgress} setCurrentStepInProgress={setCurrentStepInProgress}
                                      currentStepFailed={currentStepFailed}/>
                         <p>Connecting to server
 
                         </p>
                     </div>
                     <div className="loading">
+                        <UserInputLoadingIcon step={SELECT_DATABASE} currentStep={currentStep}
+                                     steps={webAppSteps}
+                                     currentStepFailed={currentStepFailed}/>
+                        <p>Select database</p>
+                    </div>
+                    <div className="loading">
                         <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep}
+                                     steps={webAppSteps}
                                      currentStepFailed={currentStepFailed}/>
                         <p>Checking GDS plugin</p>
                     </div>
                     <div className="loading">
                         <LoadingIcon step={CHECKING_APOC_PLUGIN} currentStep={currentStep}
+                                     steps={webAppSteps}
                                      currentStepFailed={currentStepFailed}/>
                         <p>Checking APOC plugin</p>
                     </div>
@@ -87,7 +109,10 @@ const NewApp = (props) => {
                 <div>
                     <WebAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
                                        connectionStatus={connectionInfo.status} currentStep={currentStep}
-                                       setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>
+                                       setCurrentStep={setCurrentStep}
+                                       setCurrentStepFailed={setCurrentStepFailed}
+                                       setCurrentStepInProgress={setCurrentStepInProgress}
+                    />
                 </div>
 
             </Segment>

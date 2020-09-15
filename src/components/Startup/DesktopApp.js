@@ -16,7 +16,7 @@ import {
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
 import {initializeDesktopConnection} from "../../services/connections"
 import {addDatabase, initLabel} from "../../ducks/settings";
-import {onConnected} from "./startup";
+import {onConnected, steps, webAppSteps} from "./startup";
 import {LoadingIcon} from "./LoadingIcon";
 import {DesktopAppLoadingArea} from "./DesktopAppLoadingArea";
 import {getDriver} from "../../services/stores/neoStore";
@@ -77,6 +77,7 @@ const NewApp = (props) => {
         <div style={{textAlign: "center", paddingTop: "10px", display: "flex", justifyContent: "center"}}>
           <div className="loading">
             <LoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
+                         steps={steps}
                          currentStepFailed={currentStepFailed}/>
             <p>
               Connecting to database
@@ -84,11 +85,13 @@ const NewApp = (props) => {
           </div>
           <div className="loading">
             <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep}
+                         steps={steps}
                          currentStepFailed={currentStepFailed}/>
             <p>Checking GDS plugin</p>
           </div>
           <div className="loading">
             <LoadingIcon step={CHECKING_APOC_PLUGIN} currentStep={currentStep}
+                         steps={steps}
                          currentStepFailed={currentStepFailed}/>
             <p>Checking APOC plugin</p>
           </div>
