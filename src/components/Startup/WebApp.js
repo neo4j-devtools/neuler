@@ -47,7 +47,7 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if(currentStep === ALL_DONE) {
-            refreshMetadata(props, () => setMetadataLoaded(true))
+            refreshMetadata(props, true,() => setMetadataLoaded(true))
         }
     }, [currentStep])
 

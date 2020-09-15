@@ -17,10 +17,12 @@ export const webAppSteps = [
     CONNECTING_TO_DATABASE, SELECT_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
 ]
 
-export const refreshMetadata = (props, finished = () => {
-}) => {
+export const refreshMetadata = (props, firstConnection=false, finished = () => {}) => {
     loadVersions().then(versions => {
-        sendMetrics("neuler-connected", true, versions)
+        if(firstConnection) {
+            sendMetrics("neuler-connected", true, versions)
+        }
+
 
         props.setGds(versions)
         onNeo4jVersion(versions.neo4jVersion)
