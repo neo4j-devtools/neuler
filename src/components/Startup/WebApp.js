@@ -14,7 +14,7 @@ import {
     setVersions
 } from "../../ducks/metadata"
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
-import {addDatabase, initLabel} from "../../ducks/settings";
+import {addDatabase, communityNodeLimit, initLabel, limit} from "../../ducks/settings";
 import {WebAppLoadingArea} from "./WebAppLoadingArea";
 import {LoadingIcon, UserInputLoadingIcon} from "./LoadingIcon";
 import {
@@ -22,7 +22,7 @@ import {
     CHECKING_APOC_PLUGIN,
     CHECKING_GDS_PLUGIN,
     CONNECTING_TO_DATABASE,
-    refreshMetadata, SELECT_DATABASE,
+    refreshMetadata, SELECT_DATABASE, setLimitDefaults,
     webAppSteps
 } from "./startup";
 
@@ -32,7 +32,7 @@ const NewApp = (props) => {
     const [currentStepInProgress, setCurrentStepInProgress] = React.useState(false)
     const [showNeuler, setShowNeuler] = React.useState(false)
     const [metadataLoaded, setMetadataLoaded] = React.useState(false)
-    const { setConnected, setDisconnected, connectionInfo } = props
+    const {setConnected, setDisconnected, connectionInfo} = props
 
     const [serverInfo, setServerInfo] = React.useState(null)
 
@@ -46,13 +46,14 @@ const NewApp = (props) => {
     }, [props.connectionInfo.status])
 
     React.useEffect(() => {
-        if(currentStep === ALL_DONE) {
-            refreshMetadata(props, true,() => setMetadataLoaded(true))
+        if (currentStep === ALL_DONE) {
+            refreshMetadata(props, true, () => setMetadataLoaded(true))
+            setLimitDefaults(props)
         }
     }, [currentStep])
 
-    if(currentStep === ALL_DONE && metadataLoaded) {
-        if(showNeuler) {
+    if (currentStep === ALL_DONE && metadataLoaded) {
+        if (showNeuler) {
             return <NEuler key="app" {...props} />;
         } else {
             setTimeout(function () {
@@ -73,16 +74,17 @@ const NewApp = (props) => {
                 <div className="loading-wrapper">
                     <div className="loading">
                         <UserInputLoadingIcon step={CONNECTING_TO_DATABASE} currentStep={currentStep}
-                                     steps={webAppSteps} currentStepInProgress={currentStepInProgress} setCurrentStepInProgress={setCurrentStepInProgress}
-                                     currentStepFailed={currentStepFailed}/>
+                                              steps={webAppSteps} currentStepInProgress={currentStepInProgress}
+                                              setCurrentStepInProgress={setCurrentStepInProgress}
+                                              currentStepFailed={currentStepFailed}/>
                         <p>Connecting to server
 
                         </p>
                     </div>
                     <div className="loading">
                         <UserInputLoadingIcon step={SELECT_DATABASE} currentStep={currentStep}
-                                     steps={webAppSteps}
-                                     currentStepFailed={currentStepFailed}/>
+                                              steps={webAppSteps}
+                                              currentStepFailed={currentStepFailed}/>
                         <p>Select database</p>
                     </div>
                     <div className="loading">
@@ -100,12 +102,12 @@ const NewApp = (props) => {
                 </div>
 
                 <div style={{...smallStyle, paddingBottom: "10px", textAlign: "center", color: "#ccc"}}>
-                        <div style={smallStyle}>
-                            {serverInfo ? <React.Fragment>Connected to: {serverInfo}</React.Fragment> : null}
-                        </div>
+                    <div style={smallStyle}>
+                        {serverInfo ? <React.Fragment>Connected to: {serverInfo}</React.Fragment> : null}
+                    </div>
                 </div>
 
-                <Divider />
+                <Divider/>
 
                 <div>
                     <WebAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
@@ -122,25 +124,30 @@ const NewApp = (props) => {
 }
 
 const mapStateToProps = state => ({
-  activeGroup: state.algorithms.group,
-  activeAlgorithm: state.algorithms.algorithm,
-  connectionInfo: state.connections,
-  metadata: state.metadata
+    activeGroup: state.algorithms.group,
+    activeAlgorithm: state.algorithms.algorithm,
+    connectionInfo: state.connections,
+    metadata: state.metadata,
+    limit: state.settings.limit,
+    communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = dispatch => ({
-  selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
-  setLabels: labels => dispatch(setLabels(labels)),
-  setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
-  setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
-  setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
-  setGds: version => dispatch(setVersions(version)),
-  setDatabases: databases => dispatch(setDatabases(databases)),
-  setConnected: credentials => dispatch(setConnected(credentials)),
-  setDisconnected: () => dispatch(setDisconnected()),
+    selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
+    setLabels: labels => dispatch(setLabels(labels)),
+    setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
+    setGds: version => dispatch(setVersions(version)),
+    setDatabases: databases => dispatch(setDatabases(databases)),
+    setConnected: credentials => dispatch(setConnected(credentials)),
+    setDisconnected: () => dispatch(setDisconnected()),
 
-  addDatabase: database => dispatch(addDatabase(database)),
-  initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))
+    addDatabase: database => dispatch(addDatabase(database)),
+    initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys)),
+
+    updateLimit: value => dispatch(limit(value)),
+    updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewApp)

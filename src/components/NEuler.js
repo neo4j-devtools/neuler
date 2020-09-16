@@ -29,7 +29,7 @@ const NEuler = (props) => {
             case  "Home":
                 return {header: "Graph Data Science Playground", view: <Home/>}
             default:
-                return {header: "", view: <MainContent onComplete={onComplete} limit={limit}/>}
+                return {header: "", view: <MainContent onComplete={onComplete} />}
         }
     }
 
@@ -66,7 +66,8 @@ const NEuler = (props) => {
 }
 
 const mapStateToProps = state => ({
-    limit: state.settings.limit
+    limit: state.settings.limit,
+    communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = dispatch => ({

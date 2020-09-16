@@ -63,8 +63,8 @@ const NewApp = (props) => {
     }
   }, [currentStep])
 
-  if(currentStep === ALL_DONE && metadataLoaded) {
-    if(showNeuler) {
+  if (currentStep === ALL_DONE && metadataLoaded) {
+    if (showNeuler) {
       return <NEuler key="app" {...props} />;
     } else {
       setTimeout(function () {

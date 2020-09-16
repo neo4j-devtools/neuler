@@ -2,6 +2,7 @@ import {loadMetadata, loadVersions} from "../../services/metadata";
 import {sendMetrics} from "../metrics/sendMetrics";
 import {onNeo4jVersion} from "../../services/stores/neoStore";
 import {selectCaption, selectRandomColor} from "../NodeLabel";
+import constants from "../../constants";
 
 export const ALL_DONE = "all-done";
 export const CONNECTING_TO_DATABASE = "connect-server";
@@ -15,6 +16,11 @@ export const steps = [
 export const webAppSteps = [
     CONNECTING_TO_DATABASE, SELECT_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
 ]
+
+export const setLimitDefaults = (props) => {
+    props.updateLimit(constants.defaultLimit)
+    props.updateCommunityNodeLimit(constants.defaultCommunityNodeLimit)
+}
 
 export const refreshMetadata = (props, firstConnection=false, finished = () => {}) => {
     loadVersions().then(versions => {
