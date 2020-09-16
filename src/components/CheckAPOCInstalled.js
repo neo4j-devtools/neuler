@@ -2,6 +2,7 @@ import React, {useState} from 'react'
 import {Form, Image, Message} from "semantic-ui-react"
 
 import {checkApocInstalled} from "../services/installation"
+import {sampleGraphs} from "./SampleGraphs/sampleGraphs";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
@@ -22,22 +23,43 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     } else {
         return <div className="loading-container">
             <Message color="grey" attached={true} header="APOC Library Missing"/>
-            <Form className='attached fluid segment'>
-                <div align="center" className='attached fluid segment'>
-                    <Image src='images/apoc-plugin.png'/>
-                </div>
-
-                <div align="center" className="loading-message">
-                    <p>
-                        This application relies on the APOC Library.
-                        <br/>You can install it via the 'Plugins' tab of your database.
-                    </p>
-                </div>
-            </Form>
+            {props.desktop ? <MissingLibraryOnDesktop /> : <MissingLibraryOnWebapp />}
 
         </div>
 
     }
+}
+
+const MissingLibraryOnDesktop = () => {
+    return <React.Fragment>
+        <Form className='attached fluid segment'>
+            <div align="center" className='attached fluid segment'>
+                <Image src='images/apoc-plugin.png'/>
+            </div>
+        </Form>
+
+        <Message color="grey" attached={true}  align="center" className="loading-message" >
+            <Message.Content>
+                <p>
+                    This application relies on the APOC Library.
+                    <br/>You can install it via the 'Plugins' tab of your database.
+                </p>
+            </Message.Content>
+        </Message>
+    </React.Fragment>
+}
+
+const MissingLibraryOnWebapp = () => {
+    return <React.Fragment>
+        <Message color="grey" attached={true}  align="center" className="loading-message" >
+            <Message.Content>
+                <p>
+                    This application relies on the APOC Library.
+                    <br/>You can find installation instructions at <a target="_blank" rel="noopener noreferrer" href="https://neo4j.com/labs/apoc/4.1/installation/">neo4j.com/labs/apoc/4.1/installation</a>
+                </p>
+            </Message.Content>
+        </Message>
+    </React.Fragment>
 }
 
 export default CheckGraphAlgorithmsInstalled

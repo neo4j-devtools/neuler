@@ -131,7 +131,7 @@ const AlgoForm = (props) => {
             {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
 
             {task.status !== ADDED && task.completed &&
-                <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Make a copy</Button>
+                <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Edit configuration</Button>
 
             }
 

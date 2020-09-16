@@ -31,8 +31,8 @@
   }
 }
 
-div.loading-message {
-  font-size: 2rem;
+div.ui.loading-message {
+  font-size: 1.4rem;
 }
 
 h1.loading {
