@@ -40,7 +40,7 @@ export const DesktopAppLoadingArea = ({
                 {placeholder}
             </CheckAPOCInstalled>;
         case ALL_DONE:
-            return <div style={{padding: "20px"}}>
+            return <div className="loading-container">
                 <Message color="grey" >
                     <Message.Header>
                         Neuler ready to launch
@@ -56,7 +56,7 @@ export const DesktopAppLoadingArea = ({
 }
 
 const ConnectingToDatabase = ({currentStepFailed}) => {
-    return <div style={{padding: "20px"}}>
+    return <div className="loading-container">
         {currentStepFailed ? <Message color="red" attached header="Trying to connect">
             <Message.Header>
                 Unable to connect to active graph
