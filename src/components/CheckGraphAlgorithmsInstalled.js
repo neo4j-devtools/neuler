@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Image} from "semantic-ui-react"
+import {Form, Image, Message} from "semantic-ui-react"
 
 import {checkGraphAlgorithmsInstalled} from "../services/installation"
 
@@ -20,20 +20,20 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     if (algorithmsInstalled) {
         return props.children;
     } else {
-        return <div style={{textAlign: "center"}}>
+        return <div className="loading-container">
+            <Message color="grey" attached={true} header="Graph Data Science Library Missing"/>
+            <Form className='attached fluid segment' >
+                <div align="center" className='attached fluid segment' >
+                    <Image src='images/gds-plugin.png'/>
+                </div>
 
-            <h1>Graph Data Science Library Missing</h1>
-
-            <div align="center" style={{margin: "10px"}}>
-                <Image src='images/gds-plugin.png'/>
-            </div>
-
-            <div align="center" className="loading-message">
-                <p>
-                    This application relies on the Graph Data Science Library.
-                    <br/>You can install it via the 'Plugins' tab of your database.
-                </p>
-            </div>
+                <div align="center" className="loading-message">
+                    <p>
+                        This application relies on the Graph Data Science Library.
+                        <br/>You can install it via the 'Plugins' tab of your database.
+                    </p>
+                </div>
+            </Form>
 
         </div>
     }

@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Image} from "semantic-ui-react"
+import {Form, Image, Message} from "semantic-ui-react"
 
 import {checkApocInstalled} from "../services/installation"
 
@@ -20,22 +20,23 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     if (algorithmsInstalled) {
         return props.children;
     } else {
-        return <div style={{textAlign: "center"}}>>
+        return <div className="loading-container">
+            <Message color="grey" attached={true} header="APOC Library Missing"/>
+            <Form className='attached fluid segment'>
+                <div align="center" className='attached fluid segment'>
+                    <Image src='images/apoc-plugin.png'/>
+                </div>
 
-            <h1>APOC Library Missing</h1>
-
-            <div align="center" style={{margin: "10px"}}>
-                <Image src='images/apoc-plugin.png'/>
-            </div>
-
-            <div align="center" className="loading-message">
-                <p>
-                    This application relies on the APOC Library.
-                    <br/>You can install it via the 'Plugins' tab of your database.
-                </p>
-            </div>
+                <div align="center" className="loading-message">
+                    <p>
+                        This application relies on the APOC Library.
+                        <br/>You can install it via the 'Plugins' tab of your database.
+                    </p>
+                </div>
+            </Form>
 
         </div>
+
     }
 }
 

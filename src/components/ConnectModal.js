@@ -21,7 +21,7 @@ const ConnectForm = (props) => {
     ]
 
     return (
-        <div style={{padding: "20px", maxWidth: "1000px", margin: "auto"}}>
+        <div className="loading-container">
             <Message color="grey" attached={true} header="Connect to Neo4j Server"/>
             <Form error={!!errorMsg} onSubmit={onSubmit} className='attached fluid segment'>
                 <Form.Field>

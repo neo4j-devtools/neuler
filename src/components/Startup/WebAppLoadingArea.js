@@ -48,7 +48,7 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
                 {placeholder}
             </CheckAPOCInstalled>;
         case ALL_DONE:
-            return <div style={{padding: "20px", textAlign: "center"}}>
+            return <div className="loading-container">
                 <Message color="grey" attached header="Neuler ready to launch"
                          content="Connected to database and all dependencies found. Neuler will launch shortly"/>
             </div>
@@ -97,7 +97,7 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
     }
 
 
-    return <div style={{padding: "20px", maxWidth: "1000px", margin: "auto"}}>
+    return <div className="loading-container">
         <Message color="grey" attached={true} header="Select database"/>
         <Form error={!!errorMessage}  className='attached fluid segment' onSubmit={onSubmit}>
             {databaseOptions.length > 0 &&
@@ -156,7 +156,7 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
     const [errorMessage, setErrorMessage] = React.useState(null)
     const [extraErrorMessage, setExtraErrorMessage] = React.useState(null)
 
-    const tryingToConnect = <div style={{padding: "20px"}}>
+    const tryingToConnect = <div className="loading-container">
         <Message color="grey" attached header="Trying to connect"
                  content="Trying to connect to active database. This should only take a few seconds. If it takes longer than that, check that you have a running database."/>
     </div>

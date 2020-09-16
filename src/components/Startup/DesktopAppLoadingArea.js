@@ -32,13 +32,11 @@ export const DesktopAppLoadingArea = ({
                                          currentStepFailed={currentStepFailed}
             />
         case CHECKING_GDS_PLUGIN:
-            return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
-                                                  gdsInstalled={gdsInstalled}>
+            return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep} gdsInstalled={gdsInstalled}>
                 {placeholder}
             </CheckGraphAlgorithmsInstalled>;
         case CHECKING_APOC_PLUGIN:
-            return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep}
-                                       apocInstalled={apocInstalled}>
+            return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep} apocInstalled={apocInstalled}>
                 {placeholder}
             </CheckAPOCInstalled>;
         case ALL_DONE:
