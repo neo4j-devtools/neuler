@@ -64,7 +64,7 @@ class Datasets extends Component {
                   runAlgorithmsCollapsed: false
               })
 
-              sendMetrics('neuler-loaded-dataset', selectedDataset )
+              sendMetrics('neuler-loaded-dataset', selectedDataset, {dataset: selectedDataset} )
 
               this.props.onComplete()
           })

@@ -1,4 +1,3 @@
-import {checkApocInstalled, checkGraphAlgorithmsInstalled} from "../../services/installation";
 import {loadMetadata, loadVersions} from "../../services/metadata";
 import {sendMetrics} from "../metrics/sendMetrics";
 import {onNeo4jVersion} from "../../services/stores/neoStore";
@@ -22,7 +21,6 @@ export const refreshMetadata = (props, firstConnection=false, finished = () => {
         if(firstConnection) {
             sendMetrics("neuler-connected", true, versions)
         }
-
 
         props.setGds(versions)
         onNeo4jVersion(versions.neo4jVersion)

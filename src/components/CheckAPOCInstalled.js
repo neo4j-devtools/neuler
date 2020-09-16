@@ -2,21 +2,27 @@ import React, {useState} from 'react'
 import {Form, Image, Message} from "semantic-ui-react"
 
 import {checkApocInstalled} from "../services/installation"
-import {sampleGraphs} from "./SampleGraphs/sampleGraphs";
+import {sendMetrics} from "./metrics/sendMetrics";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
     const [algorithmsInstalled, setAlgorithmsInstalled] = useState(true)
+    const libraryName = "apoc";
 
-    checkApocInstalled().then(result => {
-        if (!result) {
-            props.didNotFindPlugin("apoc");
-        } else {
-            props.apocInstalled();
-        }
+    React.useEffect(() => {
+        checkApocInstalled().then(result => {
+            if (!result) {
+                sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
+                props.didNotFindPlugin(libraryName);
+            } else {
+                props.apocInstalled();
+            }
 
-        setAlgorithmsInstalled(result)
-    });
+            setAlgorithmsInstalled(result)
+        });
+    }, [])
+
+
 
     if (algorithmsInstalled) {
         return props.children;

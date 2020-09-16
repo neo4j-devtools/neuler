@@ -2,20 +2,26 @@ import React, {useState} from 'react'
 import {Form, Image, Message} from "semantic-ui-react"
 
 import {checkGraphAlgorithmsInstalled} from "../services/installation"
+import {sendMetrics} from "./metrics/sendMetrics";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
+    const libraryName = "gds";
     const [algorithmsInstalled, setAlgorithmsInstalled] = useState(true)
 
-    checkGraphAlgorithmsInstalled().then(result => {
-        if (!result) {
-            props.didNotFindPlugin("gds");
-        } else {
-            props.gdsInstalled();
-        }
+    React.useEffect(() => {
+        checkGraphAlgorithmsInstalled().then(result => {
+            if (!result) {
+                sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
+                props.didNotFindPlugin(libraryName);
+            } else {
+                props.gdsInstalled();
+            }
 
-        setAlgorithmsInstalled(result)
-    });
+            setAlgorithmsInstalled(result)
+        });
+    }, [])
+
 
     if (algorithmsInstalled) {
         return props.children;
