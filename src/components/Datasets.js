@@ -8,126 +8,119 @@ import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 import {sampleGraphs} from "./SampleGraphs/sampleGraphs";
 
 
-class Datasets extends Component {
-    state = {
-        open: false,
-        selectedDataset: null,
-        currentQueryIndex: -1,
-        completedQueryIndexes: {},
-        completed: [],
-        loadSampleGraphCollapsed: false,
-        runAlgorithmsCollapsed: true
+const Datasets = (props) => {
+    const {selectGroup, selectAlgorithm} = props
+
+    const [open, setOpen] = React.useState(false)
+    const [selectedDataset, setSelectedDataset] = React.useState(null)
+    const [currentQueryIndex, setCurrentQueryIndex] = React.useState(-1)
+    const [completedQueryIndexes, setCompletedQueryIndexes] = React.useState({})
+    const [completed, setCompleted] = React.useState([])
+    const [loadSampleGraphCollapsed, setLoadSampleGraphCollapsed] = React.useState(false)
+    const [runAlgorithmsCollapsed, setRunAlgorithmsCollapsed] = React.useState(true)
+
+    const resetState = () => {
+        setOpen(false)
+        setCurrentQueryIndex(-1)
+        setCompletedQueryIndexes({})
     }
 
-    resetState() {
-        this.setState({
-            open: false,
-            currentQueryIndex: -1,
-            completedQueryIndexes: {},
-        })
+    const show = (dimmer, datasetName) => () => {
+        setCurrentQueryIndex(-1)
+        setCompletedQueryIndexes({})
+        setCompleted([])
+        setSelectedDataset(datasetName)
+        setLoadSampleGraphCollapsed(false)
+        setRunAlgorithmsCollapsed(true)
     }
 
-    show = (dimmer, datasetName) => () => this.setState({
-        currentQueryIndex: -1,
-        completedQueryIndexes: {},
-        completed: [],
-        selectedDataset: datasetName,
-        loadSampleGraphCollapsed: false,
-        runAlgorithmsCollapsed: true
-    })
-    close = () => this.resetState()
+    const close = () => resetState()
 
-    loadDataset() {
-        const { selectedDataset } = this.state
-
+    const loadDataset = () => {
         const queries = sampleGraphs[selectedDataset].queries;
         queries.reduce((promiseChain, query, qIndex) => {
             return promiseChain.then(chainResults => {
-                  this.setState({ currentQueryIndex: qIndex })
-                  return runCypher(query)
-                  .catch(error => {if (error.code !== "Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists") throw new Error(error)})
-                  .then(currentResult => {
-                      this.setState({
-                          completedQueryIndexes: { ...this.state.completedQueryIndexes, [qIndex]: true }
-                      })
-                      return [...chainResults, currentResult]
-                  })
-              }
+                setCurrentQueryIndex(qIndex)
+                    return runCypher(query)
+                        .catch(error => {
+                            if (error.code !== "Neo.ClientError.Schema.EquivalentSchemaRuleAlreadyExists") throw new Error(error)
+                        })
+                        .then(currentResult => {
+                            setCompletedQueryIndexes({...completedQueryIndexes, [qIndex]: true})
+                            return [...chainResults, currentResult]
+                        })
+                }
             );
         }, Promise.resolve([]))
-          .then(results => {
-              const {completed} = this.state
-              completed.push(selectedDataset)
-              this.setState({
-                  currentQueryIndex: -1,
-                  completed: completed,
-                  runAlgorithmsCollapsed: false
-              })
+            .then(results => {
+                completed.push(selectedDataset)
+                setCurrentQueryIndex(-1)
+                setCompleted(completed)
+                setRunAlgorithmsCollapsed(false)
 
-              sendMetrics('neuler-loaded-dataset', selectedDataset, {dataset: selectedDataset} )
+                sendMetrics('neuler-loaded-dataset', selectedDataset, {dataset: selectedDataset})
 
-              this.props.onComplete()
-          })
+                props.onComplete()
+            })
     }
 
-    render() {
-        const containerStyle = {
-            margin: "1em",
-        }
+    const containerStyle = {
+        margin: "1em",
+    }
 
-        const { selectedDataset, currentQueryIndex, completedQueryIndexes, completed, loadSampleGraphCollapsed, runAlgorithmsCollapsed } = this.state
-        const { selectGroup, selectAlgorithm } = this.props
-        const selectedStyle = {background: "#e5f9e7"};
-        const buttonStyle = { borderRadius: '0', background: "#f8f8f9", float: "right", height: "23px", width: "23px" };
 
-        const headerStyle = {cursor: "pointer", background: "#f8f8f9"};
-        return (<div style={containerStyle}>
-                <Container fluid>
-                    <p>
-                        Below are some sample graphs that are useful for learning how to use the Graph Data Science library.
-                    </p>
+    const selectedStyle = {background: "#e5f9e7"};
+    const buttonStyle = {borderRadius: '0', background: "#f8f8f9", float: "right", height: "23px", width: "23px"};
 
-                    <CardGroup>
-                        {Object.keys(sampleGraphs).map(key => {
-                            return (
-                                <Card key={sampleGraphs[key].name} raised={sampleGraphs[key].name === selectedDataset}>
-                                    <Card.Content
-                                        style={sampleGraphs[key].name === selectedDataset ? selectedStyle : null}>
-                                        <Icon name='sitemap'/>
-                                        <Card.Header>
-                                            {sampleGraphs[key].name}
-                                        </Card.Header>
-                                        <Card.Meta>
-                                            Author: <a target="_blank" rel="noopener noreferrer"
-                                                       href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
-                                        </Card.Meta>
-                                        <Card.Description>
-                                            {sampleGraphs[key].description}
-                                        </Card.Description>
-                                    </Card.Content>
-                                    <Card.Content extra
-                                                  style={sampleGraphs[key].name === selectedDataset ? selectedStyle : null}>
-                                        <div className='ui two buttons'>
-                                            <Button basic color='green'
-                                                    onClick={this.show(true, sampleGraphs[key].name)}>
-                                                Select
-                                            </Button>
-                                        </div>
-                                    </Card.Content>
-                                </Card>
-                            );
-                        })}
-                    </CardGroup>
+    const headerStyle = {cursor: "pointer", background: "#f8f8f9"};
+    return (<div style={containerStyle}>
+            <Container fluid>
+                <p>
+                    Below are some sample graphs that are useful for learning how to use the Graph Data Science library.
+                </p>
 
-                    {selectedDataset ?
+                <CardGroup>
+                    {Object.keys(sampleGraphs).map(key => {
+                        return (
+                            <Card key={sampleGraphs[key].name} raised={sampleGraphs[key].name === selectedDataset}>
+                                <Card.Content
+                                    style={sampleGraphs[key].name === selectedDataset ? selectedStyle : null}>
+                                    <Icon name='sitemap'/>
+                                    <Card.Header>
+                                        {sampleGraphs[key].name}
+                                    </Card.Header>
+                                    <Card.Meta>
+                                        Author: <a target="_blank" rel="noopener noreferrer"
+                                                   href={sampleGraphs[key].authorLink}>{sampleGraphs[key].author}</a>
+                                    </Card.Meta>
+                                    <Card.Description>
+                                        {sampleGraphs[key].description}
+                                    </Card.Description>
+                                </Card.Content>
+                                <Card.Content extra
+                                              style={sampleGraphs[key].name === selectedDataset ? selectedStyle : null}>
+                                    <div className='ui two buttons'>
+                                        <Button basic color='green'
+                                                onClick={show(true, sampleGraphs[key].name)}>
+                                            Select
+                                        </Button>
+                                    </div>
+                                </Card.Content>
+                            </Card>
+                        );
+                    })}
+                </CardGroup>
+
+                {selectedDataset ?
                     <Card fluid>
-                        <Card.Content  style={headerStyle} onClick={() => this.setState(({ loadSampleGraphCollapsed }) => ({ loadSampleGraphCollapsed: !loadSampleGraphCollapsed }))}>
+                        <Card.Content style={headerStyle}
+                                      onClick={() => setLoadSampleGraphCollapsed(!loadSampleGraphCollapsed)}>
                             <Card.Header>
                                 Load Sample Graph
-                                <Icon style={buttonStyle} name={loadSampleGraphCollapsed ? "plus" : "minus"} />
+                                <Icon style={buttonStyle} name={loadSampleGraphCollapsed ? "plus" : "minus"}/>
                             </Card.Header>
                         </Card.Content>
-                        <Card.Content style={loadSampleGraphCollapsed? {display: "none"} : null}>
+                        <Card.Content style={loadSampleGraphCollapsed ? {display: "none"} : null}>
                             <Card.Description>
                                 <Message color='purple'>
                                     <Message.Header>
@@ -141,24 +134,28 @@ class Datasets extends Component {
 
                                 <div>
                                     {sampleGraphs[selectedDataset].queries.map((query, queryIndex) => (
-                                      <Message key={queryIndex}>
-                                          {completedQueryIndexes[queryIndex] ? <Icon color='green' name='check'/> : null}
-                                          <pre style={{ whiteSpace: 'pre-wrap' }}>{query};</pre>
-                                          <Clipboard onSuccess={(event) => {
-                                              sendMetrics('neuler-sample-graphs', "copied-code", {type: "sample-graph-query", graph: selectedDataset})
-                                              event.trigger.textContent = "Copied";
-                                              setTimeout(() => {
-                                                  event.trigger.textContent = 'Copy';
-                                              }, 2000);
-                                          }}
-                                                     button-className="code"
-                                                     data-clipboard-text={query}>
-                                              Copy
-                                          </Clipboard>
-                                          <Dimmer active={queryIndex === currentQueryIndex}>
-                                              <Loader>Running</Loader>
-                                          </Dimmer>
-                                      </Message>
+                                        <Message key={queryIndex}>
+                                            {completedQueryIndexes[queryIndex] ?
+                                                <Icon color='green' name='check'/> : null}
+                                            <pre style={{whiteSpace: 'pre-wrap'}}>{query};</pre>
+                                            <Clipboard onSuccess={(event) => {
+                                                sendMetrics('neuler-sample-graphs', "copied-code", {
+                                                    type: "sample-graph-query",
+                                                    graph: selectedDataset
+                                                })
+                                                event.trigger.textContent = "Copied";
+                                                setTimeout(() => {
+                                                    event.trigger.textContent = 'Copy';
+                                                }, 2000);
+                                            }}
+                                                       button-className="code"
+                                                       data-clipboard-text={query}>
+                                                Copy
+                                            </Clipboard>
+                                            <Dimmer active={queryIndex === currentQueryIndex}>
+                                                <Loader>Running</Loader>
+                                            </Dimmer>
+                                        </Message>
 
                                     ))}
 
@@ -172,21 +169,22 @@ class Datasets extends Component {
                                             positive
                                             color='green'
                                             content="Yes, load it!"
-                                            onClick={this.loadDataset.bind(this)}
+                                            onClick={loadDataset}
                                         />
 
                                     </div>
                                 }
                             </Card.Description>
                         </Card.Content>
-                        <Card.Content style={headerStyle} onClick={() => this.setState(({ runAlgorithmsCollapsed }) => ({ runAlgorithmsCollapsed: !runAlgorithmsCollapsed }))}>
-                            <Card.Header  >
+                        <Card.Content style={headerStyle}
+                                      onClick={() => setRunAlgorithmsCollapsed(!runAlgorithmsCollapsed)}>
+                            <Card.Header>
                                 Run Graph Algorithms
-                                    <Icon style={buttonStyle} name={runAlgorithmsCollapsed ? "plus" : "minus"} />
+                                <Icon style={buttonStyle} name={runAlgorithmsCollapsed ? "plus" : "minus"}/>
 
                             </Card.Header>
                         </Card.Content>
-                        <Card.Content style={runAlgorithmsCollapsed? {display: "none"} : null}>
+                        <Card.Content style={runAlgorithmsCollapsed ? {display: "none"} : null}>
                             <Card.Description>
                                 <p>The following algorithms are well suited to the {selectedDataset} sample graph:</p>
 
@@ -207,7 +205,10 @@ class Datasets extends Component {
                                                 <Card.Content extra>
                                                     <div className='ui two buttons'>
                                                         <Button basic color='green' onClick={() => {
-                                                            sendMetrics('neuler-sample-graphs', "try-out-algorithm", {category: item.category, name: item.name});
+                                                            sendMetrics('neuler-sample-graphs', "try-out-algorithm", {
+                                                                category: item.category,
+                                                                name: item.name
+                                                            });
                                                             selectGroup(item.category);
                                                             selectAlgorithm(item.name);
                                                         }}>
@@ -225,11 +226,10 @@ class Datasets extends Component {
                         </Card.Content>
                     </Card> : null}
 
-                </Container>
-            </div>
-        )
+            </Container>
+        </div>
+    )
 
-    }
 }
 
 

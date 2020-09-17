@@ -61,18 +61,7 @@ const NEuler = (props) => {
                 </Segment>
                 {view}
                 <FeedbackForm page={page}/>
-                <Modal open={aboutActive}
-                       onClose={() => {setAboutActive(false)}}
-                       centered={false}
-                       closeIcon
-                       size="small">
-                    <Modal.Header>
-                        Versions
-                    </Modal.Header>
-                    <Modal.Content>
-                        <About />
-                    </Modal.Content>
-                </Modal>
+                <About open={aboutActive} onClose={() => setAboutActive(false)} />
             </div>
         </Container>
     )
