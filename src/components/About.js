@@ -18,7 +18,6 @@ const About = (props) => {
             Versions
         </Modal.Header>
         <Modal.Content>
-            
             <div style={containerStyle}>
                 <Container fluid>
                     <Table basic='very' celled collapsing>

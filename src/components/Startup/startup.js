@@ -32,13 +32,13 @@ export const refreshMetadata = (props, firstConnection = false, finished = () =>
         onNeo4jVersion(versions.neo4jVersion)
 
         loadMetadata(versions.neo4jVersion).then(metadata => {
-            updateMetadata(props, metadata)
+            updateMetadata(props, metadata, props.metadata.activeDatabase)
             finished()
         })
     });
 }
 
-export const updateMetadata = (props, metadata) => {
+export const updateMetadata = (props, metadata, selectedDatabase) => {
     props.setLabels(metadata.labels)
     props.setRelationshipTypes(metadata.relationships)
     props.setPropertyKeys(metadata.propertyKeys)
@@ -50,6 +50,6 @@ export const updateMetadata = (props, metadata) => {
     })
 
     metadata.labels.forEach(label => {
-        props.initLabel(props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
+        props.initLabel(selectedDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
     })
 }

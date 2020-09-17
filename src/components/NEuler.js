@@ -21,15 +21,16 @@ const NEuler = (props) => {
     }
 
     const [aboutActive, setAboutActive] = React.useState(false)
+    const [datasetsActive, setDatasetsActive] = React.useState(false)
 
     const selectComponent = (activeGroup) => {
         switch (activeGroup) {
             // case "About":
             //     return {header: "About", view: <About/>}
-            case "Sample Graphs":
-                return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
+            // case "Sample Graphs":
+            //     return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
             case  "Home":
-                return {header: "Graph Data Science Playground", view: <Home/>}
+                return {header: "Graph Data Science Playground", view: <Home setDatasetsActive={setDatasetsActive}/>}
             default:
                 return {header: "", view: <MainContent onComplete={onComplete} />}
         }
@@ -41,7 +42,7 @@ const NEuler = (props) => {
 
     return (
         <Container fluid style={{display: 'flex', height: '100%', background: "#fff"}}>
-            <AlgorithmsGroupMenu setAboutActive={setAboutActive} />
+            <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive} />
             <div style={{width: '100%', overflowY: 'auto'}}>
                 <Segment basic inverted vertical={false}
                          style={{height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0'}}>
@@ -62,6 +63,7 @@ const NEuler = (props) => {
                 {view}
                 <FeedbackForm page={page}/>
                 <About open={aboutActive} onClose={() => setAboutActive(false)} />
+                <Datasets onComplete={onComplete} open={datasetsActive} onClose={() => setDatasetsActive(false)} />
             </div>
         </Container>
     )

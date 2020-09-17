@@ -23,10 +23,10 @@ const Home = (props) => {
     const {selectGroup, setActiveDatabase, metadata} = props
     const [activeDatabaseSelected, setActiveDatabaseSelected] = React.useState(true)
 
-    const onRefresh = () => {
+    const onRefresh = (selectedDatabase) => {
         setActiveDatabaseSelected(false)
         loadMetadata(props.metadata.versions.neo4jVersion).then(metadata => {
-            updateMetadata(props, metadata)
+            updateMetadata(props, metadata, selectedDatabase)
             setActiveDatabaseSelected(true)
         })
     }
@@ -64,12 +64,12 @@ const Home = (props) => {
                             if (data.value !== getActiveDatabase()) {
                                 setActiveDatabase(data.value);
                                 onActiveDatabase(data.value);
-                                onRefresh()
+                                onRefresh(data.value)
                             }
                         }}/>
                         {hasNamedDatabase() ?
                             <Button icon style={{marginLeft: "10px"}} onClick={() => {
-                                onRefresh()
+                                onRefresh(props.metadata.activeDatabase)
                             }}>
                                 <Icon className="refresh" size="large"/>
                             </Button> : null}
@@ -80,8 +80,8 @@ const Home = (props) => {
                     {
                         activeDatabaseSelected ?
                             (hasNodesAndRelationships(props.metadata)) ?
-                                <SelectedDatabase onRefresh={onRefresh}/> :
-                                <WhatIsMissing/>
+                                <SelectedDatabase onRefresh={() => onRefresh(props.metadata.activeDatabase)}/> :
+                                <WhatIsMissing setDatasetsActive={props.setDatasetsActive}/>
                             : <Message>
                                 <Message.Header>Refreshing</Message.Header>
                                 <Message.Content>

@@ -23,7 +23,7 @@ const whatIsMissing = (metadata) => {
     return null
 }
 
-const WhatIsMissing = ({metadata, selectGroup}) => {
+const WhatIsMissing = ({metadata, selectGroup, setDatasetsActive}) => {
     return <div>
         <Message color='purple'>
             <Message.Header>
@@ -39,7 +39,7 @@ const WhatIsMissing = ({metadata, selectGroup}) => {
                         If you don't have any data, you can load one of the sample graphs.
                     </p>
 
-                    <Button primary onClick={() => selectGroup('Sample Graphs')}>
+                    <Button primary onClick={() => setDatasetsActive(true)}>
                         View Sample Graphs
                     </Button>
                 </div>

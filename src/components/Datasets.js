@@ -1,4 +1,4 @@
-import {Button, Card, CardGroup, Container, Dimmer, Icon, Loader, Message} from "semantic-ui-react"
+import {Button, Card, Modal, CardGroup, Container, Dimmer, Icon, Loader, Message} from "semantic-ui-react"
 import React, {Component} from 'react'
 import {runCypher} from "../services/stores/neoStore"
 import {connect} from "react-redux";
@@ -15,7 +15,6 @@ const headerStyle = {cursor: "pointer", background: "#f8f8f9"};
 const Datasets = (props) => {
     const {selectGroup, selectAlgorithm} = props
 
-    const [open, setOpen] = React.useState(false)
     const [selectedDataset, setSelectedDataset] = React.useState(null)
     const [currentQueryIndex, setCurrentQueryIndex] = React.useState(-1)
     const [completedQueryIndexes, setCompletedQueryIndexes] = React.useState({})
@@ -24,7 +23,7 @@ const Datasets = (props) => {
     const [runAlgorithmsCollapsed, setRunAlgorithmsCollapsed] = React.useState(true)
 
     const resetState = () => {
-        setOpen(false)
+        props.onClose()
         setCurrentQueryIndex(-1)
         setCompletedQueryIndexes({})
     }
@@ -72,22 +71,35 @@ const Datasets = (props) => {
         margin: "1em",
     }
 
-    return <div style={containerStyle}>
-        <Container fluid>
-            <SelectDataset selectedDataset={selectedDataset} selectedStyle={selectedStyle} show={show}/>
-            {selectedDataset &&
-            <React.Fragment>
-                <ImportDataset setLoadSampleGraphCollapsed={setLoadSampleGraphCollapsed}
-                               loadSampleGraphCollapsed={loadSampleGraphCollapsed}
-                               selectedDataset={selectedDataset} completedQueryIndexes={completedQueryIndexes}
-                               currentQueryIndex={currentQueryIndex} completed={completed} loadDataset={loadDataset}/>
-                <SelectAlgorithms setRunAlgorithmsCollapsed={setRunAlgorithmsCollapsed}
-                                  runAlgorithmsCollapsed={runAlgorithmsCollapsed}
-                                  selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm} selectGroup={selectGroup}/>
+    return <Modal open={props.open}
+                  onClose={props.onClose}
+                  centered={false}
+                  closeIcon
+                  size="medium">
+        <Modal.Header>
+            Select Sample Graph
+        </Modal.Header>
+        <Modal.Content>
+            <div style={containerStyle}>
+                <Container fluid>
+                    <SelectDataset selectedDataset={selectedDataset} selectedStyle={selectedStyle} show={show}/>
+                    {selectedDataset &&
+                    <React.Fragment>
+                        <ImportDataset setLoadSampleGraphCollapsed={setLoadSampleGraphCollapsed}
+                                       loadSampleGraphCollapsed={loadSampleGraphCollapsed}
+                                       selectedDataset={selectedDataset} completedQueryIndexes={completedQueryIndexes}
+                                       currentQueryIndex={currentQueryIndex} completed={completed}
+                                       loadDataset={loadDataset}/>
+                        <SelectAlgorithms setRunAlgorithmsCollapsed={setRunAlgorithmsCollapsed}
+                                          runAlgorithmsCollapsed={runAlgorithmsCollapsed}
+                                          selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
+                                          selectGroup={selectGroup}/>
 
-            </React.Fragment>}
-        </Container>
-    </div>
+                    </React.Fragment>}
+                </Container>
+            </div>
+        </Modal.Content>
+    </Modal>
 }
 
 const SelectDataset = ({selectedDataset, selectedStyle, show}) => {

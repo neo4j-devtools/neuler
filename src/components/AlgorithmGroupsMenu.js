@@ -23,7 +23,7 @@ const topBarStyle = {
     height: '100%'
 }
 
-const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive}) =>
+const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>
     <Menu vertical={true} inverted style={menuStyle}>
         <div style={topBarStyle}>
             <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
@@ -52,7 +52,7 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive}) =>
             </Menu.Item>
         </div>
         <div>
-            <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a' onClick={() => selectGroup('Sample Graphs')}
+            <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a' onClick={() => setDatasetsActive(true)}
                        style={menuItemStyle}>
                 <Image size='mini' src='images/datasetin.png' />
             </Menu.Item>
