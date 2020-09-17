@@ -18,6 +18,7 @@ const ConnectForm = (props) => {
         {key: 'neo4j', value: 'neo4j', text: 'neo4j'},
         {key: 'neo4j+s', value: 'neo4j+s', text: 'neo4j+s'},
         {key: 'neo4j+ssc', value: 'neo4j+ssc', text: 'neo4j+ssc'},
+        {key: 'bolt', value: 'bolt', text: 'bolt'},
     ]
 
     return (
