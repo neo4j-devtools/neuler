@@ -1,5 +1,12 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.35 (2020-09-17)
+
+* redesigned startup flow
+* update about/sample dataset screens to be modal
+* sample dataset wizard flow added
+* fixed missing values for limit and nodeCommunityLimit properties
+
 ## 0.1.34 (2020-09-14)
 
 * Save config of form across procedure runs
