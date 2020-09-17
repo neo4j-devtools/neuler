@@ -23,7 +23,7 @@ const topBarStyle = {
     height: '100%'
 }
 
-const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
+const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive}) =>
     <Menu vertical={true} inverted style={menuStyle}>
         <div style={topBarStyle}>
             <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
@@ -56,7 +56,7 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, children}) =>
                        style={menuItemStyle}>
                 <Image size='mini' src='images/datasetin.png' />
             </Menu.Item>
-            <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => selectGroup('About')}
+            <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => setAboutActive(true)}
                        style={menuItemStyle}>
                 <Image size='mini' src='images/neo4j_logo_globe1.png' />
             </Menu.Item>

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Header, Menu, Segment} from "semantic-ui-react"
+import {Container, Header, Menu, Modal, Segment} from "semantic-ui-react"
 
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
 import {getAlgorithms} from "./algorithmsLibrary"
@@ -20,10 +20,12 @@ const NEuler = (props) => {
         refreshMetadata(props)
     }
 
+    const [aboutActive, setAboutActive] = React.useState(false)
+
     const selectComponent = (activeGroup) => {
         switch (activeGroup) {
-            case "About":
-                return {header: "About", view: <About/>}
+            // case "About":
+            //     return {header: "About", view: <About/>}
             case "Sample Graphs":
                 return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
             case  "Home":
@@ -39,7 +41,7 @@ const NEuler = (props) => {
 
     return (
         <Container fluid style={{display: 'flex', height: '100%', background: "#fff"}}>
-            <AlgorithmsGroupMenu/>
+            <AlgorithmsGroupMenu setAboutActive={setAboutActive} />
             <div style={{width: '100%', overflowY: 'auto'}}>
                 <Segment basic inverted vertical={false}
                          style={{height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0'}}>
@@ -59,6 +61,18 @@ const NEuler = (props) => {
                 </Segment>
                 {view}
                 <FeedbackForm page={page}/>
+                <Modal open={aboutActive}
+                       onClose={() => {setAboutActive(false)}}
+                       centered={false}
+                       closeIcon
+                       size="small">
+                    <Modal.Header>
+                        Versions
+                    </Modal.Header>
+                    <Modal.Content>
+                        <About />
+                    </Modal.Content>
+                </Modal>
             </div>
         </Container>
     )

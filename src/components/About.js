@@ -5,15 +5,12 @@ import {connect} from "react-redux";
 export const NEULER_VERSION = "0.1.35"
 
 const About = (props) => {
-
     const containerStyle = {
         margin: "1em",
     }
 
     return (<div style={containerStyle}>
             <Container fluid>
-                <h2>Versions</h2>
-
                 <Table basic='very' celled collapsing>
                     <Table.Header>
                         <Table.Row>

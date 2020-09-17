@@ -39,7 +39,6 @@ const Home = (props) => {
         padding: '1em'
     }
 
-
     const credentials = props.connectionInfo.credentials
 
     const databaseOptions = metadata.databases.map(value => {
