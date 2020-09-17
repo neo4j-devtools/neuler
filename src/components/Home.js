@@ -14,9 +14,9 @@ import {
 import {getActiveDatabase, getDriver, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
-import {selectCaption, selectRandomColor} from "./NodeLabel";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
+import {updateMetadata} from "./Startup/startup";
 
 
 class Home extends Component {
@@ -31,20 +31,7 @@ class Home extends Component {
     onRefresh() {
         this.setState({activeDatabaseSelected: false})
         loadMetadata(this.props.metadata.versions.neo4jVersion).then(metadata => {
-            this.props.setLabels(metadata.labels)
-            this.props.setRelationshipTypes(metadata.relationships)
-            this.props.setPropertyKeys(metadata.propertyKeys)
-            this.props.setNodePropertyKeys(metadata.nodePropertyKeys)
-            this.props.setDatabases(metadata.databases)
-
-            metadata.databases.forEach(database => {
-                this.props.addDatabase(database.name)
-            })
-
-            metadata.labels.forEach(label => {
-                this.props.initLabel(this.props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
-            })
-
+            updateMetadata(this.props, metadata)
             this.setState({activeDatabaseSelected: true})
         })
     }

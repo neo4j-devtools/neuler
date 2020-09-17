@@ -22,7 +22,7 @@ export const setLimitDefaults = (props) => {
     props.updateCommunityNodeLimit(constants.defaultCommunityNodeLimit)
 }
 
-export const refreshMetadata = (props, firstConnection=false, finished = () => {}) => {
+export const refreshMetadata = (props, firstConnection = false, finished = () => {}) => {
     loadVersions().then(versions => {
         if(firstConnection) {
             sendMetrics("neuler-connected", true, versions)
@@ -30,22 +30,26 @@ export const refreshMetadata = (props, firstConnection=false, finished = () => {
 
         props.setGds(versions)
         onNeo4jVersion(versions.neo4jVersion)
+
         loadMetadata(versions.neo4jVersion).then(metadata => {
-            props.setLabels(metadata.labels)
-            props.setRelationshipTypes(metadata.relationships)
-            props.setPropertyKeys(metadata.propertyKeys)
-            props.setNodePropertyKeys(metadata.nodePropertyKeys)
-            props.setDatabases(metadata.databases)
-
-            metadata.databases.forEach(database => {
-                props.addDatabase(database.name)
-            })
-
-            metadata.labels.forEach(label => {
-                props.initLabel(props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
-            })
-
+            updateMetadata(props, metadata)
             finished()
         })
     });
+}
+
+export const updateMetadata = (props, metadata) => {
+    props.setLabels(metadata.labels)
+    props.setRelationshipTypes(metadata.relationships)
+    props.setPropertyKeys(metadata.propertyKeys)
+    props.setNodePropertyKeys(metadata.nodePropertyKeys)
+    props.setDatabases(metadata.databases)
+
+    metadata.databases.forEach(database => {
+        props.addDatabase(database.name)
+    })
+
+    metadata.labels.forEach(label => {
+        props.initLabel(props.metadata.activeDatabase, label.label, selectRandomColor(), selectCaption(metadata.nodePropertyKeys[label.label]))
+    })
 }
