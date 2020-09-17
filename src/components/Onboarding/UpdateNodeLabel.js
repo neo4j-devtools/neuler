@@ -6,11 +6,20 @@ import {SketchPicker} from 'react-color';
 import reactCSS from 'reactcss'
 import {updateLabelColor, updateLabelPropertyKeys} from "../../ducks/settings";
 
+export const getNodeLabel = (globalLabels, database, label) => {
+    const nodeLabel = globalLabels[database][label];
+    return nodeLabel ? nodeLabel : {color: "#efefef", propertyKeys: []};
+}
+
 const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, label, globalLabels}) => {
     const [displayColorPicker, setDisplayColorPicker] = React.useState(false)
 
-    const nodeLabel = globalLabels[database][label]
-    const [color, setColor] = React.useState(nodeLabel.color)
+    const nodeLabel = getNodeLabel(globalLabels, database, label)
+    const [color, setColor] = React.useState(null)
+
+    React.useEffect(() => {
+        setColor(nodeLabel.color)
+    }, [nodeLabel.color])
 
     const styles = reactCSS({
         'default': {
@@ -57,7 +66,7 @@ const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, l
             Update {label}
         </Modal.Header>
         <Modal.Content >
-            <div>
+            <div key={color}>
                 <div className="update-node-row">
                     <h4>Color</h4>
                     <div>
@@ -91,7 +100,7 @@ const UpdateNodeLabel = ({updateLabelColor, metadata, database, open, setOpen, l
 }
 
 const SelectCaptionView = ({metadata, globalLabels, database, label,updateLabelPropertyKeys}) => {
-    const nodeLabel = globalLabels[database][label]
+    const nodeLabel = getNodeLabel(globalLabels, database, label)
     const [selectedPropertyKeys, setSelectedPropertyKeys]  = React.useState(nodeLabel.propertyKeys)
 
     return <div key={selectedPropertyKeys}>
@@ -130,8 +139,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     selectGroup: group => dispatch(selectGroup(group)),
-    updateLabelColor: (database, label, color) => dispatch(updateLabelColor(database, label, color)),
-    updateLabelPropertyKeys: (database, label, propertyKeys) => dispatch(updateLabelPropertyKeys(database, label, propertyKeys))
+    updateLabelColor: (database, label, color) => dispatch(updateLabelColor(database, label, color))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UpdateNodeLabel)

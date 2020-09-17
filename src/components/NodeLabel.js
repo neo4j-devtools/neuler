@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import React from "react";
-import UpdateNodeLabel from "./Onboarding/UpdateNodeLabel";
+import UpdateNodeLabel, {getNodeLabel} from "./Onboarding/UpdateNodeLabel";
 
 const randomColor = require('randomcolor');
 const tenOf = (color) => {
@@ -58,7 +58,7 @@ const NodeLabel = ({labels, database, globalLabels, caption, metadata, readOnly}
               className="label">
         {caption}
     </span>
-        : <div>
+        : <div key={metadata.globalLabels && getNodeLabel(metadata.globalLabels, database, label).color}>
         <span title={"Edit " + label} onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(style, labels, labelBackgrounds)}
               className="label">
         {caption}

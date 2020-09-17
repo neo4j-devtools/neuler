@@ -45,6 +45,8 @@ export const updateMetadata = (props, metadata, selectedDatabase) => {
     props.setNodePropertyKeys(metadata.nodePropertyKeys)
     props.setDatabases(metadata.databases)
 
+    console.log("updateMetadata", selectedDatabase, metadata)
+
     metadata.databases.forEach(database => {
         props.addDatabase(database.name)
     })

@@ -66,8 +66,8 @@ const Datasets = (props) => {
                 setCurrentQueryIndex(-1)
                 setCompleted(completed)
                 setNextEnabled(true)
-                sendMetrics('neuler-loaded-dataset', selectedDataset, {dataset: selectedDataset})
                 props.onComplete()
+                sendMetrics('neuler-loaded-dataset', selectedDataset, {dataset: selectedDataset})
             })
     }
 
@@ -182,8 +182,6 @@ const SelectDataset = ({selectedDataset, selectedStyle, show}) => {
 }
 
 const ImportDataset = ({selectedDataset, completedQueryIndexes, currentQueryIndex, completed, loadDataset}) => {
-    console.log("completedQueryIndexes", completedQueryIndexes)
-
     return <React.Fragment>
         <Message color='purple'>
             <Message.Header>
@@ -230,6 +228,7 @@ const ImportDataset = ({selectedDataset, completedQueryIndexes, currentQueryInde
                 <Button
                     disabled={currentQueryIndex >= 0}
                     positive
+                    fluid
                     color='green'
                     content="Yes, load it!"
                     onClick={loadDataset}
