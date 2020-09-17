@@ -83,7 +83,12 @@ const Datasets = (props) => {
                 return {
                     header: "Select Sample Graph",
                     view: <SelectDataset selectedDataset={selectedDataset} selectedStyle={selectedStyle} show={show} nextEnabled={nextEnabled} setNextEnabled={setNextEnabled}/>,
-                    next: <Button disabled={!nextEnabled} primary onClick={() => {setCurrentStep(IMPORT_DATASET); setNextEnabled(false); setPrevEnabled(true) } }>Next <Icon name='chevron right' /></Button>
+                    next: <Button disabled={!nextEnabled} primary
+                                  onClick={() => {
+                                      setCurrentStep(IMPORT_DATASET);
+                                      setNextEnabled(false);
+                                      setPrevEnabled(true)
+                                  }}>Next <Icon name='chevron right' /></Button>
                 }
             case IMPORT_DATASET:
                 return {
@@ -91,15 +96,22 @@ const Datasets = (props) => {
                     view: <ImportDataset selectedDataset={selectedDataset} completedQueryIndexes={completedQueryIndexes}
                                          currentQueryIndex={currentQueryIndex} completed={completed}
                                          loadDataset={loadDataset}/>,
-                    previous: <Button disabled={!prevEnabled} style={{float: "left"}} primary onClick={() => {setCurrentStep(SELECT_DATASET); setPrevEnabled(false); setNextEnabled(true)}}><Icon name='chevron left' /> Previous </Button>,
-                    next: <Button disabled={!nextEnabled} primary onClick={() => setCurrentStep(SELECT_ALGORITHM)}>Next <Icon name='chevron right' /></Button>
+                    previous: <Button disabled={!prevEnabled} style={{float: "left"}} primary
+                                      onClick={() => {
+                                          setCurrentStep(SELECT_DATASET);
+                                          setPrevEnabled(false);
+                                          setNextEnabled(true)
+                                      }}><Icon name='chevron left' /> Previous </Button>,
+                    next: <Button disabled={!nextEnabled} primary onClick={() =>
+                        setCurrentStep(SELECT_ALGORITHM)
+                    }>Next <Icon name='chevron right' /></Button>
                 };
             case SELECT_ALGORITHM:
                 return {
                     header: "Choose algorithm",
                     view: <SelectAlgorithms selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
                                             selectGroup={selectGroup}/>,
-                    next: <Button disabled={!nextEnabled} positive onClick={() => {resetState();props.onClose()}}>All Done</Button>
+                    next: <Button disabled={!nextEnabled} positive onClick={resetState}>All Done</Button>
                 }
             default:
                 return null;
