@@ -24,6 +24,7 @@ const Datasets = (props) => {
     const [completedQueryIndexes, setCompletedQueryIndexes] = React.useState({})
     const [completed, setCompleted] = React.useState([])
     const [nextEnabled, setNextEnabled] = React.useState(false)
+    const [prevEnabled, setPrevEnabled] = React.useState(false)
 
     const resetState = () => {
         props.onClose()
@@ -53,7 +54,7 @@ const Datasets = (props) => {
                         })
                         .then(currentResult => {
                             // console.log("loadDataset.completedQueryIndexes", completedQueryIndexes, {...completedQueryIndexes, [qIndex]: true}, qIndex)
-                            setCompletedQueryIndexes({...completedQueryIndexes, [qIndex]: true})
+                            setCompletedQueryIndexes( prevState => { return {...prevState, [qIndex]: true} })
 
                             return [...chainResults, currentResult]
                         })
@@ -82,7 +83,7 @@ const Datasets = (props) => {
                 return {
                     header: "Select Sample Graph",
                     view: <SelectDataset selectedDataset={selectedDataset} selectedStyle={selectedStyle} show={show} nextEnabled={nextEnabled} setNextEnabled={setNextEnabled}/>,
-                    next: <Button disabled={!nextEnabled} primary onClick={() => {setCurrentStep(IMPORT_DATASET); setNextEnabled(false) } }>Next <Icon name='chevron right' /></Button>
+                    next: <Button disabled={!nextEnabled} primary onClick={() => {setCurrentStep(IMPORT_DATASET); setNextEnabled(false); setPrevEnabled(true) } }>Next <Icon name='chevron right' /></Button>
                 }
             case IMPORT_DATASET:
                 return {
@@ -90,13 +91,15 @@ const Datasets = (props) => {
                     view: <ImportDataset selectedDataset={selectedDataset} completedQueryIndexes={completedQueryIndexes}
                                          currentQueryIndex={currentQueryIndex} completed={completed}
                                          loadDataset={loadDataset}/>,
+                    previous: <Button disabled={!prevEnabled} style={{float: "left"}} primary onClick={() => {setCurrentStep(SELECT_DATASET); setPrevEnabled(false); setNextEnabled(true)}}><Icon name='chevron left' /> Previous </Button>,
                     next: <Button disabled={!nextEnabled} primary onClick={() => setCurrentStep(SELECT_ALGORITHM)}>Next <Icon name='chevron right' /></Button>
                 };
             case SELECT_ALGORITHM:
                 return {
                     header: "Choose algorithm",
                     view: <SelectAlgorithms selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
-                                            selectGroup={selectGroup}/>
+                                            selectGroup={selectGroup}/>,
+                    next: <Button disabled={!nextEnabled} positive onClick={() => {resetState();props.onClose()}}>All Done</Button>
                 }
             default:
                 return null;
@@ -121,6 +124,7 @@ const Datasets = (props) => {
             </div>
         </Modal.Content>
         <Modal.Actions>
+            {currentScreen.previous}
             {currentScreen.next}
         </Modal.Actions>
     </Modal>
