@@ -2,12 +2,40 @@ import React from 'react'
 import {Render} from 'graph-app-kit/components/Render'
 import {Button, Divider, Dropdown, Form, Input, Message} from 'semantic-ui-react'
 
-const extractComponents = (url) => {
-    const [scheme, theRest] = url.split("://")
+const defaultUrlComponents = { scheme: "neo4j", port: 7687, address: "localhost"}
+
+const schemeOptions = [
+    {key: 'neo4j', value: 'neo4j', text: 'neo4j'},
+    {key: 'neo4j+s', value: 'neo4j+s', text: 'neo4j+s'},
+    {key: 'neo4j+ssc', value: 'neo4j+ssc', text: 'neo4j+ssc'},
+    {key: 'bolt', value: 'bolt', text: 'bolt'},
+]
+
+export const extractComponents = (url) => {
+    // http://localhost:3000/?username=training&url=localhost&accessToken=training
+    // http://localhost:3000/?username=movies&url=neo4j://demo.neo4jlabs.com&accessToken=movies
+
+    if (!url) {
+        return defaultUrlComponents
+    }
+
+    let [scheme, theRest] = url.split("://")
+    if (!scheme) {
+        return defaultUrlComponents
+    }
+
+    if (!schemeOptions.map(option => option.key).includes(scheme)) {
+        scheme = "neo4j"
+    }
+
+    if (!theRest) {
+        theRest = "localhost:7687"
+    }
+
     const urlParts = theRest.split(":");
     if (urlParts.length > 1) {
         return {
-            scheme: scheme, port: urlParts[urlParts.length - 1], address: urlParts[0]
+            scheme: scheme, port: parseInt(urlParts[urlParts.length - 1]), address: urlParts[0]
         }
     } else {
         return {
@@ -33,21 +61,14 @@ const ConnectForm = (props) => {
         setUsername(props.queryParameters.username)
         setPassword(props.queryParameters.accessToken)
 
-        if (props.queryParameters.url) {
-            const {scheme, port, address} = extractComponents(props.queryParameters.url)
-            setScheme(scheme)
-            setPort(port)
-            setAddress(address)
-        }
+        const {scheme, port, address} = extractComponents(props.queryParameters.url)
+        setScheme(scheme)
+        setPort(port)
+        setAddress(address)
 
     }, [props.queryParameters])
 
-    const schemeOptions = [
-        {key: 'neo4j', value: 'neo4j', text: 'neo4j'},
-        {key: 'neo4j+s', value: 'neo4j+s', text: 'neo4j+s'},
-        {key: 'neo4j+ssc', value: 'neo4j+ssc', text: 'neo4j+ssc'},
-        {key: 'bolt', value: 'bolt', text: 'bolt'},
-    ]
+
 
     return (
         <div className="loading-container">

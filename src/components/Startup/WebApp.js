@@ -31,6 +31,7 @@ const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
     React.useEffect(() => {
         setQueryParameters(qs.parse(props.location.search, { ignoreQueryPrefix: true }))
+        props.history.push(props.location.pathname)
     }, [])
 
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
