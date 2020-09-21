@@ -1,7 +1,8 @@
 import constants from "../../constants";
 
 const mixpanel = require('mixpanel-browser');
-mixpanel.init(constants.mixpanelId["dev"]);
+const env = constants.env;
+mixpanel.init(constants.mixpanelId[env]);
 
 export const sendMetrics = (category, label, data = {}) => {
     // console.log(category, label, data)
