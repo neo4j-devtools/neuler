@@ -9,6 +9,8 @@ const schemeOptions = [
     {key: 'neo4j+s', value: 'neo4j+s', text: 'neo4j+s'},
     {key: 'neo4j+ssc', value: 'neo4j+ssc', text: 'neo4j+ssc'},
     {key: 'bolt', value: 'bolt', text: 'bolt'},
+    {key: 'bolt+s', value: 'bolt+s', text: 'bolt+s'},
+    {key: 'bolt+ssc', value: 'bolt+ssc', text: 'bolt+ssc'},
 ]
 
 export const extractComponents = (url) => {
@@ -54,10 +56,11 @@ const ConnectForm = (props) => {
     };
 
     React.useEffect(() => {
-        setUsername(props.queryParameters.username)
-        setPassword(props.queryParameters.accessToken)
+        setUsername(props.queryParameters.username || "neo4j")
+        setPassword(props.queryParameters.accessToken || "")
 
         const {scheme, port, address} = extractComponents(props.queryParameters.url)
+        console.log(scheme, port, address, props.queryParameters.url)
         setScheme(scheme)
         setPort(port)
         setAddress(address)

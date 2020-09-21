@@ -22,6 +22,15 @@ describe("Extract URL components should", () => {
         expect(address).toEqual("demo.neo4jlabs.com")
     })
 
+    it('bolt:s', () => {
+        const {scheme, port, address} = extractComponents("bolt+s://100.25.221.22:41382");
+        expect(scheme).toEqual("bolt+s")
+        expect(port).toEqual(41382)
+        expect(address).toEqual("100.25.221.22")
+    })
+
+
+
     it('no port uses 7687', () => {
         const {scheme, port, address} = extractComponents("blah://demo.neo4jlabs.com");
         expect(scheme).toEqual("neo4j")
