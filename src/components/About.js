@@ -1,8 +1,7 @@
 import {Container, Modal, Table} from "semantic-ui-react"
 import React from 'react'
 import {connect} from "react-redux";
-
-export const NEULER_VERSION = "0.1.35"
+import constants from "../constants.js";
 
 const About = (props) => {
     const containerStyle = {
@@ -35,7 +34,7 @@ const About = (props) => {
                             <Table.Row>
                                 <Table.Cell>NEuler</Table.Cell>
                                 <Table.Cell>
-                                    {NEULER_VERSION}
+                                    {constants.version}
                                 </Table.Cell>
                             </Table.Row>
                             <Table.Row>

@@ -1,5 +1,5 @@
 import React from 'react'
-import {Container, Header, Menu, Modal, Segment} from "semantic-ui-react"
+import {Container, Header, Menu, Segment} from "semantic-ui-react"
 
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
 import {getAlgorithms} from "./algorithmsLibrary"
@@ -9,10 +9,10 @@ import {connect} from "react-redux"
 import {limit} from "../ducks/settings"
 import {setLabels, setPropertyKeys, setRelationshipTypes} from "../ducks/metadata"
 import Home from "./Home";
-import About, {NEULER_VERSION} from "./About";
+import About from "./About";
 import {FeedbackForm} from "./Feedback/FeedbackForm";
 import {refreshMetadata} from "./Startup/startup";
-
+import constants from "../constants.js";
 
 const NEuler = (props) => {
     const {activeGroup, activeAlgorithm, selectAlgorithm} = props
@@ -38,7 +38,7 @@ const NEuler = (props) => {
 
     const {header, view} = selectComponent(activeGroup)
 
-    const page = activeAlgorithm ? `${NEULER_VERSION}/${activeGroup}/${activeAlgorithm}` : `${NEULER_VERSION}/${activeGroup}`
+    const page = activeAlgorithm ? `${constants.version}/${activeGroup}/${activeAlgorithm}` : `${constants.version}/${activeGroup}`
 
     return (
         <Container fluid style={{display: 'flex', height: '100%', background: "#fff"}}>

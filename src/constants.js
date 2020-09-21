@@ -5,5 +5,6 @@ export default {
         prod: 'c4488ddf14af6efe91014e60cecef01e'
     },
     defaultLimit: 42,
-    defaultCommunityNodeLimit: 10
+    defaultCommunityNodeLimit: 10,
+    version: "0.1.35"
 }
