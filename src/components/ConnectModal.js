@@ -14,6 +14,7 @@ const schemeOptions = [
 export const extractComponents = (url) => {
     // http://localhost:3000/?username=training&url=localhost&accessToken=training
     // http://localhost:3000/?username=movies&url=neo4j://demo.neo4jlabs.com&accessToken=movies
+    // http://localhost:3000?url=bolt://100.25.221.22:41382&username=neo4j&accessToken=headquarters-ampere-jewel
 
     if (!url) {
         return defaultUrlComponents
@@ -34,14 +35,9 @@ export const extractComponents = (url) => {
 
     const urlParts = theRest.split(":");
     if (urlParts.length > 1) {
-        return {
-            scheme: scheme, port: parseInt(urlParts[urlParts.length - 1]), address: urlParts[0]
-        }
+        return {scheme: scheme, port: parseInt(urlParts[urlParts.length - 1]), address: urlParts[0]}
     } else {
-        return {
-            scheme: scheme, address: urlParts[0], port: 7687
-        }
-
+        return {scheme: scheme, address: urlParts[0], port: 7687}
     }
 }
 
