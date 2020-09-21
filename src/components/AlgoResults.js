@@ -185,7 +185,6 @@ const TabExampleVerticalTabular = (props) => {
       })
 
       const formParameters = addLimits(parameters);
-      console.log("formParameters", formParameters)
       addNewTask(activeGroup, activeAlgorithm, addLimits(params), formParameters)
     }
 

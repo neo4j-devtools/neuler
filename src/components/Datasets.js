@@ -124,7 +124,7 @@ const Datasets = (props) => {
                   onClose={resetState}
                   centered={false}
                   closeIcon
-                  size="medium">
+                  size="large">
         <Modal.Header>
             {currentScreen.header}
         </Modal.Header>

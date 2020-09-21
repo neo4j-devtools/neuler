@@ -25,8 +25,14 @@ import {
     refreshMetadata, SELECT_DATABASE, setLimitDefaults,
     webAppSteps
 } from "./startup";
+import * as qs from "qs";
 
 const NewApp = (props) => {
+    const [queryParameters, setQueryParameters] = React.useState({})
+    React.useEffect(() => {
+        setQueryParameters(qs.parse(props.location.search, { ignoreQueryPrefix: true }))
+    }, [])
+
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
     const [currentStepFailed, setCurrentStepFailed] = React.useState(false)
     const [currentStepInProgress, setCurrentStepInProgress] = React.useState(false)
@@ -115,6 +121,7 @@ const NewApp = (props) => {
                                        setCurrentStep={setCurrentStep}
                                        setCurrentStepFailed={setCurrentStepFailed}
                                        setCurrentStepInProgress={setCurrentStepInProgress}
+                                       queryParameters={queryParameters}
                     />
                 </div>
 

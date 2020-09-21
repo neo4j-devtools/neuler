@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Label, Segment} from "semantic-ui-react";
+import {Label, Segment} from "semantic-ui-react";
 
 export const OpenCloseSection = ({title, children}) => {
     const [open, setOpen] = React.useState(true);
@@ -9,8 +9,8 @@ export const OpenCloseSection = ({title, children}) => {
         <Label as='a' attached='top left' onClick={() => setOpen(!open)}>
             {title}
         </Label>
-        <Form style={style}>
+        <div style={style}>
             {children}
-        </Form>
+        </div>
     </Segment>
 }

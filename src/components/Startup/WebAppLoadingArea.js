@@ -13,7 +13,7 @@ import {connect} from "react-redux";
 import {Render} from "graph-app-kit/components/Render";
 
 
-export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress}) => {
+export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress, queryParameters}) => {
     const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
 
     const failedCurrentStep = () => {
@@ -34,7 +34,9 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
         case CONNECTING_TO_DATABASE:
             return <ConnectingToDatabase connectionStatus={connectionStatus} setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}
                                          setCurrentStepInProgress={setCurrentStepInProgress}
-                                         setConnected={setConnected} setDisconnected={setDisconnected}/>
+                                         setConnected={setConnected} setDisconnected={setDisconnected}
+                                         queryParameters={queryParameters}
+            />
         case SELECT_DATABASE:
             return <SelectDatabase currentStep={currentStep} setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
         case CHECKING_GDS_PLUGIN:
@@ -151,7 +153,7 @@ const SelectDatabase = connect(() => ({}), dispatch => ({
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
 }))(SelectDatabaseForm)
 
-const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected, setCurrentStepFailed, setCurrentStepInProgress}) => {
+const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected, setCurrentStepFailed, setCurrentStepInProgress, queryParameters}) => {
     const errorMsgTemplate = "Could not get a connection! Check that you entered the correct credentials and that the database is running."
     const [errorMessage, setErrorMessage] = React.useState(null)
     const [extraErrorMessage, setExtraErrorMessage] = React.useState(null)
@@ -172,6 +174,7 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
                     setErrorMessage(null)
                     setExtraErrorMessage(null)
                 }}
+                queryParameters={queryParameters}
                 onSubmit={(boltUri, username, password) => {
                     setCurrentStepInProgress(true)
                     setErrorMessage(null)

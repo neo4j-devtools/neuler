@@ -1,6 +1,21 @@
-import React, {Component} from 'react'
+import React from 'react'
 import {Render} from 'graph-app-kit/components/Render'
 import {Button, Divider, Dropdown, Form, Input, Message} from 'semantic-ui-react'
+
+const extractComponents = (url) => {
+    const [scheme, theRest] = url.split("://")
+    const urlParts = theRest.split(":");
+    if (urlParts.length > 1) {
+        return {
+            scheme: scheme, port: urlParts[urlParts.length - 1], address: urlParts[0]
+        }
+    } else {
+        return {
+            scheme: scheme, address: urlParts[0], port: 7687
+        }
+
+    }
+}
 
 const ConnectForm = (props) => {
     const {errorMsg, extraErrorMessage, clearErrorMessages} = props
@@ -13,6 +28,19 @@ const ConnectForm = (props) => {
         const boltUri = `${scheme}://${address}:${port}`
         props.onSubmit(boltUri, username, password)
     };
+
+    React.useEffect(() => {
+        setUsername(props.queryParameters.username)
+        setPassword(props.queryParameters.accessToken)
+
+        if (props.queryParameters.url) {
+            const {scheme, port, address} = extractComponents(props.queryParameters.url)
+            setScheme(scheme)
+            setPort(port)
+            setAddress(address)
+        }
+
+    }, [props.queryParameters])
 
     const schemeOptions = [
         {key: 'neo4j', value: 'neo4j', text: 'neo4j'},
@@ -28,37 +56,37 @@ const ConnectForm = (props) => {
                 <Form.Field>
                     <label>Server Address</label>
                     <Form.Field inline>
-                    <Dropdown  style={{minWidth: "7em"}}
-                        selection search value={scheme}
-                        options={schemeOptions}
-                        onChange={(_, {value}) => {
-                            clearErrorMessages()
-                            setScheme(value)
-                        }}
-                               onClick={clearErrorMessages}
-                    />
+                        <Dropdown style={{minWidth: "7em"}}
+                                  selection search value={scheme}
+                                  options={schemeOptions}
+                                  onChange={(_, {value}) => {
+                                      clearErrorMessages()
+                                      setScheme(value)
+                                  }}
+                                  onClick={clearErrorMessages}
+                        />
                         <p style={{margin: "0 .85714286em 0 0"}}>://</p>
-                    <Input style={{margin: "0 .85714286em 0 0"}}
-                        value={address}
-                        name='address'
-                        onChange={(_, {value}) => {
-                            clearErrorMessages()
-                            setAddress(value)
-                        }}
-                           onClick={clearErrorMessages}
-                        placeholder='Server Address'
-                    />
-                    <p style={{margin: "0 .85714286em 0 0"}}>:</p>
-                        <Input style={{width: "7em", minWidth: "7em"}}
-                            value={port}
-                            type="number"
-                            name='port'
-                            onChange={(_, {value}) => {
-                                setPort(value)
-                                clearErrorMessages()
-                            }}
+                        <Input style={{margin: "0 .85714286em 0 0"}}
+                               value={address}
+                               name='address'
+                               onChange={(_, {value}) => {
+                                   clearErrorMessages()
+                                   setAddress(value)
+                               }}
                                onClick={clearErrorMessages}
-                            placeholder='Port'
+                               placeholder='Server Address'
+                        />
+                        <p style={{margin: "0 .85714286em 0 0"}}>:</p>
+                        <Input style={{width: "7em", minWidth: "7em"}}
+                               value={port}
+                               type="number"
+                               name='port'
+                               onChange={(_, {value}) => {
+                                   setPort(value)
+                                   clearErrorMessages()
+                               }}
+                               onClick={clearErrorMessages}
+                               placeholder='Port'
                         />
 
                     </Form.Field>
@@ -101,7 +129,7 @@ const ConnectForm = (props) => {
                         <Message.Content>
                             {errorMsg}
                         </Message.Content>
-                        <Divider />
+                        <Divider/>
                         <Message.Content style={{fontStyle: "italic"}}>
                             <p>
                                 {extraErrorMessage}
@@ -109,7 +137,7 @@ const ConnectForm = (props) => {
                         </Message.Content>
                     </Message>
                 </Render>
-                <Divider />
+                <Divider/>
                 <Button
                     onClick={() => {
                         clearErrorMessages()
@@ -127,27 +155,21 @@ const ConnectForm = (props) => {
 
 }
 
-export class ConnectModal extends Component {
-    state = {
-        showModal: true,
-        initial: true
+export const ConnectModal = (props) => {
+    const [initial, setInitial] = React.useState(true)
+    const onSubmit = (boltUri, username, password) => {
+        setInitial(false)
+        props.onSubmit(boltUri, username, password)
     };
 
-    onSubmit = (boltUri, username, password) => {
-        this.setState({initial: false}, () => {
-            this.props.onSubmit(boltUri, username, password)
-        })
-    };
-
-    render() {
-        const errorMsg = this.state.initial ? false : this.props.errorMsg
-        return (
-            <ConnectForm
-                onSubmit={this.onSubmit}
-                errorMsg={errorMsg}
-                extraErrorMessage={this.props.extraErrorMessage}
-                clearErrorMessages={this.props.clearErrorMessages}
-            />
-        )
-    }
+    const errorMsg = initial ? false : props.errorMsg
+    return (
+        <ConnectForm
+            onSubmit={onSubmit}
+            queryParameters={props.queryParameters}
+            errorMsg={errorMsg}
+            extraErrorMessage={props.extraErrorMessage}
+            clearErrorMessages={props.clearErrorMessages}
+        />
+    )
 }
