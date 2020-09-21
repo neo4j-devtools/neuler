@@ -65,7 +65,7 @@ test('relationshipProjection removes hyphens', () => {
 
 
 test('writeProperty if persist is true', () => {
-  const params = centralityParams({requiredProperties:["writeProperty"], persist: true, writeProperty: "foo"})
+  const params = centralityParams({requiredProperties:["writeProperty"], persist: false, writeProperty: "foo"})
   const config = params.config;
   expect(config.writeProperty).toEqual("foo")
 });
