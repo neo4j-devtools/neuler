@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.36 (2020-09-21)
+
+* fix bug with duplicate properties showing on perspectives view
+* added functionality to pass in server parameters from web app
+
 ## 0.1.35 (2020-09-17)
 
 * redesigned startup flow
