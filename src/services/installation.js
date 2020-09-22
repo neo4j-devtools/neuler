@@ -1,10 +1,30 @@
 import {runCypher} from "./stores/neoStore"
 
+const findApocProceduresCypher = `
+CALL dbms.procedures()
+YIELD name
+WHERE name STARTS WITH "apoc"
+RETURN count(*) AS count
+`
+
 export const checkApocInstalled = () => {
   return runCypher(findApocProceduresCypher)
       .then(result => (parseResultStream(result)))
       .catch(handleException)
 }
+
+export const checkApocMetaProcedureAvailable = () => {
+  return runCypher("CALL apoc.meta.nodeTypeProperties() YIELD propertyName RETURN count(*) AS count")
+      .then(result => (parseResultStream(result)))
+      .catch(error => false)
+}
+
+const findGraphAlgosProceduresCypher = `
+CALL dbms.procedures()
+YIELD name
+WHERE name STARTS WITH "gds"
+RETURN count(*) AS count
+`
 
 export const checkGraphAlgorithmsInstalled = () => {
   return runCypher(findGraphAlgosProceduresCypher)
@@ -17,19 +37,9 @@ const handleException = error => {
   throw new Error(error)
 }
 
-const findGraphAlgosProceduresCypher = `
-CALL dbms.procedures()
-YIELD name
-WHERE name STARTS WITH "gds"
-RETURN count(*) AS count
-`
 
-const findApocProceduresCypher = `
-CALL dbms.procedures()
-YIELD name
-WHERE name STARTS WITH "apoc"
-RETURN count(*) AS count
-`
+
+
 
 export const parseResultStream = result => {
   if (result.records) {

@@ -26,7 +26,7 @@ ORDER BY propertyKey`, {})
 
 export const loadNodePropertyKeys = () => {
   return runCypher(`CALL apoc.meta.nodeTypeProperties()
-YIELD nodeLabels, propertyName
+  YIELD nodeLabels, propertyName
 UNWIND nodeLabels AS label
 WITH DISTINCT label, propertyName
 ORDER By label, propertyName
