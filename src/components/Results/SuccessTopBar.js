@@ -13,8 +13,6 @@ const printElement = element => {
 }
 
 export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
-    const message = task.status !== ADDED ? `Started at: ${task.startTime.toLocaleTimeString()}` : ""
-
     return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
@@ -43,21 +41,27 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
                 </React.Fragment> : null}
         </div>
 
-        <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            marginLeft: "auto"
-        }}>
-            <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-                <Icon name='angle left'/>
-            </Button>
-            <Header as='h3' style={{margin: '0 1em'}}>
-                {`${task.algorithm} ${message} - (${currentPage} / ${totalPages})`}
-            </Header>
-            <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-                <Icon name='angle right'/>
-            </Button>
-        </div>
+        <NavBar prevResult={prevResult} currentPage={currentPage} nextResult={nextResult} task={task} totalPages={totalPages} />
 
     </Menu>
+}
+
+export const NavBar = ({prevResult, currentPage, nextResult, task, totalPages}) => {
+    const message = task.status !== ADDED ? `Started at: ${task.startTime.toLocaleTimeString()}` : ""
+
+    return <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        marginLeft: "auto"
+    }}>
+        <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
+            <Icon name='angle left'/>
+        </Button>
+        <Header as='h3' style={{margin: '0 1em'}}>
+            {`${task.algorithm} ${message} - (${currentPage} / ${totalPages})`}
+        </Header>
+        <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
+            <Icon name='angle right'/>
+        </Button>
+    </div>
 }

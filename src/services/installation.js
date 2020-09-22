@@ -15,7 +15,7 @@ export const checkApocInstalled = () => {
 
 export const checkApocMetaProcedureAvailable = () => {
   return runCypher("CALL apoc.meta.nodeTypeProperties() YIELD propertyName RETURN count(*) AS count")
-      .then(result => (parseResultStream(result)))
+      .then(result => true)
       .catch(error => false)
 }
 
