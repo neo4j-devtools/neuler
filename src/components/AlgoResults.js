@@ -248,10 +248,8 @@ const TabExampleVerticalTabular = (props) => {
 
   const tasks = props.tasks
 
-  console.log("selectedTaskId", selectedTaskId)
   if (tasks && tasks.length > 0) {
     const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) :  tasks[0]
-    console.log("currentTask", currentTask)
     return <HorizontalAlgoTab
         tasks={tasks}
         metadata={props.metadata}
