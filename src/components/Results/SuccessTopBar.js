@@ -1,4 +1,4 @@
-import {Button, Header, Icon, Image, Menu} from "semantic-ui-react";
+import  {Dropdown, Button, Form, Header, Icon, Image, Menu} from "semantic-ui-react";
 import React from "react";
 import html2canvas from "html2canvas";
 import {v4 as generateId} from "uuid";
@@ -12,7 +12,7 @@ const printElement = element => {
     })
 }
 
-export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef}) => {
+export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef, tasks, setSelectedTaskId}) => {
     return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
@@ -41,27 +41,29 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
                 </React.Fragment> : null}
         </div>
 
-        <NavBar prevResult={prevResult} currentPage={currentPage} nextResult={nextResult} task={task} totalPages={totalPages} />
+        <NavBar task={task} tasks={tasks} setSelectedTaskId={setSelectedTaskId} />
 
     </Menu>
 }
 
-export const NavBar = ({prevResult, currentPage, nextResult, task, totalPages}) => {
-    const message = task.status !== ADDED ? `Started at: ${task.startTime.toLocaleTimeString()}` : ""
+export const NavBar = ({task, tasks, setSelectedTaskId}) => {
+    const createMessage = (task) => {
+        return task.status !== ADDED ? ` (Started at: ${task.startTime.toLocaleTimeString()})` : ""
+    }
+
+    const taskOptions = tasks.map(value => {
+        return {key: value.taskId, value: value.taskId, text: value.algorithm + createMessage(value)};
+    })
 
     return <div style={{
         display: 'flex',
         alignItems: 'center',
-        marginLeft: "auto"
+        marginLeft: "auto",
+        marginBottom: "5px"
     }}>
-        <Button basic icon size='mini' onClick={prevResult} disabled={currentPage === 1}>
-            <Icon name='angle left'/>
-        </Button>
-        <Header as='h3' style={{margin: '0 1em'}}>
-            {`${task.algorithm} ${message} - (${currentPage} / ${totalPages})`}
-        </Header>
-        <Button basic icon size='mini' onClick={nextResult} disabled={currentPage === totalPages}>
-            <Icon name='angle right'/>
-        </Button>
+        <Form>
+        <Dropdown options={taskOptions} search selection value={task.taskId} onChange={(evt, data) => setSelectedTaskId(data.value)} >
+        </Dropdown>
+        </Form>
     </div>
 }

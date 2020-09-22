@@ -23,7 +23,7 @@ export const tabContentStyle = {
 }
 
 const HorizontalAlgoTab = (props) => {
-  const { task, prevResult, nextResult, currentPage, totalPages } = props
+  const { task, currentPage, totalPages } = props
 
   const panelRef = React.createRef()
   const [activeItem, setActiveItem] = React.useState("Configure")
@@ -61,8 +61,9 @@ const HorizontalAlgoTab = (props) => {
         </Header>
         {task.completed && task.status === FAILED ? (
                 <React.Fragment>
-                  <FailedTopBar task={task} activeItem={activeItem} prevResult={prevResult} nextResult={nextResult}
+                  <FailedTopBar task={task} activeItem={activeItem}  tasks={props.tasks}
                                 currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={handleMenuItemClick.bind(this)}
+                                setSelectedTaskId={props.setSelectedTaskId}
                   />
 
                   <Segment attached='bottom'>
@@ -91,9 +92,10 @@ const HorizontalAlgoTab = (props) => {
                 </React.Fragment>
           )
             : <React.Fragment>
-                <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup} prevResult={prevResult}
-                               nextResult={nextResult} currentPage={currentPage} totalPages={totalPages}
+                <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup}
+                               currentPage={currentPage} totalPages={totalPages} tasks={props.tasks}
                                panelRef={panelRef} handleMenuItemClick={handleMenuItemClick.bind(this)}
+                               setSelectedTaskId={props.setSelectedTaskId}
                 />
                 <div ref={panelRef}>
                   <Segment attached='bottom'>
@@ -141,16 +143,13 @@ const HorizontalAlgoTab = (props) => {
 }
 
 const TabExampleVerticalTabular = (props) => {
-  const [page, setPage] = useState(0)
+  const [selectedTaskId, setSelectedTaskId] = useState(null)
 
-  const prevResult = () => {
-    setPage(Math.max(0, page - 1))
-  }
-
-  const nextResult = () => {
-    const length = (props.tasks || []).length
-    setPage(Math.min(length - 1, page + 1))
-  }
+  useEffect(() => {
+    if(props.tasks.length > 0) {
+      setSelectedTaskId(props.tasks[0].taskId)
+    }
+  }, [props.tasks.length === 0])
 
   const addLimits = (params) => {
     return {
@@ -163,16 +162,14 @@ const TabExampleVerticalTabular = (props) => {
   const addNewTask = (group, algorithm, parameters, formParameters) => {
     const taskId = generateTaskId()
     props.addTask(taskId, group, algorithm, parameters, formParameters, parameters.persist)
+    setSelectedTaskId(taskId)
   }
-
-  useEffect(() => {
-      setPage(0)
-  }, [props.tasks.length, props.tasks.length > 0 && props.tasks[0].taskId])
 
   useEffect(() => {
     const latestTask = props.tasks[0]
     if(latestTask && latestTask.status === ADDED) {
       props.removeTask(latestTask.taskId)
+      setSelectedTaskId(null)
     }
 
     const {activeGroup, activeAlgorithm, metadata} = props
@@ -251,16 +248,17 @@ const TabExampleVerticalTabular = (props) => {
 
   const tasks = props.tasks
 
+  console.log("selectedTaskId", selectedTaskId)
   if (tasks && tasks.length > 0) {
-    const currentTask = tasks[page]
+    const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) :  tasks[0]
+    console.log("currentTask", currentTask)
     return <HorizontalAlgoTab
+        tasks={tasks}
         metadata={props.metadata}
+        setSelectedTaskId={setSelectedTaskId}
         onRunAlgo={onRunAlgo}
         onCopyAlgo={addNewTask}
         task={currentTask}
-        prevResult={prevResult}
-        nextResult={nextResult}
-        currentPage={page + 1}
         totalPages={tasks.length}
         gdsVersion={props.metadata.versions.gdsVersion}
     />
