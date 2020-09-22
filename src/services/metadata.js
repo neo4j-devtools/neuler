@@ -54,7 +54,7 @@ export const loadDatabases = (neo4jVersion) => {
       .then(parseDatabasesResultStream)
       .catch(handleException)
   } else {
-    return Promise.resolve([{name: "graph.db", default: true}]);
+    return Promise.resolve([{name: "neo4j", default: true}]);
   }
 }
 

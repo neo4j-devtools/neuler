@@ -32,7 +32,7 @@ export const refreshMetadata = (props, firstConnection = false, finished = () =>
         onNeo4jVersion(versions.neo4jVersion)
 
         loadMetadata(versions.neo4jVersion).then(metadata => {
-            updateMetadata(props, metadata, props.metadata.activeDatabase)
+            updateMetadata(props, metadata, (props.metadata.activeDatabase || "neo4j"))
             finished()
         })
     });
