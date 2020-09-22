@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.38 (2020-09-22)
+
+* dropdown of previous algorithm runs instead of prev/next nav
+* fix bug in meta check on empty graphs 
+
 ## 0.1.37 (2020-09-22)
 
 * add check for apoc.meta.nodeTypeProperties procedure being unrestricted on startup 
