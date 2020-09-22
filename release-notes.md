@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.37 (2020-09-22)
+
+* add check for apoc.meta.nodeTypeProperties procedure being unrestricted on startup 
+
 ## 0.1.36 (2020-09-21)
 
 * fix bug with duplicate properties showing on perspectives view
