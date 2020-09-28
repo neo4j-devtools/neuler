@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.39 (2020-09-28)
+
+* add feedback form to startup
+* right align results of centrality algos
+
 ## 0.1.38 (2020-09-22)
 
 * dropdown of previous algorithm runs instead of prev/next nav
