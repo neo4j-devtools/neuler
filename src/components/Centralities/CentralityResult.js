@@ -11,7 +11,7 @@ export default ({ task }) => (
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Node</Table.HeaderCell>
-          <Table.HeaderCell>Score</Table.HeaderCell>
+          <Table.HeaderCell style={{textAlign: "right"}}>Score</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
       <Table.Body>
@@ -19,7 +19,7 @@ export default ({ task }) => (
         task.result && task.result.rows.map((result, idx) =>
           <Table.Row key={idx}>
             <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels} database={task.database}/></Table.Cell>
-            <Table.Cell>{result.score}</Table.Cell>
+            <Table.Cell style={{textAlign: "right"}}>{result.score}</Table.Cell>
           </Table.Row>
         )
           :
