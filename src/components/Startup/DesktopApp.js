@@ -26,6 +26,8 @@ import {
 } from "./startup";
 import {LoadingIcon} from "./LoadingIcon";
 import {DesktopAppLoadingArea} from "./DesktopAppLoadingArea";
+import {FeedbackForm} from "../Feedback/FeedbackForm";
+import constants from "../../constants";
 
 
 const NewApp = (props) => {
@@ -122,7 +124,7 @@ const NewApp = (props) => {
                                  currentStepFailed={currentStepFailed}
                                  setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed}/>
         </div>
-
+        <FeedbackForm page={constants.version + "/DesktopApp-Startup" } />
       </Segment>
     </div>
   </Container>

@@ -109,3 +109,7 @@ div.update-node-row p {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.feedback-form.checkbox label  {
+  white-space: pre-line;
+}

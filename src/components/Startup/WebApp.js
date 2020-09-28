@@ -26,6 +26,8 @@ import {
     webAppSteps
 } from "./startup";
 import * as qs from "qs";
+import {FeedbackForm} from "../Feedback/FeedbackForm";
+import constants from "../../constants";
 
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
@@ -125,7 +127,7 @@ const NewApp = (props) => {
                                        queryParameters={queryParameters}
                     />
                 </div>
-
+                <FeedbackForm page={constants.version + "/WebApp-Startup" } />
             </Segment>
         </div>
     </Container>

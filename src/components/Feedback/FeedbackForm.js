@@ -104,7 +104,7 @@ const headerStyle = {
 
 const FeedbackFirstScreen = (props) => {
   const outerStyle = {padding: "24px"}
-  const innerStyle = {marginBottom: "10px"}
+  const innerStyle = {marginBottom: "10px", color: "#000"}
 
   if (!props.open) {
     innerStyle.display = "none"
@@ -131,7 +131,7 @@ const FeedbackFirstScreen = (props) => {
 
 const FeedbackSecondScreen = (props) => {
   const outerStyle = {padding: "24px"}
-  const innerStyle = {marginBottom: "10px"}
+  const innerStyle = {marginBottom: "10px", color: "#000"}
 
   if (!props.open) {
     innerStyle.display = "none"
@@ -151,6 +151,7 @@ const FeedbackSecondScreen = (props) => {
 
             <Form.Field>
               <Checkbox
+                  className="feedback-form"
                 radio
                 label="Results are confusing or don't make sense"
                 name='checkboxRadioGroup'
@@ -161,6 +162,7 @@ const FeedbackSecondScreen = (props) => {
             </Form.Field>
             <Form.Field>
               <Checkbox
+                  className="feedback-form"
                 radio
                 label="Missing algorithm or functionality"
                 name='checkboxRadioGroup'
@@ -171,7 +173,8 @@ const FeedbackSecondScreen = (props) => {
             </Form.Field>
             <Form.Field>
               <Checkbox
-                radio
+                  className="feedback-form"
+                  radio
                 label="The app is confusing/I don't know what to do"
                 name='checkboxRadioGroup'
                 value='hard-to-follow'
@@ -181,6 +184,7 @@ const FeedbackSecondScreen = (props) => {
             </Form.Field>
             <Form.Field>
               <Checkbox
+                className="feedback-form"
                 radio
                 label='It has another problem not covered by the above'
                 name='checkboxRadioGroup'
@@ -206,7 +210,7 @@ const FeedbackSecondScreen = (props) => {
 
 const FeedbackThanks = (props) => {
   const outerStyle = {padding: "24px"}
-  const innerStyle = {}
+  const innerStyle = {color: '#000'}
 
   if (!props.open) {
     innerStyle.display = "none"
