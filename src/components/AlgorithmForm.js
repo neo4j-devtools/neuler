@@ -1,12 +1,13 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Button, Header, List, Label, Menu, Dropdown, Form, Input} from 'semantic-ui-react'
-import {getAlgorithmDefinitions, getAlgorithms} from "./algorithmsLibrary"
-import {getCurrentAlgorithm, selectAlgorithm, selectGroup} from "../ducks/algorithms"
+import {Button, Header} from 'semantic-ui-react'
+import {getAlgorithmDefinitions} from "./algorithmsLibrary"
+import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultFilteringFields} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
+import SelectAlgorithm from "./SelectAlgorithm";
 
 export const AlgoFormView = (props) => {
   const {task} = props
@@ -118,13 +119,11 @@ export const AlgoFormView = (props) => {
     props.updateCommunityNodeLimit(parseInt(data.value))
   }
 
-
-
   const readOnly = task.status !== ADDED;
   return (
       <div style={containerStyle}>
         {readOnly && <SelectedAlgorithm currentAlgorithm={currentAlgorithm} task={task} readOnly={readOnly} />}
-        {!readOnly && <SelectAlgorithm currentAlgorithm={currentAlgorithm} task={task} readOnly={readOnly} />}
+        {!readOnly && <SelectAlgorithm currentAlgorithm={task.algorithm} readOnly={readOnly} />}
 
         <div style={{marginBottom: '1em'}}>
 
@@ -172,45 +171,6 @@ const SelectedAlgorithm = ({task, currentAlgorithm}) => {
     </Header>
   </OpenCloseSection>
 }
-
-const SelectAlgorithmView = ({currentAlgorithm, task, metadata}) => {
-  const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
-
-  React.useEffect(() => {
-    setSelectedAlgorithm(task.algorithm)
-  }, [])
-
-  const handleChange = (e, {value}) => {
-    setSelectedAlgorithm(value)
-  }
-
-  const algorithmDescriptions = getAlgorithms("Centralities").map(algorithm => {
-    return {
-      key: algorithm,
-      value: algorithm,
-      text: algorithm,
-      description: getAlgorithmDefinitions("Centralities", algorithm, metadata.versions.gdsVersion).description
-    }
-  })
-
-  return <OpenCloseSection title="Algorithm">
-    <Form>
-      <Form.Field>
-        <Dropdown search selection options={algorithmDescriptions} value={selectedAlgorithm} fluid
-                  onChange={handleChange}
-        />
-      </Form.Field>
-    </Form>
-  </OpenCloseSection>
-
-}
-
-const SelectAlgorithm = connect(state => ({
-  metadata: state.metadata,
-}), dispatch => ({
-  selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
-  selectGroup: algorithm => dispatch(selectGroup(algorithm)),
-}))(SelectAlgorithmView)
 
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,

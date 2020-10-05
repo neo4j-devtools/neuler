@@ -157,7 +157,7 @@ const RecipeView = (props) => {
 
 const AlgoForm = connect(state => ({
     activeGroup: "Centralities",
-    activeAlgorithm: "Degree    ",
+    activeAlgorithm: "Degree",
     currentAlgorithm: getAlgorithmDefinitions("Centralities", "Degree", state.metadata.versions.gdsVersion),
     metadata: state.metadata,
     limit: state.settings.limit,
