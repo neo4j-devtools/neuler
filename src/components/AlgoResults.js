@@ -152,10 +152,54 @@ const TabExampleVerticalTabular = (props) => {
     }
   }
 
-  const addNewTask = (group, algorithm, parameters, formParameters) => {
+  const [newTask, setNewTask] = React.useState({})
+  const constructNewTask = (activeGroup, activeAlgorithm) => {
     const taskId = generateTaskId()
-    props.addTask(taskId, group, algorithm, parameters, formParameters, parameters.persist)
-    setSelectedTaskId(taskId)
+    const addLimits = (params) => {
+      return {
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }
+    }
+    const {parameters} = getAlgorithmDefinitions(activeGroup, activeAlgorithm, props.metadata.versions.gdsVersion)
+    const {parametersBuilder} = props.currentAlgorithm
+
+    const params = parametersBuilder({
+      ...parameters,
+      requiredProperties: Object.keys(parameters)
+    })
+
+    const formParameters = addLimits(parameters);
+
+    return {
+      group: activeGroup,
+      algorithm: activeAlgorithm,
+      taskId,
+      parameters: params,
+      formParameters,
+      persisted: parameters.persist,
+      startTime: new Date(),
+      database: getActiveDatabase(),
+      status: ADDED
+    }
+  }
+
+  const addNewTask = (group, algorithm, parameters, formParameters) => {
+    setNewAlgorithmFormOpen(true)
+    const taskId = generateTaskId()
+    // props.addTask(taskId, group, algorithm, parameters, formParameters, parameters.persist)
+
+    const task = {
+      group, algorithm, taskId,
+      parameters, formParameters, persisted: parameters.persist,
+      startTime: new Date(),
+      database: getActiveDatabase(),
+      status: ADDED
+    }
+
+    setNewTask(task)
+
   }
 
   // useEffect(() => {
@@ -182,6 +226,7 @@ const TabExampleVerticalTabular = (props) => {
 
 
   const onRunAlgo = (task, parameters, formParameters, persisted) => {
+    setSelectedTaskId(null)
     const {taskId, group, algorithm} = task
     const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion);
     const {service, getFetchQuery} = algorithmDefinition
@@ -242,6 +287,13 @@ const TabExampleVerticalTabular = (props) => {
 
   const [newAlgorithmFormOpen, setNewAlgorithmFormOpen] = React.useState(false)
 
+
+
+
+  React.useEffect(() => {
+    setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm))
+  }, [props.activeGroup, props.activeAlgorithm])
+
   if (tasks && tasks.length > 0) {
     const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) : tasks[0]
     return <div>
@@ -262,6 +314,7 @@ const TabExampleVerticalTabular = (props) => {
           open={newAlgorithmFormOpen}
           setOpen={setNewAlgorithmFormOpen}
           onRunAlgo={onRunAlgo}
+          task={newTask}
       />
     </div>
   } else {
@@ -278,6 +331,7 @@ const TabExampleVerticalTabular = (props) => {
           open={newAlgorithmFormOpen}
           setOpen={setNewAlgorithmFormOpen}
           onRunAlgo={onRunAlgo}
+          task={newTask}
       />
     </div>
   }

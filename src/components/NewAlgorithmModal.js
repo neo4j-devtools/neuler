@@ -1,45 +1,20 @@
 import React from "react";
-import {v4 as generateTaskId} from "uuid";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import {Modal} from "semantic-ui-react";
 import AlgorithmForm from "./AlgorithmForm";
-import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 import {connect} from "react-redux";
 import {getCurrentAlgorithm} from "../ducks/algorithms";
-import {ADDED, addTask, runTask} from "../ducks/tasks";
+import {addTask, runTask} from "../ducks/tasks";
 
 export const NewAlgorithmModal = (props) => {
-    const {activeGroup, activeAlgorithm, metadata, open, setOpen} = props
+    const {activeGroup, activeAlgorithm, metadata, open, setOpen, task} = props
 
-    const taskId = generateTaskId()
     const addLimits = (params) => {
         return {
             ...params,
             limit: props.limit,
             communityNodeLimit: props.communityNodeLimit
         }
-    }
-    console.log("activeGroup", activeGroup, "activeAlgorithm", activeAlgorithm, "version", metadata.versions.gdsVersion)
-    const {parameters} = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
-    const {parametersBuilder} = props.currentAlgorithm
-
-    const params = parametersBuilder({
-        ...parameters,
-        requiredProperties: Object.keys(parameters)
-    })
-
-    const formParameters = addLimits(parameters);
-
-    const task = {
-        group: activeGroup,
-        algorithm: activeAlgorithm,
-        taskId,
-        parameters: params,
-        formParameters,
-        persisted: parameters.persist,
-        startTime: new Date(),
-        database: getActiveDatabase(),
-        status: ADDED
     }
 
     return <Modal open={open} size="large"  onClose={() => {
@@ -52,8 +27,9 @@ export const NewAlgorithmModal = (props) => {
             <AlgorithmForm
                 task={task}
                 onRun={(newParameters, formParameters, persisted) => {
-                    props.addTask(taskId, activeGroup, activeAlgorithm, addLimits(params), formParameters, persisted)
+                    props.addTask(task.taskId, activeGroup, activeAlgorithm, addLimits(newParameters), formParameters, persisted)
                     props.onRunAlgo(task, newParameters, formParameters, persisted)
+                    setOpen(false)
                 }}
                 onCopy={() => {}}
             />
