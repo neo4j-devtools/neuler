@@ -6,7 +6,7 @@ import AlgorithmForm from "./AlgorithmForm";
 import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 import {connect} from "react-redux";
 import {getCurrentAlgorithm} from "../ducks/algorithms";
-import {ADDED, addTask, completeTask, removeTask, runTask} from "../ducks/tasks";
+import {ADDED, addTask, runTask} from "../ducks/tasks";
 
 export const NewAlgorithmModal = (props) => {
     const {activeGroup, activeAlgorithm, metadata, open, setOpen} = props
@@ -19,7 +19,7 @@ export const NewAlgorithmModal = (props) => {
             communityNodeLimit: props.communityNodeLimit
         }
     }
-
+    console.log("activeGroup", activeGroup, "activeAlgorithm", activeAlgorithm, "version", metadata.versions.gdsVersion)
     const {parameters} = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
     const {parametersBuilder} = props.currentAlgorithm
 

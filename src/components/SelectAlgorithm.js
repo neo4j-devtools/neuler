@@ -1,11 +1,11 @@
 import React from "react";
-import {getAlgorithmDefinitions, getAlgorithms} from "./algorithmsLibrary";
+import {algorithmGroups, getAlgorithmDefinitions, getAlgorithms, getGroup} from "./algorithmsLibrary";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {Dropdown, Form} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 
-const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm}) => {
+const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selectGroup}) => {
     const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
 
     React.useEffect(() => {
@@ -13,19 +13,23 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm}) => {
     }, [])
 
     const handleChange = (e, {value}) => {
-        setSelectedAlgorithm(value)
+        const group = getGroup(value);
+        selectGroup(group)
         selectAlgorithm(value)
+        setSelectedAlgorithm(value)
     }
 
-    const algorithmDescriptions = getAlgorithms("Centralities").map(algorithm => {
-        return {
-            key: algorithm,
-            value: algorithm,
-            text: algorithm,
-            description: getAlgorithmDefinitions("Centralities", algorithm, metadata.versions.gdsVersion).description
-        }
+    const algorithmDescriptions= Object.keys(algorithmGroups).flatMap(group => {
+        return getAlgorithms(group).map(algorithm => {
+            return {
+                key: algorithm,
+                value: algorithm,
+                text: algorithm,
+                description: getAlgorithmDefinitions(group, algorithm, metadata.versions.gdsVersion).description
+            }
+        })
     })
-    console.log("selectedAlgorithm", selectedAlgorithm)
+
     return <OpenCloseSection title="Algorithm">
         <Form>
             <Form.Field>

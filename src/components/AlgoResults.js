@@ -222,7 +222,6 @@ const TabExampleVerticalTabular = (props) => {
     }).catch(exc => {
       console.log('ERROR IN SERVICE', exc)
       props.completeTask(taskId, [], exc.toString())
-
     })
 
     const constructedQueries = constructQueries(algorithmDefinition, parameters, streamQuery)
@@ -244,8 +243,12 @@ const TabExampleVerticalTabular = (props) => {
   const [newAlgorithmFormOpen, setNewAlgorithmFormOpen] = React.useState(false)
 
   if (tasks && tasks.length > 0) {
-    const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) :  tasks[0]
-    return <HorizontalAlgoTab
+    const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) : tasks[0]
+    return <div>
+      <Button onClick={() => {
+        setNewAlgorithmFormOpen(true)
+      }} primary>Configure an algorithm</Button>
+      <HorizontalAlgoTab
         tasks={tasks}
         metadata={props.metadata}
         setSelectedTaskId={setSelectedTaskId}
@@ -255,18 +258,27 @@ const TabExampleVerticalTabular = (props) => {
         totalPages={tasks.length}
         gdsVersion={props.metadata.versions.gdsVersion}
     />
+      <NewAlgorithmModal
+          open={newAlgorithmFormOpen}
+          setOpen={setNewAlgorithmFormOpen}
+          onRunAlgo={onRunAlgo}
+      />
+    </div>
   } else {
     return <div>
       <Header>
         No algorithms run yet
 
-        <Button onClick={() => {setNewAlgorithmFormOpen(true)}} primary>Configure an algorithm</Button>
+        <Button onClick={() => {
+          setNewAlgorithmFormOpen(true)
+        }} primary>Configure an algorithm</Button>
 
       </Header>
       <NewAlgorithmModal
           open={newAlgorithmFormOpen}
           setOpen={setNewAlgorithmFormOpen}
-          onRunAlgo={onRunAlgo}/>
+          onRunAlgo={onRunAlgo}
+      />
     </div>
   }
 }
