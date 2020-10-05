@@ -5,16 +5,16 @@ import {Dropdown, Form} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 
-const SelectAlgorithmView = ({currentAlgorithm, metadata}) => {
+const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm}) => {
     const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
 
     React.useEffect(() => {
-        console.log("currentAlgorithm", currentAlgorithm)
         setSelectedAlgorithm(currentAlgorithm)
     }, [])
 
     const handleChange = (e, {value}) => {
         setSelectedAlgorithm(value)
+        selectAlgorithm(value)
     }
 
     const algorithmDescriptions = getAlgorithms("Centralities").map(algorithm => {

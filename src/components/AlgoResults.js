@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Header, Message, Segment} from 'semantic-ui-react'
+import {Header, Message, Segment, Button} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import CodeView, {constructQueries} from './CodeView'
@@ -15,6 +15,7 @@ import AlgorithmForm from "./AlgorithmForm";
 import {v4 as generateTaskId} from "uuid";
 import {getCurrentAlgorithm} from "../ducks/algorithms";
 import {getActiveDatabase} from "../services/stores/neoStore";
+import NewAlgorithmModal from "./NewAlgorithmModal";
 
 export const tabContentStyle = {
   height: '85vh',
@@ -157,27 +158,27 @@ const TabExampleVerticalTabular = (props) => {
     setSelectedTaskId(taskId)
   }
 
-  useEffect(() => {
-    const latestTask = props.tasks[0]
-    if(latestTask && latestTask.status === ADDED) {
-      props.removeTask(latestTask.taskId)
-      setSelectedTaskId(null)
-    }
-
-    const {activeGroup, activeAlgorithm, metadata} = props
-    const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
-    const { service, parametersBuilder } = props.currentAlgorithm
-    if (service) {
-      const params = parametersBuilder({
-        ...parameters,
-        requiredProperties: Object.keys(parameters)
-      })
-
-      const formParameters = addLimits(parameters);
-      addNewTask(activeGroup, activeAlgorithm, addLimits(params), formParameters)
-    }
-
-  }, [JSON.stringify(props.currentAlgorithm)])
+  // useEffect(() => {
+  //   const latestTask = props.tasks[0]
+  //   if(latestTask && latestTask.status === ADDED) {
+  //     props.removeTask(latestTask.taskId)
+  //     setSelectedTaskId(null)
+  //   }
+  //
+  //   const {activeGroup, activeAlgorithm, metadata} = props
+  //   const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
+  //   const { service, parametersBuilder } = props.currentAlgorithm
+  //   if (service) {
+  //     const params = parametersBuilder({
+  //       ...parameters,
+  //       requiredProperties: Object.keys(parameters)
+  //     })
+  //
+  //     const formParameters = addLimits(parameters);
+  //     addNewTask(activeGroup, activeAlgorithm, addLimits(params), formParameters)
+  //   }
+  //
+  // }, [JSON.stringify(props.currentAlgorithm)])
 
 
   const onRunAlgo = (task, parameters, formParameters, persisted) => {
@@ -240,6 +241,8 @@ const TabExampleVerticalTabular = (props) => {
 
   const tasks = props.tasks
 
+  const [newAlgorithmFormOpen, setNewAlgorithmFormOpen] = React.useState(false)
+
   if (tasks && tasks.length > 0) {
     const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) :  tasks[0]
     return <HorizontalAlgoTab
@@ -253,7 +256,18 @@ const TabExampleVerticalTabular = (props) => {
         gdsVersion={props.metadata.versions.gdsVersion}
     />
   } else {
-    return null
+    return <div>
+      <Header>
+        No algorithms run yet
+
+        <Button onClick={() => {setNewAlgorithmFormOpen(true)}} primary>Configure an algorithm</Button>
+
+      </Header>
+      <NewAlgorithmModal
+          open={newAlgorithmFormOpen}
+          setOpen={setNewAlgorithmFormOpen}
+          onRunAlgo={onRunAlgo}/>
+    </div>
   }
 }
 
