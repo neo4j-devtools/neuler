@@ -49,9 +49,6 @@ const HorizontalAlgoTab = (props) => {
     const activeGroup = task.group
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
-
-
-
     return (
       <div style={{padding: "10px"}}>
         {task.completed && task.status === FAILED ? (
@@ -144,14 +141,6 @@ const TabExampleVerticalTabular = (props) => {
     }
   }, [props.tasks.length === 0])
 
-  const addLimits = (params) => {
-    return {
-      ...params,
-      limit: props.limit,
-      communityNodeLimit: props.communityNodeLimit
-    }
-  }
-
   const [newTask, setNewTask] = React.useState({})
   const constructNewTask = (activeGroup, activeAlgorithm) => {
     const taskId = generateTaskId()
@@ -188,8 +177,6 @@ const TabExampleVerticalTabular = (props) => {
   const addNewTask = (group, algorithm, parameters, formParameters) => {
     setNewAlgorithmFormOpen(true)
     const taskId = generateTaskId()
-    // props.addTask(taskId, group, algorithm, parameters, formParameters, parameters.persist)
-
     const task = {
       group, algorithm, taskId,
       parameters, formParameters, persisted: parameters.persist,
@@ -201,29 +188,6 @@ const TabExampleVerticalTabular = (props) => {
     setNewTask(task)
 
   }
-
-  // useEffect(() => {
-  //   const latestTask = props.tasks[0]
-  //   if(latestTask && latestTask.status === ADDED) {
-  //     props.removeTask(latestTask.taskId)
-  //     setSelectedTaskId(null)
-  //   }
-  //
-  //   const {activeGroup, activeAlgorithm, metadata} = props
-  //   const { parameters } = getAlgorithmDefinitions(activeGroup, activeAlgorithm, metadata.versions.gdsVersion)
-  //   const { service, parametersBuilder } = props.currentAlgorithm
-  //   if (service) {
-  //     const params = parametersBuilder({
-  //       ...parameters,
-  //       requiredProperties: Object.keys(parameters)
-  //     })
-  //
-  //     const formParameters = addLimits(parameters);
-  //     addNewTask(activeGroup, activeAlgorithm, addLimits(params), formParameters)
-  //   }
-  //
-  // }, [JSON.stringify(props.currentAlgorithm)])
-
 
   const onRunAlgo = (task, parameters, formParameters, persisted) => {
     setSelectedTaskId(null)
@@ -286,9 +250,6 @@ const TabExampleVerticalTabular = (props) => {
   const tasks = props.tasks
 
   const [newAlgorithmFormOpen, setNewAlgorithmFormOpen] = React.useState(false)
-
-
-
 
   React.useEffect(() => {
     setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm))

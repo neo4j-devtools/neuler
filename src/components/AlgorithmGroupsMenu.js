@@ -1,11 +1,9 @@
-import {Image, Icon, Menu} from "semantic-ui-react"
+import {Image, Icon, Menu, List, Divider} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 
-const menuItemStyle = {
-    padding: '2em'
-}
+const menuItemStyle = {}
 
 const defaultIconStyle = {
     padding: '2em 2em 3em 2em'
@@ -16,61 +14,79 @@ const menuStyle = {
     height: '100%',
     display: 'flex',
     justifyContent: 'space-between',
-    width: '6em'
+    // width: '6em'
 }
 
 const topBarStyle = {
     height: '100%'
 }
 
+const navStyle = {
+    padding: "15px"
+}
+
 const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>
-    <Menu vertical={true} inverted style={menuStyle}>
-        <div style={topBarStyle}>
-            <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
-                       style={defaultIconStyle}>
-                <Icon size='big' name='home' color='grey'/>
-            </Menu.Item>
-            <Menu.Item title='Centralities' active={activeGroup === 'Centralities'} as='a'
-                       onClick={() => selectGroup('Centralities')}
-                       style={menuItemStyle}>
-                <Image size='mini' src='images/Centrality-Algo-Icon.png'/>
-            </Menu.Item>
-            <Menu.Item title='Community Detection' active={activeGroup === 'Community Detection'} as='a'
-                       onClick={() => selectGroup('Community Detection')}
-                       style={menuItemStyle}>
-                <Image size='mini' src='images/Community-Algo-Icon.png'/>
-            </Menu.Item>
-            <Menu.Item title='Path Finding' active={activeGroup === 'Path Finding'} as='a'
-                       onClick={() => selectGroup('Path Finding')}
-                       style={menuItemStyle}>
-                <Image size='mini' src='images/Pathfinding-Algo-Icon.png'/>
-            </Menu.Item>
+    <header
+        style={{display: "flex", justifyContent: "space-between", height: "50px", background: "#000", color: "#fff"}}>
+        <div style={navStyle}>
 
-            <Menu.Item title='Similarity' active={activeGroup === 'Similarity'} as='a'
-                       onClick={() => selectGroup('Similarity')}
-                       style={menuItemStyle}>
-                <Image size='mini' src='images/Similarity-Algo-Icon.png'/>
-            </Menu.Item>
-            {/*<Menu.Item title='Recipes' active={activeGroup === 'Recipes'} as='a'*/}
-            {/*           onClick={() => selectGroup('Recipes')}*/}
-            {/*           style={menuItemStyle}>*/}
-            {/*    <Icon size='big' name='book' color='grey'/>*/}
-            {/*</Menu.Item>*/}
+            <nav>
+                <a href="#" className="header-right-separator" onClick={() => selectGroup("Home")}>NEuler
+                    </a>
 
+                <a href="#" onClick={() => selectGroup("Centralities")}>
+                    Run Algorithms
+                </a>
+                <a href="#" onClick={() => setDatasetsActive(true)}>
+                    Import Sample Graph
+                </a>
+            </nav>
         </div>
-        <div>
-            <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a'
-                       onClick={() => setDatasetsActive(true)}
-                       style={menuItemStyle}>
-                <Image size='mini' src='images/datasetin.png'/>
-            </Menu.Item>
-            <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => setAboutActive(true)}
-                       style={menuItemStyle}>
-                <Image size='mini' src='images/neo4j_logo_globe1.png'/>
-            </Menu.Item>
-        </div>
+        <div style={navStyle}>
+            <nav>
 
-    </Menu>
+                <a href="#" onClick={() => setAboutActive(true)}>Versions</a>
+            </nav>
+        </div>
+    </header>
+
+
+// <Menu inverted borderless>
+//
+//         <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
+//                    style={menuItemStyle}>
+//             NEuler - Data Science Playground
+//         </Menu.Item>
+//         <Menu.Item title='Run Algorithm' active={activeGroup === 'Centralities'} as='a'
+//                    onClick={() => selectGroup('Centralities')}
+//                    style={menuItemStyle}>
+//             Run Algorithms
+//         </Menu.Item>
+//
+//         {/*<Menu.Item title='Recipes' active={activeGroup === 'Recipes'} as='a'*/}
+//         {/*           onClick={() => selectGroup('Recipes')}*/}
+//         {/*           style={menuItemStyle}>*/}
+//         {/*    <Icon size='big' name='book' color='grey'/>*/}
+//         {/*</Menu.Item>*/}
+//
+//
+//     <Menu.Menu position='right'>
+//         <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a'
+//                    onClick={() => setDatasetsActive(true)}
+//
+//                    style={menuItemStyle}>
+//             <Image size='mini' src='images/datasetin.png'/>
+//             Sample Graphs
+//         </Menu.Item>
+//         <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => setAboutActive(true)}
+//                    style={menuItemStyle}
+//                 >
+//             <Image size='mini' src='images/neo4j_logo_globe1.png'/>
+//             Versions
+//         </Menu.Item>
+//     </Menu.Menu>
+//
+// </Menu>
 
 
 const mapStateToProps = state => ({

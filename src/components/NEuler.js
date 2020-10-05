@@ -50,25 +50,9 @@ const NEuler = (props) => {
     const page = activeAlgorithm ? `${constants.version}/${activeGroup}/${activeAlgorithm}` : `${constants.version}/${activeGroup}`
 
     return (
-        <Container fluid style={{display: 'flex', height: '100%', background: "#fff"}}>
+        <Container fluid style={{height: '100%', background: "#fff"}}>
             <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}/>
             <div style={{width: '100%', overflowY: 'auto'}}>
-                <Segment basic inverted vertical={false}
-                         style={{height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0'}}>
-                    {header ? <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
-                        {header}
-                    </Header> : null}
-                    <Menu inverted>
-                        {getAlgorithms(activeGroup).map(algorithm =>
-                            <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm}
-                                       onClick={() => selectAlgorithm(algorithm)}>
-                                {algorithm}
-                            </Menu.Item>)}
-                    </Menu>
-                    <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
-                        NEuler
-                    </Header>
-                </Segment>
                 {view}
                 <FeedbackForm page={page}/>
                 <About open={aboutActive} onClose={() => setAboutActive(false)}/>

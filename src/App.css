@@ -113,3 +113,25 @@ div.update-node-row p {
 .feedback-form.checkbox label  {
   white-space: pre-line;
 }
+
+nav a {
+  padding: 10px 10px 10px 10px;
+  color: #efefef;
+}
+
+nav a:first-child {
+  padding: 10px 15px 10px 0;
+  color: #fff;
+}
+
+nav a:first-child:hover, nav a:last-child:hover {
+  color: #4183c4;
+}
+
+nav a:last-child {
+  padding: 10px 0 10px 10px;
+}
+
+nav a.header-right-separator {
+ border-right: 1px solid #fff;
+}
