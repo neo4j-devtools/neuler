@@ -18,27 +18,27 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
         <div style={{display: 'flex'}}>
             <Menu.Item name='Configure' active={activeItem === 'Configure'} onClick={handleMenuItemClick}/>
 
-            {[RUNNING, COMPLETED].includes(task.status) ?
-                <React.Fragment>
-                    <Menu.Item name='Table' active={activeItem === 'Table'} onClick={handleMenuItemClick}/>
+                {[RUNNING, COMPLETED].includes(task.status) ?
+                    <React.Fragment>
+                        <Menu.Item name='Table' active={activeItem === 'Table'} onClick={handleMenuItemClick}/>
 
-                    {activeGroup === 'Centralities' ?
-                        <Menu.Item name='Chart' active={activeItem === 'Chart'} onClick={handleMenuItemClick}/>
-                        : null
-                    }
+                        {activeGroup === 'Centralities' ?
+                            <Menu.Item name='Chart' active={activeItem === 'Chart'} onClick={handleMenuItemClick}/>
+                            : null
+                        }
 
-                    {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                        <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
-                                   onClick={handleMenuItemClick}/>
-                        : null
-                    }
+                        {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                            <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}
+                                       onClick={handleMenuItemClick}/>
+                            : null
+                        }
 
-                    <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
+                        <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
 
-                    <Menu.Item active={activeItem === 'Printscreen'} onClick={(() => printElement(panelRef.current))}>
-                        <Image src='images/Camera2.png'/>
-                    </Menu.Item>
-                </React.Fragment> : null}
+                        <Menu.Item active={activeItem === 'Printscreen'} onClick={(() => printElement(panelRef.current))}>
+                            <Image src='images/Camera2.png'/>
+                        </Menu.Item>
+                    </React.Fragment> : null}
         </div>
 
         <NavBar task={task} tasks={tasks} setSelectedTaskId={setSelectedTaskId} />

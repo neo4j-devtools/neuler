@@ -1,8 +1,8 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Button, Header} from 'semantic-ui-react'
-import {getAlgorithmDefinitions} from "./algorithmsLibrary"
-import {getCurrentAlgorithm} from "../ducks/algorithms"
+import {Button, Header, List, Label, Menu, Dropdown, Form, Input} from 'semantic-ui-react'
+import {getAlgorithmDefinitions, getAlgorithms} from "./algorithmsLibrary"
+import {getCurrentAlgorithm, selectAlgorithm, selectGroup} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultFilteringFields} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
@@ -12,28 +12,32 @@ export const AlgoFormView = (props) => {
   const {task} = props
 
   const [parameters, setParameters] = React.useState({})
-  const [labelOptions, setLabelOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
-  const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
+  const [labelOptions, setLabelOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
+  const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
   const [propertyKeyOptions, setPropertyKeyOptions] = React.useState([])
-  const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{ key: "Natural", value: "Natural", text: 'Natural' }])
+  const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{
+    key: "Natural",
+    value: "Natural",
+    text: 'Natural'
+  }])
 
   const loadMetadata = (metadata) => {
     const labels = metadata.labels.map(row => {
-      return { key: row.label, value: row.label, text: row.label }
+      return {key: row.label, value: row.label, text: row.label}
     })
-    labels.unshift({ key: "*", value: "*", text: 'Any' })
+    labels.unshift({key: "*", value: "*", text: 'Any'})
     setLabelOptions(labels)
 
     const relationshipTypes = metadata.relationshipTypes.map(row => {
-      return { key: row.label, value: row.label, text: row.label }
+      return {key: row.label, value: row.label, text: row.label}
     })
-    relationshipTypes.unshift({ key: "*", value: "*", text: 'Any' })
+    relationshipTypes.unshift({key: "*", value: "*", text: 'Any'})
     setRelationshipTypeOptions(relationshipTypes)
 
-    const  propertyKeys = metadata.propertyKeys.map(row => {
+    const propertyKeys = metadata.propertyKeys.map(row => {
       return {key: row.propertyKey, value: row.propertyKey, text: row.propertyKey}
     });
-    propertyKeys.unshift({ key: null, value: null, text: 'None' })
+    propertyKeys.unshift({key: null, value: null, text: 'None'})
     setPropertyKeyOptions(propertyKeys)
 
     setRelationshipOrientationOptions([
@@ -52,14 +56,14 @@ export const AlgoFormView = (props) => {
   }, [props.task.taskId])
 
 
-  const onChangeParam = (key, value) =>  {
+  const onChangeParam = (key, value) => {
     setParameters({...parameters, [key]: value})
   }
 
   const onRunAlgo = () => {
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
-    const { service, parametersBuilder } = currentAlgorithm
+    const {service, parametersBuilder} = currentAlgorithm
     if (service) {
       let formParameters = parameters;
       const params = parametersBuilder({
@@ -68,14 +72,18 @@ export const AlgoFormView = (props) => {
       })
 
       const persisted = formParameters.persist
-      props.onRun({ ...params, limit: props.limit, communityNodeLimit: props.communityNodeLimit }, formParameters, persisted)
+      props.onRun({
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }, formParameters, persisted)
     }
   }
 
   const onCopyAlgo = () => {
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
-    const { service, parametersBuilder } = currentAlgorithm
+    const {service, parametersBuilder} = currentAlgorithm
     if (service) {
       let formParameters = parameters;
       const params = parametersBuilder({
@@ -83,7 +91,11 @@ export const AlgoFormView = (props) => {
         requiredProperties: Object.keys(formParameters)
       })
 
-      props.onCopy(task.group, task.algorithm, { ...params, limit: props.limit, communityNodeLimit: props.communityNodeLimit }, formParameters)
+      props.onCopy(task.group, task.algorithm, {
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }, formParameters)
     }
   }
 
@@ -106,19 +118,13 @@ export const AlgoFormView = (props) => {
     props.updateCommunityNodeLimit(parseInt(data.value))
   }
 
-  const { description } = currentAlgorithm
+
 
   const readOnly = task.status !== ADDED;
   return (
       <div style={containerStyle}>
-        <OpenCloseSection title="Algorithm">
-          <Header disabled={readOnly} as="h3">
-            {task.algorithm}
-            <Header.Subheader>
-              {description}
-            </Header.Subheader>
-          </Header>
-        </OpenCloseSection>
+        {readOnly && <SelectedAlgorithm currentAlgorithm={currentAlgorithm} task={task} readOnly={readOnly} />}
+        {!readOnly && <SelectAlgorithm currentAlgorithm={currentAlgorithm} task={task} readOnly={readOnly} />}
 
         <div style={{marginBottom: '1em'}}>
 
@@ -130,29 +136,81 @@ export const AlgoFormView = (props) => {
                     readOnly={readOnly}
                     onChange={onChangeParam.bind(this)}>
             <ResultFilteringFields limit={parameters.limit}
-                              communityNodeLimit={parameters.communityNodeLimit}
-                              readOnly={readOnly}
-                              returnsCommunities={returnsCommunities}
-                              updateLimit={updateLimit}
-                              updateCommunityNodeLimit={updateCommunityNodeLimit}/>
+                                   communityNodeLimit={parameters.communityNodeLimit}
+                                   readOnly={readOnly}
+                                   returnsCommunities={returnsCommunities}
+                                   updateLimit={updateLimit}
+                                   updateCommunityNodeLimit={updateCommunityNodeLimit}/>
           </AlgoForm>
 
         </div>
         <div>
-            {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+          {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
 
-            {task.status !== ADDED && task.completed &&
-                <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Edit configuration</Button>
+          {task.status !== ADDED && task.completed &&
+          <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Edit
+            configuration</Button>
+          }
 
-            }
-
-            {task.status !== ADDED && !task.completed && <Button disabled color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+          {task.status !== ADDED && !task.completed &&
+          <Button disabled color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
 
         </div>
 
       </div>
-      )
+  )
+}
+
+const SelectedAlgorithm = ({task, currentAlgorithm}) => {
+  const {description} = currentAlgorithm
+  return <OpenCloseSection title="Algorithm">
+    <Header disabled={true} as="h3">
+      {task.algorithm}
+      <Header.Subheader>
+        {description}
+      </Header.Subheader>
+    </Header>
+  </OpenCloseSection>
+}
+
+const SelectAlgorithmView = ({currentAlgorithm, task, metadata}) => {
+  const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
+
+  React.useEffect(() => {
+    setSelectedAlgorithm(task.algorithm)
+  }, [])
+
+  const handleChange = (e, {value}) => {
+    setSelectedAlgorithm(value)
   }
+
+  const algorithmDescriptions = getAlgorithms("Centralities").map(algorithm => {
+    return {
+      key: algorithm,
+      value: algorithm,
+      text: algorithm,
+      description: getAlgorithmDefinitions("Centralities", algorithm, metadata.versions.gdsVersion).description
+    }
+  })
+
+  return <OpenCloseSection title="Algorithm">
+    <Form>
+      <Form.Field>
+        <Dropdown search selection options={algorithmDescriptions} value={selectedAlgorithm} fluid
+                  onChange={handleChange}
+        />
+      </Form.Field>
+    </Form>
+  </OpenCloseSection>
+
+}
+
+const SelectAlgorithm = connect(state => ({
+  metadata: state.metadata,
+}), dispatch => ({
+  selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
+  selectGroup: algorithm => dispatch(selectGroup(algorithm)),
+}))(SelectAlgorithmView)
 
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,

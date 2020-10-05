@@ -38,8 +38,8 @@ const NEuler = (props) => {
             //     return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
             case  "Home":
                 return {header: "Graph Data Science Playground", view: <Home setDatasetsActive={setDatasetsActive}/>}
-            case "Recipes":
-                return {header: "Recipes", view: <Recipe/>}
+            // case "Recipes":
+            //     return {header: "Recipes", view: <Recipe/>}
             default:
                 return {header: "", view: <MainContent onComplete={onComplete}/>}
         }
