@@ -1,13 +1,14 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Button} from 'semantic-ui-react'
+import {Button, Header} from 'semantic-ui-react'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultFilteringFields} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
 
-const AlgoForm = (props) => {
+export const AlgoFormView = (props) => {
   const {task} = props
 
   const [parameters, setParameters] = React.useState({})
@@ -56,7 +57,6 @@ const AlgoForm = (props) => {
   }
 
   const onRunAlgo = () => {
-    const {task} = props
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
     const { service, parametersBuilder } = currentAlgorithm
@@ -73,7 +73,6 @@ const AlgoForm = (props) => {
   }
 
   const onCopyAlgo = () => {
-    const {task} = props
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
     const { service, parametersBuilder } = currentAlgorithm
@@ -107,10 +106,22 @@ const AlgoForm = (props) => {
     props.updateCommunityNodeLimit(parseInt(data.value))
   }
 
+  const { description } = currentAlgorithm
+
   const readOnly = task.status !== ADDED;
   return (
       <div style={containerStyle}>
+        <OpenCloseSection title="Algorithm">
+          <Header disabled={readOnly} as="h3">
+            {task.algorithm}
+            <Header.Subheader>
+              {description}
+            </Header.Subheader>
+          </Header>
+        </OpenCloseSection>
+
         <div style={{marginBottom: '1em'}}>
+
           <AlgoForm {...parameters}
                     labelOptions={labelOptions}
                     relationshipTypeOptions={relationshipTypeOptions}
@@ -157,4 +168,4 @@ const mapDispatchToProps = dispatch => ({
   updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlgoForm)
+export default connect(mapStateToProps, mapDispatchToProps)(AlgoFormView)

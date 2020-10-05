@@ -30,37 +30,46 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatas
                        style={defaultIconStyle}>
                 <Icon size='big' name='home' color='grey'/>
             </Menu.Item>
-            <Menu.Item title='Centralities' active={activeGroup === 'Centralities'} as='a' onClick={() => selectGroup('Centralities')}
+            <Menu.Item title='Centralities' active={activeGroup === 'Centralities'} as='a'
+                       onClick={() => selectGroup('Centralities')}
                        style={menuItemStyle}>
-                <Image size='mini' src='images/Centrality-Algo-Icon.png' />
+                <Image size='mini' src='images/Centrality-Algo-Icon.png'/>
             </Menu.Item>
             <Menu.Item title='Community Detection' active={activeGroup === 'Community Detection'} as='a'
                        onClick={() => selectGroup('Community Detection')}
                        style={menuItemStyle}>
-                <Image size='mini' src='images/Community-Algo-Icon.png' />
+                <Image size='mini' src='images/Community-Algo-Icon.png'/>
             </Menu.Item>
             <Menu.Item title='Path Finding' active={activeGroup === 'Path Finding'} as='a'
                        onClick={() => selectGroup('Path Finding')}
                        style={menuItemStyle}>
-                <Image size='mini' src='images/Pathfinding-Algo-Icon.png' />
+                <Image size='mini' src='images/Pathfinding-Algo-Icon.png'/>
             </Menu.Item>
 
             <Menu.Item title='Similarity' active={activeGroup === 'Similarity'} as='a'
                        onClick={() => selectGroup('Similarity')}
                        style={menuItemStyle}>
-                <Image size='mini' src='images/Similarity-Algo-Icon.png' />
+                <Image size='mini' src='images/Similarity-Algo-Icon.png'/>
             </Menu.Item>
+            {/*<Menu.Item title='Recipes' active={activeGroup === 'Recipes'} as='a'*/}
+            {/*           onClick={() => selectGroup('Recipes')}*/}
+            {/*           style={menuItemStyle}>*/}
+            {/*    <Icon size='big' name='book' color='grey'/>*/}
+            {/*</Menu.Item>*/}
+
         </div>
         <div>
-            <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a' onClick={() => setDatasetsActive(true)}
+            <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a'
+                       onClick={() => setDatasetsActive(true)}
                        style={menuItemStyle}>
-                <Image size='mini' src='images/datasetin.png' />
+                <Image size='mini' src='images/datasetin.png'/>
             </Menu.Item>
             <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => setAboutActive(true)}
                        style={menuItemStyle}>
-                <Image size='mini' src='images/neo4j_logo_globe1.png' />
+                <Image size='mini' src='images/neo4j_logo_globe1.png'/>
             </Menu.Item>
         </div>
+
     </Menu>
 
 

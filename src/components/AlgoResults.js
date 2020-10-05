@@ -48,17 +48,11 @@ const HorizontalAlgoTab = (props) => {
     const activeGroup = task.group
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
-    const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
-    const { description } = currentAlgorithm
+
+
 
     return (
       <div style={{padding: "10px"}}>
-        <Header as="h3">
-          {task.algorithm}
-          <Header.Subheader>
-            {description}
-          </Header.Subheader>
-        </Header>
         {task.completed && task.status === FAILED ? (
                 <React.Fragment>
                   <FailedTopBar task={task} activeItem={activeItem}  tasks={props.tasks}
@@ -113,7 +107,6 @@ const HorizontalAlgoTab = (props) => {
                     </div>
 
 
-                    <React.Fragment>
                     <div style={getStyle('Table')}>
                       <TableView task={task} gdsVersion={props.gdsVersion}/>
                     </div>
@@ -132,7 +125,6 @@ const HorizontalAlgoTab = (props) => {
                           <ChartView task={task} active={activeItem === 'Chart'}/>
                         </div> : null}
 
-                    </React.Fragment>
                   </Segment>
                 </div>
             </React.Fragment>
