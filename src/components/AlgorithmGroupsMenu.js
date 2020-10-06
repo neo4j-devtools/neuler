@@ -1,4 +1,4 @@
-import {Image, Icon, Menu, List, Divider} from "semantic-ui-react"
+import {Image, Icon, Dropdown, Menu, List, Divider} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
@@ -27,7 +27,7 @@ const navStyle = {
 
 const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>
     <header
-        style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff"}}>
+        style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "39px"}}>
         <div style={{display: "flex"}}>
             <Image src="images/noun_Sandbox Toys_1207953.png" style={{height: "39px"}} />
             <span style={{padding: "10px 0 10px 0"}}>NEuler</span>
@@ -42,15 +42,18 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatas
                 <a href="#" onClick={() => selectGroup("Centralities")} className={activeGroup === "Centralities" ? "selected" : null}>
                     Run Algorithms
                 </a>
-                <a href="#" onClick={() => setDatasetsActive(true)}>
-                    Import Sample Graph
-                </a>
+
             </nav>
         </div>
         <div style={navStyle}>
             <nav>
 
-                <a href="#" onClick={() => setAboutActive(true)}>Versions</a>
+                <Dropdown icon={<Icon name="setting" size="large" />} direction="right" className="big">
+                    <Dropdown.Menu style={{ left: 'auto', right: 0, marginTop: "9px" }}>
+                        <Dropdown.Item onClick={() => setDatasetsActive(true)}>Sample Graphs</Dropdown.Item>
+                        <Dropdown.Item onClick={() => setAboutActive(true)}>Versions</Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
             </nav>
         </div>
     </header>
