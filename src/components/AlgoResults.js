@@ -7,7 +7,7 @@ import CodeView, {constructQueries} from './CodeView'
 import {ADDED, addTask, completeTask, FAILED, removeTask, runTask} from "../ducks/tasks"
 import {sendMetrics} from "./metrics/sendMetrics";
 import {FailedTopBar} from "./Results/FailedTopBar";
-import {SuccessTopBar} from "./Results/SuccessTopBar";
+import {NavBar, SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import {VisView} from "./Results/VisView";
 import {ChartView} from "./Results/ChartView";
@@ -257,10 +257,13 @@ const TabExampleVerticalTabular = (props) => {
 
   if (tasks && tasks.length > 0) {
     const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) : tasks[0]
-    return <div>
-      <Button onClick={() => {
-        setNewAlgorithmFormOpen(true)
-      }} primary>Configure an algorithm</Button>
+    return <div style={{width: "100%"}}>
+      <nav style={{    background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
+        <NavBar task={currentTask} tasks={tasks} setSelectedTaskId={setSelectedTaskId}  />
+        <Button style={{margin: "4px", fontSize: "0.9rem", padding: ".6em 1.2em"}} onClick={() => {
+          setNewAlgorithmFormOpen(true)
+        }} primary>New algorithm</Button>
+      </nav>
       <HorizontalAlgoTab
         tasks={tasks}
         metadata={props.metadata}
@@ -279,15 +282,28 @@ const TabExampleVerticalTabular = (props) => {
       />
     </div>
   } else {
-    return <div>
-      <Header>
-        No algorithms run yet
+    return <div style={{
+      width: "50%",
+      margin: "auto",
+      height: "300px",
+      border: "1px black dotted",
+      padding: "100px",
+      textAlign: "center",
+      position: "absolute",
+      top: "50%",
+      left: "50%",
+      "-moz-transform": "translateX(-50%) translateY(-50%)",
+      "-webkit-transform": "translateX(-50%) translateY(-50%)",
+      transform: "translateX(-50%) translateY(-50%)"
+    }}>
+
+      <h1>No algorithms run yet</h1>
 
         <Button onClick={() => {
           setNewAlgorithmFormOpen(true)
         }} primary>Configure an algorithm</Button>
 
-      </Header>
+
       <NewAlgorithmModal
           open={newAlgorithmFormOpen}
           setOpen={setNewAlgorithmFormOpen}

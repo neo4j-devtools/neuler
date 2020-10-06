@@ -40,9 +40,6 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
                         </Menu.Item>
                     </React.Fragment> : null}
         </div>
-
-        <NavBar task={task} tasks={tasks} setSelectedTaskId={setSelectedTaskId} />
-
     </Menu>
 }
 
@@ -56,10 +53,7 @@ export const NavBar = ({task, tasks, setSelectedTaskId}) => {
     })
 
     return <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        marginLeft: "auto",
-        marginBottom: "5px"
+        margin: "3px"
     }}>
         <Form>
         <Dropdown options={taskOptions} text="Algorithm runs" search selection value={task.taskId} onChange={(evt, data) => setSelectedTaskId(data.value)} >

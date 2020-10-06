@@ -50,9 +50,9 @@ const NEuler = (props) => {
     const page = activeAlgorithm ? `${constants.version}/${activeGroup}/${activeAlgorithm}` : `${constants.version}/${activeGroup}`
 
     return (
-        <Container fluid style={{height: '100%', background: "#fff"}}>
+        <Container fluid style={{height: '100%', display: "flex", flexFlow: "column", background: "#fff"}}>
             <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}/>
-            <div style={{width: '100%', overflowY: 'auto'}}>
+            <div style={{width: '100%', overflowY: 'auto', flexGrow: "1"}}>
                 {view}
                 <FeedbackForm page={page}/>
                 <About open={aboutActive} onClose={() => setAboutActive(false)}/>

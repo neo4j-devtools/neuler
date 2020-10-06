@@ -10,6 +10,5 @@ export const FailedTopBar = ({task, activeItem, handleMenuItemClick, tasks, setS
             <Menu.Item name='Error' active={activeItem === 'Error'} onClick={handleMenuItemClick}/>
             <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}/>
         </div>
-        <NavBar task={task}tasks={tasks} setSelectedTaskId={setSelectedTaskId} />
     </Menu>
 }

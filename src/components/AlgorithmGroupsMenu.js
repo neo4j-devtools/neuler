@@ -22,12 +22,12 @@ const topBarStyle = {
 }
 
 const navStyle = {
-    padding: "15px"
+    padding: "10px"
 }
 
 const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>
     <header
-        style={{display: "flex", justifyContent: "space-between", height: "50px", background: "#000", color: "#fff"}}>
+        style={{display: "flex", justifyContent: "space-between", height: "40px", background: "#000", color: "#fff"}}>
         <div style={navStyle}>
 
             <nav>
