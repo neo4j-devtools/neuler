@@ -90,7 +90,7 @@ const HorizontalAlgoTab = (props) => {
                                setSelectedTaskId={props.setSelectedTaskId}
                 />
                 <div ref={panelRef}>
-                  <Segment attached='bottom'>
+                  <div style={{marginTop: "10px"}}>
                     <div style={getStyle("Configure")}>
                       <AlgorithmForm
                           task={task}
@@ -123,7 +123,7 @@ const HorizontalAlgoTab = (props) => {
                           <ChartView task={task} active={activeItem === 'Chart'}/>
                         </div> : null}
 
-                  </Segment>
+                  </div>
                 </div>
             </React.Fragment>
         }
@@ -262,7 +262,7 @@ const TabExampleVerticalTabular = (props) => {
         <NavBar task={currentTask} tasks={tasks} setSelectedTaskId={setSelectedTaskId}  />
         <Button style={{margin: "4px", fontSize: "0.9rem", padding: ".6em 1.2em"}} onClick={() => {
           setNewAlgorithmFormOpen(true)
-        }} primary>New algorithm</Button>
+        }} primary>Run algorithm</Button>
       </nav>
       <HorizontalAlgoTab
         tasks={tasks}
@@ -301,7 +301,7 @@ const TabExampleVerticalTabular = (props) => {
 
         <Button onClick={() => {
           setNewAlgorithmFormOpen(true)
-        }} primary>Configure an algorithm</Button>
+        }} primary>Run algorithm</Button>
 
 
       <NewAlgorithmModal
