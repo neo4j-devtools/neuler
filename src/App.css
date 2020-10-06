@@ -114,24 +114,60 @@ div.update-node-row p {
   white-space: pre-line;
 }
 
-nav a {
-  padding: 10px 10px 10px 10px;
-  color: #efefef;
+/*nav a {*/
+/*  padding: 10px 10px 10px 10px;*/
+/*  color: #efefef;*/
+/*}*/
+
+/*nav a:first-child {*/
+/*  padding: 10px 15px 10px 0;*/
+/*  color: #fff;*/
+/*}*/
+
+/*nav a:first-child:hover, nav a:last-child:hover {*/
+/*  color: #4183c4;*/
+/*}*/
+
+/*nav a:last-child {*/
+/*  padding: 10px 0 10px 10px;*/
+/*}*/
+
+/*nav a.header-right-separator {*/
+/* border-right: 1px solid #fff;*/
+/*}*/
+
+div.results-bar a {
+  font-size: 1.1rem;
 }
 
-nav a:first-child {
-  padding: 10px 15px 10px 0;
+.ui.vertical.menu.resultsMenu {
+  width: 9rem;
+}
+
+header {
+  background-color: #333;
+  overflow: hidden;
+}
+
+/* Style the links inside the navigation bar */
+header a {
+  color: #fff;
+  padding: 10px;
+  text-decoration: none;
+  border-bottom: 3px solid transparent;
+}
+
+header a.selected {
+  border-bottom: 3px solid hsl(305, 80%, 49%);
   color: #fff;
 }
 
-nav a:first-child:hover, nav a:last-child:hover {
-  color: #4183c4;
+header a:hover {
+  border-bottom: 3px solid hsl(305, 80%, 49%);
+  color: #fff;
 }
 
-nav a:last-child {
-  padding: 10px 0 10px 10px;
-}
-
-nav a.header-right-separator {
- border-right: 1px solid #fff;
+header a.active {
+  border-bottom: 3px solid hsl(305, 80%, 49%);
+  color: #fff;
 }

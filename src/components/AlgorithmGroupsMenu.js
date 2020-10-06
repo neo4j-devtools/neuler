@@ -27,14 +27,19 @@ const navStyle = {
 
 const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>
     <header
-        style={{display: "flex", justifyContent: "space-between", height: "40px", background: "#000", color: "#fff"}}>
+        style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff"}}>
+        <div style={{display: "flex"}}>
+            <Image src="images/noun_Sandbox Toys_1207953.png" style={{height: "39px"}} />
+            <span style={{padding: "10px 0 10px 0"}}>NEuler</span>
+        </div>
         <div style={navStyle}>
-
             <nav>
-                <a href="#" className="header-right-separator" onClick={() => selectGroup("Home")}>NEuler
-                    </a>
 
-                <a href="#" onClick={() => selectGroup("Centralities")}>
+
+                <a href="#" onClick={() => selectGroup("Home")} className={activeGroup === "Home" ? "selected" : null}>Select Database
+                </a>
+
+                <a href="#" onClick={() => selectGroup("Centralities")} className={activeGroup === "Centralities" ? "selected" : null}>
                     Run Algorithms
                 </a>
                 <a href="#" onClick={() => setDatasetsActive(true)}>

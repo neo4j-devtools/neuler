@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Header, Message, Segment, Button} from 'semantic-ui-react'
+import {Header, Message, Segment, Button, Grid, Menu} from 'semantic-ui-react'
 import {connect} from "react-redux"
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import CodeView, {constructQueries} from './CodeView'
@@ -27,29 +27,39 @@ const HorizontalAlgoTab = (props) => {
   const { task, currentPage, totalPages } = props
 
   const panelRef = React.createRef()
-  const [activeItem, setActiveItem] = React.useState("Configure")
+  const [activeItem, setActiveItem] = React.useState("Results")
+  const [activeResultsItem, setActiveResultsItem] = React.useState("Table")
 
   const handleMenuItemClick = (e, { name }) => {
     sendMetrics('neuler-click-view', name)
     setActiveItem(name)
   }
 
+  const handleResultsMenuItemClick = (e, {name}) => {
+    sendMetrics('neuler-click-view', name)
+    setActiveResultsItem(name)
+  }
+
   React.useEffect(() => {
     if (task.status === ADDED) {
       setActiveItem("Configure")
     } else {
-      if (task.error) {
-        setActiveItem("Error")
-      } else {
-        setActiveItem("Table")
-      }
+      setActiveItem("Results")
+
+      // if (task.error) {
+      //   setActiveItem("Error")
+      // } else {
+      //   setActiveItem("Results")
+      // }
     }
   }, [task.status])
 
     const activeGroup = task.group
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
+    const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
+    const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
 
-    return (
+  return (
       <div style={{padding: "10px"}}>
         {task.completed && task.status === FAILED ? (
                 <React.Fragment>
@@ -104,27 +114,54 @@ const HorizontalAlgoTab = (props) => {
                       />
                     </div>
 
-
-                    <div style={getStyle('Table')}>
-                      <TableView task={task} gdsVersion={props.gdsVersion}/>
-                    </div>
-
                     <div style={getStyle('Code')}>
                       <CodeView task={task}/>
                     </div>
 
-                    {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                        <div style={getStyle('Visualisation')}>
-                          <VisView task={task} active={activeItem === 'Visualisation'}/>
-                        </div> : null}
 
-                    {activeGroup === 'Centralities' ?
-                        <div style={getStyle('Chart')}>
-                          <ChartView task={task} active={activeItem === 'Chart'}/>
-                        </div> : null}
+                    <div style={getStyleResultsTab("Results")}>
+                        <div>
+                          <Menu pointing secondary vertical className="resultsMenu">
+                            <Menu.Item
+                                name='Table'
+                                active={activeResultsItem === 'Table'}
+                                onClick={handleResultsMenuItemClick}
+                            />
+                            <Menu.Item
+                                name='Chart'
+                                active={activeResultsItem === 'Chart'}
+                                onClick={handleResultsMenuItemClick}
+                            />
+                            <Menu.Item
+                                name='Visualisation'
+                                active={activeResultsItem === 'Visualisation'}
+                                onClick={handleResultsMenuItemClick}
+                            />
+                          </Menu>
+                        </div>
+                        <div style={{flexGrow: "1", paddingLeft: "10px"}}>
+                          {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                              <div style={getResultsStyle('Visualisation')}>
+                                <VisView task={task} active={activeResultsItem === 'Visualisation'}/>
+                              </div> : null}
+
+                          {activeGroup === 'Centralities' ?
+                              <div style={getResultsStyle('Chart')}>
+                                <ChartView task={task} active={activeResultsItem === 'Chart'}/>
+                              </div> : null}
+
+                          <div style={getResultsStyle('Table')}>
+                            <TableView task={task} gdsVersion={props.gdsVersion}/>
+                          </div>
+                        </div>
+
+
+
+                    </div>
 
                   </div>
                 </div>
+
             </React.Fragment>
         }
       </div>
@@ -261,8 +298,9 @@ const TabExampleVerticalTabular = (props) => {
       <nav style={{    background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
         <NavBar task={currentTask} tasks={tasks} setSelectedTaskId={setSelectedTaskId}  />
         <Button style={{margin: "4px", fontSize: "0.9rem", padding: ".6em 1.2em"}} onClick={() => {
+          setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm))
           setNewAlgorithmFormOpen(true)
-        }} primary>Run algorithm</Button>
+        }} primary>New algorithm</Button>
       </nav>
       <HorizontalAlgoTab
         tasks={tasks}
@@ -286,7 +324,7 @@ const TabExampleVerticalTabular = (props) => {
       width: "50%",
       margin: "auto",
       height: "300px",
-      border: "1px black dotted",
+      border: "1px black dashed",
       padding: "100px",
       textAlign: "center",
       position: "absolute",
