@@ -62,7 +62,7 @@ export const NavBar = ({task, tasks, setSelectedTaskId}) => {
         marginBottom: "5px"
     }}>
         <Form>
-        <Dropdown options={taskOptions} text="Previous algorithm runs" search selection value={task.taskId} onChange={(evt, data) => setSelectedTaskId(data.value)} >
+        <Dropdown options={taskOptions} text="Algorithm runs" search selection value={task.taskId} onChange={(evt, data) => setSelectedTaskId(data.value)} >
         </Dropdown>
         </Form>
     </div>
