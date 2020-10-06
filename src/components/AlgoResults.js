@@ -58,7 +58,7 @@ const HorizontalAlgoTab = (props) => {
                                 setSelectedTaskId={props.setSelectedTaskId}
                   />
 
-                  <Segment attached='bottom'>
+                  <div style={{marginTop: "10px"}}>
                     <div style={getStyle("Configure")}>
                       <AlgorithmForm
                           task={task}
@@ -80,7 +80,7 @@ const HorizontalAlgoTab = (props) => {
                     <div style={getStyle('Code')}>
                       <CodeView task={task}/>
                     </div>
-                  </Segment>
+                  </div>
                 </React.Fragment>
           )
             : <React.Fragment>
