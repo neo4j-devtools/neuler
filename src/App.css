@@ -150,20 +150,20 @@ header a {
   color: #fff;
   padding: 10px;
   text-decoration: none;
-  border-bottom: 3px solid transparent;
+  border-bottom: 0.17rem solid transparent;
 }
 
 header a.selected {
-  border-bottom: 3px solid hsl(305, 80%, 49%);
+  border-bottom: 0.17rem solid hsl(305, 80%, 49%);
   color: #fff;
 }
 
 header a:hover {
-  border-bottom: 3px solid hsl(305, 80%, 49%);
+  border-bottom: 0.17rem solid hsl(305, 80%, 49%);
   color: #fff;
 }
 
 header a.active {
-  border-bottom: 3px solid hsl(305, 80%, 49%);
+  border-bottom: 0.17rem solid hsl(305, 80%, 49%);
   color: #fff;
 }
