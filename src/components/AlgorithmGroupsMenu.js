@@ -40,7 +40,7 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatas
                 </a>
 
                 <a href="#" onClick={() => selectGroup("Centralities")} className={activeGroup === "Centralities" ? "selected" : null}>
-                    Run Algorithms
+                    Run Single Algorithm
                 </a>
 
             </nav>

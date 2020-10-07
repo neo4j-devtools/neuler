@@ -44,12 +44,6 @@ const HorizontalAlgoTab = (props) => {
       setActiveItem("Configure")
     } else {
       setActiveItem("Results")
-
-      // if (task.error) {
-      //   setActiveItem("Error")
-      // } else {
-      //   setActiveItem("Results")
-      // }
     }
   }, [task.status])
 
@@ -80,7 +74,7 @@ const HorizontalAlgoTab = (props) => {
                           }}
                       />
                     </div>
-                    <div style={getStyle('Error')}>
+                    <div style={getStyle('Results')}>
                       <Message warning>
                         <Message.Header>Algorithm failed to complete</Message.Header>
                         <p>{task.error}</p>
@@ -153,8 +147,6 @@ const HorizontalAlgoTab = (props) => {
                             <TableView task={task} gdsVersion={props.gdsVersion}/>
                           </div>
                         </div>
-
-
 
                     </div>
 
