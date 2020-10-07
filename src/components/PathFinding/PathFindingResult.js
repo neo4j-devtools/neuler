@@ -6,7 +6,6 @@ import { Loader } from 'semantic-ui-react'
 const LoaderExampleInlineCentered = () => <Loader active inline='centered'>Algorithm running</Loader>
 
 export default ({ task }) => (
-  <Tab.Pane key={task.startTime.toLocaleString()} style={{ padding: '1em 0', borderTop: '0' }}>
     <Table color='green'>
       <Table.Header>
         <Table.Row>
@@ -35,5 +34,4 @@ export default ({ task }) => (
 }
       </Table.Body>
     </Table>
-  </Tab.Pane>
 )

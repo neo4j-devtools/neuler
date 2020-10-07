@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react'
 import {Header, Message, Segment, Button, Grid, Menu} from 'semantic-ui-react'
 import {connect} from "react-redux"
-import {getAlgorithmDefinitions} from "./algorithmsLibrary"
+import {getAlgorithmDefinitions, getGroup} from "./algorithmsLibrary"
 import CodeView, {constructQueries} from './CodeView'
 
 import {ADDED, addTask, completeTask, FAILED, removeTask, runTask} from "../ducks/tasks"
@@ -120,16 +120,20 @@ const HorizontalAlgoTab = (props) => {
                                 active={activeResultsItem === 'Table'}
                                 onClick={handleResultsMenuItemClick}
                             />
+
+                            {getGroup(task.algorithm) === "Centralities" &&
                             <Menu.Item
                                 name='Chart'
                                 active={activeResultsItem === 'Chart'}
                                 onClick={handleResultsMenuItemClick}
-                            />
-                            <Menu.Item
+                            />}
+
+                            {!(getGroup(task.algorithm) === 'Path Finding' || getGroup(task.algorithm) === 'Similarity')  && <Menu.Item
                                 name='Visualisation'
                                 active={activeResultsItem === 'Visualisation'}
                                 onClick={handleResultsMenuItemClick}
-                            />
+                            />}
+
                           </Menu>
                         </div>
                         <div style={{flexGrow: "1", paddingLeft: "10px"}}>
