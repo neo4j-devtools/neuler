@@ -18,7 +18,6 @@ import {getActiveDatabase} from "../services/stores/neoStore";
 import NewAlgorithmModal from "./NewAlgorithmModal";
 
 export const tabContentStyle = {
-  height: '85vh',
   overflowY: 'auto',
   overflowX: 'hidden'
 }

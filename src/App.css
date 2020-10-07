@@ -167,3 +167,30 @@ header a.active {
   border-bottom: 0.17rem solid hsl(305, 80%, 49%);
   color: #fff;
 }
+
+.ui.card, .ui.cards.small-cards>.card {
+  width: 131px;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+div.small-cards .ui.card.selected {
+  background: #e5f9e7;
+}
+
+div.small-cards a.ui.card:hover {
+  -webkit-transform: translateY(0px);
+  transform: translateY(0px);
+}
+
+div.algorithm-groups div.algorithm-group {
+  padding: 0 0 0.5rem 0;
+}
+
+div.algorithm-group span {
+  color: hsl(211, 13%, 65%);
+}
+
+div.algorithm-group-container {
+  padding: 0 0 1.5rem 0;
+}

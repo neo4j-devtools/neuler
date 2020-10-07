@@ -99,7 +99,7 @@ const RecipeView = (props) => {
         <h3>Some recipes</h3>
 
         <div ref={panelRef}>
-            <Segment attached='bottom'>
+
                 <div style={getStyle("Configure")}>
                     <AlgoForm
                         task={task}
@@ -132,7 +132,7 @@ const RecipeView = (props) => {
                         <ChartView task={task} active={activeItem === 'Chart'}/>
                     </div> : null}
 
-            </Segment>
+
         </div>
 
 

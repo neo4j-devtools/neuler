@@ -252,7 +252,6 @@ export default class extends Component {
 
         return (
             <div style={{
-                height: '85vh',
                 overflowY: 'auto',
                 overflowX: 'hidden'
             }}>
