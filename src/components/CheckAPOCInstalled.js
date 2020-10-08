@@ -107,7 +107,7 @@ const MetaUnavailable = () => {
         <Message color="grey" attached={true}  align="center"  >
             <Message.Content>
                 <p>
-                    This application uses the <i>apoc.meta.nodeTypeProperties</i> procedure, which is currently unavailable because it is sandboxed and has dependencies outside of the sandbox. Sandboxing is controlled by the <i>dbms.security.procedures.unrestricted setting</i>.
+                    This application uses the <i>apoc.meta.schema</i> procedure, which is currently unavailable because it is sandboxed and has dependencies outside of the sandbox. Sandboxing is controlled by the <i>dbms.security.procedures.unrestricted setting</i>.
                 </p>
                 <p>You can add the following entry to your Neo4j configuration file to allow access:
                 </p>

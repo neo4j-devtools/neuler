@@ -25,16 +25,15 @@ ORDER BY propertyKey`, {})
 }
 
 export const loadNodePropertyKeys = () => {
-  return runCypher(`CALL apoc.meta.nodeTypeProperties()
-  YIELD nodeLabels, propertyName
-UNWIND nodeLabels AS label
-WITH DISTINCT label, propertyName
-ORDER By label, propertyName
-RETURN label, collect(propertyName) AS propertyKeys`, {})
+  return runCypher(`CALL apoc.meta.schema({maxRels: 0})
+YIELD value
+UNWIND keys(value) AS key
+WITH key, value 
+WHERE value[key].type = "node"
+RETURN key AS label, keys(value[key].properties) AS propertyKeys`, {})
       .then(parseNodePropertyKeysResultStream)
       .catch(handleException)
 }
-
 
 export const loadVersions = () => {
   return runCypher(`CALL dbms.components() 
