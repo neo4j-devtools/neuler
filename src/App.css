@@ -148,23 +148,23 @@ div.results-bar a {
 /* Style the links inside the navigation bar */
 header a {
   color: #fff;
-  padding: 0.71rem;
+  padding: 0.71rem 1.3rem 0.71rem 1.3rem;
   text-decoration: none;
   border-bottom: 0.17rem solid transparent;
 }
 
 header a.selected {
-  background: hsl(41, 9%, 35%);
+  background: hsl(261, 54%, 68%);
   color: #fff;
 }
 
 header a:hover {
-  background: hsl(41, 9%, 35%);
+  background: hsl(261, 54%, 68%);
   color: #fff;
 }
 
 header a.active {
-  background: hsl(41, 9%, 35%);
+  background: hsl(261, 54%, 68%);
   color: #fff;
 }
 
