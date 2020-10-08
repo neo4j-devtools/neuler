@@ -1,4 +1,4 @@
-import {Button, Card, CardGroup, Container, Divider, Dropdown, Header, Icon, Loader, Message} from "semantic-ui-react"
+import {Button, Container, Dropdown, Header, Icon, List, Loader, Message} from "semantic-ui-react"
 import React from 'react'
 
 import {selectGroup} from "../ducks/algorithms"
@@ -17,6 +17,7 @@ import {addDatabase, initLabel} from "../ducks/settings";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
 import {updateMetadata} from "./Startup/startup";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 
 const SelectDatabase = (props) => {
@@ -48,33 +49,39 @@ const SelectDatabase = (props) => {
 
     return (<div style={containerStyle}>
             <Container fluid>
-                <Header as={"h2"}>
-                    Select Database
-                </Header>
+                <OpenCloseSection title="Database Connection">
 
-                <div>
-                    <p>
-                        Connected to: {credentials.username + "@" + credentials.host}
-                    </p>
+                    <List className="connection update">
+                        <List.Item className="connection-item update">
+                            <label>Username</label>
+                            <span>{credentials.username}</span>
+                        </List.Item>
+                        <List.Item className="connection-item update">
+                            <label>Server</label>
+                            <span>{credentials.host}</span>
+                        </List.Item>
+                        <List.Item className="connection-item update">
+                            <label>Database</label>
 
-                    <Button as='div' labelPosition='left'>
-                        <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection
-                                  style={{"width": "290px"}}
-                                  options={databaseOptions} onChange={(evt, data) => {
-                            if (data.value !== getActiveDatabase()) {
-                                setActiveDatabase(data.value);
-                                onActiveDatabase(data.value);
-                                onRefresh(data.value)
-                            }
-                        }}/>
-                        {hasNamedDatabase() ?
-                            <Button icon style={{marginLeft: "10px"}} onClick={() => {
-                                onRefresh(props.metadata.activeDatabase)
-                            }}>
-                                <Icon className="refresh" size="large"/>
-                            </Button> : null}
-                    </Button>
-                </div>
+                                <Dropdown compact value={metadata.activeDatabase} placeholder='Database' search selection
+                                          style={{"width": "290px"}}
+                                          options={databaseOptions} onChange={(evt, data) => {
+                                    if (data.value !== getActiveDatabase()) {
+                                        setActiveDatabase(data.value);
+                                        onActiveDatabase(data.value);
+                                        onRefresh(data.value)
+                                    }
+                                }}/>
+                                {hasNamedDatabase() ?
+                                    <Button icon style={{marginLeft: "10px"}} onClick={() => {
+                                        onRefresh(props.metadata.activeDatabase)
+                                    }}>
+                                        Refresh databases
+                                    </Button> : null}
+
+                        </List.Item>
+                    </List>
+
 
                 <div style={{paddingTop: "10px"}}>
                     {
@@ -92,7 +99,7 @@ const SelectDatabase = (props) => {
                     }
 
                 </div>
-
+                </OpenCloseSection>
             </Container>
 
         </div>

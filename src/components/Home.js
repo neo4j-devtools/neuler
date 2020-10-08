@@ -1,4 +1,16 @@
-import {Button, Card, CardGroup, Container, Divider, Dropdown, Header, Icon, Loader, Message} from "semantic-ui-react"
+import {
+    Button,
+    Card,
+    CardGroup,
+    Container,
+    Divider,
+    Dropdown,
+    List,
+    Header,
+    Icon,
+    Loader,
+    Message
+} from "semantic-ui-react"
 import React from 'react'
 
 import {selectGroup} from "../ducks/algorithms"
@@ -17,6 +29,7 @@ import {addDatabase, initLabel} from "../ducks/settings";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
 import {updateMetadata} from "./Startup/startup";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 
 const Home = (props) => {
@@ -31,15 +44,27 @@ const Home = (props) => {
 
     return (<div style={containerStyle}>
             <Container fluid>
-                    <div>
-                        <p className="connected">Connected to</p>
-                        <p>Server: {credentials.username + "@" + credentials.host + "/"}</p>
-                        <p>Database: {metadata.activeDatabase}</p>
-                    </div>
+                <OpenCloseSection title="Database Connection">
+                    <List className="connection">
+                        <List.Item className="connection-item">
+                            <label>Username</label>
+                            <span>{credentials.username}</span>
+                        </List.Item>
+                        <List.Item className="connection-item">
+                            <label>Server</label>
+                            <span>{credentials.host}</span>
+                        </List.Item>
+                        <List.Item className="connection-item">
+                            <label>Database</label>
+                            <span>{metadata.activeDatabase}</span>
+                        </List.Item>
+                    </List>
+                </OpenCloseSection>
 
-                <Header as={"h2"}>
-                    Getting Started
-                </Header>
+
+                <OpenCloseSection title="Getting Started">
+
+
                 <p>
                     The Neo4j Graph Data Science Library supports the following categories of algorithms.
                 </p>
@@ -124,7 +149,7 @@ const Home = (props) => {
                     </Card>
 
                 </CardGroup>
-
+                </OpenCloseSection>
 
             </Container>
 

@@ -154,17 +154,17 @@ header a {
 }
 
 header a.selected {
-  border-bottom: 0.17rem solid hsl(305, 80%, 49%);
+  background: hsl(41, 9%, 35%);
   color: #fff;
 }
 
 header a:hover {
-  border-bottom: 0.17rem solid hsl(305, 80%, 49%);
+  background: hsl(41, 9%, 35%);
   color: #fff;
 }
 
 header a.active {
-  border-bottom: 0.17rem solid hsl(305, 80%, 49%);
+  background: hsl(41, 9%, 35%);
   color: #fff;
 }
 
@@ -197,4 +197,15 @@ div.algorithm-group-container {
 
 p.connected {
   text-transform: uppercase;
+}
+
+div.connection label {
+  width: 7em;
+  display: inline-block;
+  font-size: .92857143em;
+  font-weight: 700;
+}
+
+div.connection-item.update {
+  /*height: 2rem;*/
 }

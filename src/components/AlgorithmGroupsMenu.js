@@ -22,7 +22,7 @@ const topBarStyle = {
 }
 
 const navStyle = {
-    padding: "9px"
+    padding: "0.67rem"
 }
 
 const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>

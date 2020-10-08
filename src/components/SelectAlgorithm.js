@@ -30,17 +30,6 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
         })
     })
 
-    const algorithmDescriptions= Object.keys(algorithmGroups).flatMap(group => {
-        return getAlgorithms(group).map(algorithm => {
-            return {
-                key: algorithm,
-                value: algorithm,
-                text: algorithm,
-                description: getAlgorithmDefinitions(group, algorithm, metadata.versions.gdsVersion).description
-            }
-        })
-    })
-
     return (selectedAlgorithm &&
         <OpenCloseSection title="Algorithm">
             <div style={{border: "1px solid rgba(34,36,38,.15)", borderRadius: ".28571429rem", padding: "10px 0 0 10px"}}>
