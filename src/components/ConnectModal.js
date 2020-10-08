@@ -50,9 +50,33 @@ const ConnectForm = (props) => {
     const [scheme, setScheme] = React.useState("neo4j")
     const [address, setAddress] = React.useState("localhost")
     const [port, setPort] = React.useState(7687)
+
+    const [rawServerAddress, setRawServerAddress] = React.useState(false)
+    const [rawBoltUri, setRawBoltUri] = React.useState("neo4j://localhost:7687")
+
+    const updateComponentsFromRaw = () => {
+        const components = extractComponents(rawBoltUri)
+        setScheme(components.scheme)
+        setPort(components.port)
+        setAddress(components.address)
+    }
+
+    const updateRawFromComponents = () => {
+        setRawBoltUri(`${scheme}://${address}:${port}`)
+    }
+
     const onSubmit = () => {
-        const boltUri = `${scheme}://${address}:${port}`
-        props.onSubmit(boltUri, username, password)
+        const boltUri = rawServerAddress ? rawBoltUri : `${scheme}://${address}:${port}`
+
+        let [theScheme] = boltUri.split("://")
+        if(!schemeOptions.map(value => value.key).includes(theScheme)) {
+            props.hasError()
+            props.setErrorMessage("Could not get a connection! Unknown scheme: " + theScheme + ". ")
+            props.setExtraErrorMessage("Valid schemes are: " + schemeOptions.map(value => value.key))
+        } else {
+            props.onSubmit(boltUri, username, password)
+        }
+
     };
 
     React.useEffect(() => {
@@ -60,13 +84,11 @@ const ConnectForm = (props) => {
         setPassword(props.queryParameters.accessToken || "")
 
         const {scheme, port, address} = extractComponents(props.queryParameters.url)
-        console.log(scheme, port, address, props.queryParameters.url)
         setScheme(scheme)
         setPort(port)
         setAddress(address)
 
     }, [props.queryParameters])
-
 
 
     return (
@@ -76,7 +98,8 @@ const ConnectForm = (props) => {
                 <Form.Field>
                     <label>Server Address</label>
                     <Form.Field inline>
-                        <Dropdown style={{minWidth: "7em"}}
+                        {!rawServerAddress && <React.Fragment>
+                            <Dropdown style={{minWidth: "7em"}}
                                   selection search value={scheme}
                                   options={schemeOptions}
                                   onChange={(_, {value}) => {
@@ -97,7 +120,7 @@ const ConnectForm = (props) => {
                                placeholder='Server Address'
                         />
                         <p style={{margin: "0 .85714286em 0 0"}}>:</p>
-                        <Input style={{width: "7em", minWidth: "7em"}}
+                        <Input style={{width: "7em", minWidth: "7em", marginRight: "1em"}}
                                value={port}
                                type="number"
                                name='port'
@@ -108,6 +131,31 @@ const ConnectForm = (props) => {
                                onClick={clearErrorMessages}
                                placeholder='Port'
                         />
+                        </React.Fragment>}
+
+                        {rawServerAddress &&
+                        <Input style={{width: "31.45rem"}}
+                            value={rawBoltUri}
+                            name='boltUri'
+                            onChange={(_, {value}) => {
+                                clearErrorMessages()
+                                setRawBoltUri(value)
+                            }}
+                            onClick={clearErrorMessages}
+                            placeholder='Bolt URI'
+                        />
+                        }
+                        <div className="ui input">
+                        <a href="#" onClick={() => {
+                            clearErrorMessages()
+                            setRawServerAddress(!rawServerAddress)
+                            if(rawServerAddress) {
+                                updateComponentsFromRaw()
+                            } else {
+                                updateRawFromComponents()
+                            }
+                        }}>{!rawServerAddress ? "Raw" : "Structured"}</a>
+                        </div>
 
                     </Form.Field>
 
@@ -186,9 +234,12 @@ export const ConnectModal = (props) => {
     return (
         <ConnectForm
             onSubmit={onSubmit}
+            hasError={() => setInitial(false)}
+            setErrorMessage={props.setErrorMessage}
             queryParameters={props.queryParameters}
             errorMsg={errorMsg}
             extraErrorMessage={props.extraErrorMessage}
+            setExtraErrorMessage={props.setExtraErrorMessage}
             clearErrorMessages={props.clearErrorMessages}
         />
     )

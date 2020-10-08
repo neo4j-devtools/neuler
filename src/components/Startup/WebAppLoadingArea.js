@@ -170,6 +170,8 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
                 key="modal"
                 errorMsg={errorMessage}
                 extraErrorMessage={extraErrorMessage}
+                setErrorMessage={setErrorMessage}
+                setExtraErrorMessage={setExtraErrorMessage}
                 clearErrorMessages={() => {
                     setErrorMessage(null)
                     setExtraErrorMessage(null)
