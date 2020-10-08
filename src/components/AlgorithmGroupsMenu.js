@@ -34,9 +34,10 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatas
         </div>
         <div style={navStyle}>
             <nav>
+                <a href="#" onClick={() => selectGroup("Home")} className={activeGroup === "Home" ? "selected" : null}>Home
+                </a>
 
-
-                <a href="#" onClick={() => selectGroup("Home")} className={activeGroup === "Home" ? "selected" : null}>Select Database
+                <a href="#" onClick={() => selectGroup("Database")} className={activeGroup === "Database" ? "selected" : null}>Select Database
                 </a>
 
                 <a href="#" onClick={() => selectGroup("Centralities")} className={activeGroup === "Centralities" ? "selected" : null}>

@@ -148,7 +148,7 @@ div.results-bar a {
 /* Style the links inside the navigation bar */
 header a {
   color: #fff;
-  padding: 10px;
+  padding: 0.71rem;
   text-decoration: none;
   border-bottom: 0.17rem solid transparent;
 }
@@ -193,4 +193,8 @@ div.algorithm-group span {
 
 div.algorithm-group-container {
   padding: 0 0 1.5rem 0;
+}
+
+p.connected {
+  text-transform: uppercase;
 }

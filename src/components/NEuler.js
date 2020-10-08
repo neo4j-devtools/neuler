@@ -20,6 +20,7 @@ import {ChartView} from "./Results/ChartView";
 import {v4 as generateTaskId} from "uuid";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import {ADDED} from "../ducks/tasks";
+import SelectDatabase from "./SelectDatabase";
 
 const NEuler = (props) => {
     const {activeGroup, activeAlgorithm, selectAlgorithm} = props
@@ -37,15 +38,17 @@ const NEuler = (props) => {
             // case "Sample Graphs":
             //     return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
             case  "Home":
-                return {header: "Graph Data Science Playground", view: <Home setDatasetsActive={setDatasetsActive}/>}
+                return {view: <Home setDatasetsActive={setDatasetsActive}/>}
+            case  "Database":
+                return {view: <SelectDatabase setDatasetsActive={setDatasetsActive}/>}
             // case "Recipes":
             //     return {header: "Recipes", view: <Recipe/>}
             default:
-                return {header: "", view: <MainContent onComplete={onComplete}/>}
+                return {view: <MainContent onComplete={onComplete}/>}
         }
     }
 
-    const {header, view} = selectComponent(activeGroup)
+    const {view} = selectComponent(activeGroup)
 
     const page = activeAlgorithm ? `${constants.version}/${activeGroup}/${activeAlgorithm}` : `${constants.version}/${activeGroup}`
 

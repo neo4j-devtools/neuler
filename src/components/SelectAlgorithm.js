@@ -43,7 +43,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
 
     return (selectedAlgorithm &&
         <OpenCloseSection title="Algorithm">
-            <div style={{border: "1px solid rgba(34,36,38,.15)", borderRadius: "7px", padding: "10px 0 0 10px"}}>
+            <div style={{border: "1px solid rgba(34,36,38,.15)", borderRadius: ".28571429rem", padding: "10px 0 0 10px"}}>
                 <div style={{display: "flex", cursor: "pointer" ,justifyContent: "space-between"}} onClick={() => setSelectingAlgorithm(!selectingAlgorithm)}>
                 <Header as="h3">
                     {selectedAlgorithm}
