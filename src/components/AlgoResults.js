@@ -88,12 +88,10 @@ const HorizontalAlgoTab = (props) => {
           )
             : <React.Fragment>
                 <SuccessTopBar task={task} activeItem={activeItem} activeGroup={activeGroup}
-                               currentPage={currentPage} totalPages={totalPages} tasks={props.tasks}
-                               panelRef={panelRef} handleMenuItemClick={handleMenuItemClick.bind(this)}
-                               setSelectedTaskId={props.setSelectedTaskId}
+                               panelRef={panelRef} handleMenuItemClick={handleMenuItemClick}
                 />
                 <div ref={panelRef}>
-                  <div style={{marginTop: "10px"}}>
+                  <div>
                     <div style={getStyle("Configure")}>
                       <AlgorithmForm
                           task={task}

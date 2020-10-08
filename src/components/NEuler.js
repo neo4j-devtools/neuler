@@ -23,6 +23,7 @@ import {ADDED} from "../ducks/tasks";
 import SelectDatabase from "./SelectDatabase";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
+import {SuccessTopBar} from "./Results/SuccessTopBar";
 
 const NEuler = (props) => {
     const {activeGroup, activeMenuItem, activeAlgorithm, selectAlgorithm} = props
@@ -35,10 +36,6 @@ const NEuler = (props) => {
 
     const selectComponent = (activeMenuItem) => {
         switch (activeMenuItem) {
-            // case "About":
-            //     return {header: "About", view: <About/>}
-            // case "Sample Graphs":
-            //     return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
             case  "Home":
                 return {view: <Home setDatasetsActive={setDatasetsActive}/>}
             case  "Database":
@@ -68,9 +65,36 @@ const NEuler = (props) => {
 
 }
 
+const Recipes = (props) => {
+    const {recipes, setSelectedRecipe} = props
+    return  <CardGroup>
+        {Object.keys(recipes).map(key => {
+            return <Card key={key}>
+                <Card.Content>
+                    <Icon name='sitemap'/>
+                    <Card.Header>
+                        {recipes[key].name}
+                    </Card.Header>
+                    <Card.Meta>
+                        {recipes[key].shortDescription}
+                    </Card.Meta>
+                </Card.Content>
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        <Button basic color='green'  onClick={() => setSelectedRecipe(key)}>
+                            Select
+                        </Button>
+                    </div>
+                </Card.Content>
+            </Card>
+        })}
+    </CardGroup>
+}
+
 const RecipeView = (props) => {
     const panelRef = React.createRef()
     const [activeItem, setActiveItem] = React.useState("Configure")
+    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
     const recipes = {
         "Directed-Graph-Influencers": {
@@ -78,6 +102,7 @@ const RecipeView = (props) => {
             shortDescription: "This recipe contains algorithms that find the most influential nodes in a directed graph."
         }
     }
+
     const [selectedRecipe, setSelectedRecipe] = React.useState(null)
 
     const addLimits = (params) => {
@@ -103,13 +128,9 @@ const RecipeView = (props) => {
         database: getActiveDatabase()
     }
 
-    const activeGroup = task.group
-
     const containerStyle = {
         padding: '1em'
     }
-    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
-
     if(!selectedRecipe) {
         return <div style={containerStyle}><Container fluid>
             <OpenCloseSection title="Algorithm Recipes">
@@ -117,86 +138,63 @@ const RecipeView = (props) => {
                     Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
                     certain types of graphs or can be combined to solve data science problems.
                 </p>
-
-                <CardGroup>
-                    {Object.keys(recipes).map(key => {
-                        return <Card key={key}>
-                            <Card.Content>
-                                <Icon name='sitemap'/>
-                                <Card.Header>
-                                    {recipes[key].name}
-                                </Card.Header>
-                                <Card.Meta>
-                                    {recipes[key].description}
-                                </Card.Meta>
-                            </Card.Content>
-                            <Card.Content extra>
-                                <div className='ui two buttons'>
-                                    <Button basic color='green'  onClick={() => setSelectedRecipe(key)}>
-                                        Select
-                                    </Button>
-                                </div>
-                            </Card.Content>
-                        </Card>
-                    })}
-
-                </CardGroup>
+                <Recipes recipes={recipes} setSelectedRecipe={setSelectedRecipe}/>
 
             </OpenCloseSection>
-        </Container></div>
+        </Container>
+        </div>
     } else {
         return <div style={containerStyle}><Container fluid>
             <OpenCloseSection title={recipes[selectedRecipe].name}>
-                <p>
-                    {recipes[selectedRecipe].shortDescription}
-                </p>
+                <p>{recipes[selectedRecipe].shortDescription}</p>
+                <div className="recipe">
+                    <div className="left">
+                        Some explanatory text
+                    </div>
+                    <div className="right">
+                        <SuccessTopBar task={task} activeItem={activeItem} activeGroup="Configure"
+                                       panelRef={panelRef} handleMenuItemClick={(e, { name }) => setActiveItem(name)}
+                        />
+                        <div ref={panelRef}>
+                            <div style={getStyle("Configure")}>
+                                <AlgoForm
+                                    task={task}
+                                    limit={props.limit}
+                                    onRun={(newParameters, formParameters, persisted) => {
+                                        props.onRunAlgo(task, newParameters, formParameters, persisted)
+                                    }}
+                                    onCopy={(group, algorithm, newParameters, formParameters) => {
+                                        props.onCopyAlgo(group, algorithm, newParameters, formParameters)
+                                    }}
+                                />
+                            </div>
 
+
+                            <div style={getStyle('Table')}>
+                                <TableView task={task} gdsVersion={props.metadata.versions.gdsVersion}/>
+                            </div>
+
+                            <div style={getStyle('Code')}>
+                                <CodeView task={task}/>
+                            </div>
+
+                            {/*{!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?*/}
+                            {/*    <div style={getStyle('Visualisation')}>*/}
+                            {/*        <VisView task={task} active={activeItem === 'Visualisation'}/>*/}
+                            {/*    </div> : null}*/}
+
+                            {task.group === 'Centralities' ?
+                                <div style={getStyle('Chart')}>
+                                    <ChartView task={task} active={activeItem === 'Chart'}/>
+                                </div> : null}
+
+
+                        </div>
+                    </div>
+                </div>
             </OpenCloseSection>
         </Container></div>
     }
-
-    // return <div style={{padding: "10px"}}>
-    //     <h3>Some recipes</h3>
-    //
-    //     <div ref={panelRef}>
-    //
-    //             <div style={getStyle("Configure")}>
-    //                 <AlgoForm
-    //                     task={task}
-    //                     limit={props.limit}
-    //                     onRun={(newParameters, formParameters, persisted) => {
-    //                         props.onRunAlgo(task, newParameters, formParameters, persisted)
-    //                     }}
-    //                     onCopy={(group, algorithm, newParameters, formParameters) => {
-    //                         props.onCopyAlgo(group, algorithm, newParameters, formParameters)
-    //                     }}
-    //                 />
-    //             </div>
-    //
-    //
-    //             <div style={getStyle('Table')}>
-    //                 <TableView task={task} gdsVersion={props.metadata.versions.gdsVersion}/>
-    //             </div>
-    //
-    //             <div style={getStyle('Code')}>
-    //                 <CodeView task={task}/>
-    //             </div>
-    //
-    //             {/*{!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?*/}
-    //             {/*    <div style={getStyle('Visualisation')}>*/}
-    //             {/*        <VisView task={task} active={activeItem === 'Visualisation'}/>*/}
-    //             {/*    </div> : null}*/}
-    //
-    //             {activeGroup === 'Centralities' ?
-    //                 <div style={getStyle('Chart')}>
-    //                     <ChartView task={task} active={activeItem === 'Chart'}/>
-    //                 </div> : null}
-    //
-    //
-    //     </div>
-    //
-    //
-    // </div>
 }
 
 const AlgoForm = connect(state => ({
@@ -207,7 +205,6 @@ const AlgoForm = connect(state => ({
     limit: state.settings.limit,
     communityNodeLimit: state.settings.communityNodeLimit,
 }), dispatch => ({
-
     updateLimit: value => dispatch(limit(value)),
     updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
 }))(AlgoFormView)
@@ -216,6 +213,7 @@ const AlgoForm = connect(state => ({
 const Recipe = connect(state => ({
     metadata: state.metadata,
     activeAlgorithm: state.algorithms.algorithm,
+    limit: state.settings.limit,
 }), dispatch => ({
     selectAlgorithm: group => dispatch(selectAlgorithm(group)),
 }))(RecipeView)

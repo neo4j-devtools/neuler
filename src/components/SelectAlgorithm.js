@@ -40,7 +40,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
                         {allAlgorithms[selectedAlgorithm].description}
                     </Header.Subheader>
                 </Header>
-                <Icon name={selectingAlgorithm ? 'triangle up big' : 'triangle down big'}/>
+                <Icon name={selectingAlgorithm ? 'triangle up' : 'triangle down'} size="big"/>
                 </div>
 
                 <div style={selectingAlgorithm ? {display: ''} : {display: 'none'}} className="algorithm-groups">

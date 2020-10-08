@@ -1,26 +1,8 @@
-import {Image, Icon, Dropdown, Menu, List, Divider} from "semantic-ui-react"
+import {Dropdown, Icon, Image} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
-
-const menuItemStyle = {}
-
-const defaultIconStyle = {
-    padding: '2em 2em 3em 2em'
-}
-
-const menuStyle = {
-    borderRadius: '0',
-    height: '100%',
-    display: 'flex',
-    justifyContent: 'space-between',
-    // width: '6em'
-}
-
-const topBarStyle = {
-    height: '100%'
-}
 
 const navStyle = {
     padding: "0.67rem"

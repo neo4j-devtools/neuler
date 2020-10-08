@@ -140,6 +140,10 @@ div.results-bar a {
   font-size: 1.1rem;
 }
 
+.ui.menu.results-bar {
+  margin-bottom: 1.5rem;
+}
+
 .ui.vertical.menu.resultsMenu {
   width: 9rem;
 }
@@ -208,4 +212,22 @@ div.connection label {
 
 div.connection-item.update {
   /*height: 2rem;*/
+}
+
+div.recipe {
+  display: flex;
+}
+
+div.recipe div.left {
+  width: 20rem;
+  background: hsl(43, 13%, 90%);
+  border-radius: 0.3rem 0 0 0.3rem;
+  padding: 0.5rem;
+}
+
+div.recipe div.right {
+  flex-grow: 1;
+  padding: 0.5rem;
+  background: hsl(40, 23%, 97%);
+  border-radius: 0 0.3rem 0.3rem 0;
 }

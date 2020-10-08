@@ -5,14 +5,14 @@ import {v4 as generateId} from "uuid";
 import {ReImg} from "reimg";
 import {ADDED, COMPLETED, RUNNING} from "../../ducks/tasks";
 
-const printElement = element => {
-    html2canvas(element).then(function (canvas) {
-        const guid = generateId()
-        ReImg.fromCanvas(canvas).downloadPng(`neuler-${guid}.png`);
-    })
-}
+// const printElement = element => {
+//     html2canvas(element).then(function (canvas) {
+//         const guid = generateId()
+//         ReImg.fromCanvas(canvas).downloadPng(`neuler-${guid}.png`);
+//     })
+// }
 
-export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextResult, currentPage, totalPages, handleMenuItemClick, panelRef, tasks, setSelectedTaskId}) => {
+export const SuccessTopBar = ({task, activeItem, handleMenuItemClick}) => {
     return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
@@ -26,29 +26,9 @@ export const SuccessTopBar = ({task, activeItem, activeGroup, prevResult, nextRe
                             2. Results
                         </Menu.Item>
 
-                        {/*<Menu.Item name='Table' active={activeItem === 'Table'} onClick={handleMenuItemClick}/>*/}
-
-                        {/*{activeGroup === 'Centralities' ?*/}
-                        {/*    <Menu.Item name='Chart' active={activeItem === 'Chart'} onClick={handleMenuItemClick}/>*/}
-                        {/*    : null*/}
-                        {/*}*/}
-
-                        {/*{!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?*/}
-                        {/*    <Menu.Item name='Visualisation' active={activeItem === 'Visualisation'}*/}
-                        {/*               onClick={handleMenuItemClick}/>*/}
-                        {/*    : null*/}
-                        {/*}*/}
-
                         <Menu.Item name='Code' active={activeItem === 'Code'} onClick={handleMenuItemClick}>
                             3. Code
                         </Menu.Item>
-
-                        {/*<Menu.Menu position='right'>*/}
-                        {/*    <Menu.Item active={activeItem === 'Printscreen'}*/}
-                        {/*               onClick={(() => printElement(panelRef.current))}>*/}
-                        {/*        <Image src='images/Camera2.png'/>*/}
-                        {/*    </Menu.Item>*/}
-                        {/*</Menu.Menu>*/}
                     </React.Fragment> : null}
         </div>
     </Menu>
