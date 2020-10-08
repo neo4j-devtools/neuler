@@ -25,7 +25,7 @@ import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 
 const NEuler = (props) => {
-    const {activeGroup, activeAlgorithm, selectAlgorithm} = props
+    const {activeGroup, activeMenuItem, activeAlgorithm, selectAlgorithm} = props
     const onComplete = () => {
         refreshMetadata(props)
     }
@@ -33,8 +33,8 @@ const NEuler = (props) => {
     const [aboutActive, setAboutActive] = React.useState(false)
     const [datasetsActive, setDatasetsActive] = React.useState(false)
 
-    const selectComponent = (activeGroup) => {
-        switch (activeGroup) {
+    const selectComponent = (activeMenuItem) => {
+        switch (activeMenuItem) {
             // case "About":
             //     return {header: "About", view: <About/>}
             // case "Sample Graphs":
@@ -50,7 +50,7 @@ const NEuler = (props) => {
         }
     }
 
-    const {view} = selectComponent(activeGroup)
+    const {view} = selectComponent(activeMenuItem)
 
     const page = activeAlgorithm ? `${constants.version}/${activeGroup}/${activeAlgorithm}` : `${constants.version}/${activeGroup}`
 
@@ -71,6 +71,14 @@ const NEuler = (props) => {
 const RecipeView = (props) => {
     const panelRef = React.createRef()
     const [activeItem, setActiveItem] = React.useState("Configure")
+
+    const recipes = {
+        "Directed-Graph-Influencers": {
+            name: "Directed Graph Influencers",
+            shortDescription: "This recipe contains algorithms that find the most influential nodes in a directed graph."
+        }
+    }
+    const [selectedRecipe, setSelectedRecipe] = React.useState(null)
 
     const addLimits = (params) => {
         return {
@@ -102,35 +110,50 @@ const RecipeView = (props) => {
     }
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
-    return  <div style={containerStyle}><Container fluid>
-        <OpenCloseSection title="Algorithm Recipes">
-            <p>
-                Algorithm Recipes are collections of algorithms that provide provide useful insights on certain types of graphs or series of algorithms that can be combined to solve a data science problem.
-            </p>
+    if(!selectedRecipe) {
+        return <div style={containerStyle}><Container fluid>
+            <OpenCloseSection title="Algorithm Recipes">
+                <p>
+                    Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
+                    certain types of graphs or can be combined to solve data science problems.
+                </p>
 
-            <CardGroup>
-                <Card key={"centralities"}>
-                    <Card.Content>
-                        <Icon name='sitemap'/>
-                        <Card.Header>
-                            Centralities
-                        </Card.Header>
-                        <Card.Meta>
-                            These algorithms determine the importance of distinct nodes in a network
-                        </Card.Meta>
-                    </Card.Content>
-                    <Card.Content extra>
-                        <div className='ui two buttons'>
-                            <Button basic color='green' onClick={() => props.selectAlgorithm('Centralities')}>
-                                Select
-                            </Button>
-                        </div>
-                    </Card.Content>
-                </Card>
-            </CardGroup>
+                <CardGroup>
+                    {Object.keys(recipes).map(key => {
+                        return <Card key={key}>
+                            <Card.Content>
+                                <Icon name='sitemap'/>
+                                <Card.Header>
+                                    {recipes[key].name}
+                                </Card.Header>
+                                <Card.Meta>
+                                    {recipes[key].description}
+                                </Card.Meta>
+                            </Card.Content>
+                            <Card.Content extra>
+                                <div className='ui two buttons'>
+                                    <Button basic color='green'  onClick={() => setSelectedRecipe(key)}>
+                                        Select
+                                    </Button>
+                                </div>
+                            </Card.Content>
+                        </Card>
+                    })}
 
-        </OpenCloseSection>
-    </Container></div>
+                </CardGroup>
+
+            </OpenCloseSection>
+        </Container></div>
+    } else {
+        return <div style={containerStyle}><Container fluid>
+            <OpenCloseSection title={recipes[selectedRecipe].name}>
+                <p>
+                    {recipes[selectedRecipe].shortDescription}
+                </p>
+
+            </OpenCloseSection>
+        </Container></div>
+    }
 
     // return <div style={{padding: "10px"}}>
     //     <h3>Some recipes</h3>
@@ -192,11 +215,13 @@ const AlgoForm = connect(state => ({
 
 const Recipe = connect(state => ({
     metadata: state.metadata,
+    activeAlgorithm: state.algorithms.algorithm,
 }), dispatch => ({
     selectAlgorithm: group => dispatch(selectAlgorithm(group)),
 }))(RecipeView)
 
 const mapStateToProps = state => ({
+    activeMenuItem: state.menu.item,
     limit: state.settings.limit,
     communityNodeLimit: state.settings.communityNodeLimit,
 })

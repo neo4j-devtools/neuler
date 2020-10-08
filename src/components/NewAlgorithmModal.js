@@ -5,6 +5,7 @@ import AlgorithmForm from "./AlgorithmForm";
 import {connect} from "react-redux";
 import {getCurrentAlgorithm} from "../ducks/algorithms";
 import {addTask, runTask} from "../ducks/tasks";
+import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 
 export const NewAlgorithmModal = (props) => {
     const {activeGroup, activeAlgorithm, metadata, open, setOpen, task} = props

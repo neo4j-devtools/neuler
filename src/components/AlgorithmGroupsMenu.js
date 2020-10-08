@@ -2,6 +2,7 @@ import {Image, Icon, Dropdown, Menu, List, Divider} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
+import {selectMenuItem} from "../ducks/menu";
 
 const menuItemStyle = {}
 
@@ -25,7 +26,7 @@ const navStyle = {
     padding: "0.67rem"
 }
 
-const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatasetsActive}) =>
+const AlgorithmsGroupMenu = ({activeMenuItem, selectMenuItem, setAboutActive, setDatasetsActive}) =>
     <header
         style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "39px"}}>
         <div style={{display: "flex"}}>
@@ -34,18 +35,19 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatas
         </div>
         <div style={navStyle}>
             <nav>
-                <a href="#" onClick={() => selectGroup("Home")} className={activeGroup === "Home" ? "selected" : null}>Home
+                <a href="#" onClick={() => selectMenuItem("Home")} className={activeMenuItem === "Home" ? "selected" : null}>Home
                 </a>
 
-                <a href="#" onClick={() => selectGroup("Database")} className={activeGroup === "Database" ? "selected" : null}>Select Database
+                <a href="#" onClick={() => selectMenuItem("Database")} className={activeMenuItem === "Database" ? "selected" : null}>Select Database
                 </a>
 
-                <a href="#" onClick={() => selectGroup("Recipes")} className={activeGroup === "Recipes" ? "selected" : null}>
-                    Run Algorithm Recipes
+
+                <a href="#" onClick={() => selectMenuItem("Algorithms")} className={activeMenuItem === "Algorithms" ? "selected" : null}>
+                    Algorithms
                 </a>
 
-                <a href="#" onClick={() => selectGroup("Centralities")} className={activeGroup === "Centralities" ? "selected" : null}>
-                    Run Single Algorithm
+                <a href="#" onClick={() => selectMenuItem("Recipes")} className={activeMenuItem === "Recipes" ? "selected" : null}>
+                    Recipes
                 </a>
 
             </nav>
@@ -103,11 +105,13 @@ const AlgorithmsGroupMenu = ({activeGroup, selectGroup, setAboutActive, setDatas
 
 
 const mapStateToProps = state => ({
-    activeGroup: state.algorithms.group
+    activeAlgorithm: state.algorithms.algorithm,
+    activeMenuItem: state.menu.item,
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group))
+    selectGroup: group => dispatch(selectGroup(group)),
+    selectMenuItem: item => dispatch(selectMenuItem(item))
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlgorithmsGroupMenu)

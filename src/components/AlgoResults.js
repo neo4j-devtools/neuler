@@ -336,7 +336,6 @@ const TabExampleVerticalTabular = (props) => {
           setNewAlgorithmFormOpen(true)
         }} primary>Run algorithm</Button>
 
-
       <NewAlgorithmModal
           open={newAlgorithmFormOpen}
           setOpen={setNewAlgorithmFormOpen}

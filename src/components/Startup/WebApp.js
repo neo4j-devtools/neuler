@@ -3,7 +3,7 @@ import {Container, Divider, Segment} from "semantic-ui-react"
 
 import '../../App.css'
 import NEuler from "../NEuler"
-import {selectAlgorithm} from "../../ducks/algorithms"
+import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {
     setDatabases,
@@ -32,6 +32,8 @@ import constants from "../../constants";
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
     React.useEffect(() => {
+        props.selectGroup("Centralities")
+        props.selectAlgorithm("Degree")
         setQueryParameters(qs.parse(props.location.search, { ignoreQueryPrefix: true }))
         props.history.push(props.location.pathname)
     }, [])
@@ -158,6 +160,8 @@ const mapDispatchToProps = dispatch => ({
 
     updateLimit: value => dispatch(limit(value)),
     updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
+
+    selectGroup: algorithm => dispatch(selectGroup(algorithm)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewApp)
