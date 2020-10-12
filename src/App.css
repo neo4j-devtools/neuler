@@ -148,11 +148,15 @@ div.results-bar a {
   width: 9rem;
 }
 
+header {
+  align-items: center;
+}
 
 /* Style the links inside the navigation bar */
 header a {
   color: #fff;
-  padding: 0.71rem 1.3rem 0.71rem 1.3rem;
+  /*padding: 0.71rem 1.3rem 0.71rem 1.3rem;*/
+  padding: 11px 11px 8.5px 11px;
   text-decoration: none;
   border-bottom: 0.17rem solid transparent;
 }

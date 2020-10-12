@@ -181,8 +181,7 @@ const TabExampleVerticalTabular = (props) => {
         communityNodeLimit: props.communityNodeLimit
       }
     }
-    const {parameters} = getAlgorithmDefinitions(activeGroup, activeAlgorithm, props.metadata.versions.gdsVersion)
-    const {parametersBuilder} = props.currentAlgorithm
+    const {parameters, parametersBuilder} = getAlgorithmDefinitions(activeGroup, activeAlgorithm, props.metadata.versions.gdsVersion)
 
     const params = parametersBuilder({
       ...parameters,

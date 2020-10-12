@@ -5,14 +5,14 @@ import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
 
 const navStyle = {
-    padding: "0.67rem"
+    padding: "11px"
 }
 
 const AlgorithmsGroupMenu = ({activeMenuItem, selectMenuItem, setAboutActive, setDatasetsActive}) =>
     <header
-        style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "39px"}}>
+        style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "37px"}}>
         <div style={{display: "flex"}}>
-            <Image src="images/noun_Sandbox Toys_1207953.png" style={{height: "39px"}} />
+            <Image src="images/noun_Sandbox Toys_1207953.png" style={{height: "37px"}} />
             <span style={{padding: "10px 0 10px 0"}}>NEuler</span>
         </div>
         <div style={navStyle}>
