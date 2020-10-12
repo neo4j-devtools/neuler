@@ -15,19 +15,55 @@ import {communityNodeLimit, limit} from "../ducks/settings";
 import {AlgoFormView} from "./AlgorithmForm";
 import {VisView} from "./Results/VisView";
 
+import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
+
+const containerStyle = {
+    padding: '1em'
+}
+
+
+
+const recipes = {
+    "directed-graph-influencers": {
+        name: "Directed Graph Influencers",
+        shortDescription: "This recipe contains algorithms that find the most influential nodes in a directed graph."
+    }
+}
+
+
 const RecipeView = (props) => {
+    let { path, url } = useRouteMatch();
+
     const panelRef = React.createRef()
     const [activeItem, setActiveItem] = React.useState("Configure")
+
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
 
-    const recipes = {
-        "Directed-Graph-Influencers": {
-            name: "Directed Graph Influencers",
-            shortDescription: "This recipe contains algorithms that find the most influential nodes in a directed graph."
-        }
-    }
 
-    const [selectedRecipe, setSelectedRecipe] = React.useState(null)
+    return <Switch>
+        <Route exact path={path}>
+            <div style={containerStyle}><Container fluid>
+                <OpenCloseSection title="Algorithm Recipes">
+                    <p>
+                        Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
+                        certain types of graphs or can be combined to solve data science problems.
+                    </p>
+                    <Recipes recipes={recipes}/>
+
+                </OpenCloseSection>
+            </Container>
+            </div>
+        </Route>
+        <Route path={`${path}/:recipeId`}>
+            <IndividualRecipe metadata={props.metadata} panelRef={panelRef} activeItem={activeItem} setActiveItem={setActiveItem} getStyle={getStyle} />
+        </Route>
+    </Switch>
+}
+
+const IndividualRecipe  = (props) => {
+    const { recipeId } = useParams();
+
+    const {getStyle} = props
 
     const addLimits = (params) => {
         return {
@@ -59,74 +95,60 @@ const RecipeView = (props) => {
         database: getActiveDatabase()
     }
 
-    const containerStyle = {
-        padding: '1em'
-    }
-    if(!selectedRecipe) {
-        return <div style={containerStyle}><Container fluid>
-            <OpenCloseSection title="Algorithm Recipes">
-                <p>
-                    Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
-                    certain types of graphs or can be combined to solve data science problems.
-                </p>
-                <Recipes recipes={recipes} setSelectedRecipe={setSelectedRecipe}/>
 
-            </OpenCloseSection>
-        </Container>
-        </div>
-    } else {
-        return <div style={containerStyle}><Container fluid>
-            <OpenCloseSection title={recipes[selectedRecipe].name}>
-                <p>{recipes[selectedRecipe].shortDescription}</p>
-                <div className="recipe">
-                    <div className="left">
-                        Some explanatory text
-                    </div>
-                    <div className="right">
-                        <SuccessTopBar task={task} activeItem={activeItem} activeGroup="Configure"
-                                       panelRef={panelRef} handleMenuItemClick={(e, { name }) => setActiveItem(name)}
-                        />
-                        <div ref={panelRef}>
-                            <div style={getStyle("Configure")}>
-                                <AlgoForm
-                                    task={task}
-                                    limit={props.limit}
-                                    onRun={(newParameters, formParameters, persisted) => {
-                                        console.log("run algorithm")
-                                    }}
-                                    onCopy={(group, algorithm, newParameters, formParameters) => {
-                                        console.log("copy algorithm")
-                                    }}
-                                />
-                            </div>
+  return <div style={containerStyle}><Container fluid>
+      <OpenCloseSection title={recipes[recipeId].name}>
+          <p>{recipes[recipeId].shortDescription}</p>
+          <div className="recipe">
+              <div className="left">
+                  Some explanatory text
+              </div>
+              <div className="right">
+                  <SuccessTopBar task={task} panelRef={props.panelRef} activeItem={props.activeItem} activeGroup="Configure"
+                                 handleMenuItemClick={(e, { name }) => props.setActiveItem(name)}
+                  />
+                  <div ref={props.panelRef}>
+                      <div style={getStyle("Configure")}>
+                          <AlgoForm
+                              task={task}
+                              limit={props.limit}
+                              onRun={(newParameters, formParameters, persisted) => {
+                                  console.log("run algorithm")
+                              }}
+                              onCopy={(group, algorithm, newParameters, formParameters) => {
+                                  console.log("copy algorithm")
+                              }}
+                          />
+                      </div>
 
-                            <div style={getStyle('Table')}>
-                                <TableView task={task} gdsVersion={props.metadata.versions.gdsVersion}/>
-                            </div>
+                      <div style={getStyle('Table')}>
+                          <TableView task={task} gdsVersion={props.metadata.versions.gdsVersion}/>
+                      </div>
 
-                            <div style={getStyle('Code')}>
-                                <CodeView task={task}/>
-                            </div>
+                      <div style={getStyle('Code')}>
+                          <CodeView task={task}/>
+                      </div>
 
-                            {!(task.group === 'Path Finding' || task.group === 'Similarity') ?
-                                <div style={getStyle('Visualisation')}>
-                                    <VisView task={task} active={activeItem === 'Visualisation'}/>
-                                </div> : null}
+                      {!(task.group === 'Path Finding' || task.group === 'Similarity') ?
+                          <div style={getStyle('Visualisation')}>
+                              <VisView task={task} active={props.activeItem === 'Visualisation'}/>
+                          </div> : null}
 
-                            {task.group === 'Centralities' ?
-                                <div style={getStyle('Chart')}>
-                                    <ChartView task={task} active={activeItem === 'Chart'}/>
-                                </div> : null}
-                        </div>
-                    </div>
-                </div>
-            </OpenCloseSection>
-        </Container></div>
-    }
+                      {task.group === 'Centralities' ?
+                          <div style={getStyle('Chart')}>
+                              <ChartView task={task} active={props.activeItem === 'Chart'}/>
+                          </div> : null}
+                  </div>
+              </div>
+          </div>
+      </OpenCloseSection>
+  </Container></div>
 }
 
 const Recipes = (props) => {
-    const {recipes, setSelectedRecipe} = props
+    const history = useHistory();
+
+    const {recipes} = props
     return  <CardGroup>
         {Object.keys(recipes).map(key => {
             return <Card key={key}>
@@ -141,7 +163,7 @@ const Recipes = (props) => {
                 </Card.Content>
                 <Card.Content extra>
                     <div className='ui two buttons'>
-                        <Button basic color='green'  onClick={() => setSelectedRecipe(key)}>
+                        <Button basic color='green'  onClick={() => history.push('/recipes/' + key)}>
                             Select
                         </Button>
                     </div>

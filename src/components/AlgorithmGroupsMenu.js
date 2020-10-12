@@ -3,6 +3,7 @@ import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
+import {Link} from "react-router-dom";
 
 const navStyle = {
     padding: "11px"
@@ -17,21 +18,10 @@ const AlgorithmsGroupMenu = ({activeMenuItem, selectMenuItem, setAboutActive, se
         </div>
         <div style={navStyle}>
             <nav>
-                <a href="#" onClick={() => selectMenuItem("Home")} className={activeMenuItem === "Home" ? "selected" : null}>Home
-                </a>
-
-                <a href="#" onClick={() => selectMenuItem("Database")} className={activeMenuItem === "Database" ? "selected" : null}>Select Database
-                </a>
-
-
-                <a href="#" onClick={() => selectMenuItem("Algorithms")} className={activeMenuItem === "Algorithms" ? "selected" : null}>
-                    Algorithms
-                </a>
-
-                <a href="#" onClick={() => selectMenuItem("Recipes")} className={activeMenuItem === "Recipes" ? "selected" : null}>
-                    Recipes
-                </a>
-
+                <Link to="/">Home</Link>
+                <Link to="/algorithms">Algorithms</Link>
+                <Link to="/database">Select Database</Link>
+                <Link to="/recipes">Recipes</Link>
             </nav>
         </div>
         <div style={navStyle}>

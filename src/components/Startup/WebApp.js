@@ -28,6 +28,7 @@ import {
 import * as qs from "qs";
 import {FeedbackForm} from "../Feedback/FeedbackForm";
 import constants from "../../constants";
+import {Redirect} from "react-router-dom";
 
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
@@ -65,7 +66,7 @@ const NewApp = (props) => {
 
     if (currentStep === ALL_DONE && metadataLoaded) {
         if (showNeuler) {
-            return <NEuler key="app" {...props} />;
+            return <Redirect to="/" />
         } else {
             setTimeout(function () {
                 setShowNeuler(true)
