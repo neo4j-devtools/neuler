@@ -16,6 +16,21 @@ export const duplicateTask = (group, algorithm, parameters, formParameters) => {
     }
 }
 
+export const duplicateWithNewId = (task, parameters, formParameters) => {
+    task.taskId = generateTaskId()
+    task.parameters = parameters
+    task.formParameters = formParameters
+    return task
+}
+
+export const updateTask = (task, group, algorithm) => {
+    task.taskId = generateTaskId()
+    task.group = group
+    task.algorithm = algorithm
+    return task
+}
+
+
 export const constructNewTask = (group, algorithm, limit, communityNodeLimit, gdsVersion) => {
     const taskId = generateTaskId()
     const addLimits = (params) => {

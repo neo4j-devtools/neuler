@@ -276,6 +276,10 @@ div.algorithm-item:hover {
 }
 
 button.ui.back-to-algorithms, button.ui.back-to-algorithms:hover {
-  background: hsl(261, 54%, 68%);
+  background: hsl(261, 47%, 58%);
+  color: #fff;
+}
+button.ui.new-algorithm, button.ui.new-algorithm:hover {
+  background: hsl(123, 57%, 45%);
   color: #fff;
 }

@@ -1,6 +1,6 @@
 import {connect} from "react-redux";
 import {getCurrentAlgorithm} from "../ducks/algorithms";
-import {ADDED, addTask, completeTask, runTask} from "../ducks/tasks";
+import {addTask, completeTask, runTask} from "../ducks/tasks";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import {
     setDatabases,
@@ -14,31 +14,32 @@ import {addDatabase, initLabel} from "../ducks/settings";
 import {useHistory} from "react-router-dom";
 import React from "react";
 import {refreshMetadata} from "./Startup/startup";
-import {duplicateTask, constructNewTask, onRunAlgo} from "../services/tasks";
+import {constructNewTask, duplicateTask, onRunAlgo} from "../services/tasks";
 import {Button} from "semantic-ui-react";
 import {NewTopBar} from "./Results/SuccessTopBar";
 import AlgorithmForm from "./AlgorithmForm";
-import {v4 as generateTaskId} from "uuid";
-
 
 
 export const NewAlgorithmView = (props) => {
-    console.log("props", props)
     const history = useHistory();
-    const [newTask, setNewTask] = React.useState(null)
+    const [newTask, setNewTask] = React.useState(constructNewTask(
+        props.activeGroup, props.activeAlgorithm, props.limit, props.communityNodeLimit, props.metadata.versions.gdsVersion)
+    )
 
     const onComplete = () => {
         refreshMetadata(props)
     }
 
     React.useEffect(() => {
-        if(props.location.state) {
+        setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm, props.limit, props.communityNodeLimit, props.metadata.versions.gdsVersion))
+    }, [props.activeGroup, props.activeAlgorithm])
+
+    React.useEffect(() => {
+        if (props.location.state) {
             const {group, algorithm, newParameters, formParameters} = props.location.state
             setNewTask(duplicateTask(group, algorithm, newParameters, formParameters))
-        } else {
-            setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm, props.limit, props.communityNodeLimit, props.metadata.versions.gdsVersion))
         }
-    }, [props.activeGroup, props.activeAlgorithm, props.location.state])
+    }, [props.location.state])
 
     const addLimits = (params) => {
         return {
@@ -49,7 +50,6 @@ export const NewAlgorithmView = (props) => {
     }
 
     const {versions} = props.metadata
-
 
     const header = props.tasks && props.tasks.length > 0 ?
         <nav style={{background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>

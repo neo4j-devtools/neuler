@@ -39,7 +39,7 @@ const MainContent = (props) => {
                 <nav style={{  background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
                     <Button onClick={() => {
                     history.push("/algorithms/new")
-                    }} icon="plus" labelPosition="right" content="New algorithm" primary />
+                    }} icon="plus" labelPosition="right" content="New algorithm" className="new-algorithm" />
                 </nav>
                 {props.tasks.map(task =>
                     <div className="algorithm-item" onClick={() => history.push("/algorithms/" + task.taskId)}>
@@ -72,7 +72,7 @@ const MainContent = (props) => {
                     }} icon="left arrow" labelPosition="left" content="All algorithms" className="back-to-algorithms" />
                     <Button onClick={() => {
                         history.push("/algorithms/new")
-                    }} icon="plus" labelPosition="right" content="New algorithm" primary style={{marginLeft: "3px"}} />
+                    }} icon="plus" labelPosition="right" content="New algorithm"  style={{marginLeft: "3px"}} className="new-algorithm" />
                 </nav>
                 <SpecificTask tasks={props.tasks} />
             </div>
