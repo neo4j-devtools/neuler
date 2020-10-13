@@ -85,7 +85,7 @@ const TabExampleVerticalTabular = (props) => {
   if (tasks && tasks.length > 0) {
     const currentTask = selectedTaskId ? tasks.find(task => task.taskId === selectedTaskId) : tasks[0]
     return <div style={{width: "100%"}}>
-      <nav style={{    background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
+      <nav className="top-nav">
         <NavBar task={currentTask} tasks={tasks} setSelectedTaskId={setSelectedTaskId}  />
         <Button style={{margin: "4px", fontSize: "0.9rem", padding: ".6em 1.2em"}} onClick={() => {
           setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm))

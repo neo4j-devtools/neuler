@@ -36,11 +36,16 @@ const MainContent = (props) => {
     return <Switch>
         <Route exact path={path}>
             <div>
-                <nav style={{  background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
+                <nav className="top-nav">
                     <Button onClick={() => {
                     history.push("/algorithms/new")
                     }} icon="plus" labelPosition="right" content="New algorithm" className="new-algorithm" />
                 </nav>
+
+                <div className="page-heading">
+                    Algorithm Runs
+                </div>
+
                 {props.tasks.map(task =>
                     <div className="algorithm-item" onClick={() => history.push("/algorithms/" + task.taskId)}>
                         <Link to={"/algorithms/" + task.taskId} >{task.group} / {task.algorithm}</Link>
@@ -65,7 +70,7 @@ const MainContent = (props) => {
         </Route>
         <Route path={`${path}/:taskId`}>
             <div>
-                <nav style={{  background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
+                <nav className="top-nav">
                     <Button onClick={() => {
 
                         history.push("/algorithms/")

@@ -41,7 +41,12 @@ export const SingleTask = (props) => {
     const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
     const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
 
-    return (
+    return (<React.Fragment>
+        <div className="page-heading">
+            {task.group} / {task.algorithm} - Started at {task.startTime.toLocaleTimeString()}
+        </div>
+
+
         <div style={{padding: "10px"}}>
             {task.completed && task.status === FAILED ? (
                     <React.Fragment>
@@ -143,7 +148,7 @@ export const SingleTask = (props) => {
 
                 </React.Fragment>
             }
-        </div>
+        </div></React.Fragment>
     )
 
 }

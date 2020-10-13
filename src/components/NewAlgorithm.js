@@ -52,7 +52,7 @@ export const NewAlgorithmView = (props) => {
     const {versions} = props.metadata
 
     const header = props.tasks && props.tasks.length > 0 ?
-        <nav style={{background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
+        <nav className="top-nav">
             <Button onClick={() => {
 
                 history.push("/algorithms/")
@@ -61,6 +61,9 @@ export const NewAlgorithmView = (props) => {
 
     return newTask && <div>
         {header}
+        <div className="page-heading">
+            New Algorithm Run
+        </div>
         <div className="top-level-container">
             <NewTopBar/>
             <AlgorithmForm

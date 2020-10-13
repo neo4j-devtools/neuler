@@ -42,17 +42,21 @@ const RecipeView = (props) => {
 
     return <Switch>
         <Route exact path={path}>
-            <div style={containerStyle}><Container fluid>
-                <OpenCloseSection title="Algorithm Recipes">
-                    <p>
-                        Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
-                        certain types of graphs or can be combined to solve data science problems.
-                    </p>
-                    <Recipes recipes={recipes}/>
+            <React.Fragment>
+                <div className="page-heading">
+                    Algorithm Recipes
+                </div>
 
-                </OpenCloseSection>
-            </Container>
+            <div style={containerStyle}>
+                <p>
+                    Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
+                    certain types of graphs or can be combined to solve data science problems.
+                </p>
+                <Recipes recipes={recipes}/>
+
+
             </div>
+            </React.Fragment>
         </Route>
         <Route path={`${path}/:recipeId`}>
             <IndividualRecipe metadata={props.metadata} panelRef={panelRef} activeItem={activeItem} setActiveItem={setActiveItem} getStyle={getStyle} />
@@ -61,6 +65,8 @@ const RecipeView = (props) => {
 }
 
 const IndividualRecipe  = (props) => {
+    const history = useHistory();
+
     const { recipeId } = useParams();
 
     const {getStyle} = props
@@ -96,8 +102,19 @@ const IndividualRecipe  = (props) => {
     }
 
 
-  return <div style={containerStyle}><Container fluid>
-      <OpenCloseSection title={recipes[recipeId].name}>
+  return <React.Fragment>
+      <nav className="top-nav">
+          <Button onClick={() => {
+
+              history.push("/recipes/")
+          }} icon="left arrow" labelPosition="left" content="All algorithm recipes" className="back-to-algorithms" />
+      </nav>
+      <div className="page-heading">
+          {recipes[recipeId].name}
+      </div>
+      <div style={containerStyle}>
+      <Container fluid>
+
           <p>{recipes[recipeId].shortDescription}</p>
           <div className="recipe">
               <div className="left">
@@ -141,8 +158,8 @@ const IndividualRecipe  = (props) => {
                   </div>
               </div>
           </div>
-      </OpenCloseSection>
   </Container></div>
+  </React.Fragment>
 }
 
 const Recipes = (props) => {

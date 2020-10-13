@@ -37,8 +37,16 @@ const Home = (props) => {
     const credentials = props.connectionInfo.credentials
 
 
-    return (<div className="top-level-container">
+    return (<React.Fragment>
+            <div className="page-heading">
+        Welcome to NEuler - The Graph Data Science Playground
+    </div>
+            <div className="top-level-container">
+
             <Container fluid>
+
+
+
                 <OpenCloseSection title="Database Connection">
                     <List className="connection">
                         <List.Item className="connection-item">
@@ -149,7 +157,7 @@ const Home = (props) => {
             </Container>
 
         </div>
-
+        </React.Fragment>
     )
 
 }

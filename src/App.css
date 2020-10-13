@@ -166,17 +166,17 @@ header a {
 }
 
 header a.selected {
-  background: hsl(261, 54%, 68%);
+  background: hsl(227, 50%, 59%);
   color: #fff;
 }
 
 header a:hover {
-  background: hsl(261, 54%, 68%);
+  background: hsl(227, 50%, 59%);
   color: #fff;
 }
 
 header a.active {
-  background: hsl(261, 54%, 68%);
+  background: hsl(227, 50%, 59%);
   color: #fff;
 }
 
@@ -228,7 +228,7 @@ div.recipe {
 
 div.recipe div.left {
   width: 20rem;
-  background: hsl(43, 13%, 90%);
+  background: hsl(214, 15%, 91%);
   border-radius: 0.3rem 0 0 0.3rem;
   padding: 0.5rem;
 }
@@ -236,7 +236,7 @@ div.recipe div.left {
 div.recipe div.right {
   flex-grow: 1;
   padding: 0.5rem;
-  background: hsl(40, 23%, 97%);
+  background: hsl(216, 33%, 97%);
   border-radius: 0 0.3rem 0.3rem 0;
 }
 
@@ -246,13 +246,13 @@ div.top-level-container {
 
 div.algorithm-item {
   padding: 10px;
-  background: hsl(40, 23%, 97%);
+  background: hsl(216, 33%, 97%);
   border-radius: 5px;
   margin: 20px 10px 20px 10px;
 }
 
 div.algorithm-item a {
-  color: hsl(262, 69%, 31%);
+  color: hsl(234, 62%, 26%);
   font-weight: 700;
   font-size: 1.3rem;
 }
@@ -261,25 +261,59 @@ div.algorithm-detail label {
   width: 12em;
   display: inline-block;
   font-size: .92857143em;
-  color: hsl(41, 9%, 35%);
+  color: hsl(211, 12%, 43%);
+  font-weight: 400;
+}
+
+div.algorithm-detail div {
+  font-size: .92857143em;
+  color: hsl(211, 12%, 43%);
+  font-weight: 500;
 }
 
 div.algorithm-item p.start-time {
   font-weight: 300;
-  color: hsl(41, 8%, 48%);
+  color: hsl(211, 10%, 53%);
   font-style: italic;
 }
 
 div.algorithm-item:hover {
   cursor: pointer;
-  background: hsl(43, 13%, 90%);
+  background: hsl(214, 15%, 91%);
 }
 
-button.ui.back-to-algorithms, button.ui.back-to-algorithms:hover {
-  background: hsl(261, 47%, 58%);
+.ui.back-to-algorithms.button {
+  background: hsl(227, 50%, 59%);
   color: #fff;
 }
-button.ui.new-algorithm, button.ui.new-algorithm:hover {
+
+.ui.new-algorithm.button {
   background: hsl(123, 57%, 45%);
   color: #fff;
+}
+
+div.page-heading {
+  text-transform: uppercase;
+  margin: 10px;
+  padding: 10px;
+  /*border: 1px solid black;*/
+  background: hsl(216, 33%, 97%);
+  color: hsl(211, 13%, 65%);
+  font-weight: 600;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.ui.label {
+  background-color: hsl(214, 15%, 91%);
+}
+
+.ui.segment {
+  border: 1px solid hsl(214, 15%, 91%);
+}
+
+nav.top-nav {
+ background: hsl(221, 78%, 86%);
+  padding: 5px;
+  display: flex;
 }
