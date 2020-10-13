@@ -31,7 +31,8 @@ import {
     setRelationshipTypes
 } from "./ducks/metadata";
 import {addDatabase, initLabel} from "./ducks/settings";
-import MainContent, {NewAlgorithm} from "./components/MainContent";
+import MainContent from "./components/MainContent";
+import {NewAlgorithm} from "./components/NewAlgorithm";
 
 // Import apollo client nethods from services
 

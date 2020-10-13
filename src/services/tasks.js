@@ -5,6 +5,17 @@ import {sendMetrics} from "../components/metrics/sendMetrics";
 import {constructQueries} from "../components/CodeView";
 import {getAlgorithmDefinitions} from "../components/algorithmsLibrary";
 
+export const duplicateTask = (group, algorithm, parameters, formParameters) => {
+    const taskId = generateTaskId()
+    return {
+        group, algorithm, taskId,
+        parameters, formParameters, persisted: parameters.persist,
+        startTime: new Date(),
+        database: getActiveDatabase(),
+        status: ADDED
+    }
+}
+
 export const constructNewTask = (group, algorithm, limit, communityNodeLimit, gdsVersion) => {
     const taskId = generateTaskId()
     const addLimits = (params) => {

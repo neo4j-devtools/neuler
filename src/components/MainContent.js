@@ -10,103 +10,10 @@ import {
     setVersions
 } from "../ducks/metadata";
 import {connect} from "react-redux";
-import {Link, Redirect, Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
-import {getCurrentAlgorithm} from "../ducks/algorithms";
-import {addTask, completeTask, runTask} from "../ducks/tasks";
-import {getActiveDatabase} from "../services/stores/neoStore";
-import AlgorithmForm from "./AlgorithmForm";
-import {constructNewTask, onRunAlgo} from "../services/tasks";
-import {NavBar, NewTopBar} from "./Results/SuccessTopBar";
-import {SingleTask} from "./AlgoResults";
-import {Button, List, Icon} from "semantic-ui-react";
-import {OpenCloseSection} from "./Form/OpenCloseSection";
+import {Link, Redirect, Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
+import {Button, List} from "semantic-ui-react";
+import {SpecificTask} from "./SpecificTask";
 
-
-export const NewAlgorithmView = (props) => {
-    const history = useHistory();
-    const [newTask, setNewTask] = React.useState(null)
-
-    const onComplete = () => {
-        refreshMetadata(props)
-    }
-
-    React.useEffect(() => {
-        setNewTask(constructNewTask(props.activeGroup, props.activeAlgorithm, props.limit, props.communityNodeLimit, props.metadata.versions.gdsVersion))
-    }, [props.activeGroup, props.activeAlgorithm])
-
-    const addLimits = (params) => {
-        return {
-            ...params,
-            limit: props.limit,
-            communityNodeLimit: props.communityNodeLimit
-        }
-    }
-
-    const { versions} = props.metadata
-
-
-    const header = props.tasks && props.tasks.length > 0 ? <nav style={{  background: "hsl(212, 33%, 89%)", padding: "5px", display: "flex"}}>
-        <Button onClick={() => {
-
-            history.push("/algorithms/")
-        }} icon="left arrow" labelPosition="left" content="All algorithms" className="back-to-algorithms" />
-    </nav> : null
-
-    return newTask && <div>
-        {header}
-    <div className="top-level-container">
-        <NewTopBar />
-        <AlgorithmForm
-            task={newTask}
-            onComplete={onComplete}
-            onRun={(newParameters, formParameters, persisted) => {
-                props.addTask(newTask.taskId, newTask.group, newTask.algorithm, addLimits(newParameters), formParameters, persisted)
-                onRunAlgo(newTask, newParameters, formParameters, persisted, versions, props.completeTask, onComplete, props.runTask)
-                history.push("/algorithms/" + newTask.taskId)
-            }}
-            onCopy={() => {}}
-        />
-    </div>
-    </div>
-}
-
-export const NewAlgorithm =  connect(state => ({
-    tasks: state.tasks,
-    limit: state.settings.limit,
-    metadata: state.metadata,
-    activeGroup: state.algorithms.group,
-    activeAlgorithm: state.algorithms.algorithm,
-    currentAlgorithm: getCurrentAlgorithm(state),
-    communityNodeLimit: state.settings.communityNodeLimit,
-}), (dispatch, ownProps) => ({
-    runTask: (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
-        dispatch(runTask({taskId, query, namedGraphQueries, parameters, formParameters, persisted}))
-    },
-    addTask: (taskId, group, algorithm, parameters, formParameters, persisted) => {
-        const task = {
-            group,
-            algorithm,
-            taskId,
-            parameters,
-            formParameters,
-            persisted,
-            startTime: new Date(),
-            database: getActiveDatabase()
-        }
-        dispatch(addTask({...task}))
-    },
-    completeTask: (taskId, result, error) => {
-        dispatch(completeTask({ taskId, result, error }))
-    },
-    setGds: version => dispatch(setVersions(version)),
-    setLabels: labels => dispatch(setLabels(labels)),
-    setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
-    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
-    setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
-    setDatabases: databases => dispatch(setDatabases(databases)),
-    addDatabase: database => dispatch(addDatabase(database)),
-    initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys)),
-}))(NewAlgorithmView)
 
 const MainContent = (props) => {
     const history = useHistory();
@@ -180,21 +87,6 @@ const MainContent = (props) => {
     //     </div>
     // )
 
-}
-
-const SpecificTask = (props) => {
-    const {tasks} = props
-
-    const { taskId } = useParams();
-    const currentTask = tasks.find(task => task.taskId === taskId)
-    return <SingleTask
-        metadata={props.metadata}
-        onRunAlgo={onRunAlgo}
-        // onCopyAlgo={addNewTask}
-        task={currentTask}
-        totalPages={tasks.length}
-        gdsVersion="1.3"
-    />
 }
 
 const mapStateToProps = state => ({
