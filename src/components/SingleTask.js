@@ -47,7 +47,7 @@ export const SingleTask = (props) => {
         </div>
 
 
-        <div style={{padding: "10px"}}>
+        <div className="top-level-container">
             {task.completed && task.status === FAILED ? (
                     <React.Fragment>
                         <FailedTopBar task={task} activeItem={activeItem}

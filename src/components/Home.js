@@ -45,8 +45,6 @@ const Home = (props) => {
 
             <Container fluid>
 
-
-
                 <OpenCloseSection title="Database Connection">
                     <List className="connection">
                         <List.Item className="connection-item">

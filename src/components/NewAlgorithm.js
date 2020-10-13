@@ -22,9 +22,7 @@ import AlgorithmForm from "./AlgorithmForm";
 
 export const NewAlgorithmView = (props) => {
     const history = useHistory();
-    const [newTask, setNewTask] = React.useState(constructNewTask(
-        props.activeGroup, props.activeAlgorithm, props.limit, props.communityNodeLimit, props.metadata.versions.gdsVersion)
-    )
+    const [newTask, setNewTask] = React.useState(null)
 
     const onComplete = () => {
         refreshMetadata(props)

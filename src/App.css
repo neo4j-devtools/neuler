@@ -144,8 +144,10 @@ div.results-bar {
   font-size: 1.1rem;
 }
 
+
 .ui.menu.results-bar {
   margin-bottom: 1.5rem;
+  font-size: 1.1rem;
 }
 
 .ui.vertical.menu.resultsMenu {
@@ -241,7 +243,7 @@ div.recipe div.right {
 }
 
 div.top-level-container {
-  padding: 10px;
+  padding: 0 10px;
 }
 
 div.algorithm-item {
