@@ -3,13 +3,13 @@ import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
-import {Link} from "react-router-dom";
+import {Link, NavLink} from "react-router-dom";
 
 const navStyle = {
     padding: "11px"
 }
 
-const AlgorithmsGroupMenu = ({activeMenuItem, selectMenuItem, setAboutActive, setDatasetsActive}) =>
+const AlgorithmsGroupMenu = ({setAboutActive, setDatasetsActive}) =>
     <header
         style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "37px"}}>
         <div style={{display: "flex"}}>
@@ -18,10 +18,10 @@ const AlgorithmsGroupMenu = ({activeMenuItem, selectMenuItem, setAboutActive, se
         </div>
         <div style={navStyle}>
             <nav>
-                <Link to="/">Home</Link>
-                <Link to="/algorithms">Algorithms</Link>
-                <Link to="/database">Select Database</Link>
-                <Link to="/recipes">Recipes</Link>
+                <NavLink exact={true} activeClassName="selected" to="/">Home</NavLink>
+                <NavLink activeClassName="selected" to="/algorithms">Algorithms</NavLink>
+                <NavLink activeClassName="selected" to="/database">Select Database</NavLink>
+                <NavLink activeClassName="selected" to="/recipes">Recipes</NavLink>
             </nav>
         </div>
         <div style={navStyle}>

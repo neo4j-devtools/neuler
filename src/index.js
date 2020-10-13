@@ -31,7 +31,7 @@ import {
     setRelationshipTypes
 } from "./ducks/metadata";
 import {addDatabase, initLabel} from "./ducks/settings";
-import MainContent from "./components/MainContent";
+import MainContent, {NewAlgorithm} from "./components/MainContent";
 
 // Import apollo client nethods from services
 
@@ -112,10 +112,17 @@ ReactDOM.render(
                            render={routeProps => (
                                <RenderComponent view={<SelectDatabase {...routeProps} />} />
                            )}/>
+
+                    <Route path="/algorithms/new"
+                           render={routeProps => (
+                               <RenderComponent view={<NewAlgorithm {...routeProps} />} />
+                           )}/>
+
                     <Route path="/algorithms"
                            render={routeProps => (
                                <RenderComponent view={<MainContent {...routeProps} />} />
                            )}/>
+
                     <Route path="/login"
                            render={routeProps => (
                                <App {...routeProps} />

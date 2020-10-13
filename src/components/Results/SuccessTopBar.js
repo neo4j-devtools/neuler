@@ -34,6 +34,25 @@ export const SuccessTopBar = ({task, activeItem, handleMenuItemClick}) => {
     </Menu>
 }
 
+export const NewTopBar = ({task, activeItem, handleMenuItemClick}) => {
+    return <Menu attached='top' tabular pointing secondary className="results-bar"
+                 style={{display: 'flex', justifyContent: 'space-between'}}>
+        <div style={{display: 'flex'}}>
+            <Menu.Item name="Configure" active={true}>
+                1. Configure
+            </Menu.Item>
+
+                    <Menu.Item name="Results" active={false} disabled={true}>
+                        2. Results
+                    </Menu.Item>
+
+                    <Menu.Item name='Code' active={false}  disabled={true}>
+                        3. Code
+                    </Menu.Item>
+        </div>
+    </Menu>
+}
+
 export const NavBar = ({task, tasks, setSelectedTaskId}) => {
     const createMessage = (task) => {
         return task.status !== ADDED ? ` (Started at: ${task.startTime.toLocaleTimeString()})` : ""

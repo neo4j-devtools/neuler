@@ -235,3 +235,43 @@ div.recipe div.right {
   background: hsl(40, 23%, 97%);
   border-radius: 0 0.3rem 0.3rem 0;
 }
+
+div.top-level-container {
+  padding: 1em;
+}
+
+div.algorithm-item {
+  padding: 10px;
+  background: hsl(40, 23%, 97%);
+  border-radius: 5px;
+  margin: 20px 10px 20px 10px;
+}
+
+div.algorithm-item a {
+  color: hsl(262, 69%, 31%);
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+div.algorithm-detail label {
+  width: 12em;
+  display: inline-block;
+  font-size: .92857143em;
+  color: hsl(41, 9%, 35%);
+}
+
+div.algorithm-item p.start-time {
+  font-weight: 300;
+  color: hsl(41, 8%, 48%);
+  font-style: italic;
+}
+
+div.algorithm-item:hover {
+  cursor: pointer;
+  background: hsl(43, 13%, 90%);
+}
+
+button.ui.back-to-algorithms, button.ui.back-to-algorithms:hover {
+  background: hsl(261, 54%, 68%);
+  color: #fff;
+}

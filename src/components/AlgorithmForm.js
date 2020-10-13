@@ -133,7 +133,7 @@ export const AlgoFormView = (props) => {
                     relationshipOrientationOptions={relationshipOrientationOptions}
                     propertyKeyOptions={propertyKeyOptions}
                     readOnly={readOnly}
-                    onChange={onChangeParam.bind(this)}>
+                    onChange={onChangeParam}>
             <ResultFilteringFields limit={parameters.limit}
                                    communityNodeLimit={parameters.communityNodeLimit}
                                    readOnly={readOnly}

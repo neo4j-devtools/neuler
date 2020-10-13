@@ -16,13 +16,14 @@ import {v4 as generateTaskId} from "uuid";
 import {getCurrentAlgorithm} from "../ducks/algorithms";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import NewAlgorithmModal from "./NewAlgorithmModal";
+import {onRunAlgo} from "../services/tasks";
 
 export const tabContentStyle = {
   overflowY: 'auto',
   overflowX: 'hidden'
 }
 
-const HorizontalAlgoTab = (props) => {
+export const SingleTask = (props) => {
   const { task, currentPage, totalPages } = props
 
   const panelRef = React.createRef()
@@ -56,9 +57,8 @@ const HorizontalAlgoTab = (props) => {
       <div style={{padding: "10px"}}>
         {task.completed && task.status === FAILED ? (
                 <React.Fragment>
-                  <FailedTopBar task={task} activeItem={activeItem}  tasks={props.tasks}
+                  <FailedTopBar task={task} activeItem={activeItem}
                                 currentPage={currentPage} totalPages={totalPages} handleMenuItemClick={handleMenuItemClick.bind(this)}
-                                setSelectedTaskId={props.setSelectedTaskId}
                   />
 
                   <div style={{marginTop: "10px"}}>
@@ -67,7 +67,7 @@ const HorizontalAlgoTab = (props) => {
                           task={task}
                           limit={props.limit}
                           onRun={(newParameters, formParameters, persisted) => {
-                            props.onRunAlgo(task, newParameters, formParameters, persisted)
+                            props.onRunAlgo(task, newParameters, formParameters, persisted, props.gdsVersion)
                           }}
                           onCopy={(group, algorithm, newParameters, formParameters) => {
                             props.onCopyAlgo(group, algorithm, newParameters, formParameters)
@@ -97,7 +97,7 @@ const HorizontalAlgoTab = (props) => {
                           task={task}
                           limit={props.limit}
                           onRun={(newParameters, formParameters, persisted) => {
-                            props.onRunAlgo(task, newParameters, formParameters, persisted)
+                            props.onRunAlgo(task, newParameters, formParameters, persisted, props.gdsVersion)
                           }}
                           onCopy={(group, algorithm, newParameters, formParameters) => {
                             props.onCopyAlgo(group, algorithm, newParameters, formParameters)
@@ -218,63 +218,6 @@ const TabExampleVerticalTabular = (props) => {
 
   }
 
-  const onRunAlgo = (task, parameters, formParameters, persisted) => {
-    setSelectedTaskId(null)
-    const {taskId, group, algorithm} = task
-    const algorithmDefinition = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion);
-    const {service, getFetchQuery} = algorithmDefinition
-
-    let fetchCypher
-
-    let streamQuery = algorithmDefinition.streamQuery
-    let storeQuery = algorithmDefinition.storeQuery
-
-    if (group === "Similarity") {
-      const {itemLabel, relationshipType, categoryLabel, weightProperty} = parameters
-      streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
-      storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
-
-      fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType, parameters.config)
-      delete parameters.itemLabel
-      delete parameters.relationshipType
-      delete parameters.categoryLabel
-    } else {
-      fetchCypher = getFetchQuery(parameters.label, parameters.config)
-    }
-
-    const params = { ...props.metadata.versions, taskId, algorithm, group}
-    sendMetrics('neuler-call-algorithm', algorithm, params)
-
-    service({
-      streamCypher: streamQuery,
-      storeCypher: storeQuery,
-      fetchCypher,
-      parameters,
-      persisted
-    }).then(result => {
-      sendMetrics('neuler', "completed-algorithm-call", params)
-      props.completeTask(taskId, result)
-      if (persisted) {
-        props.onComplete()
-      }
-    }).catch(exc => {
-      console.log('ERROR IN SERVICE', exc)
-      props.completeTask(taskId, [], exc.toString())
-    })
-
-    const constructedQueries = constructQueries(algorithmDefinition, parameters, streamQuery)
-
-    props.runTask(
-        taskId,
-        persisted ? [storeQuery, fetchCypher] : [streamQuery],
-        persisted ?
-            [constructedQueries.createGraph, constructedQueries.storeAlgorithmNamedGraph, fetchCypher, constructedQueries.dropGraph] :
-            [constructedQueries.createGraph, constructedQueries.streamAlgorithmNamedGraph, constructedQueries.dropGraph],
-        parameters,
-        formParameters,
-        persisted
-    )
-  }
 
   const tasks = props.tasks
 
@@ -294,10 +237,8 @@ const TabExampleVerticalTabular = (props) => {
           setNewAlgorithmFormOpen(true)
         }} primary>New algorithm</Button>
       </nav>
-      <HorizontalAlgoTab
-        tasks={tasks}
+      <SingleTask
         metadata={props.metadata}
-        setSelectedTaskId={setSelectedTaskId}
         onRunAlgo={onRunAlgo}
         onCopyAlgo={addNewTask}
         task={currentTask}
@@ -315,7 +256,7 @@ const TabExampleVerticalTabular = (props) => {
     return <div style={{
       width: "50%",
       margin: "auto",
-      height: "300px",
+      maxHeight: "300px",
       border: "1px black dashed",
       padding: "100px",
       textAlign: "center",

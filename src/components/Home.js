@@ -34,15 +34,10 @@ import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 const Home = (props) => {
     const {selectGroup, metadata} = props
-
-    const containerStyle = {
-        padding: '1em'
-    }
-
     const credentials = props.connectionInfo.credentials
 
 
-    return (<div style={containerStyle}>
+    return (<div className="top-level-container">
             <Container fluid>
                 <OpenCloseSection title="Database Connection">
                     <List className="connection">

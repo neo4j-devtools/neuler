@@ -1,8 +1,7 @@
 import {Menu} from "semantic-ui-react";
 import React from "react";
-import {NavBar} from "./SuccessTopBar";
 
-export const FailedTopBar = ({task, activeItem, handleMenuItemClick, tasks, setSelectedTaskId}) => {
+export const FailedTopBar = ({ activeItem, handleMenuItemClick}) => {
     return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>
