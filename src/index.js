@@ -28,11 +28,12 @@ import {
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
-    setRelationshipTypes
+    setRelationshipTypes, setVersions
 } from "./ducks/metadata";
 import {addDatabase, initLabel} from "./ducks/settings";
 import MainContent from "./components/MainContent";
 import {NewAlgorithm} from "./components/NewAlgorithm";
+import {refreshMetadata} from "./components/Startup/startup";
 
 // Import apollo client nethods from services
 
@@ -58,7 +59,8 @@ const isNeo4jDesktop = !!window.neo4jDesktopApi
 
 const App = isNeo4jDesktop ? DesktopApp : WebApp
 
-const RenderComponentView = ({view, connectionInfo}) => {
+const RenderComponentView = (props) => {
+    const {View, connectionInfo, routeProps} = props
     if(!connectionInfo.credentials) {
         return <Redirect to="/login" />
     }
@@ -70,10 +72,10 @@ const RenderComponentView = ({view, connectionInfo}) => {
     return <Container fluid style={{height: '100%', display: "flex", flexFlow: "column", background: "#fff"}}>
         <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}/>
         <div style={{width: '100%', overflowY: 'auto', flexGrow: "1"}}>
-            {view}
+            <View {...routeProps} setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}  />
             <FeedbackForm page={page}/>
             <About open={aboutActive} onClose={() => setAboutActive(false)}/>
-            <Datasets onComplete={() => {}} open={datasetsActive} onClose={() => setDatasetsActive(false)}/>
+            <Datasets onComplete={() => refreshMetadata(props)} open={datasetsActive} onClose={() => setDatasetsActive(false)}/>
         </div>
     </Container>
 }
@@ -92,6 +94,7 @@ const mapDispatchToProps = dispatch => ({
     setLabels: labels => dispatch(setLabels(labels)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setGds: version => dispatch(setVersions(version)),
     setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
     addDatabase: database => dispatch(addDatabase(database)),
     initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))
@@ -111,17 +114,17 @@ ReactDOM.render(
                     {/*/>*/}
                     <Route path="/database"
                            render={routeProps => (
-                               <RenderComponent view={<SelectDatabase {...routeProps} />} />
+                               <RenderComponent routeProps={routeProps} View={SelectDatabase} />
                            )}/>
 
                     <Route path="/algorithms/new"
                            render={routeProps => (
-                               <RenderComponent view={<NewAlgorithm {...routeProps} />} />
+                               <RenderComponent routeProps={routeProps} View={NewAlgorithm} />
                            )}/>
 
                     <Route path="/algorithms"
                            render={routeProps => (
-                               <RenderComponent view={<MainContent {...routeProps} />} />
+                               <RenderComponent routeProps={routeProps} View={MainContent} />
                            )}/>
 
                     <Route path="/login"
@@ -130,7 +133,7 @@ ReactDOM.render(
                            )}/>
                     <Route exact path="/"
                            render={routeProps => (
-                               <RenderComponent view={<Home {...routeProps} />} />
+                               <RenderComponent routeProps={routeProps} View={Home} />
                            )}/>
 
                 </Switch>
