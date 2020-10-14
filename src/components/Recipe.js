@@ -6,7 +6,6 @@ import {v4 as generateTaskId} from "uuid";
 import {ADDED, COMPLETED, FAILED, RUNNING} from "../ducks/tasks";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import {Button, Card, CardGroup, Container, Icon, Menu} from "semantic-ui-react";
-import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import CodeView from "./CodeView";
@@ -17,7 +16,6 @@ import {VisView} from "./Results/VisView";
 
 import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
 import {onRunAlgo} from "../services/tasks";
-import {sendMetrics} from "./metrics/sendMetrics";
 
 const containerStyle = {
     padding: '1em'
@@ -35,14 +33,6 @@ const recipes = {
 
 const RecipeView = (props) => {
     let { path, url } = useRouteMatch();
-
-    const panelRef = React.createRef()
-    const [activeItem, setActiveItem] = React.useState("Configure")
-    const [activeResultsItem, setActiveResultsItem] = React.useState("Table")
-
-    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
-    const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
-    const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
 
     return <Switch>
         <Route exact path={path}>
@@ -66,14 +56,6 @@ const RecipeView = (props) => {
             <IndividualRecipe
                 metadata={props.metadata}
                 limit={props.limit}
-                panelRef={panelRef}
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
-                getStyle={getStyle}
-                getStyleResultsTab={getStyleResultsTab}
-                getResultsStyle={getResultsStyle}
-                activeResultsItem={activeResultsItem}
-                setActiveResultsItem={setActiveResultsItem}
                 gdsVersion={props.metadata.versions.gdsVersion}
             />
         </Route>
@@ -81,11 +63,17 @@ const RecipeView = (props) => {
 }
 
 const IndividualRecipe  = (props) => {
+    const panelRef = React.createRef()
+    const [activeItem, setActiveItem] = React.useState("Configure")
+    const [activeResultsItem, setActiveResultsItem] = React.useState("Table")
+
+    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
+    const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
+    const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
+
     const history = useHistory();
 
     const { recipeId } = useParams();
-
-    const {getStyle, getResultsStyle, getStyleResultsTab, activeResultsItem, setActiveResultsItem} = props
 
 
     const addLimits = (params) => {
@@ -122,7 +110,6 @@ const IndividualRecipe  = (props) => {
         database: getActiveDatabase()
     })
 
-    console.log("task", task)
     const activeGroup = task && task.group
 
     const handleResultsMenuItemClick = (e, {name}) => {
@@ -162,9 +149,9 @@ const IndividualRecipe  = (props) => {
               </div>
               <div className="right">
                   <SuccessTopBar task={task} panelRef={props.panelRef} activeItem={props.activeItem} activeGroup="Configure"
-                                 handleMenuItemClick={(e, { name }) => props.setActiveItem(name)}
+                                 handleMenuItemClick={(e, { name }) => setActiveItem(name)}
                   />
-                  <div ref={props.panelRef}>
+                  <div ref={panelRef}>
                       <div style={getStyle("Configure")}>
                           <AlgoForm
                               selectedAlgorithmReadOnly={true}

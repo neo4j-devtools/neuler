@@ -53,7 +53,7 @@ const MainContent = (props) => {
 
                         <Button onClick={() => {
                             props.removeTask(task.taskId)
-                        }} icon="close" className="close" size="small" />
+                        }} icon="close" className="close" size="tiny" />
 
                         <p className="start-time">
                             Started at: {task.startTime.toLocaleTimeString()}

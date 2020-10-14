@@ -30,12 +30,43 @@ import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
 import {updateMetadata} from "./Startup/startup";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
+import {useHistory} from "react-router-dom";
+import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 
 
 const Home = (props) => {
     const {selectGroup, metadata} = props
     const credentials = props.connectionInfo.credentials
+    const history = useHistory();
 
+    const addLimits = (params) => {
+        return {
+            ...params,
+            limit: props.limit,
+            communityNodeLimit: props.communityNodeLimit
+        }
+    }
+
+    const getDescription = (group, algorithm) => {
+        const {description} =getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+        return description
+    }
+
+    const generateAlgorithmState = (group, algorithm) => {
+        const {parameters, parametersBuilder} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+        const params = parametersBuilder({
+            ...parameters,
+            requiredProperties: Object.keys(parameters)
+        })
+
+        const formParameters = addLimits(parameters);
+        return {
+            group: group,
+            algorithm: algorithm,
+            newParameters: params,
+            formParameters: formParameters
+        }
+    }
 
     return (<React.Fragment>
             <div className="page-heading">
@@ -67,82 +98,100 @@ const Home = (props) => {
 
 
                 <p>
-                    The Neo4j Graph Data Science Library supports the following categories of algorithms.
+                    The Neo4j Graph Data Science Library supports Centrality, Community Detection, and Path Finding algorithms. The algorithms below are some of the most popular ones:
                 </p>
 
                 <CardGroup>
-                    <Card key={"centralities"}>
+                    <Card key={"degree-centrality"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Centralities
+                                Degree Centrality
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms determine the importance of distinct nodes in a network
+                                {getDescription("Centralities", "Degree")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup('Centralities')}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Centralities", "Degree")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
                         </Card.Content>
                     </Card>
 
-                    <Card key={"communityDetection"}>
+                    <Card key={"page-rank"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Community Detection
+                                Page Rank
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms evaluate how a group is clustered or partitioned, as
-                                well as its tendency to strengthen or break apart
+                                {getDescription("Centralities", "Page Rank")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup('Community Detection')}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Centralities", "Page Rank")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
                         </Card.Content>
                     </Card>
 
-                    <Card key={"pathFinding"}>
+                    <Card key={"louvain"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Path Finding
+                                Louvain
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms help find the shortest path or evaluate the availability and quality of
-                                routes
+                                {getDescription("Community Detection", "Louvain")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup("Path Finding")}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Community Detection", "Louvain")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
                         </Card.Content>
                     </Card>
 
-                    <Card key={"similarity"}>
+                    <Card key={"jaccard"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Similarity
+                                Jaccard Node Similarity
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms help calculate the similarity of nodes.
+                                {getDescription("Similarity", "Jaccard")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup("Similarity")}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Similarity", "Jaccard")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
@@ -166,6 +215,8 @@ const mapStateToProps = state => ({
     metadata: state.metadata,
     labels: state.settings.labels,
     connectionInfo: state.connections,
+    limit: state.settings.limit,
+    communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = dispatch => ({

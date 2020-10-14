@@ -104,11 +104,11 @@ ReactDOM.render(
         <PersistGate loading={LoaderComponent} persistor={persistor}>
             <Router>
                 <Switch>
-                    <Route path="/recipes"
-                           render={routeProps => (
-                               <RenderComponent view={<Recipe {...routeProps} />} />
-                           )}
-                    />
+                    {/*<Route path="/recipes"*/}
+                    {/*       render={routeProps => (*/}
+                    {/*           <RenderComponent view={<Recipe {...routeProps} />} />*/}
+                    {/*       )}*/}
+                    {/*/>*/}
                     <Route path="/database"
                            render={routeProps => (
                                <RenderComponent view={<SelectDatabase {...routeProps} />} />

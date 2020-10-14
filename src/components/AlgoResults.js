@@ -141,11 +141,11 @@ const TabExampleVerticalTabular = (props) => {
 
 const mapStateToProps = state => ({
   tasks: state.tasks,
-  limit: state.settings.limit,
   metadata: state.metadata,
   activeGroup: state.algorithms.group,
   activeAlgorithm: state.algorithms.algorithm,
   currentAlgorithm: getCurrentAlgorithm(state),
+  limit: state.settings.limit,
   communityNodeLimit: state.settings.communityNodeLimit,
 })
 

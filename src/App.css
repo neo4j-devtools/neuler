@@ -269,6 +269,10 @@ div.algorithm-item button.close {
   color: #fff;
 }
 
+div.algorithm-item .ui.icon.button {
+  padding: 0.5rem;
+}
+
 div.algorithm-item button.close:hover {
   background: hsl(352, 90%, 35%);
   color: #fff;

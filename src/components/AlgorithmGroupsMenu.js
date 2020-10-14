@@ -19,9 +19,9 @@ const AlgorithmsGroupMenu = ({setAboutActive, setDatasetsActive}) =>
         <div style={navStyle}>
             <nav>
                 <NavLink exact={true} activeClassName="selected" to="/">Home</NavLink>
-                <NavLink activeClassName="selected" to="/algorithms">Algorithms</NavLink>
-                <NavLink activeClassName="selected" to="/database">Select Database</NavLink>
-                <NavLink activeClassName="selected" to="/recipes">Recipes</NavLink>
+                <NavLink activeClassName="selected" to="/algorithms">Run Algorithms</NavLink>
+                <NavLink activeClassName="selected" to="/database">Configure Database</NavLink>
+                {/*<NavLink activeClassName="selected" to="/recipes">Recipes</NavLink>*/}
             </nav>
         </div>
         <div style={navStyle}>
