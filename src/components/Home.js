@@ -32,6 +32,8 @@ import {updateMetadata} from "./Startup/startup";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {useHistory} from "react-router-dom";
 import {getAlgorithmDefinitions} from "./algorithmsLibrary";
+import {hasNodesAndRelationships} from "./SelectDatabase";
+
 
 
 const Home = (props) => {
@@ -45,11 +47,6 @@ const Home = (props) => {
             limit: props.limit,
             communityNodeLimit: props.communityNodeLimit
         }
-    }
-
-    const getDescription = (group, algorithm) => {
-        const {description} =getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
-        return description
     }
 
     const generateAlgorithmState = (group, algorithm) => {
@@ -67,6 +64,13 @@ const Home = (props) => {
             formParameters: formParameters
         }
     }
+
+    const getDescription = (group, algorithm) => {
+        const {description} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+        return description
+    }
+
+
 
     return (<React.Fragment>
             <div className="page-heading">
@@ -91,12 +95,21 @@ const Home = (props) => {
                             <span>{metadata.activeDatabase}</span>
                         </List.Item>
                     </List>
+                    <Button onClick={() => {
+                        history.push({
+                            pathname: '/database'
+                        })
+                    }}>
+                        Configure Database
+                    </Button>
                 </OpenCloseSection>
 
 
                 <OpenCloseSection title="Getting Started">
 
+                    {!hasNodesAndRelationships(props.metadata) && <WhatIsMissing setDatasetsActive={props.setDatasetsActive}/>}
 
+                    {hasNodesAndRelationships(props.metadata) && <React.Fragment>
                 <p>
                     The Neo4j Graph Data Science Library supports Centrality, Community Detection, and Path Finding algorithms. The algorithms below are some of the most popular ones:
                 </p>
@@ -199,6 +212,7 @@ const Home = (props) => {
                     </Card>
 
                 </CardGroup>
+                    </React.Fragment>}
                 </OpenCloseSection>
 
             </Container>

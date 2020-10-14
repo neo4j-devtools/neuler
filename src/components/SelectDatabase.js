@@ -19,6 +19,9 @@ import SelectedDatabase from "./Onboarding/SelectedDatabase";
 import {updateMetadata} from "./Startup/startup";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
 
+export const hasNodesAndRelationships = (metadata) => {
+    return (metadata.labels.length > 0 && metadata.relationshipTypes.length > 0)
+}
 
 const SelectDatabase = (props) => {
     const {setActiveDatabase, metadata} = props
@@ -32,9 +35,7 @@ const SelectDatabase = (props) => {
         })
     }
 
-    const hasNodesAndRelationships = (metadata) => {
-        return (metadata.labels.length > 0 && metadata.relationshipTypes.length > 0)
-    }
+
 
     const containerStyle = {
         padding: '1em'
