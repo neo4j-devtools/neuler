@@ -247,6 +247,7 @@ div.top-level-container {
 }
 
 div.algorithm-item {
+  position: relative;
   padding: 10px;
   background: hsl(216, 33%, 97%);
   border-radius: 5px;
@@ -257,6 +258,20 @@ div.algorithm-item a {
   color: hsl(234, 62%, 26%);
   font-weight: 700;
   font-size: 1.3rem;
+}
+
+div.algorithm-item button.close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  display: none;
+  background: hsl(356, 75%, 53%);
+  color: hsl(214, 15%, 91%);
+}
+
+div.algorithm-item button.close:hover {
+  background: hsl(352, 90%, 35%);
+  color: hsl(214, 15%, 91%);
 }
 
 div.algorithm-detail label {
@@ -280,8 +295,11 @@ div.algorithm-item p.start-time {
 }
 
 div.algorithm-item:hover {
-  cursor: pointer;
   background: hsl(214, 15%, 91%);
+}
+
+div.algorithm-item:hover > button.close {
+  display: block;
 }
 
 .ui.back-to-algorithms.button {

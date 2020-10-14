@@ -13,6 +13,7 @@ import {connect} from "react-redux";
 import {Link, Redirect, Route, Switch, useHistory, useRouteMatch} from "react-router-dom";
 import {Button, List} from "semantic-ui-react";
 import {SpecificTask} from "./SpecificTask";
+import {removeTask} from "../ducks/tasks";
 
 
 const MainContent = (props) => {
@@ -47,8 +48,13 @@ const MainContent = (props) => {
                 </div>
 
                 {props.tasks.map(task =>
-                    <div className="algorithm-item" onClick={() => history.push("/algorithms/" + task.taskId)}>
+                    <div className="algorithm-item">
                         <Link to={"/algorithms/" + task.taskId} >{task.group} / {task.algorithm}</Link>
+
+                        <Button onClick={() => {
+                            props.removeTask(task.taskId)
+                        }} icon="close" className="close" size="small" />
+
                         <p className="start-time">
                             Started at: {task.startTime.toLocaleTimeString()}
                         </p>
@@ -112,6 +118,9 @@ const mapDispatchToProps = dispatch => ({
     setDatabases: databases => dispatch(setDatabases(databases)),
     addDatabase: database => dispatch(addDatabase(database)),
     initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys)),
+    removeTask: (taskId) => {
+        dispatch(removeTask({ taskId}))
+    }
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainContent)
