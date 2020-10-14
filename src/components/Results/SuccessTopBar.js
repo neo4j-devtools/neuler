@@ -34,7 +34,7 @@ export const SuccessTopBar = ({task, activeItem, handleMenuItemClick}) => {
     </Menu>
 }
 
-export const NewTopBar = ({task, activeItem, handleMenuItemClick}) => {
+export const NewTopBar = () => {
     return <Menu attached='top' tabular pointing secondary className="results-bar"
                  style={{display: 'flex', justifyContent: 'space-between'}}>
         <div style={{display: 'flex'}}>

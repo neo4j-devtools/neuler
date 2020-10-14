@@ -266,12 +266,12 @@ div.algorithm-item button.close {
   top: 5px;
   display: none;
   background: hsl(356, 75%, 53%);
-  color: hsl(214, 15%, 91%);
+  color: #fff;
 }
 
 div.algorithm-item button.close:hover {
   background: hsl(352, 90%, 35%);
-  color: hsl(214, 15%, 91%);
+  color: #fff;
 }
 
 div.algorithm-detail label {
@@ -333,7 +333,19 @@ div.page-heading {
 }
 
 nav.top-nav {
- background: hsl(221, 78%, 86%);
+  background: hsl(221, 78%, 86%);
   padding: 5px;
   display: flex;
+}
+
+span.recipe-heading {
+  text-transform: uppercase;
+  color: hsl(211, 10%, 53%);
+  margin-bottom: 10px;
+  display: block;
+  font-weight: 500;
+}
+
+div.recipe div.left p {
+  color: hsl(209, 14%, 37%);
 }

@@ -1,11 +1,11 @@
 import {connect} from "react-redux";
 import {selectAlgorithm} from "../ducks/algorithms";
 import React from "react";
-import {getAlgorithmDefinitions} from "./algorithmsLibrary";
+import {getAlgorithmDefinitions, getGroup} from "./algorithmsLibrary";
 import {v4 as generateTaskId} from "uuid";
-import {ADDED} from "../ducks/tasks";
+import {ADDED, COMPLETED, FAILED, RUNNING} from "../ducks/tasks";
 import {getActiveDatabase} from "../services/stores/neoStore";
-import {Button, Card, CardGroup, Container, Icon} from "semantic-ui-react";
+import {Button, Card, CardGroup, Container, Icon, Menu} from "semantic-ui-react";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
@@ -16,6 +16,8 @@ import {AlgoFormView} from "./AlgorithmForm";
 import {VisView} from "./Results/VisView";
 
 import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
+import {onRunAlgo} from "../services/tasks";
+import {sendMetrics} from "./metrics/sendMetrics";
 
 const containerStyle = {
     padding: '1em'
@@ -36,9 +38,11 @@ const RecipeView = (props) => {
 
     const panelRef = React.createRef()
     const [activeItem, setActiveItem] = React.useState("Configure")
+    const [activeResultsItem, setActiveResultsItem] = React.useState("Table")
 
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
-
+    const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
+    const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
 
     return <Switch>
         <Route exact path={path}>
@@ -59,7 +63,19 @@ const RecipeView = (props) => {
             </React.Fragment>
         </Route>
         <Route path={`${path}/:recipeId`}>
-            <IndividualRecipe metadata={props.metadata} panelRef={panelRef} activeItem={activeItem} setActiveItem={setActiveItem} getStyle={getStyle} />
+            <IndividualRecipe
+                metadata={props.metadata}
+                limit={props.limit}
+                panelRef={panelRef}
+                activeItem={activeItem}
+                setActiveItem={setActiveItem}
+                getStyle={getStyle}
+                getStyleResultsTab={getStyleResultsTab}
+                getResultsStyle={getResultsStyle}
+                activeResultsItem={activeResultsItem}
+                setActiveResultsItem={setActiveResultsItem}
+                gdsVersion={props.metadata.versions.gdsVersion}
+            />
         </Route>
     </Switch>
 }
@@ -69,7 +85,8 @@ const IndividualRecipe  = (props) => {
 
     const { recipeId } = useParams();
 
-    const {getStyle} = props
+    const {getStyle, getResultsStyle, getStyleResultsTab, activeResultsItem, setActiveResultsItem} = props
+
 
     const addLimits = (params) => {
         return {
@@ -79,7 +96,10 @@ const IndividualRecipe  = (props) => {
         }
     }
 
-    const { parameters, parametersBuilder } = getAlgorithmDefinitions("Centralities", "Degree", props.metadata.versions.gdsVersion)
+    const group = "Centralities"
+    const algorithm = "Degree"
+
+    const { parameters, parametersBuilder } = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
 
     const params = parametersBuilder({
         ...parameters,
@@ -89,9 +109,10 @@ const IndividualRecipe  = (props) => {
 
     const formParameters = addLimits(parameters);
     const taskId = generateTaskId()
-    const task = {
-        group : "Centralities",
-        algorithm: "Degree",
+
+    const [task, setTask] = React.useState({
+        group : group,
+        algorithm: algorithm,
         status: ADDED,
         taskId,
         parameters: params,
@@ -99,10 +120,17 @@ const IndividualRecipe  = (props) => {
         persisted: false,
         startTime: new Date(),
         database: getActiveDatabase()
+    })
+
+    console.log("task", task)
+    const activeGroup = task && task.group
+
+    const handleResultsMenuItemClick = (e, {name}) => {
+
+        setActiveResultsItem(name)
     }
 
-
-  return <React.Fragment>
+  return task && <React.Fragment>
       <nav className="top-nav">
           <Button onClick={() => {
 
@@ -118,7 +146,19 @@ const IndividualRecipe  = (props) => {
           <p>{recipes[recipeId].shortDescription}</p>
           <div className="recipe">
               <div className="left">
-                  Some explanatory text
+                  <span className="recipe-heading">
+                      Degree Centrality
+                  </span>
+
+                  <p>
+                      Degree Centrality finds the most influential or central nodes in a graph based on the number of relationships that the node has.
+                  </p>
+                  <p>
+                      By default, it counts the number of incoming relationships but this value can be configured via the <i>Relationship Orientation</i> parameter.
+                  </p>
+                  <p>
+                      The weighted degree centrality for each node is computed by providing an optional relationship property name via the <i>Weight Property</i> parameter.
+                  </p>
               </div>
               <div className="right">
                   <SuccessTopBar task={task} panelRef={props.panelRef} activeItem={props.activeItem} activeGroup="Configure"
@@ -127,10 +167,39 @@ const IndividualRecipe  = (props) => {
                   <div ref={props.panelRef}>
                       <div style={getStyle("Configure")}>
                           <AlgoForm
+                              selectedAlgorithmReadOnly={true}
                               task={task}
                               limit={props.limit}
                               onRun={(newParameters, formParameters, persisted) => {
-                                  console.log("run algorithm")
+                                  onRunAlgo(task, newParameters, formParameters, persisted, props.metadata.versions,
+                                      (taskId, result, error) => {
+                                          console.log("completed...")
+                                          const newTask = Object.assign({}, task)
+                                          if (error) {
+                                              newTask.error = error
+                                              newTask.status = FAILED
+                                          } else {
+                                              newTask.result = result
+                                              newTask.status = COMPLETED
+                                          }
+                                          console.log("onRunAlgo:task", task)
+                                          setTask(newTask)
+                                      },
+                                      () => {
+                                      },
+                                      (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
+                                            console.log("running...")
+                                          const newTask = Object.assign({}, task)
+                                          newTask.status = RUNNING
+                                          newTask.query = query
+                                          newTask.namedGraphQueries = namedGraphQueries
+                                          newTask.parameters = parameters
+                                          newTask.formParameters = formParameters
+                                          newTask.persisted = persisted
+                                          newTask.result = null
+                                          console.log("runTask:task", task)
+                                          setTask(newTask)
+                                      })
                               }}
                               onCopy={(group, algorithm, newParameters, formParameters) => {
                                   console.log("copy algorithm")
@@ -138,23 +207,53 @@ const IndividualRecipe  = (props) => {
                           />
                       </div>
 
-                      <div style={getStyle('Table')}>
-                          <TableView task={task} gdsVersion={props.metadata.versions.gdsVersion}/>
+                      <div style={getStyleResultsTab("Results")}>
+                          <div>
+                              <Menu pointing secondary vertical className="resultsMenu">
+                                  <Menu.Item
+                                      name='Table'
+                                      active={activeResultsItem === 'Table'}
+                                      onClick={handleResultsMenuItemClick}
+                                  />
+
+                                  {getGroup(task.algorithm) === "Centralities" &&
+                                  <Menu.Item
+                                      name='Chart'
+                                      active={activeResultsItem === 'Chart'}
+                                      onClick={handleResultsMenuItemClick}
+                                  />}
+
+                                  {!(getGroup(task.algorithm) === 'Path Finding' || getGroup(task.algorithm) === 'Similarity') &&
+                                  <Menu.Item
+                                      name='Visualisation'
+                                      active={activeResultsItem === 'Visualisation'}
+                                      onClick={handleResultsMenuItemClick}
+                                  />}
+
+                              </Menu>
+                          </div>
+                          <div style={{flexGrow: "1", paddingLeft: "10px"}}>
+                              {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                                  <div style={getResultsStyle('Visualisation')}>
+                                      <VisView task={task} active={activeResultsItem === 'Visualisation'}/>
+                                  </div> : null}
+
+                              {activeGroup === 'Centralities' ?
+                                  <div style={getResultsStyle('Chart')}>
+                                      <ChartView task={task} active={activeResultsItem === 'Chart'}/>
+                                  </div> : null}
+
+                              <div style={getResultsStyle('Table')}>
+                                  <TableView task={task} gdsVersion={props.gdsVersion}/>
+                              </div>
+                          </div>
+
                       </div>
 
                       <div style={getStyle('Code')}>
                           <CodeView task={task}/>
                       </div>
 
-                      {!(task.group === 'Path Finding' || task.group === 'Similarity') ?
-                          <div style={getStyle('Visualisation')}>
-                              <VisView task={task} active={props.activeItem === 'Visualisation'}/>
-                          </div> : null}
-
-                      {task.group === 'Centralities' ?
-                          <div style={getStyle('Chart')}>
-                              <ChartView task={task} active={props.activeItem === 'Chart'}/>
-                          </div> : null}
                   </div>
               </div>
           </div>

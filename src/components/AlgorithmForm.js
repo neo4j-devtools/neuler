@@ -120,10 +120,11 @@ export const AlgoFormView = (props) => {
   }
 
   const readOnly = task.status !== ADDED;
+  const selectedAlgorithmReadOnly = props.selectedAlgorithmReadOnly || readOnly
   return (
       <div style={containerStyle}>
-        {readOnly && <SelectedAlgorithm currentAlgorithm={currentAlgorithm} task={task} readOnly={readOnly} />}
-        {!readOnly && <SelectAlgorithm currentAlgorithm={task.algorithm} readOnly={readOnly} />}
+        {selectedAlgorithmReadOnly && <SelectedAlgorithm currentAlgorithm={currentAlgorithm} task={task}  />}
+        {!selectedAlgorithmReadOnly && <SelectAlgorithm currentAlgorithm={task.algorithm}  />}
 
         <div style={{marginBottom: '1em'}}>
 
