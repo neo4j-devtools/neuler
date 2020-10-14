@@ -111,7 +111,7 @@ LIMIT toInteger($limit)`,
     streamQuery: constructStreamingQueryGetter("CALL gds.alpha.similarity.cosine.stream(config)", constructWeightedSimilarityMaps),
     storeQuery: constructStoreQueryGetter(`CALL gds.alpha.similarity.cosine.write(config)`, constructWeightedSimilarityMaps),
     getFetchQuery: constructFetchQuery,
-    description: ` the cosine of the angle between two n-dimensional vectors in an n-dimensional space. It is the dot product of the two vectors divided by the product of the two vectors' lengths (or magnitudes).`
+    description: `calculates the dot product of the two vectors divided by the product of the two vectors' lengths (or magnitudes).`
   },
 
   "Pearson": {

@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Divider, Message, Tab} from "semantic-ui-react"
+import {Button, Container, Divider, Message, Tab} from "semantic-ui-react"
 import RenderParams from "./renderParams"
 import {v4 as generateId} from 'uuid'
 import Clipboard from 'react-clipboard.js';
@@ -8,6 +8,7 @@ import * as neo from 'neo4j-driver'
 import {hasNamedDatabase} from "../services/stores/neoStore";
 import {sendMetrics} from "./metrics/sendMetrics";
 import {filterParameters} from "../services/queries";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.com/dev/generateBrowserGuide'
 
@@ -159,7 +160,7 @@ export default class extends Component {
 
         return [
             {
-                menuItem: "Anonymous Graph", render: () => <Tab.Pane attached={false}>
+                menuItem: "Anonymous Graph", render: () => <div>
                     <React.Fragment>
                         <p>
                             An anonymous graph is created for the duration of the algorithm run. It is deleted before
@@ -170,10 +171,10 @@ export default class extends Component {
                         {anonymous}
                     </React.Fragment>
 
-                </Tab.Pane>,
+                </div>,
             },
             {
-                menuItem: "Named Graph", render: () => <Tab.Pane attached={false}>
+                menuItem: "Named Graph", render: () => <div>
                     <React.Fragment>
                         <p>
                             A named graph is created in memory and remains there until it is explicitly deleted.
@@ -183,7 +184,7 @@ export default class extends Component {
                         {params}
                         {named}
                     </React.Fragment>
-                </Tab.Pane>,
+                </div>,
             }
         ]
     }
@@ -252,11 +253,11 @@ export default class extends Component {
 
         return (
             <div style={{
-                height: '85vh',
                 overflowY: 'auto',
                 overflowX: 'hidden'
             }}>
-                <h3>Generate Neo4j Browser Guide</h3>
+
+                <OpenCloseSection title="Generate Neo4j Browser Guide">
                 <p>
                     You can generate a Neo4j Browser guide that contains the code to reproduce the algorithm run:
                 </p>
@@ -265,12 +266,13 @@ export default class extends Component {
                     task.query ?
                         <div>
                             <Button basic color='green' icon='play' content='Send to Neo4j Browser'
-                                    onClick={() => this.openBrowser.bind(this)(task)}/>
+                                    onClick={() => this.openBrowser.bind(this)(task)} style={{marginBottom: "1rem"}}/>
+                            {taskGuide && <p>
+                                If the Neo4j Browser doesn't automatically open, you can copy/paste the following
+                                command into the Neo4j Browser:
+                            </p>}
+
                             {taskGuide ? <Message style={{margin: "1em 1em 0em 0em"}}>
-                                <p>
-                                    If the Neo4j Browser doesn't automatically open, you can copy/paste the following
-                                    command into the Neo4j Browser:
-                                </p>
                                 <pre>{taskGuide}</pre>
 
                                 <Clipboard onSuccess={(event) => {
@@ -288,17 +290,19 @@ export default class extends Component {
                         </div>
                         : null
                 }
+                </OpenCloseSection>
 
-                <Divider />
+                <OpenCloseSection title="Run code fragments">
 
-                <h3>Run code fragments</h3>
-                <p style={{margin: "1rem 0"}}>
-                    Or you can reproduce the algorithm run by running the following code fragments:
-                </p>
+                    <p style={{margin: "1rem 0"}}>
+                        Or you can reproduce the algorithm run by running the following code fragments:
+                    </p>
 
-                {
-                    this.codeFragments(task)
-                }
+                    {
+                        this.codeFragments(task)
+                    }
+
+                </OpenCloseSection>
             </div>
         )
     }

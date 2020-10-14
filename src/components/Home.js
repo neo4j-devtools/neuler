@@ -1,4 +1,16 @@
-import {Button, Card, CardGroup, Container, Divider, Dropdown, Header, Icon, Loader, Message} from "semantic-ui-react"
+import {
+    Button,
+    Card,
+    CardGroup,
+    Container,
+    Divider,
+    Dropdown,
+    List,
+    Header,
+    Icon,
+    Loader,
+    Message
+} from "semantic-ui-react"
 import React from 'react'
 
 import {selectGroup} from "../ducks/algorithms"
@@ -17,164 +29,182 @@ import {addDatabase, initLabel} from "../ducks/settings";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
 import {updateMetadata} from "./Startup/startup";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
+import {useHistory} from "react-router-dom";
+import {getAlgorithmDefinitions} from "./algorithmsLibrary";
+import {hasNodesAndRelationships} from "./SelectDatabase";
+
 
 
 const Home = (props) => {
-    const {selectGroup, setActiveDatabase, metadata} = props
-    const [activeDatabaseSelected, setActiveDatabaseSelected] = React.useState(true)
-
-    const onRefresh = (selectedDatabase) => {
-        setActiveDatabaseSelected(false)
-        loadMetadata(props.metadata.versions.neo4jVersion).then(metadata => {
-            updateMetadata(props, metadata, selectedDatabase)
-            setActiveDatabaseSelected(true)
-        })
-    }
-
-    const hasNodesAndRelationships = (metadata) => {
-        return (metadata.labels.length > 0 && metadata.relationshipTypes.length > 0)
-    }
-
-    const containerStyle = {
-        padding: '1em'
-    }
-
+    const {selectGroup, metadata} = props
     const credentials = props.connectionInfo.credentials
+    const history = useHistory();
 
-    const databaseOptions = metadata.databases.map(value => {
-        return {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
-    })
+    const addLimits = (params) => {
+        return {
+            ...params,
+            limit: props.limit,
+            communityNodeLimit: props.communityNodeLimit
+        }
+    }
+
+    const generateAlgorithmState = (group, algorithm) => {
+        const {parameters, parametersBuilder} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+        const params = parametersBuilder({
+            ...parameters,
+            requiredProperties: Object.keys(parameters)
+        })
+
+        const formParameters = addLimits(parameters);
+        return {
+            group: group,
+            algorithm: algorithm,
+            newParameters: params,
+            formParameters: formParameters
+        }
+    }
+
+    const getDescription = (group, algorithm) => {
+        const {description} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+        return description
+    }
 
 
-    return (<div style={containerStyle}>
+
+    return (<React.Fragment>
+            <div className="page-heading">
+        Welcome to NEuler - The Graph Data Science Playground
+    </div>
+            <div className="top-level-container">
+
             <Container fluid>
-                <Header as={"h2"}>
-                    Select Database
-                </Header>
 
-                <div>
-                    <p>
-                        Connected to: {credentials.username + "@" + credentials.host}
-                    </p>
-
-                    <Button as='div' labelPosition='left'>
-                        <Dropdown value={metadata.activeDatabase} placeholder='Database' fluid search selection
-                                  style={{"width": "290px"}}
-                                  options={databaseOptions} onChange={(evt, data) => {
-                            if (data.value !== getActiveDatabase()) {
-                                setActiveDatabase(data.value);
-                                onActiveDatabase(data.value);
-                                onRefresh(data.value)
-                            }
-                        }}/>
-                        {hasNamedDatabase() ?
-                            <Button icon style={{marginLeft: "10px"}} onClick={() => {
-                                onRefresh(props.metadata.activeDatabase)
-                            }}>
-                                <Icon className="refresh" size="large"/>
-                            </Button> : null}
+                <OpenCloseSection title="Database Connection">
+                    <List className="connection">
+                        <List.Item className="connection-item">
+                            <label>Username</label>
+                            <span>{credentials.username}</span>
+                        </List.Item>
+                        <List.Item className="connection-item">
+                            <label>Server</label>
+                            <span>{credentials.host}</span>
+                        </List.Item>
+                        <List.Item className="connection-item">
+                            <label>Database</label>
+                            <span>{metadata.activeDatabase}</span>
+                        </List.Item>
+                    </List>
+                    <Button onClick={() => {
+                        history.push({
+                            pathname: '/database'
+                        })
+                    }}>
+                        Configure Database
                     </Button>
-                </div>
+                </OpenCloseSection>
 
-                <div style={{paddingTop: "10px"}}>
-                    {
-                        activeDatabaseSelected ?
-                            (hasNodesAndRelationships(props.metadata)) ?
-                                <SelectedDatabase onRefresh={() => onRefresh(props.metadata.activeDatabase)}/> :
-                                <WhatIsMissing setDatasetsActive={props.setDatasetsActive}/>
-                            : <Message>
-                                <Message.Header>Refreshing</Message.Header>
-                                <Message.Content>
-                                    <Loader active inline style={{padding: "5px 0"}}/>
-                                </Message.Content>
-                            </Message>
 
-                    }
+                <OpenCloseSection title="Getting Started">
 
-                </div>
+                    {!hasNodesAndRelationships(props.metadata) && <WhatIsMissing setDatasetsActive={props.setDatasetsActive}/>}
 
-                <Divider/>
-
-                <Header as={"h2"}>
-                    Getting Started
-                </Header>
+                    {hasNodesAndRelationships(props.metadata) && <React.Fragment>
                 <p>
-                    The Neo4j Graph Data Science Library supports the following categories of algorithms.
+                    The Neo4j Graph Data Science Library supports Centrality, Community Detection, and Path Finding algorithms. The algorithms below are some of the most popular ones:
                 </p>
 
                 <CardGroup>
-                    <Card key={"centralities"}>
+                    <Card key={"degree-centrality"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Centralities
+                                Degree Centrality
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms determine the importance of distinct nodes in a network
+                                {getDescription("Centralities", "Degree")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup('Centralities')}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Centralities", "Degree")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
                         </Card.Content>
                     </Card>
 
-                    <Card key={"communityDetection"}>
+                    <Card key={"page-rank"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Community Detection
+                                Page Rank
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms evaluate how a group is clustered or partitioned, as
-                                well as its tendency to strengthen or break apart
+                                {getDescription("Centralities", "Page Rank")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup('Community Detection')}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Centralities", "Page Rank")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
                         </Card.Content>
                     </Card>
 
-                    <Card key={"pathFinding"}>
+                    <Card key={"louvain"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Path Finding
+                                Louvain
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms help find the shortest path or evaluate the availability and quality of
-                                routes
+                                {getDescription("Community Detection", "Louvain")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup("Path Finding")}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Community Detection", "Louvain")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
                         </Card.Content>
                     </Card>
 
-                    <Card key={"similarity"}>
+                    <Card key={"jaccard"}>
                         <Card.Content>
                             <Icon name='sitemap'/>
                             <Card.Header>
-                                Similarity
+                                Jaccard Node Similarity
                             </Card.Header>
                             <Card.Meta>
-                                These algorithms help calculate the similarity of nodes.
+                                {getDescription("Similarity", "Jaccard")}
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => selectGroup("Similarity")}>
+                                <Button basic color='green' onClick={() => {
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState("Similarity", "Jaccard")
+                                    })
+                                }}>
                                     Select
                                 </Button>
                             </div>
@@ -182,12 +212,13 @@ const Home = (props) => {
                     </Card>
 
                 </CardGroup>
-
+                    </React.Fragment>}
+                </OpenCloseSection>
 
             </Container>
 
         </div>
-
+        </React.Fragment>
     )
 
 }
@@ -198,6 +229,8 @@ const mapStateToProps = state => ({
     metadata: state.metadata,
     labels: state.settings.labels,
     connectionInfo: state.connections,
+    limit: state.settings.limit,
+    communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = dispatch => ({

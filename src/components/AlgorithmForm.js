@@ -1,38 +1,44 @@
 import React from 'react'
 import {connect} from 'react-redux'
-import {Button} from 'semantic-ui-react'
+import {Button, Header} from 'semantic-ui-react'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultFilteringFields} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
+import SelectAlgorithm from "./SelectAlgorithm";
 
-const AlgoForm = (props) => {
+export const AlgoFormView = (props) => {
   const {task} = props
 
   const [parameters, setParameters] = React.useState({})
-  const [labelOptions, setLabelOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
-  const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{ key: "*", value: "*", text: 'Any' }])
+  const [labelOptions, setLabelOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
+  const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
   const [propertyKeyOptions, setPropertyKeyOptions] = React.useState([])
-  const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{ key: "Natural", value: "Natural", text: 'Natural' }])
+  const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{
+    key: "Natural",
+    value: "Natural",
+    text: 'Natural'
+  }])
 
   const loadMetadata = (metadata) => {
     const labels = metadata.labels.map(row => {
-      return { key: row.label, value: row.label, text: row.label }
+      return {key: row.label, value: row.label, text: row.label}
     })
-    labels.unshift({ key: "*", value: "*", text: 'Any' })
+    labels.unshift({key: "*", value: "*", text: 'Any'})
     setLabelOptions(labels)
 
     const relationshipTypes = metadata.relationshipTypes.map(row => {
-      return { key: row.label, value: row.label, text: row.label }
+      return {key: row.label, value: row.label, text: row.label}
     })
-    relationshipTypes.unshift({ key: "*", value: "*", text: 'Any' })
+    relationshipTypes.unshift({key: "*", value: "*", text: 'Any'})
     setRelationshipTypeOptions(relationshipTypes)
 
-    const  propertyKeys = metadata.propertyKeys.map(row => {
+    const propertyKeys = metadata.propertyKeys.map(row => {
       return {key: row.propertyKey, value: row.propertyKey, text: row.propertyKey}
     });
-    propertyKeys.unshift({ key: null, value: null, text: 'None' })
+    propertyKeys.unshift({key: null, value: null, text: 'None'})
     setPropertyKeyOptions(propertyKeys)
 
     setRelationshipOrientationOptions([
@@ -51,15 +57,14 @@ const AlgoForm = (props) => {
   }, [props.task.taskId])
 
 
-  const onChangeParam = (key, value) =>  {
+  const onChangeParam = (key, value) => {
     setParameters({...parameters, [key]: value})
   }
 
   const onRunAlgo = () => {
-    const {task} = props
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
-    const { service, parametersBuilder } = currentAlgorithm
+    const {service, parametersBuilder} = currentAlgorithm
     if (service) {
       let formParameters = parameters;
       const params = parametersBuilder({
@@ -68,15 +73,18 @@ const AlgoForm = (props) => {
       })
 
       const persisted = formParameters.persist
-      props.onRun({ ...params, limit: props.limit, communityNodeLimit: props.communityNodeLimit }, formParameters, persisted)
+      props.onRun({
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }, formParameters, persisted)
     }
   }
 
   const onCopyAlgo = () => {
-    const {task} = props
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
 
-    const { service, parametersBuilder } = currentAlgorithm
+    const {service, parametersBuilder} = currentAlgorithm
     if (service) {
       let formParameters = parameters;
       const params = parametersBuilder({
@@ -84,7 +92,11 @@ const AlgoForm = (props) => {
         requiredProperties: Object.keys(formParameters)
       })
 
-      props.onCopy(task.group, task.algorithm, { ...params, limit: props.limit, communityNodeLimit: props.communityNodeLimit }, formParameters)
+      props.onCopy(task.group, task.algorithm, {
+        ...params,
+        limit: props.limit,
+        communityNodeLimit: props.communityNodeLimit
+      }, formParameters)
     }
   }
 
@@ -108,40 +120,57 @@ const AlgoForm = (props) => {
   }
 
   const readOnly = task.status !== ADDED;
+  const selectedAlgorithmReadOnly = props.selectedAlgorithmReadOnly || readOnly
   return (
       <div style={containerStyle}>
+        {selectedAlgorithmReadOnly && <SelectedAlgorithm currentAlgorithm={currentAlgorithm} task={task}  />}
+        {!selectedAlgorithmReadOnly && <SelectAlgorithm currentAlgorithm={task.algorithm}  />}
+
         <div style={{marginBottom: '1em'}}>
+
           <AlgoForm {...parameters}
                     labelOptions={labelOptions}
                     relationshipTypeOptions={relationshipTypeOptions}
                     relationshipOrientationOptions={relationshipOrientationOptions}
                     propertyKeyOptions={propertyKeyOptions}
                     readOnly={readOnly}
-                    onChange={onChangeParam.bind(this)}>
+                    onChange={onChangeParam}>
             <ResultFilteringFields limit={parameters.limit}
-                              communityNodeLimit={parameters.communityNodeLimit}
-                              readOnly={readOnly}
-                              returnsCommunities={returnsCommunities}
-                              updateLimit={updateLimit}
-                              updateCommunityNodeLimit={updateCommunityNodeLimit}/>
+                                   communityNodeLimit={parameters.communityNodeLimit}
+                                   readOnly={readOnly}
+                                   returnsCommunities={returnsCommunities}
+                                   updateLimit={updateLimit}
+                                   updateCommunityNodeLimit={updateCommunityNodeLimit}/>
           </AlgoForm>
 
         </div>
         <div>
-            {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+          {task.status === ADDED && <Button color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
 
-            {task.status !== ADDED && task.completed &&
-                <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Edit configuration</Button>
+          {task.status !== ADDED && task.completed &&
+          <Button title="Make a copy of the algorithm with parameters pre-populated" color='blue' onClick={onCopyAlgo}>Edit configuration</Button>
+          }
 
-            }
-
-            {task.status !== ADDED && !task.completed && <Button disabled color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
+          {task.status !== ADDED && !task.completed &&
+          <Button disabled color='green' onClick={onRunAlgo}>Run Algorithm</Button>}
 
         </div>
 
       </div>
-      )
-  }
+  )
+}
+
+const SelectedAlgorithm = ({task, currentAlgorithm}) => {
+  const {description} = currentAlgorithm
+  return <OpenCloseSection title="Algorithm">
+    <Header disabled={true} as="h3">
+      {task.algorithm}
+      <Header.Subheader>
+        {description}
+      </Header.Subheader>
+    </Header>
+  </OpenCloseSection>
+}
 
 const mapStateToProps = state => ({
   activeGroup: state.algorithms.group,
@@ -157,4 +186,4 @@ const mapDispatchToProps = dispatch => ({
   updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
 })
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlgoForm)
+export default connect(mapStateToProps, mapDispatchToProps)(AlgoFormView)

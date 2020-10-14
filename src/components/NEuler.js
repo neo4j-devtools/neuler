@@ -1,8 +1,7 @@
 import React from 'react'
-import {Container, Header, Menu, Segment} from "semantic-ui-react"
+import {Container} from "semantic-ui-react"
 
 import AlgorithmsGroupMenu from "./AlgorithmGroupsMenu"
-import {getAlgorithms} from "./algorithmsLibrary"
 import MainContent from './MainContent'
 import Datasets from './Datasets'
 import {connect} from "react-redux"
@@ -13,9 +12,11 @@ import About from "./About";
 import {FeedbackForm} from "./Feedback/FeedbackForm";
 import {refreshMetadata} from "./Startup/startup";
 import constants from "../constants.js";
+import SelectDatabase from "./SelectDatabase";
+import {Recipe} from "./Recipe";
 
 const NEuler = (props) => {
-    const {activeGroup, activeAlgorithm, selectAlgorithm} = props
+    const {activeGroup, activeMenuItem, activeAlgorithm, selectAlgorithm} = props
     const onComplete = () => {
         refreshMetadata(props)
     }
@@ -23,54 +24,38 @@ const NEuler = (props) => {
     const [aboutActive, setAboutActive] = React.useState(false)
     const [datasetsActive, setDatasetsActive] = React.useState(false)
 
-    const selectComponent = (activeGroup) => {
-        switch (activeGroup) {
-            // case "About":
-            //     return {header: "About", view: <About/>}
-            // case "Sample Graphs":
-            //     return {header: "Sample Graphs", view: <Datasets onComplete={onComplete}/>}
+    const selectComponent = (activeMenuItem) => {
+        switch (activeMenuItem) {
             case  "Home":
-                return {header: "Graph Data Science Playground", view: <Home setDatasetsActive={setDatasetsActive}/>}
+                return {view: <Home setDatasetsActive={setDatasetsActive}/>}
+            case  "Database":
+                return {view: <SelectDatabase setDatasetsActive={setDatasetsActive}/>}
+            case "Recipes":
+                return {header: "Recipes", view: <Recipe/>}
             default:
-                return {header: "", view: <MainContent onComplete={onComplete} />}
+                return {view: <MainContent onComplete={onComplete}/>}
         }
     }
 
-    const {header, view} = selectComponent(activeGroup)
+    const {view} = selectComponent(activeMenuItem)
 
     const page = activeAlgorithm ? `${constants.version}/${activeGroup}/${activeAlgorithm}` : `${constants.version}/${activeGroup}`
 
     return (
-        <Container fluid style={{display: 'flex', height: '100%', background: "#fff"}}>
-            <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive} />
-            <div style={{width: '100%', overflowY: 'auto'}}>
-                <Segment basic inverted vertical={false}
-                         style={{height: '5em', display: 'flex', justifyContent: 'space-between', marginBottom: '0'}}>
-                    {header ? <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
-                        {header}
-                    </Header> : null}
-                    <Menu inverted>
-                        {getAlgorithms(activeGroup).map(algorithm =>
-                            <Menu.Item key={algorithm} as='a' active={activeAlgorithm === algorithm}
-                                       onClick={() => selectAlgorithm(algorithm)}>
-                                {algorithm}
-                            </Menu.Item>)}
-                    </Menu>
-                    <Header as='h1' inverted color='grey' style={{marginTop: '0'}}>
-                        NEuler
-                    </Header>
-                </Segment>
+        <Container fluid style={{height: '100%', display: "flex", flexFlow: "column", background: "#fff"}}>
+            <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}/>
+            <div style={{width: '100%', overflowY: 'auto', flexGrow: "1"}}>
                 {view}
                 <FeedbackForm page={page}/>
-                <About open={aboutActive} onClose={() => setAboutActive(false)} />
-                <Datasets onComplete={onComplete} open={datasetsActive} onClose={() => setDatasetsActive(false)} />
+                <About open={aboutActive} onClose={() => setAboutActive(false)}/>
+                <Datasets onComplete={onComplete} open={datasetsActive} onClose={() => setDatasetsActive(false)}/>
             </div>
         </Container>
     )
-
 }
 
 const mapStateToProps = state => ({
+    activeMenuItem: state.menu.item,
     limit: state.settings.limit,
     communityNodeLimit: state.settings.communityNodeLimit,
 })

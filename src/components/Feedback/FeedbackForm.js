@@ -98,8 +98,8 @@ const headerStyle = {
   justifyContent: "space-between",
   alignItems: "center",
   cursor: "pointer",
-  background: "rgb(109, 204, 156)",
-  color: "white"
+  background: "hsl(210, 16%, 82%)",
+  color: "hsl(209, 20%, 25%)  "
 };
 
 const FeedbackFirstScreen = (props) => {

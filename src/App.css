@@ -113,3 +113,243 @@ div.update-node-row p {
 .feedback-form.checkbox label  {
   white-space: pre-line;
 }
+
+/*nav a {*/
+/*  padding: 10px 10px 10px 10px;*/
+/*  color: #efefef;*/
+/*}*/
+
+/*nav a:first-child {*/
+/*  padding: 10px 15px 10px 0;*/
+/*  color: #fff;*/
+/*}*/
+
+/*nav a:first-child:hover, nav a:last-child:hover {*/
+/*  color: #4183c4;*/
+/*}*/
+
+/*nav a:last-child {*/
+/*  padding: 10px 0 10px 10px;*/
+/*}*/
+
+/*nav a.header-right-separator {*/
+/* border-right: 1px solid #fff;*/
+/*}*/
+
+div.results-bar a {
+  font-size: 1.1rem;
+}
+
+div.results-bar {
+  font-size: 1.1rem;
+}
+
+
+.ui.menu.results-bar {
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+}
+
+.ui.vertical.menu.resultsMenu {
+  width: 9rem;
+}
+
+header {
+  align-items: center;
+}
+
+/* Style the links inside the navigation bar */
+header a {
+  color: #fff;
+  /*padding: 0.71rem 1.3rem 0.71rem 1.3rem;*/
+  padding: 11px 11px 8.5px 11px;
+  text-decoration: none;
+  border-bottom: 0.17rem solid transparent;
+}
+
+header a.selected {
+  background: hsl(227, 50%, 59%);
+  color: #fff;
+}
+
+header a:hover {
+  background: hsl(227, 50%, 59%);
+  color: #fff;
+}
+
+header a.active {
+  background: hsl(227, 50%, 59%);
+  color: #fff;
+}
+
+.ui.card, .ui.cards.small-cards>.card {
+  width: 131px;
+  font-size: 0.8rem;
+  text-align: center;
+}
+
+div.small-cards .ui.card.selected {
+  background: #e5f9e7;
+}
+
+div.small-cards a.ui.card:hover {
+  -webkit-transform: translateY(0px);
+  transform: translateY(0px);
+}
+
+div.algorithm-groups div.algorithm-group {
+  padding: 0 0 0.5rem 0;
+}
+
+div.algorithm-group span {
+  color: hsl(211, 13%, 65%);
+}
+
+div.algorithm-group-container {
+  padding: 0 0 1.5rem 0;
+}
+
+p.connected {
+  text-transform: uppercase;
+}
+
+div.connection label {
+  width: 7em;
+  display: inline-block;
+  font-size: .92857143em;
+  font-weight: 700;
+}
+
+div.connection-item.update {
+  /*height: 2rem;*/
+}
+
+div.recipe {
+  display: flex;
+}
+
+div.recipe div.left {
+  width: 20rem;
+  background: hsl(214, 15%, 91%);
+  border-radius: 0.3rem 0 0 0.3rem;
+  padding: 0.5rem;
+}
+
+div.recipe div.right {
+  flex-grow: 1;
+  padding: 0.5rem;
+  background: hsl(216, 33%, 97%);
+  border-radius: 0 0.3rem 0.3rem 0;
+}
+
+div.top-level-container {
+  padding: 0 10px;
+}
+
+div.algorithm-item {
+  position: relative;
+  padding: 10px;
+  background: hsl(216, 33%, 97%);
+  border-radius: 5px;
+  margin: 20px 10px 20px 10px;
+}
+
+div.algorithm-item a {
+  color: hsl(234, 62%, 26%);
+  font-weight: 700;
+  font-size: 1.3rem;
+}
+
+div.algorithm-item button.close {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  display: none;
+  background: hsl(356, 75%, 53%);
+  color: #fff;
+}
+
+div.algorithm-item .ui.icon.button {
+  padding: 0.5rem;
+}
+
+div.algorithm-item button.close:hover {
+  background: hsl(352, 90%, 35%);
+  color: #fff;
+}
+
+div.algorithm-detail label {
+  width: 12em;
+  display: inline-block;
+  font-size: .92857143em;
+  color: hsl(211, 12%, 43%);
+  font-weight: 400;
+}
+
+div.algorithm-detail div {
+  font-size: .92857143em;
+  color: hsl(211, 12%, 43%);
+  font-weight: 500;
+}
+
+div.algorithm-item p.start-time {
+  font-weight: 300;
+  color: hsl(211, 10%, 53%);
+  font-style: italic;
+}
+
+div.algorithm-item:hover {
+  background: hsl(214, 15%, 91%);
+}
+
+div.algorithm-item:hover > button.close {
+  display: block;
+}
+
+.ui.back-to-algorithms.button {
+  background: hsl(227, 50%, 59%);
+  color: #fff;
+}
+
+.ui.new-algorithm.button {
+  background: hsl(123, 57%, 45%);
+  color: #fff;
+}
+
+div.page-heading {
+  text-transform: uppercase;
+  margin: 10px;
+  padding: 10px;
+  /*border: 1px solid black;*/
+  background: hsl(216, 33%, 97%);
+  color: hsl(211, 13%, 65%);
+  font-weight: 600;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+
+.ui.label {
+  background-color: hsl(214, 15%, 91%);
+}
+
+.ui.segment {
+  border: 1px solid hsl(214, 15%, 91%);
+}
+
+nav.top-nav {
+  background: hsl(221, 78%, 86%);
+  padding: 5px;
+  display: flex;
+}
+
+span.recipe-heading {
+  text-transform: uppercase;
+  color: hsl(211, 10%, 53%);
+  margin-bottom: 10px;
+  display: block;
+  font-weight: 500;
+}
+
+div.recipe div.left p {
+  color: hsl(209, 14%, 37%);
+}

@@ -6,7 +6,6 @@ const LoaderExampleInlineCentered = () => <Loader active inline='centered'>Algor
 
 export default ({ task }) => (
   <div>
-  <Tab.Pane key={task.startTime.toLocaleString()} style={{ padding: '1em 0', borderTop: '0' }}>
     <Table color='green'>
       <Table.Header>
         <Table.Row>
@@ -31,6 +30,5 @@ export default ({ task }) => (
       }
       </Table.Body>
     </Table>
-  </Tab.Pane>
   </div>
 )

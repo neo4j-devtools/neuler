@@ -3,7 +3,7 @@ import {Container, Divider, Segment} from "semantic-ui-react"
 
 import '../../App.css'
 import NEuler from "../NEuler"
-import {selectAlgorithm} from "../../ducks/algorithms"
+import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {
   setDatabases,
@@ -28,6 +28,7 @@ import {LoadingIcon} from "./LoadingIcon";
 import {DesktopAppLoadingArea} from "./DesktopAppLoadingArea";
 import {FeedbackForm} from "../Feedback/FeedbackForm";
 import constants from "../../constants";
+import {Redirect} from "react-router-dom";
 
 
 const NewApp = (props) => {
@@ -43,6 +44,8 @@ const NewApp = (props) => {
   const [serverInfo, setServerInfo] = React.useState(null)
 
   React.useEffect(() => {
+    props.selectGroup("Centralities")
+    props.selectAlgorithm("Degree")
     initializeDesktopConnection(setConnected, setDisconnected, () => {
       setCurrentStepFailed(true)
     }, setActiveProject, setActiveGraph, () => {
@@ -67,7 +70,7 @@ const NewApp = (props) => {
 
   if (currentStep === ALL_DONE && metadataLoaded) {
     if (showNeuler) {
-      return <NEuler key="app" {...props} />;
+      return <Redirect to="/" />
     } else {
       setTimeout(function () {
         setShowNeuler(true)
@@ -149,7 +152,9 @@ const mapDispatchToProps = dispatch => ({
   setDisconnected: () => dispatch(setDisconnected()),
 
   addDatabase: database => dispatch(addDatabase(database)),
-  initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))
+  initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys)),
+
+  selectGroup: algorithm => dispatch(selectGroup(algorithm)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewApp)

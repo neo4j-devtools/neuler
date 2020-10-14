@@ -3,7 +3,7 @@ import {Container, Divider, Segment} from "semantic-ui-react"
 
 import '../../App.css'
 import NEuler from "../NEuler"
-import {selectAlgorithm} from "../../ducks/algorithms"
+import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {
     setDatabases,
@@ -28,10 +28,13 @@ import {
 import * as qs from "qs";
 import {FeedbackForm} from "../Feedback/FeedbackForm";
 import constants from "../../constants";
+import {Redirect} from "react-router-dom";
 
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
     React.useEffect(() => {
+        props.selectGroup("Centralities")
+        props.selectAlgorithm("Degree")
         setQueryParameters(qs.parse(props.location.search, { ignoreQueryPrefix: true }))
         props.history.push(props.location.pathname)
     }, [])
@@ -63,7 +66,7 @@ const NewApp = (props) => {
 
     if (currentStep === ALL_DONE && metadataLoaded) {
         if (showNeuler) {
-            return <NEuler key="app" {...props} />;
+            return <Redirect to="/" />
         } else {
             setTimeout(function () {
                 setShowNeuler(true)
@@ -158,6 +161,8 @@ const mapDispatchToProps = dispatch => ({
 
     updateLimit: value => dispatch(limit(value)),
     updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
+
+    selectGroup: algorithm => dispatch(selectGroup(algorithm)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewApp)

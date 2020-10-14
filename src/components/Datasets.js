@@ -6,6 +6,8 @@ import {sendMetrics} from "./metrics/sendMetrics";
 import Clipboard from "react-clipboard.js";
 import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 import {sampleGraphs} from "./SampleGraphs/sampleGraphs";
+import {useHistory} from "react-router-dom";
+import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 
 const selectedStyle = {background: "#e5f9e7"};
 
@@ -109,8 +111,8 @@ const Datasets = (props) => {
             case SELECT_ALGORITHM:
                 return {
                     header: "Choose algorithm",
-                    view: <SelectAlgorithms selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
-                                            selectGroup={selectGroup}/>,
+                    view: <SelectAlgorithms allDone={resetState} selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
+                                            selectGroup={selectGroup} metadata={props.metadata}/>,
                     next: <Button disabled={!nextEnabled} positive onClick={resetState}>All Done</Button>
                 }
             default:
@@ -239,7 +241,36 @@ const ImportDataset = ({selectedDataset, completedQueryIndexes, currentQueryInde
     </React.Fragment>
 }
 
-const SelectAlgorithms = ({selectedDataset, selectGroup, selectAlgorithm}) => {
+const SelectAlgorithms = (props) => {
+    const {selectedDataset, selectGroup, selectAlgorithm} = props
+
+    const history = useHistory();
+
+    const addLimits = (params) => {
+        return {
+            ...params,
+            limit: props.limit,
+            communityNodeLimit: props.communityNodeLimit
+        }
+    }
+
+    const generateAlgorithmState = (group, algorithm) => {
+        const {parameters, parametersBuilder} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+        const params = parametersBuilder({
+            ...parameters,
+            requiredProperties: Object.keys(parameters)
+        })
+
+        const formParameters = addLimits(parameters);
+        return {
+            group: group,
+            algorithm: algorithm,
+            newParameters: params,
+            formParameters: formParameters
+        }
+    }
+
+
     return <React.Fragment>
         <p>The following algorithms are well suited to the {selectedDataset} sample graph:</p>
 
@@ -264,8 +295,11 @@ const SelectAlgorithms = ({selectedDataset, selectGroup, selectAlgorithm}) => {
                                         category: item.category,
                                         name: item.name
                                     });
-                                    selectGroup(item.category);
-                                    selectAlgorithm(item.name);
+                                    history.push({
+                                        pathname: '/algorithms/new',
+                                        state: generateAlgorithmState(item.category, item.name)
+                                    })
+                                    props.allDone()
                                 }}>
                                     Try it out
                                 </Button>
