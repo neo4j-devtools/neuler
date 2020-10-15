@@ -4,6 +4,7 @@ import {Form, Image, Message} from "semantic-ui-react"
 import {checkApocInstalled, checkApocMetaProcedureAvailable} from "../services/installation"
 import {sendMetrics} from "./metrics/sendMetrics";
 import Clipboard from "react-clipboard.js";
+import {publicPathTo} from "./AlgorithmGroupsMenu";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
@@ -73,7 +74,7 @@ const MissingLibraryOnDesktop = () => {
     return <React.Fragment>
         <Form className='attached fluid segment'>
             <div align="center" className='attached fluid segment'>
-                <Image src='images/apoc-plugin.png'/>
+                <Image  src= {publicPathTo("images/apoc-plugin.png")}/>
             </div>
         </Form>
 

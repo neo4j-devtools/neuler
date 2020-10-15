@@ -3,6 +3,7 @@ import {Form, Image, Message} from "semantic-ui-react"
 
 import {checkGraphAlgorithmsInstalled} from "../services/installation"
 import {sendMetrics} from "./metrics/sendMetrics";
+import {publicPathTo} from "./AlgorithmGroupsMenu";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
@@ -38,7 +39,7 @@ const MissingLibraryOnDesktop = () => {
     return <React.Fragment>
         <Form className='attached fluid segment'>
             <div align="center" className='attached fluid segment'>
-                <Image src='images/gds-plugin.png'/>
+                <Image src= {publicPathTo("images/gds-plugin.png")}  />
             </div>
         </Form>
         <Message color="grey" attached={true} align="center" className="loading-message">

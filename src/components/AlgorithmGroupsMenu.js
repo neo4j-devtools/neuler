@@ -3,17 +3,24 @@ import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
-import {Link, NavLink} from "react-router-dom";
+import {NavLink} from "react-router-dom";
+
 
 const navStyle = {
     padding: "11px"
+}
+
+const url = new URL(window.location.href)
+export const publicPathTo = (append) => {
+    if ( url.protocol.includes('http') ) return `/${append}`
+    return `${url.protocol}//${url.pathname.split('/dist/')[0]}/dist/${append}`
 }
 
 const AlgorithmsGroupMenu = ({setAboutActive, setDatasetsActive}) =>
     <header
         style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "37px"}}>
         <div style={{display: "flex"}}>
-            <Image src="images/noun_Sandbox Toys_1207953.png" style={{height: "37px"}} />
+            <Image src={publicPathTo("images/noun_Sandbox Toys_1207953.png")} style={{height: "37px"}} />
             <span style={{padding: "10px 0 10px 0"}}>NEuler</span>
         </div>
         <div style={navStyle}>

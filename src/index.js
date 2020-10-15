@@ -102,6 +102,7 @@ const mapDispatchToProps = dispatch => ({
 
 const RenderComponent = connect(mapStateToProps, mapDispatchToProps)(RenderComponentView)
 
+
 ReactDOM.render(
     <Provider store={store}>
         <PersistGate loading={LoaderComponent} persistor={persistor}>
@@ -131,7 +132,7 @@ ReactDOM.render(
                            render={routeProps => (
                                <App {...routeProps} />
                            )}/>
-                    <Route exact path="/"
+                    <Route path="/"
                            render={routeProps => (
                                <RenderComponent routeProps={routeProps} View={Home} />
                            )}/>

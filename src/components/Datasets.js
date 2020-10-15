@@ -112,7 +112,7 @@ const Datasets = (props) => {
                 return {
                     header: "Choose algorithm",
                     view: <SelectAlgorithms allDone={resetState} selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
-                                            selectGroup={selectGroup} metadata={props.metadata}/>,
+                                            selectGroup={selectGroup} metadata={props.metadata} limit={props.limit} communityNodeLimit={props.communityNodeLimit}/>,
                     next: <Button disabled={!nextEnabled} positive onClick={resetState}>All Done</Button>
                 }
             default:
@@ -315,7 +315,9 @@ const SelectAlgorithms = (props) => {
 
 
 const mapStateToProps = state => ({
-    metadata: state.metadata
+   metadata: state.metadata,
+    limit: state.settings.limit,
+    communityNodeLimit: state.settings.communityNodeLimit,
 })
 
 const mapDispatchToProps = dispatch => ({
