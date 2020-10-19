@@ -13,7 +13,6 @@ import {connect, Provider} from 'react-redux'
 import rootReducer from './ducks'
 import WebApp from "./components/Startup/WebApp";
 import  {Redirect, BrowserRouter as Router, Route, Switch} from "react-router-dom";
-import {Recipe} from "./components/Recipe";
 import AlgorithmsGroupMenu from "./components/AlgorithmGroupsMenu";
 import {FeedbackForm} from "./components/Feedback/FeedbackForm";
 import About from "./components/About";
@@ -34,6 +33,7 @@ import {addDatabase, initLabel} from "./ducks/settings";
 import MainContent from "./components/MainContent";
 import {NewAlgorithm} from "./components/NewAlgorithm";
 import {refreshMetadata} from "./components/Startup/startup";
+import {Recipe} from "./components/Recipe";
 
 // Import apollo client nethods from services
 
@@ -61,6 +61,7 @@ const App = isNeo4jDesktop ? DesktopApp : WebApp
 
 const RenderComponentView = (props) => {
     const {View, connectionInfo, routeProps, activeAlgorithm, activeGroup} = props
+    console.log("View", View)
     if(!connectionInfo.credentials) {
         return <Redirect to="/login" />
     }
@@ -108,11 +109,11 @@ ReactDOM.render(
         <PersistGate loading={LoaderComponent} persistor={persistor}>
             <Router>
                 <Switch>
-                    {/*<Route path="/recipes"*/}
-                    {/*       render={routeProps => (*/}
-                    {/*           <RenderComponent view={<Recipe {...routeProps} />} />*/}
-                    {/*       )}*/}
-                    {/*/>*/}
+                    <Route path="/recipes"
+                           render={routeProps => (
+                               <RenderComponent routeProps={routeProps} View={Recipe} />
+                           )}
+                    />
                     <Route path="/database"
                            render={routeProps => (
                                <RenderComponent routeProps={routeProps} View={SelectDatabase} />
