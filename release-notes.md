@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.40 (2020-10-19)
+
+* UI redesign to make it easier to find all algorithms
+* Changed the procedure that loads node properties to be one in APOC Core
+
 ## 0.1.39 (2020-09-28)
 
 * add feedback form to startup
