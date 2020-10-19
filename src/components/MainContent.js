@@ -48,7 +48,7 @@ const MainContent = (props) => {
                 </div>
 
                 {props.tasks.map(task =>
-                    <div className="algorithm-item">
+                    <div className="algorithm-item" key={task.taskId}>
                         <Link to={"/algorithms/" + task.taskId} >{task.group} / {task.algorithm}</Link>
 
                         <Button onClick={() => {

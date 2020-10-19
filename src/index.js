@@ -60,12 +60,11 @@ const isNeo4jDesktop = !!window.neo4jDesktopApi
 const App = isNeo4jDesktop ? DesktopApp : WebApp
 
 const RenderComponentView = (props) => {
-    const {View, connectionInfo, routeProps} = props
+    const {View, connectionInfo, routeProps, activeAlgorithm, activeGroup} = props
     if(!connectionInfo.credentials) {
         return <Redirect to="/login" />
     }
-
-    const page = "test"
+    const page = activeAlgorithm ?  `${constants.version}:${routeProps.location.pathname}:${activeGroup}/${activeAlgorithm}` : `${constants.version}:${routeProps.location.pathname}`
     const [aboutActive, setAboutActive] = React.useState(false)
     const [datasetsActive, setDatasetsActive] = React.useState(false)
 
@@ -82,6 +81,7 @@ const RenderComponentView = (props) => {
 
 const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,
+    activeAlgorithm: state.algorithms.algorithm,
     metadata: state.metadata,
     labels: state.settings.labels,
     connectionInfo: state.connections,

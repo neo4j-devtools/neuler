@@ -22,7 +22,7 @@ export default ({ task }) => (
             <Table.Cell>{result.community}</Table.Cell>
             <Table.Cell>{result.size}</Table.Cell>
             <Table.Cell>
-              {result.nodes.map(node => <PropertiesView properties={node.properties} labels={node.labels} database={task.database}/>)}
+              {result.nodes.map((node, idx) => <PropertiesView key={"properties-" + idx} properties={node.properties} labels={node.labels} database={task.database}/>)}
             </Table.Cell>
           </Table.Row>
         ) :
