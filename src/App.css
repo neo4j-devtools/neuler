@@ -226,12 +226,13 @@ div.connection-item.update {
 
 div.recipe {
   display: flex;
+  height: 850px;
 }
 
 div.recipe div.left {
   width: 20rem;
   background: hsl(214, 15%, 91%);
-  border-radius: 0.3rem 0 0 0.3rem;
+  border-radius: 0.3rem 0 0 0;
   padding: 0.5rem;
 }
 
@@ -239,7 +240,30 @@ div.recipe div.right {
   flex-grow: 1;
   padding: 0.5rem;
   background: hsl(216, 33%, 97%);
-  border-radius: 0 0.3rem 0.3rem 0;
+  border-radius: 0 0.3rem 0 0;
+  overflow: auto;
+}
+
+div.recipe-navigation {
+  padding: 10px;
+  background: hsl(211, 12%, 43%);
+  border-radius: 0 0 0.3rem 0.3rem;
+  color: hsl(216, 33%, 97%);
+  text-align: center;
+}
+
+div.recipe-navigation i {
+  margin: 10px;
+  cursor: pointer;
+}
+
+div.recipe-navigation i.disabled {
+  margin: 10px;
+  cursor: auto;
+}
+
+div.recipe-navigation span {
+  vertical-align: middle;
 }
 
 div.top-level-container {
