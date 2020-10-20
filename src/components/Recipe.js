@@ -118,7 +118,6 @@ const IndividualRecipe = (props) => {
     }
 
     const selectedRecipe = recipes[recipeId]
-
     const [selectedSlide, setSelectedSlide] = React.useState(0)
     const maxSlide = selectedRecipe.slides.length
 
@@ -131,7 +130,6 @@ const IndividualRecipe = (props) => {
         ...parameters,
         requiredProperties: Object.keys(parameters)
     })
-
 
     const formParameters = addLimits(parameters);
     const taskId = generateTaskId()
@@ -168,6 +166,8 @@ const IndividualRecipe = (props) => {
         setActiveResultsItem(name)
     }
 
+    console.log("task", task)
+
     return task && <React.Fragment>
         <nav className="top-nav">
             <Button onClick={() => {
@@ -180,9 +180,7 @@ const IndividualRecipe = (props) => {
         </div>
         <div style={containerStyle}>
             <Container fluid>
-
                 <p>{recipes[recipeId].shortDescription}</p>
-
                 <div className="recipes">
                     <div className="recipe">
                         <div className="left">
@@ -192,7 +190,7 @@ const IndividualRecipe = (props) => {
                             {recipes[recipeId].slides[selectedSlide].description}
                         </div>
                         <div className="right">
-                            <SuccessTopBar task={task} panelRef={props.panelRef} activeItem={props.activeItem}
+                            <SuccessTopBar task={task} panelRef={props.panelRef} activeItem={activeItem}
                                            activeGroup="Configure"
                                            handleMenuItemClick={(e, {name}) => setActiveItem(name)}
                             />
@@ -205,37 +203,29 @@ const IndividualRecipe = (props) => {
                                         onRun={(newParameters, formParameters, persisted) => {
                                             onRunAlgo(task, newParameters, formParameters, persisted, props.metadata.versions,
                                                 (taskId, result, error) => {
-                                                    console.log("completed...")
-                                                    const newTask = Object.assign({}, task)
-                                                    if (error) {
-                                                        newTask.error = error
-                                                        newTask.status = FAILED
-                                                    } else {
-                                                        newTask.result = result
-                                                        newTask.status = COMPLETED
-                                                    }
-                                                    console.log("onRunAlgo:task", task)
-                                                    setTask(newTask)
+                                                    setTask(task => {
+                                                        return error ? {
+                                                            ...task, result, status: FAILED
+                                                        } : {
+                                                            ...task, result, status: COMPLETED
+                                                        };
+
+                                                    })
                                                 },
                                                 () => {
                                                 },
                                                 (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
-                                                    console.log("running...")
-                                                    const newTask = Object.assign({}, task)
-                                                    newTask.status = RUNNING
-                                                    newTask.query = query
-                                                    newTask.namedGraphQueries = namedGraphQueries
-                                                    newTask.parameters = parameters
-                                                    newTask.formParameters = formParameters
-                                                    newTask.persisted = persisted
-                                                    newTask.result = null
-                                                    console.log("runTask:task", task)
-                                                    setTask(newTask)
+                                                    setTask(task => {
+                                                        return {
+                                                            ...task,
+                                                            status: RUNNING, query, namedGraphQueries, parameters, formParameters,
+                                                            persisted,
+                                                            result: null
+                                                        }
+                                                    })
                                                 })
                                         }}
-                                        onCopy={(group, algorithm, newParameters, formParameters) => {
-                                            console.log("copy algorithm")
-                                        }}
+                                        onCopy={(group, algorithm, newParameters, formParameters) => {}}
                                     />
                                 </div>
 
