@@ -98,13 +98,11 @@ const RecipeView = (props) => {
 
 const IndividualRecipe = (props) => {
     const panelRef = React.createRef()
-    const [activeItem, setActiveItem] = React.useState("Configure")
-    const [activeResultsItem, setActiveResultsItem] = React.useState("Table")
     const [selectedSlide, setSelectedSlide] = React.useState(0)
 
-    const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
-    const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
-    const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
+    const getStyle = name => name === selectedTask.activeItem ? {display: ''} : {display: 'none'}
+    const getStyleResultsTab = name => name === selectedTask.activeItem ? {display: 'flex'} : {display: 'none'}
+    const getResultsStyle = name => name === selectedTask.activeResultsItem ? {display: ''} : {display: 'none'}
 
     const history = useHistory();
     const [localRecipes, setLocalRecipes] = React.useState(recipes)
@@ -119,25 +117,7 @@ const IndividualRecipe = (props) => {
 
     const {recipeId} = useParams();
 
-    if (!localRecipes[recipeId].slides[selectedSlide].task) {
-        setLocalRecipes(localRecipes => {
-            const newLocalRecipes = Object.assign({}, localRecipes)
-            newLocalRecipes[recipeId].slides[selectedSlide].task = {
-                group: group,
-                algorithm: algorithm,
-                status: ADDED,
-                taskId,
-                parameters: params,
-                formParameters,
-                persisted: false,
-                startTime: new Date(),
-                database: getActiveDatabase()
-            }
-            return newLocalRecipes
-        })
-    }
-
-    React.useEffect(() => {
+    const addTaskIfMissing = () => {
         if (!localRecipes[recipeId].slides[selectedSlide].task) {
             setLocalRecipes(localRecipes => {
                 const newLocalRecipes = Object.assign({}, localRecipes)
@@ -150,12 +130,20 @@ const IndividualRecipe = (props) => {
                     formParameters,
                     persisted: false,
                     startTime: new Date(),
-                    database: getActiveDatabase()
+                    database: getActiveDatabase(),
+                    activeItem: "Configure",
+                    activeResultsItem: "Table"
                 }
                 return newLocalRecipes
             })
         }
-    }, [selectedSlide])
+    }
+
+    addTaskIfMissing()
+
+    React.useEffect(() => {
+        addTaskIfMissing()
+    }, [selectedSlide, recipeId])
 
     const selectedRecipe = localRecipes[recipeId]
     const maxSlide = selectedRecipe.slides.length
@@ -173,13 +161,11 @@ const IndividualRecipe = (props) => {
     const taskId = generateTaskId()
 
     const handleResultsMenuItemClick = (e, {name}) => {
-        setActiveResultsItem(name)
+        updateSelectedTask({activeResultsItem: name})
     }
 
     const selectedTask = selectedRecipe.slides[selectedSlide].task
     const activeGroup = selectedTask && selectedTask.group
-
-    console.log("task", selectedTask, "selectedSlide", selectedSlide, "localRecipes", localRecipes)
 
     const updateSelectedTask = (updates) => {
         setLocalRecipes(localRecipes => {
@@ -212,9 +198,9 @@ const IndividualRecipe = (props) => {
                             {selectedRecipe.slides[selectedSlide].description}
                         </div>
                         <div className="right">
-                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef} activeItem={activeItem}
+                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef} activeItem={selectedTask.activeItem}
                                            activeGroup="Configure"
-                                           handleMenuItemClick={(e, {name}) => setActiveItem(name)}
+                                           handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
                             />
                             <div ref={panelRef}>
                                 <div style={getStyle("Configure")}>
@@ -234,6 +220,7 @@ const IndividualRecipe = (props) => {
                                                 () => {
                                                 },
                                                 (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
+                                                    updateSelectedTask({activeItem: "Results"})
                                                     updateSelectedTask({
                                                         status: RUNNING,
                                                         query,
@@ -254,21 +241,21 @@ const IndividualRecipe = (props) => {
                                         <Menu pointing secondary vertical className="resultsMenu">
                                             <Menu.Item
                                                 name='Table'
-                                                active={activeResultsItem === 'Table'}
+                                                active={selectedTask.activeItem === 'Table'}
                                                 onClick={handleResultsMenuItemClick}
                                             />
 
                                             {getGroup(selectedTask.algorithm) === "Centralities" &&
                                             <Menu.Item
                                                 name='Chart'
-                                                active={activeResultsItem === 'Chart'}
+                                                active={selectedTask.activeResultsItem === 'Chart'}
                                                 onClick={handleResultsMenuItemClick}
                                             />}
 
                                             {!(getGroup(selectedTask.algorithm) === 'Path Finding' || getGroup(selectedTask.algorithm) === 'Similarity') &&
                                             <Menu.Item
                                                 name='Visualisation'
-                                                active={activeResultsItem === 'Visualisation'}
+                                                active={selectedTask.activeResultsItem === 'Visualisation'}
                                                 onClick={handleResultsMenuItemClick}
                                             />}
 
@@ -277,12 +264,12 @@ const IndividualRecipe = (props) => {
                                     <div style={{flexGrow: "1", paddingLeft: "10px"}}>
                                         {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                                             <div style={getResultsStyle('Visualisation')}>
-                                                <VisView task={selectedTask} active={activeResultsItem === 'Visualisation'}/>
+                                                <VisView task={selectedTask} active={selectedTask.activeResultsItem === 'Visualisation'}/>
                                             </div> : null}
 
                                         {activeGroup === 'Centralities' ?
                                             <div style={getResultsStyle('Chart')}>
-                                                <ChartView task={selectedTask} active={activeResultsItem === 'Chart'}/>
+                                                <ChartView task={selectedTask} active={selectedTask.activeResultsItem === 'Chart'}/>
                                             </div> : null}
 
                                         <div style={getResultsStyle('Table')}>
