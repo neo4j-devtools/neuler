@@ -14,7 +14,7 @@ import {communityNodeLimit, limit} from "../ducks/settings";
 import {AlgoFormView} from "./AlgorithmForm";
 import {VisView} from "./Results/VisView";
 
-import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
+import {Route, Switch, useHistory, useParams, useLocation, useRouteMatch} from "react-router-dom";
 import {onRunAlgo} from "../services/tasks";
 
 const containerStyle = {
@@ -100,14 +100,14 @@ const IndividualRecipe = (props) => {
     const panelRef = React.createRef()
     const [activeItem, setActiveItem] = React.useState("Configure")
     const [activeResultsItem, setActiveResultsItem] = React.useState("Table")
+    const [selectedSlide, setSelectedSlide] = React.useState(0)
 
     const getStyle = name => name === activeItem ? {display: ''} : {display: 'none'}
     const getStyleResultsTab = name => name === activeItem ? {display: 'flex'} : {display: 'none'}
     const getResultsStyle = name => name === activeResultsItem ? {display: ''} : {display: 'none'}
 
     const history = useHistory();
-
-    const {recipeId} = useParams();
+    const [localRecipes, setLocalRecipes] = React.useState(recipes)
 
     const addLimits = (params) => {
         return {
@@ -117,10 +117,48 @@ const IndividualRecipe = (props) => {
         }
     }
 
-    const selectedRecipe = recipes[recipeId]
-    const [selectedSlide, setSelectedSlide] = React.useState(0)
-    const maxSlide = selectedRecipe.slides.length
+    const {recipeId} = useParams();
 
+    if (!localRecipes[recipeId].slides[selectedSlide].task) {
+        setLocalRecipes(localRecipes => {
+            const newLocalRecipes = Object.assign({}, localRecipes)
+            newLocalRecipes[recipeId].slides[selectedSlide].task = {
+                group: group,
+                algorithm: algorithm,
+                status: ADDED,
+                taskId,
+                parameters: params,
+                formParameters,
+                persisted: false,
+                startTime: new Date(),
+                database: getActiveDatabase()
+            }
+            return newLocalRecipes
+        })
+    }
+
+    React.useEffect(() => {
+        if (!localRecipes[recipeId].slides[selectedSlide].task) {
+            setLocalRecipes(localRecipes => {
+                const newLocalRecipes = Object.assign({}, localRecipes)
+                newLocalRecipes[recipeId].slides[selectedSlide].task = {
+                    group: group,
+                    algorithm: algorithm,
+                    status: ADDED,
+                    taskId,
+                    parameters: params,
+                    formParameters,
+                    persisted: false,
+                    startTime: new Date(),
+                    database: getActiveDatabase()
+                }
+                return newLocalRecipes
+            })
+        }
+    }, [selectedSlide])
+
+    const selectedRecipe = localRecipes[recipeId]
+    const maxSlide = selectedRecipe.slides.length
     const group = selectedRecipe.slides[selectedSlide].group
     const algorithm = selectedRecipe.slides[selectedSlide].algorithm
 
@@ -134,41 +172,25 @@ const IndividualRecipe = (props) => {
     const formParameters = addLimits(parameters);
     const taskId = generateTaskId()
 
-    const [task, setTask] = React.useState({
-        group: group,
-        algorithm: algorithm,
-        status: ADDED,
-        taskId,
-        parameters: params,
-        formParameters,
-        persisted: false,
-        startTime: new Date(),
-        database: getActiveDatabase()
-    })
-
-    React.useEffect(() => {
-        setTask({
-            group: group,
-            algorithm: algorithm,
-            status: ADDED,
-            taskId,
-            parameters: params,
-            formParameters,
-            persisted: false,
-            startTime: new Date(),
-            database: getActiveDatabase()
-        })
-    }, [selectedSlide])
-
-    const activeGroup = task && task.group
-
     const handleResultsMenuItemClick = (e, {name}) => {
         setActiveResultsItem(name)
     }
 
-    console.log("task", task)
+    const selectedTask = selectedRecipe.slides[selectedSlide].task
+    const activeGroup = selectedTask && selectedTask.group
 
-    return task && <React.Fragment>
+    console.log("task", selectedTask, "selectedSlide", selectedSlide, "localRecipes", localRecipes)
+
+    const updateSelectedTask = (updates) => {
+        setLocalRecipes(localRecipes => {
+            const newLocalRecipes = Object.assign({}, localRecipes)
+            const existingTask = newLocalRecipes[recipeId].slides[selectedSlide].task
+            newLocalRecipes[recipeId].slides[selectedSlide].task = {...existingTask, ...updates}
+            return newLocalRecipes
+        })
+    }
+
+    return selectedTask && <React.Fragment>
         <nav className="top-nav">
             <Button onClick={() => {
 
@@ -176,21 +198,21 @@ const IndividualRecipe = (props) => {
             }} icon="left arrow" labelPosition="left" content="All algorithm recipes" className="back-to-algorithms"/>
         </nav>
         <div className="page-heading">
-            {recipes[recipeId].name}
+            {selectedRecipe.name}
         </div>
         <div style={containerStyle}>
             <Container fluid>
-                <p>{recipes[recipeId].shortDescription}</p>
+                <p>{selectedRecipe.shortDescription}</p>
                 <div className="recipes">
                     <div className="recipe">
                         <div className="left">
                           <span className="recipe-heading">
-                              {recipes[recipeId].slides[selectedSlide].title}
+                              {selectedRecipe.slides[selectedSlide].title}
                           </span>
-                            {recipes[recipeId].slides[selectedSlide].description}
+                            {selectedRecipe.slides[selectedSlide].description}
                         </div>
                         <div className="right">
-                            <SuccessTopBar task={task} panelRef={props.panelRef} activeItem={activeItem}
+                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef} activeItem={activeItem}
                                            activeGroup="Configure"
                                            handleMenuItemClick={(e, {name}) => setActiveItem(name)}
                             />
@@ -198,30 +220,28 @@ const IndividualRecipe = (props) => {
                                 <div style={getStyle("Configure")}>
                                     <AlgoForm
                                         selectedAlgorithmReadOnly={true}
-                                        task={task}
+                                        task={selectedTask}
                                         limit={props.limit}
                                         onRun={(newParameters, formParameters, persisted) => {
-                                            onRunAlgo(task, newParameters, formParameters, persisted, props.metadata.versions,
+                                            onRunAlgo(selectedTask, newParameters, formParameters, persisted, props.metadata.versions,
                                                 (taskId, result, error) => {
-                                                    setTask(task => {
-                                                        return error ? {
-                                                            ...task, result, status: FAILED
-                                                        } : {
-                                                            ...task, result, status: COMPLETED
-                                                        };
-
-                                                    })
+                                                    if (error) {
+                                                        updateSelectedTask({status: FAILED, result, completed: true})
+                                                    } else {
+                                                        updateSelectedTask({status: COMPLETED, result, completed: true})
+                                                    }
                                                 },
                                                 () => {
                                                 },
                                                 (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
-                                                    setTask(task => {
-                                                        return {
-                                                            ...task,
-                                                            status: RUNNING, query, namedGraphQueries, parameters, formParameters,
-                                                            persisted,
-                                                            result: null
-                                                        }
+                                                    updateSelectedTask({
+                                                        status: RUNNING,
+                                                        query,
+                                                        namedGraphQueries,
+                                                        parameters,
+                                                        formParameters,
+                                                        persisted,
+                                                        result: null
                                                     })
                                                 })
                                         }}
@@ -238,14 +258,14 @@ const IndividualRecipe = (props) => {
                                                 onClick={handleResultsMenuItemClick}
                                             />
 
-                                            {getGroup(task.algorithm) === "Centralities" &&
+                                            {getGroup(selectedTask.algorithm) === "Centralities" &&
                                             <Menu.Item
                                                 name='Chart'
                                                 active={activeResultsItem === 'Chart'}
                                                 onClick={handleResultsMenuItemClick}
                                             />}
 
-                                            {!(getGroup(task.algorithm) === 'Path Finding' || getGroup(task.algorithm) === 'Similarity') &&
+                                            {!(getGroup(selectedTask.algorithm) === 'Path Finding' || getGroup(selectedTask.algorithm) === 'Similarity') &&
                                             <Menu.Item
                                                 name='Visualisation'
                                                 active={activeResultsItem === 'Visualisation'}
@@ -257,23 +277,23 @@ const IndividualRecipe = (props) => {
                                     <div style={{flexGrow: "1", paddingLeft: "10px"}}>
                                         {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                                             <div style={getResultsStyle('Visualisation')}>
-                                                <VisView task={task} active={activeResultsItem === 'Visualisation'}/>
+                                                <VisView task={selectedTask} active={activeResultsItem === 'Visualisation'}/>
                                             </div> : null}
 
                                         {activeGroup === 'Centralities' ?
                                             <div style={getResultsStyle('Chart')}>
-                                                <ChartView task={task} active={activeResultsItem === 'Chart'}/>
+                                                <ChartView task={selectedTask} active={activeResultsItem === 'Chart'}/>
                                             </div> : null}
 
                                         <div style={getResultsStyle('Table')}>
-                                            <TableView task={task} gdsVersion={props.gdsVersion}/>
+                                            <TableView task={selectedTask} gdsVersion={props.gdsVersion}/>
                                         </div>
                                     </div>
 
                                 </div>
 
                                 <div style={getStyle('Code')}>
-                                    <CodeView task={task}/>
+                                    <CodeView task={selectedTask}/>
                                 </div>
 
                             </div>

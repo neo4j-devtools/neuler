@@ -61,7 +61,6 @@ const App = isNeo4jDesktop ? DesktopApp : WebApp
 
 const RenderComponentView = (props) => {
     const {View, connectionInfo, routeProps, activeAlgorithm, activeGroup} = props
-    console.log("View", View)
     if(!connectionInfo.credentials) {
         return <Redirect to="/login" />
     }
