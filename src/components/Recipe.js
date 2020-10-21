@@ -14,7 +14,7 @@ import {communityNodeLimit, limit} from "../ducks/settings";
 import {AlgoFormView} from "./AlgorithmForm";
 import {VisView} from "./Results/VisView";
 
-import {Route, Switch, useHistory, useParams, useLocation, useRouteMatch} from "react-router-dom";
+import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
 import {onRunAlgo} from "../services/tasks";
 
 const containerStyle = {
@@ -232,7 +232,17 @@ const IndividualRecipe = (props) => {
                                                     })
                                                 })
                                         }}
-                                        onCopy={(group, algorithm, newParameters, formParameters) => {}}
+                                        onCopy={(group, algorithm, newParameters, formParameters) => {
+                                            updateSelectedTask({
+                                                status: ADDED,
+                                                result: null,
+                                                query: null,
+                                                namedGraphQueries: null,
+                                                activeItem: "Configure",
+                                                formParameters,
+                                                parameters: newParameters
+                                            })
+                                        }}
                                     />
                                 </div>
 
