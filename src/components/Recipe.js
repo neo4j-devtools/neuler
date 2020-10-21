@@ -21,8 +21,6 @@ const containerStyle = {
     padding: '1em'
 }
 
-
-
 const recipes = {
     "directed-graph-influencers": {
         name: "Directed Graph Influencers",
@@ -57,6 +55,22 @@ const recipes = {
                     </p>
                     <p>
                         This means that it's not only how many incoming relationships that matters, it's also the importance of the nodes on the other side of that relationship.
+                    </p>
+                </React.Fragment>
+            },
+            {
+                group: "Centralities",
+                algorithm: "Betweenness",
+                title: "Betweenness Centrality",
+                description: <React.Fragment>
+                    <p>
+                        The Betweenness Centrality algorithm detects the amount of influence a node has over the flow of information in a graph.
+                    </p>
+                    <p>
+                        It is often used to find nodes that serve as a bridge from one part of a graph to another.
+                    </p>
+                    <p>
+                        We can use this algorithm to find nodes that are well connected to a sub graph within the larger graph.
                     </p>
                 </React.Fragment>
             }
