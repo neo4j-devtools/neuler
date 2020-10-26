@@ -1,8 +1,5 @@
-import  {Dropdown, Button, Form, Header, Icon, Image, Menu} from "semantic-ui-react";
+import {Dropdown, Form, Menu} from "semantic-ui-react";
 import React from "react";
-import html2canvas from "html2canvas";
-import {v4 as generateId} from "uuid";
-import {ReImg} from "reimg";
 import {ADDED, COMPLETED, RUNNING} from "../../ducks/tasks";
 
 // const printElement = element => {

@@ -231,6 +231,7 @@ div.recipe {
 
 div.recipe div.left {
   width: 20rem;
+  min-width: 20rem;
   background: hsl(214, 15%, 91%);
   border-radius: 0.3rem 0 0 0;
   padding: 0.5rem;

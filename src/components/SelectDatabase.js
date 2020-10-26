@@ -1,4 +1,4 @@
-import {Button, Container, Dropdown, Header, Icon, List, Loader, Message} from "semantic-ui-react"
+import {Button, Container, Dropdown, List, Loader, Message} from "semantic-ui-react"
 import React from 'react'
 
 import {selectGroup} from "../ducks/algorithms"

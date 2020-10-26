@@ -5,7 +5,7 @@ import {getAlgorithmDefinitions, getGroup} from "./algorithmsLibrary";
 import {v4 as generateTaskId} from "uuid";
 import {ADDED, COMPLETED, FAILED, removeTask, RUNNING} from "../ducks/tasks";
 import {getActiveDatabase} from "../services/stores/neoStore";
-import {Button, Card, CardGroup, Container, Icon, Menu} from "semantic-ui-react";
+import {Button, Card, CardGroup, Container, Icon, Menu, Message} from "semantic-ui-react";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import CodeView from "./CodeView";
@@ -25,6 +25,7 @@ import {
     setRelationshipTypes,
     setVersions
 } from "../ducks/metadata";
+import {FailedTopBar} from "./Results/FailedTopBar";
 
 const containerStyle = {
     padding: '1em'
@@ -269,11 +270,16 @@ const IndividualRecipeView = (props) => {
                             {selectedRecipe.slides[selectedSlide].description}
                         </div>
                         <div className="right">
-                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef}
+                            { selectedTask.completed && selectedTask.status !== FAILED &&  <SuccessTopBar task={selectedTask} panelRef={props.panelRef}
                                            activeItem={selectedTask.activeItem}
                                            activeGroup="Configure"
                                            handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
-                            />
+                            />}
+
+                            { selectedTask.completed && selectedTask.status === FAILED &&  <FailedTopBar activeItem={selectedTask.activeItem}
+                                                                                                          handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
+                            />}
+
                             <div ref={panelRef}>
                                 <div style={getStyle("Configure")}>
                                     <AlgoForm
@@ -284,13 +290,12 @@ const IndividualRecipeView = (props) => {
                                             onRunAlgo(selectedTask, newParameters, formParameters, persisted, props.metadata.versions,
                                                 (taskId, result, error) => {
                                                     if (error) {
-                                                        updateSelectedTask({status: FAILED, result, completed: true})
+                                                        updateSelectedTask({status: FAILED, result, error, completed: true})
                                                     } else {
                                                         updateSelectedTask({status: COMPLETED, result, completed: true})
 
                                                         const overrides = selectedRecipe.slides[selectedSlide].overrides;
                                                         const formParametersToPassOn = overrides.formParametersToPassOn || []
-
                                                         updateSlide(overrides.slidesToUpdate,
                                                             Object.assign({}, ...formParametersToPassOn.map(key => ({[key.target]: formParameters[key.source]})))
                                                         )
@@ -300,8 +305,8 @@ const IndividualRecipeView = (props) => {
                                                     refreshMetadata(props)
                                                 },
                                                 (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
-                                                    updateSelectedTask({activeItem: "Results"})
                                                     updateSelectedTask({
+                                                        activeItem: "Results",
                                                         status: RUNNING,
                                                         query,
                                                         namedGraphQueries,
@@ -326,7 +331,7 @@ const IndividualRecipeView = (props) => {
                                     />
                                 </div>
 
-                                <div style={getStyleResultsTab("Results")}>
+                                {selectedTask.completed && selectedTask.status !== FAILED && <div style={getStyleResultsTab("Results")}>
                                     <div>
                                         <Menu pointing secondary vertical className="resultsMenu">
                                             <Menu.Item
@@ -368,8 +373,14 @@ const IndividualRecipeView = (props) => {
                                             <TableView task={selectedTask} gdsVersion={props.metadata.versions.gdsVersion}/>
                                         </div>
                                     </div>
+                                </div>}
+                                {selectedTask.completed && selectedTask.status === FAILED &&  <div style={getStyleResultsTab('Results')}>
+                                    <Message warning compact>
+                                        <Message.Header>Algorithm failed to complete</Message.Header>
+                                        <p>{selectedTask.error}</p>
+                                    </Message>
+                                </div> }
 
-                                </div>
 
                                 <div style={getStyle('Code')}>
                                     <CodeView task={selectedTask}/>
