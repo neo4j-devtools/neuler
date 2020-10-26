@@ -2,7 +2,6 @@ import React from 'react'
 import {Container, Divider, Segment} from "semantic-ui-react"
 
 import '../../App.css'
-import NEuler from "../NEuler"
 import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {
@@ -22,7 +21,9 @@ import {
     CHECKING_APOC_PLUGIN,
     CHECKING_GDS_PLUGIN,
     CONNECTING_TO_DATABASE,
-    refreshMetadata, SELECT_DATABASE, setLimitDefaults,
+    refreshMetadata,
+    SELECT_DATABASE,
+    setLimitDefaults,
     webAppSteps
 } from "./startup";
 import * as qs from "qs";

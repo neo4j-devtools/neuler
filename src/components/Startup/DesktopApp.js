@@ -2,7 +2,6 @@ import React from 'react'
 import {Container, Divider, Segment} from "semantic-ui-react"
 
 import '../../App.css'
-import NEuler from "../NEuler"
 import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {

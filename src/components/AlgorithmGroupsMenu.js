@@ -28,9 +28,8 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
         <div style={navStyle}>
             <nav>
                 <NavLink exact={true} activeClassName="selected" to="/">Home</NavLink>
-                <NavLink activeClassName="selected" to="/algorithms">Run Algorithms</NavLink>
-                <NavLink activeClassName="selected" to="/database">Configure Database</NavLink>
-                <NavLink activeClassName="selected" to="/recipes">Recipes</NavLink>
+                <NavLink activeClassName="selected" to="/algorithms">Run Single Algorithm</NavLink>
+                <NavLink activeClassName="selected" to="/recipes">Run Algorithm Recipe</NavLink>
             </nav>
         </div>
         <div style={navStyle}>
@@ -38,7 +37,7 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
 
                 <Popup trigger={<Icon name="setting" size="large" />} flowing hoverable className="about-menu">
                     <List>
-                        <List.Item>
+                        <List.Item className="connection-list-item">
                             <List className="connection">
                                 <List.Item className="connection-item">
                                     <label>Username</label>
@@ -53,6 +52,10 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
                                     <span>{metadata.activeDatabase}</span>
                                 </List.Item>
                             </List>
+                            <div className="configure-database">
+                                <NavLink to="/database">Configure Database</NavLink>
+                            </div>
+
                         </List.Item>
 
                         <Divider />
@@ -63,6 +66,8 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
                             <List.Header as="a">Sample Graphs</List.Header>
                             </List.Content>
                         </List.Item>
+
+
                         <Divider />
                         <List.Item>
                             <Table basic='very' celled collapsing className="versions">
