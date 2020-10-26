@@ -229,6 +229,14 @@ div.about-menu div.connection-list-item div.configure-database {
   padding: 0.4em 0 .25em .5em;
 }
 
+table.versions {
+  padding: 0 5px 0 5px
+}
+
+div.ui.divider {
+  margin: 0.7rem 0;
+}
+
 div.connection label {
   width: 7em;
   display: inline-block;
@@ -353,7 +361,7 @@ div.algorithm-detail label {
   font-weight: 400;
 }
 
-div.algorithm-detail div {
+div.algorithm-detail div, div.configure-database {
   font-size: .92857143em;
   color: hsl(211, 12%, 43%);
   font-weight: 500;
@@ -432,4 +440,8 @@ a.about-menu img.ui.image {
 
 a.about-menu div.content a {
   padding: 3px;
+}
+
+a.about-menu {
+  margin: 0 0 0 0.3rem;
 }
