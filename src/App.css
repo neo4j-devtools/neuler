@@ -236,6 +236,32 @@ div.recipe div.left {
   padding: 0.5rem;
 }
 
+div.recipe div.left-right {
+  background: hsl(216, 33%, 97%);
+  border-radius: 0.3rem 0.3rem 0 0;
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+}
+
+div.recipe div.left-right div.title {
+  margin-bottom: 10px;
+}
+
+div.recipe div.left-right span.title {
+  font-size: 1.5rem;
+}
+
+div.recipe div.left-right div.algorithms {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+div.recipe-body {
+  padding: 10px
+}
+
 div.recipe div.right {
   flex-grow: 1;
   padding: 0.5rem;
@@ -337,6 +363,11 @@ div.algorithm-item:hover > button.close {
 
 .ui.new-algorithm.button {
   background: hsl(123, 57%, 45%);
+  color: #fff;
+}
+
+.ui.try-recipe.button {
+  background: hsl(228, 45%, 45%);
   color: #fff;
 }
 

@@ -3,19 +3,28 @@ import {selectAlgorithm} from "../ducks/algorithms";
 import React from "react";
 import {getAlgorithmDefinitions, getGroup} from "./algorithmsLibrary";
 import {v4 as generateTaskId} from "uuid";
-import {ADDED, COMPLETED, FAILED, RUNNING} from "../ducks/tasks";
+import {ADDED, COMPLETED, FAILED, removeTask, RUNNING} from "../ducks/tasks";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import {Button, Card, CardGroup, Container, Icon, Menu} from "semantic-ui-react";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import CodeView from "./CodeView";
 import {ChartView} from "./Results/ChartView";
-import {communityNodeLimit, limit} from "../ducks/settings";
+import {addDatabase, communityNodeLimit, initLabel, limit} from "../ducks/settings";
 import {AlgoFormView} from "./AlgorithmForm";
 import {VisView} from "./Results/VisView";
 
 import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
 import {onRunAlgo} from "../services/tasks";
+import {refreshMetadata} from "./Startup/startup";
+import {
+    setDatabases,
+    setLabels,
+    setNodePropertyKeys,
+    setPropertyKeys,
+    setRelationshipTypes,
+    setVersions
+} from "../ducks/metadata";
 
 const containerStyle = {
     padding: '1em'
@@ -25,11 +34,13 @@ const recipes = {
     "directed-graph-influencers": {
         name: "Directed Graph Influencers",
         shortDescription: "This recipe contains algorithms that find the most influential nodes in a directed graph.",
+        completionMessage: "You should now have a good idea about how to find the most influential or central nodes in your graph.",
         slides: [
             {
                 group: "Centralities",
                 algorithm: "Degree",
                 title: "Degree Centrality",
+                overrides: { formParameters: {} },
                 description: <React.Fragment>
                     <p>
                         Degree Centrality finds the most influential or central nodes in a graph based on the
@@ -49,6 +60,7 @@ const recipes = {
                 group: "Centralities",
                 algorithm: "Page Rank",
                 title: "Page Rank",
+                overrides: { formParameters: {} },
                 description: <React.Fragment>
                     <p>
                         Page Rank finds the nodes that have the great transitive influence.
@@ -62,6 +74,7 @@ const recipes = {
                 group: "Centralities",
                 algorithm: "Betweenness",
                 title: "Betweenness Centrality",
+                overrides: { formParameters: {} },
                 description: <React.Fragment>
                     <p>
                         The Betweenness Centrality algorithm detects the amount of influence a node has over the flow of information in a graph.
@@ -72,6 +85,36 @@ const recipes = {
                     <p>
                         We can use this algorithm to find nodes that are well connected to a sub graph within the larger graph.
                     </p>
+                </React.Fragment>
+            }
+        ]
+    },
+    "community-detection": {
+        name: "Community Detection on Multi Partite Graph",
+        shortDescription: "This recipe contains a sequence of algorithms for detecting communities in a multi partite (more than 1 label) graph.",
+        completionMessage: "You should now understand how to find communities in a graph containing multiple labels",
+        slides: [
+            {
+                group: "Similarity",
+                algorithm: "Jaccard",
+                title: "Jaccard Similarity",
+                overrides: {
+                    formParameters: {persist: true},
+                    parameters: {config: {}},
+                    formParametersToPassOn: [{source: "writeRelationshipType", target: "relationshipType"}],
+                    slidesToUpdate: [1]
+                },
+                description: <React.Fragment>
+                    <p>Node similarity blah blah</p>
+                </React.Fragment>
+            },
+            {
+                group: "Community Detection",
+                algorithm: "Label Propagation",
+                title: "Label Propagation",
+                overrides: { formParameters: {}, parameters: {config: {}} },
+                description: <React.Fragment>
+                    <p>LPA is the best</p>
                 </React.Fragment>
             }
         ]
@@ -101,24 +144,23 @@ const RecipeView = (props) => {
             </React.Fragment>
         </Route>
         <Route path={`${path}/:recipeId`}>
-            <IndividualRecipe
-                metadata={props.metadata}
-                limit={props.limit}
-                gdsVersion={props.metadata.versions.gdsVersion}
-            />
+            <IndividualRecipe />
         </Route>
     </Switch>
 }
 
-const IndividualRecipe = (props) => {
+const START = "start"
+const END = "end"
+const SLIDE = "slide"
+
+
+
+const IndividualRecipeView = (props) => {
     const panelRef = React.createRef()
     const [selectedSlide, setSelectedSlide] = React.useState(0)
+    const [page, setPage] = React.useState(START)
 
-    const getStyle = name => name === selectedTask.activeItem ? {display: ''} : {display: 'none'}
-    const getStyleResultsTab = name => name === selectedTask.activeItem ? {display: 'flex'} : {display: 'none'}
-    const getResultsStyle = name => name === selectedTask.activeResultsItem ? {display: ''} : {display: 'none'}
 
-    const history = useHistory();
     const [localRecipes, setLocalRecipes] = React.useState(recipes)
 
     const addLimits = (params) => {
@@ -132,14 +174,29 @@ const IndividualRecipe = (props) => {
     const {recipeId} = useParams();
 
     const addTaskIfMissing = () => {
-        if (!localRecipes[recipeId].slides[selectedSlide].task) {
+        const selectedRecipe = localRecipes[recipeId];
+        if (!selectedRecipe.slides[selectedSlide].task) {
             setLocalRecipes(localRecipes => {
                 const newLocalRecipes = Object.assign({}, localRecipes)
-                newLocalRecipes[recipeId].slides[selectedSlide].task = {
+                const group = selectedRecipe.slides[selectedSlide].group
+                const algorithm = selectedRecipe.slides[selectedSlide].algorithm
+                const {parameters, parametersBuilder} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
+
+                const parametersWithOverrides = Object.assign(parameters, selectedRecipe.slides[selectedSlide].overrides.formParameters)
+
+                const params = parametersBuilder({
+                    ...parametersWithOverrides,
+                    requiredProperties: Object.keys(parametersWithOverrides)
+                })
+
+                const formParameters = addLimits(parametersWithOverrides)
+                const taskId = generateTaskId()
+
+                selectedRecipe.slides[selectedSlide].task = {
                     group: group,
                     algorithm: algorithm,
                     status: ADDED,
-                    taskId,
+                    taskId: taskId,
                     parameters: params,
                     formParameters,
                     persisted: false,
@@ -153,30 +210,18 @@ const IndividualRecipe = (props) => {
         }
     }
 
-    addTaskIfMissing()
-
     React.useEffect(() => {
-        addTaskIfMissing()
-    }, [selectedSlide, recipeId])
+        if(page === SLIDE) {
+            addTaskIfMissing()
+        }
+    }, [selectedSlide, recipeId, page])
 
     const selectedRecipe = localRecipes[recipeId]
     const maxSlide = selectedRecipe.slides.length
-    const group = selectedRecipe.slides[selectedSlide].group
-    const algorithm = selectedRecipe.slides[selectedSlide].algorithm
 
-    const {parameters, parametersBuilder} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
-
-    const params = parametersBuilder({
-        ...parameters,
-        requiredProperties: Object.keys(parameters)
-    })
-
-    const formParameters = addLimits(parameters);
-    const taskId = generateTaskId()
-
-    const handleResultsMenuItemClick = (e, {name}) => {
-        updateSelectedTask({activeResultsItem: name})
-    }
+    const getStyle = name => name === selectedRecipe.slides[selectedSlide].task.activeItem ? {display: ''} : {display: 'none'}
+    const getStyleResultsTab = name => name === selectedRecipe.slides[selectedSlide].task.activeItem ? {display: 'flex'} : {display: 'none'}
+    const getResultsStyle = name => name === selectedRecipe.slides[selectedSlide].task.activeResultsItem ? {display: ''} : {display: 'none'}
 
     const selectedTask = selectedRecipe.slides[selectedSlide].task
     const activeGroup = selectedTask && selectedTask.group
@@ -190,21 +235,33 @@ const IndividualRecipe = (props) => {
         })
     }
 
-    return selectedTask && <React.Fragment>
-        <nav className="top-nav">
-            <Button onClick={() => {
+    const updateSlide = (slideIds, formParameters) => {
+        setLocalRecipes(localRecipes => {
+            const newLocalRecipes = Object.assign({}, localRecipes)
 
-                history.push("/recipes/")
-            }} icon="left arrow" labelPosition="left" content="All algorithm recipes" className="back-to-algorithms"/>
-        </nav>
-        <div className="page-heading">
-            {selectedRecipe.name}
-        </div>
-        <div style={containerStyle}>
+            slideIds.forEach(slideId => {
+                const overrides = newLocalRecipes[recipeId].slides[slideId].overrides
+                overrides.formParameters = Object.assign(overrides.formParameters, formParameters)
+            })
+
+            return newLocalRecipes
+        })
+    }
+
+    const handleResultsMenuItemClick = (e, {name}) => {
+        updateSelectedTask({activeResultsItem: name})
+    }
+
+    return <React.Fragment>
+        <TopNav selectedRecipe={selectedRecipe}/>
+        <div className="recipe-body">
             <Container fluid>
-                <p>{selectedRecipe.shortDescription}</p>
                 <div className="recipes">
                     <div className="recipe">
+                    {page === START && <StartSlide key="start-slide" setPage={setPage} setSelectedSlide={setSelectedSlide} selectedRecipe={selectedRecipe} gdsVersion={props.metadata.versions.gdsVersion} />}
+                    {page === END && <EndSlide key="end-slide" selectedRecipe={selectedRecipe}/>}
+                    {page === SLIDE && selectedTask &&
+                        <React.Fragment>
                         <div className="left">
                           <span className="recipe-heading">
                               {selectedRecipe.slides[selectedSlide].title}
@@ -212,7 +269,8 @@ const IndividualRecipe = (props) => {
                             {selectedRecipe.slides[selectedSlide].description}
                         </div>
                         <div className="right">
-                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef} activeItem={selectedTask.activeItem}
+                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef}
+                                           activeItem={selectedTask.activeItem}
                                            activeGroup="Configure"
                                            handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
                             />
@@ -229,9 +287,17 @@ const IndividualRecipe = (props) => {
                                                         updateSelectedTask({status: FAILED, result, completed: true})
                                                     } else {
                                                         updateSelectedTask({status: COMPLETED, result, completed: true})
+
+                                                        const overrides = selectedRecipe.slides[selectedSlide].overrides;
+                                                        const formParametersToPassOn = overrides.formParametersToPassOn || []
+
+                                                        updateSlide(overrides.slidesToUpdate,
+                                                            Object.assign({}, ...formParametersToPassOn.map(key => ({[key.target]: formParameters[key.source]})))
+                                                        )
                                                     }
                                                 },
                                                 () => {
+                                                    refreshMetadata(props)
                                                 },
                                                 (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {
                                                     updateSelectedTask({activeItem: "Results"})
@@ -288,16 +354,18 @@ const IndividualRecipe = (props) => {
                                     <div style={{flexGrow: "1", paddingLeft: "10px"}}>
                                         {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                                             <div style={getResultsStyle('Visualisation')}>
-                                                <VisView task={selectedTask} active={selectedTask.activeResultsItem === 'Visualisation'}/>
+                                                <VisView task={selectedTask}
+                                                         active={selectedTask.activeResultsItem === 'Visualisation'}/>
                                             </div> : null}
 
                                         {activeGroup === 'Centralities' ?
                                             <div style={getResultsStyle('Chart')}>
-                                                <ChartView task={selectedTask} active={selectedTask.activeResultsItem === 'Chart'}/>
+                                                <ChartView task={selectedTask}
+                                                           active={selectedTask.activeResultsItem === 'Chart'}/>
                                             </div> : null}
 
                                         <div style={getResultsStyle('Table')}>
-                                            <TableView task={selectedTask} gdsVersion={props.gdsVersion}/>
+                                            <TableView task={selectedTask} gdsVersion={props.metadata.versions.gdsVersion}/>
                                         </div>
                                     </div>
 
@@ -309,20 +377,194 @@ const IndividualRecipe = (props) => {
 
                             </div>
                         </div>
+                        </React.Fragment>
+                    }
                     </div>
                 </div>
 
-                <div className="recipe-navigation">
-                    {selectedSlide <= 0 && <Icon size="large" disabled={true} className="angle left disabled"/>}
-                    {selectedSlide > 0 && <Icon size="large" onClick={() => setSelectedSlide(selectedSlide-1)} className="angle left"/>}
-                    <span>Browse Algorithms</span>
-                    {selectedSlide < (maxSlide-1) && <Icon size="large" className="angle right" onClick={() => setSelectedSlide(selectedSlide+1)}/>}
-                    {!(selectedSlide < (maxSlide-1)) && <Icon size="large" className="angle right disabled" disabled={true}/>}
+                <BottomNav selectedSlide={selectedSlide} setSelectedSlide={setSelectedSlide}
+                           page={page} setPage={setPage}
+                           maxSlide={maxSlide}
+                />
+            </Container>
+        </div>
+    </React.Fragment>
 
-                </div>
-            </Container></div>
+}
+
+const mapStateToProps = state => ({
+    activeMenuItem: state.menu.item,
+    limit: state.settings.limit,
+    communityNodeLimit: state.settings.communityNodeLimit,
+    metadata: state.metadata,
+    tasks: state.tasks,
+})
+
+const mapDispatchToProps = dispatch => ({
+    updateLimit: value => dispatch(limit(value)),
+    setLabels: labels => dispatch(setLabels(labels)),
+    setGds: version => dispatch(setVersions(version)),
+    setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
+    setDatabases: databases => dispatch(setDatabases(databases)),
+    addDatabase: database => dispatch(addDatabase(database)),
+    initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys)),
+    removeTask: (taskId) => {
+        dispatch(removeTask({ taskId}))
+    }
+})
+
+const IndividualRecipe =  connect(mapStateToProps, mapDispatchToProps)(IndividualRecipeView)
+
+const StartSlide = ({selectedRecipe, gdsVersion, setPage, setSelectedSlide}) => {
+    return  <div className="left-right">
+           <div className="title">
+            <span className="title">Welcome to the {selectedRecipe.name} recipe</span>
+           </div>
+
+            <p>{selectedRecipe.shortDescription}</p>
+
+        <Card.Group className="algorithms">
+            {selectedRecipe.slides.map((slide, idx) => {
+                const algo = getAlgorithmDefinitions(slide.group, slide.algorithm, gdsVersion)
+                return <Card key={"recipe" + idx}>
+                <Card.Content>
+                    <Card.Header>{slide.title}</Card.Header>
+                    <Card.Description>
+                        {algo.description}
+                    </Card.Description>
+                </Card.Content>
+            </Card>})}
+        </Card.Group>
+
+        <div className='ui buttons'>
+            <Button className="try-recipe" onClick={() => {
+                setSelectedSlide(0)
+                setPage(SLIDE)
+            }}>
+                Try out the recipe
+            </Button>
+        </div>
+
+        </div>
+
+}
+
+const EndSlide = ({selectedRecipe}) => {
+    const history = useHistory();
+
+    return <div className="left-right">
+        <div className="title">
+        <span className="title">Congratulations for completing the {selectedRecipe.name} recipe</span>
+        </div>
+        <p>
+            {selectedRecipe.completionMessage}
+            <br />
+            Below are some ideas for things to try next:
+        </p>
+
+        <Card.Group className="algorithms">
+            <Card>
+                <Card.Content>
+                    <Card.Header>Another recipe</Card.Header>
+                    <Card.Description>
+                        Try out one of the other algorithm recipes
+                    </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        <Button basic color='green' onClick={() => {
+                            history.push("/recipes/")
+                        }}>
+                            Select
+                        </Button>
+                    </div>
+                </Card.Content>
+            </Card>
+
+            <Card>
+                <Card.Content>
+                    <Card.Header>Run single algorithm</Card.Header>
+                    <Card.Description>
+                        Try out any of the algorithms in the Graph Data Science Library.
+                    </Card.Description>
+                </Card.Content>
+                <Card.Content extra>
+                    <div className='ui two buttons'>
+                        <Button basic color='green' onClick={() => {
+                            history.push("/algorithms/new")
+                        }}>
+                            Select
+                        </Button>
+                    </div>
+                </Card.Content>
+            </Card>
+
+        </Card.Group>
+
+    </div>
+}
+
+const BottomNav = ({selectedSlide, setSelectedSlide, page, setPage, maxSlide}) => {
+    switch (page) {
+        case START:
+            return <div className="recipe-navigation">
+                <Icon size="large" disabled={true} className="angle left disabled"/>
+                <span>Browse</span>
+                <Icon size="large" className="angle right" onClick={() =>  {
+                    setPage(SLIDE)
+                    setSelectedSlide(0)
+                }} />
+            </div>
+        case END:
+            return <div className="recipe-navigation">
+                <Icon size="large" onClick={() => {
+                    setPage(SLIDE)
+                    setSelectedSlide(maxSlide-1)
+                }} className="angle left"/>
+                <span>Browse</span>
+                <Icon size="large" className="angle right disabled" disabled={true}/>
+            </div>
+        default:
+            return <div className="recipe-navigation">
+                <Icon size="large" onClick={() => {
+                    if(selectedSlide === 0) {
+                        setPage(START)
+                    } else {
+                        setSelectedSlide(selectedSlide => selectedSlide - 1)
+                    }
+
+                }} className="angle left"/>
+                <span>Browse</span>
+                {selectedSlide < (maxSlide) &&
+                <Icon size="large" className="angle right" onClick={() => {
+                    if(selectedSlide === maxSlide - 1) {
+                        setPage(END)
+                    } else {
+                        setSelectedSlide(selectedSlide => selectedSlide + 1)
+                    }
+                }}/>}
+            </div>
+    }
+}
+
+const TopNav = ({selectedRecipe}) => {
+    const history = useHistory();
+
+    return <React.Fragment>
+        <nav className="top-nav">
+            <Button onClick={() => {
+                history.push("/recipes/")
+            }} icon="left arrow" labelPosition="left" content="All algorithm recipes" className="back-to-algorithms"/>
+        </nav>
+        <div className="page-heading">
+            {selectedRecipe.name}
+        </div>
     </React.Fragment>
 }
+
+
 
 const Recipes = (props) => {
     const history = useHistory();

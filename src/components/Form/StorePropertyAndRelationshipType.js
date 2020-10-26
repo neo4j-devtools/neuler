@@ -4,7 +4,7 @@ import {OpenCloseSection} from "./OpenCloseSection";
 
 export const StorePropertyAndRelationshipType = ({persist, onChange, writeProperty, writeRelationshipType, readOnly, children}) => {
     return <OpenCloseSection title="Results">
-        <Form.Field inline style={{display: "flex", "align-items": "center"}}
+        <Form.Field inline style={{display: "flex", alignItems: "center"}}
                     className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Store results?</label>
             <Checkbox toggle checked={persist} onChange={(evt, data) => {
