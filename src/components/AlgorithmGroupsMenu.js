@@ -1,11 +1,10 @@
-import {Dropdown, Icon, Image, Popup, List, Divider, Table, Container} from "semantic-ui-react"
+import {Divider, Icon, Image, List, Popup, Table} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
 import {NavLink} from "react-router-dom";
 import constants from "../constants";
-import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 
 const navStyle = {
@@ -14,7 +13,7 @@ const navStyle = {
 
 const url = new URL(window.location.href)
 export const publicPathTo = (append) => {
-    if ( url.protocol.includes('http') ) return `/${append}`
+    if (url.protocol.includes('http')) return `/${append}`
     return `${url.protocol}//${url.pathname.split('/dist/')[0]}/dist/${append}`
 }
 
@@ -22,7 +21,7 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
     <header
         style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "37px"}}>
         <div style={{display: "flex"}}>
-            <Image src={publicPathTo("images/noun_Sandbox Toys_1207953.png")} style={{height: "37px"}} />
+            <Image src={publicPathTo("images/noun_Sandbox Toys_1207953.png")} style={{height: "37px"}}/>
             <span style={{padding: "10px 0 10px 0"}}>NEuler</span>
         </div>
         <div style={navStyle}>
@@ -35,7 +34,7 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
         <div style={navStyle}>
             <nav>
 
-                <Popup trigger={<Icon name="setting" size="large" />} flowing hoverable className="about-menu">
+                <Popup trigger={<Icon name="setting" size="large"/>} flowing hoverable className="about-menu">
                     <List>
                         <List.Item className="connection-list-item">
                             <List className="connection">
@@ -58,17 +57,17 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
 
                         </List.Item>
 
-                        <Divider />
+                        <Divider/>
 
                         <List.Item as='a' onClick={() => setDatasetsActive(true)} className="about-menu">
-                            <Image size="mini" src='images/noun_Import Database_281767.png' />
+                            <Image size="mini" src='images/noun_Import Database_281767.png'/>
                             <List.Content>
-                            <List.Header as="a">Sample Graphs</List.Header>
+                                <List.Header as="a">Sample Graphs</List.Header>
                             </List.Content>
                         </List.Item>
 
 
-                        <Divider />
+                        <Divider/>
                         <List.Item>
                             <Table basic='very' celled collapsing className="versions">
                                 <Table.Header>
@@ -107,45 +106,6 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
             </nav>
         </div>
     </header>
-
-
-// <Menu inverted borderless>
-//
-//         <Menu.Item active={activeGroup === 'Home'} as='a' onClick={() => selectGroup('Home')}
-//                    style={menuItemStyle}>
-//             NEuler - Data Science Playground
-//         </Menu.Item>
-//         <Menu.Item title='Run Algorithm' active={activeGroup === 'Centralities'} as='a'
-//                    onClick={() => selectGroup('Centralities')}
-//                    style={menuItemStyle}>
-//             Run Algorithms
-//         </Menu.Item>
-//
-//         {/*<Menu.Item title='Recipes' active={activeGroup === 'Recipes'} as='a'*/}
-//         {/*           onClick={() => selectGroup('Recipes')}*/}
-//         {/*           style={menuItemStyle}>*/}
-//         {/*    <Icon size='big' name='book' color='grey'/>*/}
-//         {/*</Menu.Item>*/}
-//
-//
-//     <Menu.Menu position='right'>
-//         <Menu.Item title='Sample Graphs' active={activeGroup === 'Sample Graphs'} as='a'
-//                    onClick={() => setDatasetsActive(true)}
-//
-//                    style={menuItemStyle}>
-//             <Image size='mini' src='images/datasetin.png'/>
-//             Sample Graphs
-//         </Menu.Item>
-//         <Menu.Item title='About' active={activeGroup === 'About'} as='a' onClick={() => setAboutActive(true)}
-//                    style={menuItemStyle}
-//                 >
-//             <Image size='mini' src='images/neo4j_logo_globe1.png'/>
-//             Versions
-//         </Menu.Item>
-//     </Menu.Menu>
-//
-// </Menu>
-
 
 const mapStateToProps = state => ({
     activeAlgorithm: state.algorithms.algorithm,
