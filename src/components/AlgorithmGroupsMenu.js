@@ -35,7 +35,7 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials, setDisco
         <div style={navStyle}>
             <nav>
 
-                <Popup open trigger={<Icon name="setting" size="large"/>} flowing hoverable className="about-menu">
+                <Popup trigger={<Icon name="setting" size="large"/>} flowing hoverable className="about-menu">
                     <List>
                         <List.Item className="connection-list-item">
                             <List className="connection">

@@ -7,7 +7,7 @@ import {
     Dropdown,
     List,
     Header,
-    Icon,
+    Icon, Image,
     Loader,
     Message
 } from "semantic-ui-react"
@@ -33,6 +33,7 @@ import {OpenCloseSection} from "./Form/OpenCloseSection";
 import {useHistory} from "react-router-dom";
 import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 import {hasNodesAndRelationships} from "./SelectDatabase";
+import {publicPathTo} from "./AlgorithmGroupsMenu";
 
 
 
@@ -105,24 +106,24 @@ const Home = (props) => {
                 </OpenCloseSection>
 
 
-                <OpenCloseSection title="Getting Started">
+                <OpenCloseSection title="Getting Started" className="getting-started">
 
                     {!hasNodesAndRelationships(props.metadata) && <WhatIsMissing setDatasetsActive={props.setDatasetsActive}/>}
 
                     {hasNodesAndRelationships(props.metadata) && <React.Fragment>
-                <p>
-                    The Neo4j Graph Data Science Library supports Centrality, Community Detection, and Path Finding algorithms. The algorithms below are some of the most popular ones:
+                <p className="intro">
+                    NEuler supports running graph algorithms in two ways:
                 </p>
 
                 <CardGroup>
-                    <Card key={"degree-centrality"}>
+                    <Card key={"run-algorithm"}>
                         <Card.Content>
-                            <Icon name='sitemap'/>
+                            <Image src={publicPathTo("images/noun_algorithm_563285.png")} />
                             <Card.Header>
-                                Degree Centrality
+                                Run single algorithm
                             </Card.Header>
                             <Card.Meta>
-                                {getDescription("Centralities", "Degree")}
+                                Choose this option if you want to choose from any of the available algorithms in the Graph Data Science Library.
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
@@ -139,70 +140,21 @@ const Home = (props) => {
                         </Card.Content>
                     </Card>
 
-                    <Card key={"page-rank"}>
+                    <Card key={"run-algorithm-recipe"}>
                         <Card.Content>
-                            <Icon name='sitemap'/>
+                            <Image src={publicPathTo("images/noun_recipes_1566765.png")} />
                             <Card.Header>
-                                Page Rank
+                                Run Algorithm Recipe
                             </Card.Header>
                             <Card.Meta>
-                                {getDescription("Centralities", "Page Rank")}
+                                Choose this option if you aren't sure which algorithm to run and would like to suggestions of commonly used combinations of algorithms.
                             </Card.Meta>
                         </Card.Content>
                         <Card.Content extra>
                             <div className='ui two buttons'>
                                 <Button basic color='green' onClick={() => {
                                     history.push({
-                                        pathname: '/algorithms/new',
-                                        state: generateAlgorithmState("Centralities", "Page Rank")
-                                    })
-                                }}>
-                                    Select
-                                </Button>
-                            </div>
-                        </Card.Content>
-                    </Card>
-
-                    <Card key={"louvain"}>
-                        <Card.Content>
-                            <Icon name='sitemap'/>
-                            <Card.Header>
-                                Louvain
-                            </Card.Header>
-                            <Card.Meta>
-                                {getDescription("Community Detection", "Louvain")}
-                            </Card.Meta>
-                        </Card.Content>
-                        <Card.Content extra>
-                            <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => {
-                                    history.push({
-                                        pathname: '/algorithms/new',
-                                        state: generateAlgorithmState("Community Detection", "Louvain")
-                                    })
-                                }}>
-                                    Select
-                                </Button>
-                            </div>
-                        </Card.Content>
-                    </Card>
-
-                    <Card key={"jaccard"}>
-                        <Card.Content>
-                            <Icon name='sitemap'/>
-                            <Card.Header>
-                                Jaccard Node Similarity
-                            </Card.Header>
-                            <Card.Meta>
-                                {getDescription("Similarity", "Jaccard")}
-                            </Card.Meta>
-                        </Card.Content>
-                        <Card.Content extra>
-                            <div className='ui two buttons'>
-                                <Button basic color='green' onClick={() => {
-                                    history.push({
-                                        pathname: '/algorithms/new',
-                                        state: generateAlgorithmState("Similarity", "Jaccard")
+                                        pathname: '/recipes'
                                     })
                                 }}>
                                     Select
