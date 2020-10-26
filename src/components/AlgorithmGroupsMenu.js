@@ -5,6 +5,7 @@ import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
 import {NavLink} from "react-router-dom";
 import constants from "../constants";
+import {setDisconnected} from "../ducks/connection";
 
 
 const navStyle = {
@@ -17,7 +18,7 @@ export const publicPathTo = (append) => {
     return `${url.protocol}//${url.pathname.split('/dist/')[0]}/dist/${append}`
 }
 
-const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
+const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials, setDisconnected}) =>
     <header
         style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "37px"}}>
         <div style={{display: "flex"}}>
@@ -34,7 +35,7 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
         <div style={navStyle}>
             <nav>
 
-                <Popup trigger={<Icon name="setting" size="large"/>} flowing hoverable className="about-menu">
+                <Popup open trigger={<Icon name="setting" size="large"/>} flowing hoverable className="about-menu">
                     <List>
                         <List.Item className="connection-list-item">
                             <List className="connection">
@@ -55,15 +56,6 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
                                 <NavLink to="/database">Configure Database</NavLink>
                             </div>
 
-                        </List.Item>
-
-                        <Divider/>
-
-                        <List.Item as='a' onClick={() => setDatasetsActive(true)} className="about-menu">
-                            <Image size="mini" src='images/noun_Import Database_281767.png'/>
-                            <List.Content>
-                                <List.Header as="a">Sample Graphs</List.Header>
-                            </List.Content>
                         </List.Item>
 
 
@@ -100,6 +92,23 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
                                 </Table.Body>
                             </Table>
                         </List.Item>
+
+                        <Divider/>
+
+                        <List.Item as='a' onClick={() => setDatasetsActive(true)} className="about-menu">
+                            <Image size="mini" src={publicPathTo("images/noun_Import Database_281767.png")}/>
+                            <List.Content>
+                                <List.Header as="a">Sample Graphs</List.Header>
+                            </List.Content>
+                        </List.Item>
+
+                        <List.Item as='a' onClick={() => setDisconnected()} className="about-menu">
+                            <Image size="mini" src={publicPathTo("images/noun_sign out_1157133.png")}/>
+                            <List.Content>
+                                <List.Header as="a">Sign Out</List.Header>
+                            </List.Content>
+                        </List.Item>
+
                     </List>
                 </Popup>
 
@@ -114,7 +123,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({
     selectGroup: group => dispatch(selectGroup(group)),
-    selectMenuItem: item => dispatch(selectMenuItem(item))
+    selectMenuItem: item => dispatch(selectMenuItem(item)),
+    setDisconnected: () => dispatch(setDisconnected()),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(AlgorithmsGroupMenu)
