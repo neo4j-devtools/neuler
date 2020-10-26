@@ -445,3 +445,16 @@ a.about-menu div.content a {
 a.about-menu {
   margin: 0 0 0 0.3rem;
 }
+
+p.intro {
+  font-size: 1.2rem;
+}
+
+.ui.segment.getting-started {
+  border: 1px solid hsl(122, 80%, 29%);
+}
+
+.ui.segment.getting-started .ui.label {
+  background-color: hsl(122, 80%, 29%);
+  color: hsl(125, 65%, 93%);
+}
