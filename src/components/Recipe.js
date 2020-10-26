@@ -154,8 +154,6 @@ const START = "start"
 const END = "end"
 const SLIDE = "slide"
 
-
-
 const IndividualRecipeView = (props) => {
     const panelRef = React.createRef()
     const [selectedSlide, setSelectedSlide] = React.useState(0)
@@ -270,14 +268,15 @@ const IndividualRecipeView = (props) => {
                             {selectedRecipe.slides[selectedSlide].description}
                         </div>
                         <div className="right">
-                            { selectedTask.completed && selectedTask.status !== FAILED &&  <SuccessTopBar task={selectedTask} panelRef={props.panelRef}
+                            { selectedTask.status !== FAILED &&
+                            <SuccessTopBar task={selectedTask} panelRef={props.panelRef}
                                            activeItem={selectedTask.activeItem}
-                                           activeGroup="Configure"
                                            handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
                             />}
 
-                            { selectedTask.completed && selectedTask.status === FAILED &&  <FailedTopBar activeItem={selectedTask.activeItem}
-                                                                                                          handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
+                            { selectedTask.completed && selectedTask.status === FAILED &&
+                            <FailedTopBar activeItem={selectedTask.activeItem}
+                                          handleMenuItemClick={(e, {name}) => updateSelectedTask({activeItem: name})}
                             />}
 
                             <div ref={panelRef}>
@@ -289,6 +288,7 @@ const IndividualRecipeView = (props) => {
                                         onRun={(newParameters, formParameters, persisted) => {
                                             onRunAlgo(selectedTask, newParameters, formParameters, persisted, props.metadata.versions,
                                                 (taskId, result, error) => {
+                                                console.log(taskId, result, error)
                                                     if (error) {
                                                         updateSelectedTask({status: FAILED, result, error, completed: true})
                                                     } else {
@@ -296,9 +296,11 @@ const IndividualRecipeView = (props) => {
 
                                                         const overrides = selectedRecipe.slides[selectedSlide].overrides;
                                                         const formParametersToPassOn = overrides.formParametersToPassOn || []
-                                                        updateSlide(overrides.slidesToUpdate,
-                                                            Object.assign({}, ...formParametersToPassOn.map(key => ({[key.target]: formParameters[key.source]})))
-                                                        )
+                                                        if(overrides.slidesToUpdate) {
+                                                            updateSlide(overrides.slidesToUpdate,
+                                                                Object.assign({}, ...formParametersToPassOn.map(key => ({[key.target]: formParameters[key.source]})))
+                                                            )
+                                                        }
                                                     }
                                                 },
                                                 () => {
@@ -331,55 +333,15 @@ const IndividualRecipeView = (props) => {
                                     />
                                 </div>
 
-                                {selectedTask.completed && selectedTask.status !== FAILED && <div style={getStyleResultsTab("Results")}>
-                                    <div>
-                                        <Menu pointing secondary vertical className="resultsMenu">
-                                            <Menu.Item
-                                                name='Table'
-                                                active={selectedTask.activeItem === 'Table'}
-                                                onClick={handleResultsMenuItemClick}
-                                            />
-
-                                            {getGroup(selectedTask.algorithm) === "Centralities" &&
-                                            <Menu.Item
-                                                name='Chart'
-                                                active={selectedTask.activeResultsItem === 'Chart'}
-                                                onClick={handleResultsMenuItemClick}
-                                            />}
-
-                                            {!(getGroup(selectedTask.algorithm) === 'Path Finding' || getGroup(selectedTask.algorithm) === 'Similarity') &&
-                                            <Menu.Item
-                                                name='Visualisation'
-                                                active={selectedTask.activeResultsItem === 'Visualisation'}
-                                                onClick={handleResultsMenuItemClick}
-                                            />}
-
-                                        </Menu>
-                                    </div>
-                                    <div style={{flexGrow: "1", paddingLeft: "10px"}}>
-                                        {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                                            <div style={getResultsStyle('Visualisation')}>
-                                                <VisView task={selectedTask}
-                                                         active={selectedTask.activeResultsItem === 'Visualisation'}/>
-                                            </div> : null}
-
-                                        {activeGroup === 'Centralities' ?
-                                            <div style={getResultsStyle('Chart')}>
-                                                <ChartView task={selectedTask}
-                                                           active={selectedTask.activeResultsItem === 'Chart'}/>
-                                            </div> : null}
-
-                                        <div style={getResultsStyle('Table')}>
-                                            <TableView task={selectedTask} gdsVersion={props.metadata.versions.gdsVersion}/>
-                                        </div>
-                                    </div>
-                                </div>}
-                                {selectedTask.completed && selectedTask.status === FAILED &&  <div style={getStyleResultsTab('Results')}>
-                                    <Message warning compact>
-                                        <Message.Header>Algorithm failed to complete</Message.Header>
-                                        <p>{selectedTask.error}</p>
-                                    </Message>
-                                </div> }
+                                {selectedTask.status !== FAILED &&
+                                <SuccessResults getStyleResultsTab={getStyleResultsTab}
+                                                selectedTask={selectedTask}
+                                                handleResultsMenuItemClick={handleResultsMenuItemClick}
+                                                activeGroup={activeGroup}
+                                                getResultsStyle={getResultsStyle}
+                                                gdsVersion={props.metadata.versions.gdsVersion}
+                                />}
+                                {selectedTask.completed && selectedTask.status === FAILED && <ErrorResults getStyleResultsTab={getStyleResultsTab} selectedTask={selectedTask} />   }
 
 
                                 <div style={getStyle('Code')}>
@@ -400,7 +362,61 @@ const IndividualRecipeView = (props) => {
             </Container>
         </div>
     </React.Fragment>
+}
 
+const SuccessResults = ({getStyleResultsTab, selectedTask, handleResultsMenuItemClick, activeGroup, getResultsStyle, gdsVersion}) => {
+    return <div style={getStyleResultsTab("Results")}>
+        <div>
+            <Menu pointing secondary vertical className="resultsMenu">
+                <Menu.Item
+                    name='Table'
+                    active={selectedTask.activeItem === 'Table'}
+                    onClick={handleResultsMenuItemClick}
+                />
+
+                {getGroup(selectedTask.algorithm) === "Centralities" &&
+                <Menu.Item
+                    name='Chart'
+                    active={selectedTask.activeResultsItem === 'Chart'}
+                    onClick={handleResultsMenuItemClick}
+                />}
+
+                {!(getGroup(selectedTask.algorithm) === 'Path Finding' || getGroup(selectedTask.algorithm) === 'Similarity') &&
+                <Menu.Item
+                    name='Visualisation'
+                    active={selectedTask.activeResultsItem === 'Visualisation'}
+                    onClick={handleResultsMenuItemClick}
+                />}
+
+            </Menu>
+        </div>
+        <div style={{flexGrow: "1", paddingLeft: "10px"}}>
+            {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
+                <div style={getResultsStyle('Visualisation')}>
+                    <VisView task={selectedTask}
+                             active={selectedTask.activeResultsItem === 'Visualisation'}/>
+                </div> : null}
+
+            {activeGroup === 'Centralities' ?
+                <div style={getResultsStyle('Chart')}>
+                    <ChartView task={selectedTask}
+                               active={selectedTask.activeResultsItem === 'Chart'}/>
+                </div> : null}
+
+            <div style={getResultsStyle('Table')}>
+                <TableView task={selectedTask} gdsVersion={gdsVersion}/>
+            </div>
+        </div>
+    </div>
+}
+
+const ErrorResults = ({selectedTask, getStyleResultsTab}) => {
+    return <div style={getStyleResultsTab('Results')}>
+        <Message warning compact>
+            <Message.Header>Algorithm failed to complete</Message.Header>
+            <p>{selectedTask.error}</p>
+        </Message>
+    </div>
 }
 
 const mapStateToProps = state => ({

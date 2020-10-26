@@ -35,8 +35,6 @@ const SelectDatabase = (props) => {
         })
     }
 
-
-
     const containerStyle = {
         padding: '1em'
     }

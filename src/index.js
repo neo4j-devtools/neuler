@@ -69,7 +69,8 @@ const RenderComponentView = (props) => {
     const [datasetsActive, setDatasetsActive] = React.useState(false)
 
     return <Container fluid style={{height: '100%', display: "flex", flexFlow: "column", background: "#fff"}}>
-        <AlgorithmsGroupMenu setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}/>
+        <AlgorithmsGroupMenu metadata={props.metadata} setDatasetsActive={setDatasetsActive}
+                             credentials={props.connectionInfo.credentials}/>
         <div style={{width: '100%', overflowY: 'auto', flexGrow: "1"}}>
             <View {...routeProps} setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}  />
             <FeedbackForm page={page}/>

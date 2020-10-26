@@ -213,6 +213,18 @@ p.connected {
   text-transform: uppercase;
 }
 
+div.about-menu div.connection label, div.about-menu table.versions th  {
+  color: hsl(211, 13%, 65%);
+}
+
+div.about-menu div.connection span, div.about-menu table.versions tr {
+  color: hsl(211, 10%, 53%);
+}
+
+div.about-menu table.versions{
+  font-size: .92857143em;
+}
+
 div.connection label {
   width: 7em;
   display: inline-block;
@@ -408,4 +420,12 @@ span.recipe-heading {
 
 div.recipe div.left p {
   color: hsl(209, 14%, 37%);
+}
+
+a.about-menu img.ui.image {
+  width: 25px;
+}
+
+a.about-menu div.content a {
+  padding: 3px;
 }

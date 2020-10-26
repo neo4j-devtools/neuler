@@ -1,9 +1,11 @@
-import {Dropdown, Icon, Image} from "semantic-ui-react"
+import {Dropdown, Icon, Image, Popup, List, Divider, Table, Container} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
 import {selectGroup} from "../ducks/algorithms"
 import {selectMenuItem} from "../ducks/menu";
 import {NavLink} from "react-router-dom";
+import constants from "../constants";
+import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 
 const navStyle = {
@@ -16,7 +18,7 @@ export const publicPathTo = (append) => {
     return `${url.protocol}//${url.pathname.split('/dist/')[0]}/dist/${append}`
 }
 
-const AlgorithmsGroupMenu = ({setAboutActive, setDatasetsActive}) =>
+const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials}) =>
     <header
         style={{display: "flex", justifyContent: "space-between", background: "#000", color: "#fff", height: "37px"}}>
         <div style={{display: "flex"}}>
@@ -34,12 +36,69 @@ const AlgorithmsGroupMenu = ({setAboutActive, setDatasetsActive}) =>
         <div style={navStyle}>
             <nav>
 
-                <Dropdown icon={<Icon name="setting" size="large" />} direction="right" className="big">
-                    <Dropdown.Menu style={{ left: 'auto', right: 0, marginTop: "9px" }}>
-                        <Dropdown.Item onClick={() => setDatasetsActive(true)}>Sample Graphs</Dropdown.Item>
-                        <Dropdown.Item onClick={() => setAboutActive(true)}>Versions</Dropdown.Item>
-                    </Dropdown.Menu>
-                </Dropdown>
+                <Popup trigger={<Icon name="setting" size="large" />} flowing hoverable className="about-menu">
+                    <List>
+                        <List.Item>
+                            <List className="connection">
+                                <List.Item className="connection-item">
+                                    <label>Username</label>
+                                    <span>{credentials.username}</span>
+                                </List.Item>
+                                <List.Item className="connection-item">
+                                    <label>Server</label>
+                                    <span>{credentials.host}</span>
+                                </List.Item>
+                                <List.Item className="connection-item">
+                                    <label>Database</label>
+                                    <span>{metadata.activeDatabase}</span>
+                                </List.Item>
+                            </List>
+                        </List.Item>
+
+                        <Divider />
+
+                        <List.Item as='a' onClick={() => setDatasetsActive(true)} className="about-menu">
+                            <Image size="mini" src='images/noun_Import Database_281767.png' />
+                            <List.Content>
+                            <List.Header as="a">Sample Graphs</List.Header>
+                            </List.Content>
+                        </List.Item>
+                        <Divider />
+                        <List.Item>
+                            <Table basic='very' celled collapsing className="versions">
+                                <Table.Header>
+                                    <Table.Row>
+                                        <Table.HeaderCell>
+                                            Component
+                                        </Table.HeaderCell>
+                                        <Table.HeaderCell>
+                                            Version
+                                        </Table.HeaderCell>
+                                    </Table.Row>
+                                </Table.Header>
+                                <Table.Body>
+                                    <Table.Row>
+                                        <Table.Cell>NEuler</Table.Cell>
+                                        <Table.Cell>
+                                            {constants.version}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                    <Table.Row>
+                                        <Table.Cell>Graph Data Science Library</Table.Cell>
+                                        <Table.Cell>{metadata.versions.gdsVersion}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                    <Table.Row>
+                                        <Table.Cell>Neo4j Server</Table.Cell>
+                                        <Table.Cell>{metadata.versions.neo4jVersion}
+                                        </Table.Cell>
+                                    </Table.Row>
+                                </Table.Body>
+                            </Table>
+                        </List.Item>
+                    </List>
+                </Popup>
+
             </nav>
         </div>
     </header>
