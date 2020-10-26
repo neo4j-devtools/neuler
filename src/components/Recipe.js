@@ -102,11 +102,28 @@ const recipes = {
                 overrides: {
                     formParameters: {persist: true},
                     parameters: {config: {}},
-                    formParametersToPassOn: [{source: "writeRelationshipType", target: "relationshipType"}],
+                    formParametersToPassOn: [
+                        {source: "writeRelationshipType", target: "relationshipType"},
+                        {source: "writeProperty", target: "weightProperty"},
+                        {source: "label", target: "label"}
+                        ],
                     slidesToUpdate: [1]
                 },
                 description: <React.Fragment>
-                    <p>Node similarity blah blah</p>
+                    <p>
+                        The Jaccard or Node similarity algorithm computes the similarity of pairs of nodes based on the nodes that they're connected to.
+                    </p>
+
+                    <p>
+                        We can use this algorithm to create a similarity graph by setting <i>Store results?</i> and specifying <i>Write Property</i> and <i>Write Relationship Type</i>.
+                    </p>
+
+                    <p>
+                        This technique is useful for creating relationships between nodes where none exist in the initial graph. e.g. we could create relationships between <i>Recipe</i> nodes based on the <i>Ingredient</i> nodes that they have in common.
+                    </p>
+
+
+
                 </React.Fragment>
             },
             {
@@ -115,7 +132,14 @@ const recipes = {
                 title: "Label Propagation",
                 overrides: { formParameters: {}, parameters: {config: {}} },
                 description: <React.Fragment>
-                    <p>LPA is the best</p>
+                    <p>
+                        The Label Propagation Algorithm is a fast algorithm for finding communities in a graph, which it does by propagating labels and forming communities based on this process of label propagation
+                    </p>
+
+                    <p>
+                        On initialisation, every node has its own label, but as labels propagate, densely connected groups of nodes quickly reach a consensus on a unique label. At the end of the propagation only a few labels will remain.
+                    </p>
+
                 </React.Fragment>
             }
         ]
