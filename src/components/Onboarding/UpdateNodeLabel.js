@@ -105,7 +105,7 @@ const SelectCaptionView = ({metadata, globalLabels, database, label,updateLabelP
 
     return <div key={selectedPropertyKeys}>
         <Grid columns={3}>
-            {metadata.nodePropertyKeys[label].map(key =>
+            {label in metadata.nodePropertyKeys && metadata.nodePropertyKeys[label].map(key =>
                 <Grid.Column key={key}>
                     <Checkbox
                         name={key}
