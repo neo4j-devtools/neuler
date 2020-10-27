@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.41 (2020-10-27)
+
+* Introducing algorithm recipes - combinations of algorithms that are typically used together
+
 ## 0.1.40 (2020-10-19)
 
 * UI redesign to make it easier to find all algorithms
