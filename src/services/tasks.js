@@ -98,7 +98,7 @@ export const onRunAlgo = (task, parameters, formParameters, persisted, versions,
     sendMetrics('neuler-call-algorithm', algorithm, params)
 
     service(serviceParameters).then(result => {
-        // sendMetrics('neuler', "completed-algorithm-call", params)
+        sendMetrics('neuler', "completed-algorithm-call", params)
         completeTask(taskId, result)
         if (persisted) {
             onComplete()

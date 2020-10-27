@@ -26,6 +26,7 @@ import {
     setVersions
 } from "../ducks/metadata";
 import {FailedTopBar} from "./Results/FailedTopBar";
+import {sendMetrics} from "./metrics/sendMetrics";
 
 const containerStyle = {
     padding: '1em'
@@ -312,7 +313,7 @@ const IndividualRecipeView = (props) => {
                                         onRun={(newParameters, formParameters, persisted) => {
                                             onRunAlgo(selectedTask, newParameters, formParameters, persisted, props.metadata.versions,
                                                 (taskId, result, error) => {
-                                                console.log(taskId, result, error)
+                                                    sendMetrics("neuler", "ran-recipe-algorithm", {algorithm: selectedTask.algorithm, group: selectedTask.group, recipe: selectedRecipe.name})
                                                     if (error) {
                                                         updateSelectedTask({status: FAILED, result, error, completed: true})
                                                     } else {
