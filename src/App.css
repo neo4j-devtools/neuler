@@ -225,6 +225,10 @@ div.about-menu table.versions{
   font-size: .92857143em;
 }
 
+div.about-menu div.connection-list-item div.configure-database {
+  padding: 0.4em 0 .25em .5em;
+}
+
 div.connection label {
   width: 7em;
   display: inline-block;
