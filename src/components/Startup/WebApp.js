@@ -30,6 +30,7 @@ import * as qs from "qs";
 import {FeedbackForm} from "../Feedback/FeedbackForm";
 import constants from "../../constants";
 import {Redirect} from "react-router-dom";
+import {subscribeToDatabaseCredentialsForActiveGraph} from "graph-app-kit/components/GraphAppBase";
 
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
@@ -38,7 +39,19 @@ const NewApp = (props) => {
         props.selectAlgorithm("Degree")
         setQueryParameters(qs.parse(props.location.search, { ignoreQueryPrefix: true }))
         props.history.push(props.location.pathname)
-    }, [])
+    }, [props.isNeo4jDesktop])
+
+    React.useEffect(() => {
+        if(props.isNeo4jDesktop) {
+            subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
+                (credentials, activeProject, activeGraph) => {
+                    console.log("credentials", credentials)
+                    setQueryParameters({username: credentials.username, accessToken: credentials.password, url: credentials.host})
+                },
+                () => {}
+            )
+        }
+    }, [props.isNeo4jDesktop])
 
     const [currentStep, setCurrentStep] = React.useState(CONNECTING_TO_DATABASE)
     const [currentStepFailed, setCurrentStepFailed] = React.useState(false)

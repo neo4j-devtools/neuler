@@ -54,10 +54,10 @@ const LoaderComponent = <Dimmer active>
     <Loader size='massive'>Connecting</Loader>
 </Dimmer>
 
-const isNeo4jDesktop = !!window.neo4jDesktopApi
-// const isNeo4jDesktop = true
+// const isNeo4jDesktop = !!window.neo4jDesktopApi
+const isNeo4jDesktop = true
 
-const App = isNeo4jDesktop ? DesktopApp : WebApp
+const App = WebApp
 
 const RenderComponentView = (props) => {
     const {View, connectionInfo, routeProps, activeAlgorithm, activeGroup} = props
@@ -131,7 +131,7 @@ ReactDOM.render(
 
                     <Route path="/login"
                            render={routeProps => (
-                               <App {...routeProps} />
+                               <App {...routeProps} isNeo4jDesktop={isNeo4jDesktop} />
                            )}/>
                     <Route path="/"
                            render={routeProps => (
