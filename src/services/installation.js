@@ -37,10 +37,6 @@ const handleException = error => {
   throw new Error(error)
 }
 
-
-
-
-
 export const parseResultStream = result => {
   if (result.records) {
     return result.records[0].get("count").toNumber() > 0

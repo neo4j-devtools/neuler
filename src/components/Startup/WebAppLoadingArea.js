@@ -289,6 +289,8 @@ const ConnectingToDatabaseForm = ({connectionStatus, setCurrentStep, setConnecte
                                     setActiveDatabase(db)
                                 }
                             }
+                            setCurrentStep(CHECKING_GDS_PLUGIN)
+                            setCurrentStepFailed(false)
                         }
                     })
                         .catch((error) => {

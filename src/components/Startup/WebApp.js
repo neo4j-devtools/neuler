@@ -62,8 +62,6 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if (props.connectionInfo.status === CONNECTED) {
-            setCurrentStep(CHECKING_GDS_PLUGIN)
-            setCurrentStepFailed(false)
             setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
         }
 
