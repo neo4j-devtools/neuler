@@ -11,18 +11,22 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     const [algorithmsInstalled, setAlgorithmsInstalled] = useState(true)
 
     React.useEffect(() => {
+        let isSubscribed = true
         checkGraphAlgorithmsInstalled().then(result => {
-            if (!result) {
-                sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
-                props.didNotFindPlugin(libraryName);
-            } else {
-                props.gdsInstalled();
+            if(isSubscribed) {
+                if (!result) {
+                    sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
+                    props.didNotFindPlugin(libraryName);
+                } else {
+                    props.gdsInstalled();
+                }
+
+                setAlgorithmsInstalled(result)
             }
-
-            setAlgorithmsInstalled(result)
         });
-    }, [])
 
+        return () => isSubscribed = false
+    }, [libraryName])
 
     if (algorithmsInstalled) {
         return props.children;

@@ -14,29 +14,38 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     const libraryName = "apoc";
 
     React.useEffect(() => {
+        let isSubscribed = true
         checkApocInstalled().then(apocInstalled => {
-            if (!apocInstalled) {
-                sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
-                props.didNotFindPlugin(libraryName);
-                setPluginInstalled(false)
-                setCheckComplete(true)
-            } else {
-                setPluginInstalled(true)
-                checkApocMetaProcedureAvailable().then(apocMetaProcedureAvailable => {
-                    if (!apocMetaProcedureAvailable) {
-                        sendMetrics("neuler-connected", "missing-dependency", {library: libraryName, description: "apoc.meta.nodeTypeProperties is unavailable"})
-                        props.didNotFindPlugin(libraryName);
-                    } else {
-                        props.apocInstalled();
-                    }
-
+            if (isSubscribed) {
+                if (!apocInstalled) {
+                    sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
+                    props.didNotFindPlugin(libraryName);
+                    setPluginInstalled(false)
                     setCheckComplete(true)
-                    setMetaAvailable(apocMetaProcedureAvailable)
-                })
-            }
+                } else {
+                    setPluginInstalled(true)
+                    checkApocMetaProcedureAvailable().then(apocMetaProcedureAvailable => {
+                        if (isSubscribed) {
+                            if (!apocMetaProcedureAvailable) {
+                                sendMetrics("neuler-connected", "missing-dependency", {
+                                    library: libraryName,
+                                    description: "apoc.meta.nodeTypeProperties is unavailable"
+                                })
+                                props.didNotFindPlugin(libraryName);
+                            } else {
+                                props.apocInstalled();
+                            }
 
+                            setCheckComplete(true)
+                            setMetaAvailable(apocMetaProcedureAvailable)
+                        }
+                    })
+                }
+            }
         });
-    }, [])
+
+        return () => isSubscribed = false
+    }, [libraryName])
 
 
     if (!checkComplete) {
