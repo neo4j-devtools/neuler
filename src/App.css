@@ -458,3 +458,7 @@ p.intro {
   background-color: hsl(306, 88%, 37%);
   color: hsl(294, 100%, 96%);
 }
+
+div.startup-selectDatabase {
+  margin: 1em 0;
+}

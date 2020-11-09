@@ -16,7 +16,7 @@ import {loadMetadata} from "../services/metadata";
 import {addDatabase, initLabel} from "../ducks/settings";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
-import {updateMetadata} from "./Startup/startup";
+import {refreshMetadata, updateMetadata} from "./Startup/startup";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
 
 export const hasNodesAndRelationships = (metadata) => {
@@ -106,7 +106,6 @@ const SelectDatabase = (props) => {
     )
 
 }
-
 
 const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,

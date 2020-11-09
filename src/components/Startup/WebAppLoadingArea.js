@@ -2,18 +2,37 @@ import {Button, Divider, Dropdown, Form, Loader, Message} from "semantic-ui-reac
 import CheckGraphAlgorithmsInstalled from "../CheckGraphAlgorithmsInstalled";
 import CheckAPOCInstalled from "../CheckAPOCInstalled";
 import React from "react";
-import {ALL_DONE, CHECKING_APOC_PLUGIN, CHECKING_GDS_PLUGIN, CONNECTING_TO_DATABASE, SELECT_DATABASE} from "./startup";
+import {
+    ALL_DONE,
+    CHECKING_APOC_PLUGIN,
+    CHECKING_GDS_PLUGIN,
+    CONNECTING_TO_DATABASE,
+    refreshMetadata,
+    SELECT_DATABASE, updateMetadata
+} from "./startup";
 import {CONNECTING, DISCONNECTED, INITIAL} from "../../ducks/connection";
 import {ConnectModal} from "../ConnectModal";
 import {tryConnect} from "../../services/connections";
-import {loadDatabases} from "../../services/metadata";
-import {getNeo4jVersion, onActiveDatabase} from "../../services/stores/neoStore";
-import {setActiveDatabase} from "../../ducks/metadata";
+import {loadDatabases, loadMetadata} from "../../services/metadata";
+import {getActiveDatabase, getNeo4jVersion, onActiveDatabase} from "../../services/stores/neoStore";
+import {
+    setActiveDatabase,
+    setDatabases,
+    setLabels,
+    setNodePropertyKeys,
+    setPropertyKeys,
+    setRelationshipTypes, setVersions
+} from "../../ducks/metadata";
 import {connect} from "react-redux";
 import {Render} from "graph-app-kit/components/Render";
+import SelectedDatabase from "../Onboarding/SelectedDatabase";
+import {selectGroup} from "../../ducks/algorithms";
+import {addDatabase, initLabel} from "../../ducks/settings";
+import WhatIsMissing from "../Onboarding/WhatIsMissing";
+import {hasNodesAndRelationships} from "../SelectDatabase";
 
 
-export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress, queryParameters}) => {
+export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress, queryParameters, prepareMetadata}) => {
     const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
 
     const failedCurrentStep = () => {
@@ -26,7 +45,7 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
     }
 
     const apocInstalled = () => {
-        setCurrentStep(ALL_DONE)
+        setCurrentStep(SELECT_DATABASE)
         setCurrentStepFailed(false)
     }
 
@@ -36,9 +55,8 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
                                          setCurrentStepInProgress={setCurrentStepInProgress}
                                          setConnected={setConnected} setDisconnected={setDisconnected}
                                          queryParameters={queryParameters}
+                                         prepareMetadata={prepareMetadata}
             />
-        case SELECT_DATABASE:
-            return <SelectDatabase currentStep={currentStep} setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
         case CHECKING_GDS_PLUGIN:
             return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
                                                   gdsInstalled={gdsInstalled}>
@@ -49,6 +67,8 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
                                        apocInstalled={apocInstalled}>
                 {placeholder}
             </CheckAPOCInstalled>;
+        case SELECT_DATABASE:
+            return <SelectDatabase currentStep={currentStep} setCurrentStep={setCurrentStep} setCurrentStepFailed={setCurrentStepFailed} />
         case ALL_DONE:
             return <div className="loading-container">
                 <Message color="grey" attached header="Neuler ready to launch"
@@ -59,10 +79,13 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
     }
 }
 
-const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFailed}) => {
+const SelectDatabaseForm =(props) => {
+    const {setActiveDatabase, setCurrentStep, setCurrentStepFailed} = props
+
     const [databases, setDatabases] = React.useState([])
     const [selectedDatabase, setSelectedDatabase] = React.useState(null)
     const [loadedDatabases, setLoadedDatabases] = React.useState(false)
+    const [activeDatabaseSelected, setActiveDatabaseSelected] = React.useState(false)
 
     const [errorMessage, setErrorMessage] = React.useState(null)
     const errorMessageTemplate = "No database selected. Pick a database to connect to from the dropdown above."
@@ -83,6 +106,14 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
         })
     }, [])
 
+    React.useEffect(() => {
+        const prepareMetadata = async () => {
+            return await refreshMetadata(props, true, () => setActiveDatabaseSelected(true));
+        }
+
+        prepareMetadata()
+    }, [props.connectionInfo])
+
     const databaseOptions= databases.map(value => {
         return  {key: value.name, value: value.name, text: (value.name) + (value.default ? " (default)" : "")};
     })
@@ -94,8 +125,16 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
         } else {
             setActiveDatabase(selectedDatabase);
             onActiveDatabase(selectedDatabase);
-            setCurrentStep(CHECKING_GDS_PLUGIN)
+            setCurrentStep(ALL_DONE)
         }
+    }
+
+    const onRefresh = () => {
+        setActiveDatabaseSelected(false)
+        loadMetadata(props.metadata.versions.neo4jVersion).then(metadata => {
+            updateMetadata(props, metadata, selectedDatabase)
+            setActiveDatabaseSelected(true)
+        })
     }
 
 
@@ -107,8 +146,13 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
                 <Dropdown placeholder='Database' fluid search selection value={selectedDatabase}
                           style={{"width": "290px"}}
                           options={databaseOptions} onChange={(evt, data) => {
-                    setErrorMessage(null)
-                    setSelectedDatabase(data.value)
+                    if (data.value !== getActiveDatabase()) {
+                        setErrorMessage(null)
+                        setSelectedDatabase(data.value)
+                        setActiveDatabase(data.value);
+                        onActiveDatabase(data.value);
+                        onRefresh()
+                    }
                 }}/>
                 <Render if={errorMessage}>
                     <Message error>
@@ -121,6 +165,36 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
                     </Message>
                 </Render>
                 <Divider/>
+
+                {activeDatabaseSelected ?
+                    (hasNodesAndRelationships(props.metadata)) ?
+                        <div className="startup-selectDatabase">
+                            <SelectedDatabase onRefresh={() => onRefresh()}/>
+                        </div> :
+                        <Message color='purple'>
+                            <Message.Header>
+                                Missing nodes or relationships
+                            </Message.Header>
+                            <Message.Content>
+                                <div>
+                                    <p>
+                                        This database does not contain nodes or relationships.
+                                    </p>
+                                    <p>
+                                        You can import sample datasets once you launch the application.
+                                    </p>
+
+                                </div>
+                            </Message.Content>
+                        </Message>
+
+                    : <Message>
+                        <Message.Header>Refreshing</Message.Header>
+                        <Message.Content>
+                            <Loader active inline style={{padding: "5px 0"}}/>
+                        </Message.Content>
+                    </Message>}
+
                 <Button
                     positive
                     icon='right arrow'
@@ -142,18 +216,29 @@ const SelectDatabaseForm =({setActiveDatabase, setCurrentStep, setCurrentStepFai
                     </Message.Content>
                 </Message>}
 
-            {!loadedDatabases &&
-            <Loader active inline='centered'>Loading</Loader>}
+            {!loadedDatabases && <Loader active inline='centered'>Loading</Loader>}
         </Form>
 
     </div>
 }
 
-const SelectDatabase = connect(() => ({}), dispatch => ({
+const SelectDatabase = connect(state => ({
+    metadata: state.metadata,
+    labels: state.settings.labels,
+}), dispatch => ({
+    selectGroup: group => dispatch(selectGroup(group)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
+    setDatabases: databases => dispatch(setDatabases(databases)),
+    setLabels: labels => dispatch(setLabels(labels)),
+    setGds: version => dispatch(setVersions(version)),
+    setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
+    setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
+    addDatabase: database => dispatch(addDatabase(database)),
+    initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))
 }))(SelectDatabaseForm)
 
-const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, setDisconnected, setCurrentStepFailed, setCurrentStepInProgress, queryParameters}) => {
+const ConnectingToDatabaseForm = ({connectionStatus, setCurrentStep, setConnected, setDisconnected, setCurrentStepFailed, setCurrentStepInProgress, queryParameters, setActiveDatabase, prepareMetadata}) => {
     const errorMsgTemplate = "Could not get a connection! Check that you entered the correct credentials and that the database is running."
     const [errorMessage, setErrorMessage] = React.useState(null)
     const [extraErrorMessage, setExtraErrorMessage] = React.useState(null)
@@ -184,10 +269,28 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
                     const credentials = {host: boltUri, username, password}
                     tryConnect(credentials)
                         .then(() => {
-                            setCurrentStepInProgress(false)
-                            setCurrentStep(SELECT_DATABASE)
                             setConnected(credentials)
-                        })
+                            return loadDatabases(getNeo4jVersion());
+                        }).then(databases => {
+                        if (databases.length === 0) {
+                            setCurrentStepFailed(true)
+                        } else {
+                            if (databases.length === 1) {
+                                onActiveDatabase(databases[0].name)
+                                setActiveDatabase(databases[0].name)
+                            } else {
+                                const defaultDatabase = databases.find(database => database.default)
+                                if (defaultDatabase) {
+                                    onActiveDatabase(defaultDatabase.name)
+                                    setActiveDatabase(defaultDatabase.name)
+                                } else {
+                                    const db = databases[Math.floor(Math.random() * databases.length)];
+                                    onActiveDatabase(db)
+                                    setActiveDatabase(db)
+                                }
+                            }
+                        }
+                    })
                         .catch((error) => {
                             setCurrentStepInProgress(false)
                             setCurrentStepFailed(true)
@@ -204,5 +307,8 @@ const ConnectingToDatabase = ({connectionStatus, setCurrentStep, setConnected, s
         default:
             return tryingToConnect
     }
-
 }
+
+const ConnectingToDatabase = connect(() => ({}), dispatch => ({
+    setActiveDatabase: database => dispatch(setActiveDatabase(database)),
+}))(ConnectingToDatabaseForm)

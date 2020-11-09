@@ -14,7 +14,7 @@ export const steps = [
 ]
 
 export const webAppSteps = [
-    CONNECTING_TO_DATABASE, SELECT_DATABASE, CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, ALL_DONE
+    CONNECTING_TO_DATABASE,  CHECKING_GDS_PLUGIN, CHECKING_APOC_PLUGIN, SELECT_DATABASE, ALL_DONE
 ]
 
 export const setLimitDefaults = (props) => {
@@ -23,7 +23,7 @@ export const setLimitDefaults = (props) => {
 }
 
 export const refreshMetadata = (props, firstConnection = false, finished = () => {}) => {
-    loadVersions().then(versions => {
+    return loadVersions().then(versions => {
         if(firstConnection) {
             sendMetrics("neuler-connected", true, versions)
         }
@@ -31,10 +31,13 @@ export const refreshMetadata = (props, firstConnection = false, finished = () =>
         props.setGds(versions)
         onNeo4jVersion(versions.neo4jVersion)
 
-        loadMetadata(versions.neo4jVersion).then(metadata => {
+        return loadMetadata(versions.neo4jVersion).then(metadata => {
+            console.log("metadata", metadata)
             updateMetadata(props, metadata, (props.metadata.activeDatabase || "neo4j"))
             finished()
+            return Promise.resolve(metadata)
         })
+
     });
 }
 

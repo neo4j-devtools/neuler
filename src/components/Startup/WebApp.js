@@ -1,6 +1,5 @@
 import React from 'react'
 import {Container, Divider, Segment} from "semantic-ui-react"
-import NEuler from "../NEuler"
 import '../../App.css'
 import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
@@ -45,7 +44,6 @@ const NewApp = (props) => {
         if(props.isNeo4jDesktop) {
             subscribeToDatabaseCredentialsForActiveGraph(window.neo4jDesktopApi,
                 (credentials, activeProject, activeGraph) => {
-                    console.log("credentials", credentials)
                     setQueryParameters({username: credentials.username, accessToken: credentials.password, url: credentials.host})
                 },
                 () => {}
@@ -64,7 +62,7 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if (props.connectionInfo.status === CONNECTED) {
-            setCurrentStep(SELECT_DATABASE)
+            setCurrentStep(CHECKING_GDS_PLUGIN)
             setCurrentStepFailed(false)
             setServerInfo(props.connectionInfo.credentials.username + "@" + props.connectionInfo.credentials.host)
         }
@@ -77,6 +75,8 @@ const NewApp = (props) => {
             setLimitDefaults(props)
         }
     }, [currentStep])
+
+
 
     if (currentStep === ALL_DONE && metadataLoaded) {
         if (showNeuler) {
@@ -108,12 +108,6 @@ const NewApp = (props) => {
                         </p>
                     </div>
                     <div className="loading">
-                        <UserInputLoadingIcon step={SELECT_DATABASE} currentStep={currentStep}
-                                              steps={webAppSteps}
-                                              currentStepFailed={currentStepFailed}/>
-                        <p>Select database</p>
-                    </div>
-                    <div className="loading">
                         <LoadingIcon step={CHECKING_GDS_PLUGIN} currentStep={currentStep}
                                      steps={webAppSteps}
                                      currentStepFailed={currentStepFailed}/>
@@ -124,6 +118,12 @@ const NewApp = (props) => {
                                      steps={webAppSteps}
                                      currentStepFailed={currentStepFailed}/>
                         <p>Checking APOC plugin</p>
+                    </div>
+                    <div className="loading">
+                        <UserInputLoadingIcon step={SELECT_DATABASE} currentStep={currentStep}
+                                              steps={webAppSteps}
+                                              currentStepFailed={currentStepFailed}/>
+                        <p>Select database</p>
                     </div>
                 </div>
 
@@ -144,7 +144,7 @@ const NewApp = (props) => {
                                        queryParameters={queryParameters}
                     />
                 </div>
-                <FeedbackForm page={constants.version + "/WebApp-Startup" } />
+                <FeedbackForm page={constants.version + props.isNeo4jDesktop ? "/DesktopApp-Startup" : "/WebApp-Startup" } />
             </Segment>
         </div>
     </Container>
