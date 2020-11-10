@@ -69,7 +69,7 @@ const NewApp = (props) => {
 
     React.useEffect(() => {
         if (currentStep === ALL_DONE) {
-            refreshMetadata(props, true, () => setMetadataLoaded(true))
+            setMetadataLoaded(true)
             setLimitDefaults(props)
         }
     }, [currentStep])
