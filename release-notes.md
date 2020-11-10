@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.42 (2020-11-10)
+
+* Make database selection the final step on startup
+* Don't auto login - instead auto populate login form
+
 ## 0.1.41 (2020-10-27)
 
 * Introducing algorithm recipes - combinations of algorithms that are typically used together
