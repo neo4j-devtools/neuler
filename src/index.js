@@ -6,6 +6,7 @@ import {PersistGate} from 'redux-persist/integration/react'
 import {Container, Dimmer, Loader} from 'semantic-ui-react'
 
 import './index.css';
+import DesktopApp from './components/Startup/DesktopApp';
 import * as serviceWorker from './serviceWorker';
 import {createStore} from "redux"
 import {connect, Provider} from 'react-redux'
