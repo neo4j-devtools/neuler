@@ -30,7 +30,7 @@ const PropertiesView = ({labels, globalLabels, properties, database}) => {
 
 const mapStateToProps = state => ({
   hiddenProperties: state.settings.hiddenProperties,
-  globalLabels: state.settings.labels
+  globalLabels: state.metadata.allLabels
 })
 
 const mapDispatchToProps = dispatch => ({

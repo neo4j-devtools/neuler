@@ -27,7 +27,7 @@ import {connect} from "react-redux";
 import {Render} from "graph-app-kit/components/Render";
 import SelectedDatabase from "../Onboarding/SelectedDatabase";
 import {selectGroup} from "../../ducks/algorithms";
-import {addDatabase, initLabel} from "../../ducks/settings";
+import {addDatabase, initLabel} from "../../ducks/metadata";
 import WhatIsMissing from "../Onboarding/WhatIsMissing";
 import {hasNodesAndRelationships} from "../SelectDatabase";
 
@@ -129,14 +129,13 @@ const SelectDatabaseForm =(props) => {
         }
     }
 
-    const onRefresh = () => {
+    const onRefresh = (database) => {
         setActiveDatabaseSelected(false)
         loadMetadata(props.metadata.versions.neo4jVersion).then(metadata => {
-            updateMetadata(props, metadata, selectedDatabase)
+            updateMetadata(props, metadata, database || selectedDatabase)
             setActiveDatabaseSelected(true)
         })
     }
-
 
     return <div className="loading-container">
         <Message color="grey" attached={true} header="Select database"/>
@@ -151,7 +150,7 @@ const SelectDatabaseForm =(props) => {
                         setSelectedDatabase(data.value)
                         setActiveDatabase(data.value);
                         onActiveDatabase(data.value);
-                        onRefresh()
+                        onRefresh(data.value)
                     }
                 }}/>
                 <Render if={errorMessage}>
@@ -225,7 +224,7 @@ const SelectDatabaseForm =(props) => {
 
 const SelectDatabase = connect(state => ({
     metadata: state.metadata,
-    labels: state.settings.labels,
+    labels: state.metadata.allLabels,
 }), dispatch => ({
     selectGroup: group => dispatch(selectGroup(group)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),

@@ -8,11 +8,6 @@ const COMMUNITY_NODE_LIMIT = `${NAME}/COMMUNITY_NODE_LIMIT`
 const HIDE_PROPERTY = `${NAME}/HIDE_PROPERTY`
 const RESET_LABELS = `${NAME}/RESET_LABELS`
 
-const ADD_DATABASE = `${NAME}/ADD_DATABASE`
-const INIT_LABEL = `${NAME}/INIT_LABEL`
-const UPDATE_LABEL_COLOR = `${NAME}/UPDATE_LABEL_COLOR`
-const UPDATE_LABEL_PROPERTY_KEYS = `${NAME}/UPDATE_LABEL_PROPERTY_KEYS`
-
 const getBlacklist = () => {
   const blacklist = new Set()
 
@@ -43,32 +38,6 @@ const getInitialState = () => {
   }
 }
 
-export const addDatabase = database => ({
-  type: ADD_DATABASE,
-  database
-})
-
-export const initLabel = (database, label, color, propertyKeys) => ({
-  type: INIT_LABEL,
-  database,
-  label,
-  color,
-  propertyKeys
-})
-
-export const updateLabelColor = (database, label, color) => ({
-  type: UPDATE_LABEL_COLOR,
-  database,
-  label,
-  color
-})
-
-export const updateLabelPropertyKeys = (database, label, propertyKeys) => ({
-  type: UPDATE_LABEL_PROPERTY_KEYS,
-  database,
-  label,
-  propertyKeys
-})
 
 export const limit = limit => ({
   type: LIMIT,
@@ -137,47 +106,6 @@ export default (state = getInitialState(), action) => {
       return {
         ...state,
         hiddenProperties
-      }
-    case ADD_DATABASE: {
-      let labels = {...state.labels}
-      if (!(action.database in labels)) {
-        labels[action.database] = {}
-      }
-
-      return {
-        ...state,
-        labels
-      }
-    }
-    case INIT_LABEL:
-      let initialLabels = {...state.labels}
-
-      if(!(action.label in initialLabels[action.database])) {
-        initialLabels[action.database][action.label] = {
-          color: action.color,
-          propertyKeys: action.propertyKeys
-        }
-      }
-
-      return {
-        ...state,
-        labels: initialLabels
-      }
-    case UPDATE_LABEL_COLOR:
-      let initLabels = {...state.labels}
-      initLabels[action.database][action.label].color = action.color
-
-      return {
-        ...state,
-        labels: initLabels
-      }
-    case UPDATE_LABEL_PROPERTY_KEYS:
-      let startLabels = {...state.labels}
-      startLabels[action.database][action.label].propertyKeys = action.propertyKeys
-
-      return {
-        ...state,
-        labels: startLabels
       }
     default:
       return state

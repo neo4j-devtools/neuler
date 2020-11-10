@@ -9,6 +9,11 @@ export const SET_VERSIONS = `${NAME}/SET_VERSIONS`
 export const SET_DATABASES = `${NAME}/SET_DATABASES`
 export const SET_ACTIVE_DATABASE = `${NAME}/SET_ACTIVE_DATABASE`
 
+const ADD_DATABASE = `${NAME}/ADD_DATABASE`
+const INIT_LABEL = `${NAME}/INIT_LABEL`
+const UPDATE_LABEL_COLOR = `${NAME}/UPDATE_LABEL_COLOR`
+const UPDATE_LABEL_PROPERTY_KEYS = `${NAME}/UPDATE_LABEL_PROPERTY_KEYS`
+
 export const setMetadata = (labels, relationshipTypes) => ({
   type: SET_METADATA,
   labels,
@@ -50,11 +55,39 @@ export const setActiveDatabase = activeDatabase => ({
   activeDatabase
 })
 
+export const addDatabase = database => ({
+  type: ADD_DATABASE,
+  database
+})
+
+export const initLabel = (database, label, color, propertyKeys) => ({
+  type: INIT_LABEL,
+  database,
+  label,
+  color,
+  propertyKeys
+})
+
+export const updateLabelColor = (database, label, color) => ({
+  type: UPDATE_LABEL_COLOR,
+  database,
+  label,
+  color
+})
+
+export const updateLabelPropertyKeys = (database, label, propertyKeys) => ({
+  type: UPDATE_LABEL_PROPERTY_KEYS,
+  database,
+  label,
+  propertyKeys
+})
+
 const initialState = {
   labels: [],
   relationshipTypes: [],
   databases: [],
-  activeDatabase: "neo4j"
+  activeDatabase: "neo4j",
+  allLabels: {}
 }
 
 export default (state = initialState, action) => {
@@ -98,6 +131,47 @@ export default (state = initialState, action) => {
       return {
         ...state,
         activeDatabase: action.activeDatabase
+      }
+    case ADD_DATABASE: {
+      let allLabels = {...state.allLabels}
+      if (!(action.database in allLabels)) {
+        allLabels[action.database] = {}
+      }
+
+      return {
+        ...state,
+        allLabels
+      }
+    }
+    case INIT_LABEL:
+      let initialLabels = {...state.allLabels}
+
+      if(!(action.label in initialLabels[action.database])) {
+        initialLabels[action.database][action.label] = {
+          color: action.color,
+          propertyKeys: action.propertyKeys
+        }
+      }
+
+      return {
+        ...state,
+        allLabels: initialLabels
+      }
+    case UPDATE_LABEL_COLOR:
+      let initLabels = {...state.allLabels}
+      initLabels[action.database][action.label].color = action.color
+
+      return {
+        ...state,
+        allLabels: initLabels
+      }
+    case UPDATE_LABEL_PROPERTY_KEYS:
+      let startLabels = {...state.allLabels}
+      startLabels[action.database][action.label].propertyKeys = action.propertyKeys
+
+      return {
+        ...state,
+        allLabels: startLabels
       }
     default:
       return state

@@ -12,7 +12,8 @@ import {
     setVersions
 } from "../../ducks/metadata"
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
-import {addDatabase, communityNodeLimit, initLabel, limit} from "../../ducks/settings";
+import {addDatabase, initLabel} from "../../ducks/metadata";
+import {communityNodeLimit, limit} from "../../ducks/settings";
 import {WebAppLoadingArea} from "./WebAppLoadingArea";
 import {LoadingIcon, UserInputLoadingIcon} from "./LoadingIcon";
 import {

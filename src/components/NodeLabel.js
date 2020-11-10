@@ -37,7 +37,7 @@ export const generateCellStyle = (style, labels, labelBackgrounds) => {
     return style;
 }
 
-const NodeLabel = ({labels, database, globalLabels, caption, metadata, readOnly}) => {
+const NodeLabel = ({labels, database, globalLabels, caption, readOnly}) => {
     const [open, setOpen] = React.useState(false)
     let [label] = labels;
 
@@ -58,7 +58,7 @@ const NodeLabel = ({labels, database, globalLabels, caption, metadata, readOnly}
               className="label">
         {caption}
     </span>
-        : <div key={metadata.globalLabels && getNodeLabel(metadata.globalLabels, database, label).color}>
+        : <div key={globalLabels && getNodeLabel(globalLabels, database, label).color}>
         <span title={"Edit " + label} onClick={() => setOpen(!open)} key={caption} style={generateCellStyle(style, labels, labelBackgrounds)}
               className="label">
         {caption}
@@ -69,6 +69,6 @@ const NodeLabel = ({labels, database, globalLabels, caption, metadata, readOnly}
 }
 
 export default connect(state => ({
-    globalLabels: state.settings.labels,
+    globalLabels: state.metadata.allLabels,
     metadata: state.metadata,
 }))(NodeLabel)

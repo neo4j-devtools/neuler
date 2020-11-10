@@ -29,7 +29,7 @@ import {
     setPropertyKeys,
     setRelationshipTypes, setVersions
 } from "./ducks/metadata";
-import {addDatabase, initLabel} from "./ducks/settings";
+import {addDatabase, initLabel} from "./ducks/metadata";
 import MainContent from "./components/MainContent";
 import {NewAlgorithm} from "./components/NewAlgorithm";
 import {refreshMetadata} from "./components/Startup/startup";
@@ -84,7 +84,7 @@ const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,
     activeAlgorithm: state.algorithms.algorithm,
     metadata: state.metadata,
-    labels: state.settings.labels,
+    labels: state.metadata.allLabels,
     connectionInfo: state.connections,
 })
 

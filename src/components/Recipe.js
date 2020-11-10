@@ -10,7 +10,8 @@ import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import CodeView from "./CodeView";
 import {ChartView} from "./Results/ChartView";
-import {addDatabase, communityNodeLimit, initLabel, limit} from "../ducks/settings";
+import {communityNodeLimit,  limit} from "../ducks/settings";
+import {addDatabase, initLabel} from "../ducks/metadata";
 import {AlgoFormView} from "./AlgorithmForm";
 import {VisView} from "./Results/VisView";
 

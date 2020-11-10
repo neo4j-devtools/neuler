@@ -4,7 +4,7 @@ import {connect} from "react-redux";
 import {selectGroup} from "../../ducks/algorithms";
 import {SketchPicker} from 'react-color';
 import reactCSS from 'reactcss'
-import {updateLabelColor, updateLabelPropertyKeys} from "../../ducks/settings";
+import {updateLabelColor, updateLabelPropertyKeys} from "../../ducks/metadata";
 
 export const getNodeLabel = (globalLabels, database, label) => {
     const nodeLabel = globalLabels[database][label];
@@ -127,13 +127,13 @@ const SelectCaptionView = ({metadata, globalLabels, database, label,updateLabelP
     </div>
 }
 
-const SelectCaption = connect(state => ({metadata: state.metadata, globalLabels: state.settings.labels}), dispatch => ({
+const SelectCaption = connect(state => ({metadata: state.metadata, globalLabels: state.metadata.allLabels}), dispatch => ({
         updateLabelPropertyKeys: (database, label, propertyKeys) => dispatch(updateLabelPropertyKeys(database, label, propertyKeys))
     })
 )(SelectCaptionView)
 
 const mapStateToProps = state => ({
-    globalLabels: state.settings.labels,
+    globalLabels: state.metadata.allLabels,
     metadata: state.metadata
 })
 

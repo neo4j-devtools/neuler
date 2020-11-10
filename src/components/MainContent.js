@@ -1,6 +1,7 @@
 import React from 'react'
 import {refreshMetadata} from "./Startup/startup";
-import {addDatabase, initLabel, limit} from "../ducks/settings";
+import {limit} from "../ducks/settings";
+import {addDatabase, initLabel} from "../ducks/metadata";
 import {
     setDatabases,
     setLabels,

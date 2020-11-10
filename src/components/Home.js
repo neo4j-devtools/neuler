@@ -25,7 +25,7 @@ import {
 } from "../ducks/metadata";
 import {getActiveDatabase, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
 import {loadMetadata} from "../services/metadata";
-import {addDatabase, initLabel} from "../ducks/settings";
+import {addDatabase, initLabel} from "../ducks/metadata";
 import WhatIsMissing from "./Onboarding/WhatIsMissing";
 import SelectedDatabase from "./Onboarding/SelectedDatabase";
 import {updateMetadata} from "./Startup/startup";
@@ -179,7 +179,7 @@ const Home = (props) => {
 const mapStateToProps = state => ({
     activeGroup: state.algorithms.group,
     metadata: state.metadata,
-    labels: state.settings.labels,
+    labels: state.metadata.allLabels,
     connectionInfo: state.connections,
     limit: state.settings.limit,
     communityNodeLimit: state.settings.communityNodeLimit,

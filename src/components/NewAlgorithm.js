@@ -8,9 +8,10 @@ import {
     setNodePropertyKeys,
     setPropertyKeys,
     setRelationshipTypes,
+    addDatabase,
+    initLabel,
     setVersions
 } from "../ducks/metadata";
-import {addDatabase, initLabel} from "../ducks/settings";
 import {useHistory} from "react-router-dom";
 import React from "react";
 import {refreshMetadata} from "./Startup/startup";

@@ -14,7 +14,7 @@ import {
 } from "../../ducks/metadata"
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
 import {initializeDesktopConnection} from "../../services/connections"
-import {addDatabase, initLabel} from "../../ducks/settings";
+import {addDatabase, initLabel} from "../../ducks/metadata";
 import {
   ALL_DONE,
   CHECKING_APOC_PLUGIN,
