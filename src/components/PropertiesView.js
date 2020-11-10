@@ -17,13 +17,15 @@ export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   return Array.from(hiddenProps)
 }
 
-const PropertiesView = ({ labels, globalLabels, properties, database }) => {
+const PropertiesView = ({labels, globalLabels, properties, database}) => {
   const [firstLabel] = labels
-  const captionProps = globalLabels[database][firstLabel].propertyKeys
-  const caption = Object.keys(properties).filter(key => captionProps.includes(key)).map(key => properties[key].toString()).join(", ");
-
-  return <NodeLabel labels={labels} caption={caption} database={database} readOnly={true} />
-
+  if (firstLabel) {
+    const captionProps = globalLabels[database][firstLabel].propertyKeys
+    const caption = Object.keys(properties).filter(key => captionProps.includes(key)).map(key => properties[key].toString()).join(", ");
+    return <NodeLabel labels={labels} caption={caption} database={database} readOnly={true}/>
+  } else {
+    return null
+  }
 }
 
 const mapStateToProps = state => ({

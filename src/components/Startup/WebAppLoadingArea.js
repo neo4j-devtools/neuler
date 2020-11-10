@@ -197,6 +197,7 @@ const SelectDatabaseForm =(props) => {
 
                 <Button
                     positive
+                    disabled={!activeDatabaseSelected}
                     icon='right arrow'
                     labelPosition='right'
                     content='Select database'
