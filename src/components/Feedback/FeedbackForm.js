@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import {Button, Checkbox, Icon, TextArea, Form} from "semantic-ui-react";
+import {sampleGraphs} from "../SampleGraphs/sampleGraphs";
 
 export const postFeedback = (body) => {
   const formData = new URLSearchParams();
@@ -40,8 +41,19 @@ export const FeedbackForm = (props) => {
 
   let View
 
+  const helpLink = "http://community.neo4j.com/new-topic?title=NEuler%20Problem&body=Hi%20%40mark.needham%2C%0A%0AI%27m%20having%20problems%20getting%20NEuler%20to%20work.%20%0A%0A%3CAdd%20detail%20here%3E%0A%0APlease%20can%20you%20help%3F%0A%0A&category=neo4j-graph-platform/graph-algorithms&tags=neuler"
   if (feedback.complete) {
-    const message = feedback.success ? "Thanks for your feedback. We're happy to hear that NEuler is serving you well!" : "Thanks for your feedback. We'll take it account when we're updating NEuler."
+    const message = feedback.success ?
+        "Thanks for your feedback. We're happy to hear that NEuler is serving you well!" :
+        <React.Fragment>
+          <p>Thanks for your feedback. We'll take it account when we're updating NEuler.</p>
+          <p>Feedback submitted via this form is anonymous. If you need a reply to help you solve a problem you're having with NEuler,
+            you can <a target="_blank" rel="noopener noreferrer" href={helpLink}>create a topic on the community site</a> and we'll try to help.
+          </p>
+          <Button primary as='a' href={helpLink} target="_blank">
+            Post on community site
+          </Button>
+        </React.Fragment>
     View = <FeedbackThanks open={open} setOpen={setOpen} message={message}/>
   } else {
     if (feedback.success === undefined) {
