@@ -1,11 +1,12 @@
 import {runCypher} from "./stores/neoStore"
 
-const findApocProceduresCypher = `
+export const findApocProceduresCypher = `
 CALL dbms.procedures()
 YIELD name
 WHERE name STARTS WITH "apoc"
-RETURN count(*) AS count
-`
+RETURN count(*) AS count`
+
+export const checkApocMetaProcedure = "CALL apoc.meta.schema() YIELD value RETURN count(*) AS count";
 
 export const checkApocInstalled = () => {
   return runCypher(findApocProceduresCypher)
@@ -14,17 +15,15 @@ export const checkApocInstalled = () => {
 }
 
 export const checkApocMetaProcedureAvailable = () => {
-  return runCypher("CALL apoc.meta.schema() YIELD value RETURN count(*) AS count")
+  return runCypher(checkApocMetaProcedure)
       .then(result => true)
       .catch(error => false)
 }
 
-const findGraphAlgosProceduresCypher = `
-CALL dbms.procedures()
+export const findGraphAlgosProceduresCypher = `CALL dbms.procedures()
 YIELD name
 WHERE name STARTS WITH "gds"
-RETURN count(*) AS count
-`
+RETURN count(*) AS count`
 
 export const checkGraphAlgorithmsInstalled = () => {
   return runCypher(findGraphAlgosProceduresCypher)

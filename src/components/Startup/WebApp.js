@@ -144,7 +144,7 @@ const NewApp = (props) => {
                                        queryParameters={queryParameters}
                     />
                 </div>
-                <FeedbackForm page={constants.version + props.isNeo4jDesktop ? "/DesktopApp-Startup" : "/WebApp-Startup" } />
+                <FeedbackForm page={constants.version + (props.isNeo4jDesktop ? "/DesktopApp-Startup" : "/WebApp-Startup") } />
             </Segment>
         </div>
     </Container>

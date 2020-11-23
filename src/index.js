@@ -54,8 +54,8 @@ const LoaderComponent = <Dimmer active>
     <Loader size='massive'>Connecting</Loader>
 </Dimmer>
 
-// const isNeo4jDesktop = !!window.neo4jDesktopApi
-const isNeo4jDesktop = true
+const isNeo4jDesktop = !!window.neo4jDesktopApi
+// const isNeo4jDesktop = true
 
 const App = WebApp
 

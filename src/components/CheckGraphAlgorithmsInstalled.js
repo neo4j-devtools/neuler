@@ -1,13 +1,14 @@
 import React, {useState} from 'react'
-import {Form, Image, Message} from "semantic-ui-react"
+import {Form, Image, Message, Segment} from "semantic-ui-react"
 
-import {checkGraphAlgorithmsInstalled} from "../services/installation"
+import {checkGraphAlgorithmsInstalled, findGraphAlgosProceduresCypher} from "../services/installation"
 import {sendMetrics} from "./metrics/sendMetrics";
 import {publicPathTo} from "./AlgorithmGroupsMenu";
 
 
 const CheckGraphAlgorithmsInstalled = (props) => {
     const libraryName = "gds";
+    const [checkComplete, setCheckComplete] = useState(false)
     const [algorithmsInstalled, setAlgorithmsInstalled] = useState(true)
 
     React.useEffect(() => {
@@ -17,8 +18,10 @@ const CheckGraphAlgorithmsInstalled = (props) => {
                 if (!result) {
                     sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
                     props.didNotFindPlugin(libraryName);
+                    setCheckComplete(true)
                 } else {
                     props.gdsInstalled();
+                    setCheckComplete(true)
                 }
 
                 setAlgorithmsInstalled(result)
@@ -28,15 +31,38 @@ const CheckGraphAlgorithmsInstalled = (props) => {
         return () => isSubscribed = false
     }, [libraryName])
 
-    if (algorithmsInstalled) {
-        return props.children;
-    } else {
+    if (!checkComplete) {
+        return <div className="loading-container">
+            <Message color="grey" attached={true} header="Checking GDS Library Installation"/>
+            <Segment attached={true}>
+                We are checking whether the library is installed by running the following query:
+                <pre>
+                        {findGraphAlgosProceduresCypher};
+                    </pre>
+            </Segment>
+        </div>
+    }
+
+
+    if (!algorithmsInstalled) {
         return <div className="loading-container">
             <Message color="grey" attached={true} header="Graph Data Science Library Missing"/>
             {props.desktop ? <MissingLibraryOnDesktop /> : <MissingLibraryOnWebapp />}
 
         </div>
     }
+
+    return <div className="loading-container">
+        <Message color="grey" attached={true} header="GDS Library Installed"/>
+        <Message color="grey" attached={true}  align="center" className="loading-message" >
+            <Message.Content>
+                <p>
+                    The GDS Library is installed on this Neo4j Server. Proceeding to the next step.
+                </p>
+            </Message.Content>
+        </Message>
+    </div>
+
 }
 
 const MissingLibraryOnDesktop = () => {
@@ -54,6 +80,13 @@ const MissingLibraryOnDesktop = () => {
                 </p>
             </Message.Content>
         </Message>
+
+        <Segment attached={true}>
+            We check whether the library is installed by running the following query:
+            <pre>
+                        {findGraphAlgosProceduresCypher};
+                    </pre>
+        </Segment>
     </React.Fragment>
 }
 

@@ -1,7 +1,12 @@
 import React, {useState} from 'react'
-import {Form, Image, Message} from "semantic-ui-react"
+import {Form, Image, Loader, Message, Segment} from "semantic-ui-react"
 
-import {checkApocInstalled, checkApocMetaProcedureAvailable} from "../services/installation"
+import {
+    checkApocInstalled,
+    checkApocMetaProcedure,
+    checkApocMetaProcedureAvailable,
+    findApocProceduresCypher
+} from "../services/installation"
 import {sendMetrics} from "./metrics/sendMetrics";
 import Clipboard from "react-clipboard.js";
 import {publicPathTo} from "./AlgorithmGroupsMenu";
@@ -16,6 +21,7 @@ const CheckGraphAlgorithmsInstalled = (props) => {
     React.useEffect(() => {
         let isSubscribed = true
         checkApocInstalled().then(apocInstalled => {
+
             if (isSubscribed) {
                 if (!apocInstalled) {
                     sendMetrics("neuler-connected", "missing-dependency", {library: libraryName})
@@ -47,15 +53,35 @@ const CheckGraphAlgorithmsInstalled = (props) => {
         return () => isSubscribed = false
     }, [libraryName])
 
-
     if (!checkComplete) {
-        return props.children;
+        return <div className="loading-container">
+            <Message color="grey" attached={true} header="Checking APOC Library Installation"/>
+            <Segment attached={true}>
+                We are checking whether the library is installed by running the following queries:
+                <pre>
+                        {findApocProceduresCypher};
+                    </pre>
+                <pre>
+                        {checkApocMetaProcedure};
+                    </pre>
+            </Segment>
+        </div>
     }
 
     if (!pluginInstalled) {
         return <div className="loading-container">
             <Message color="grey" attached={true} header="APOC Library Missing"/>
             {props.desktop ? <MissingLibraryOnDesktop/> : <MissingLibraryOnWebapp/>}
+
+            <Segment attached={true}>
+                    We check whether the library is installed by running the following queries:
+                    <pre>
+                        {findApocProceduresCypher};
+                    </pre>
+                <pre>
+                        {checkApocMetaProcedure};
+                    </pre>
+            </Segment>
         </div>
     }
 
