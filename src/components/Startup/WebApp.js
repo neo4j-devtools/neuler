@@ -138,6 +138,7 @@ const NewApp = (props) => {
                     <WebAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
                                        connectionStatus={connectionInfo.status} currentStep={currentStep}
                                        setCurrentStep={setCurrentStep}
+                                        isNeo4jDesktop={props.isNeo4jDesktop}
                                        setCurrentStepFailed={setCurrentStepFailed}
                                        setCurrentStepInProgress={setCurrentStepInProgress}
                                        queryParameters={queryParameters}

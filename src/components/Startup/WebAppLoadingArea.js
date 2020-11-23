@@ -32,7 +32,7 @@ import WhatIsMissing from "../Onboarding/WhatIsMissing";
 import {hasNodesAndRelationships} from "../SelectDatabase";
 
 
-export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress, queryParameters, prepareMetadata}) => {
+export const WebAppLoadingArea = ({connectionStatus, isNeo4jDesktop, currentStep, setCurrentStep, setCurrentStepFailed, setConnected, setDisconnected, setCurrentStepInProgress, queryParameters, prepareMetadata}) => {
     const placeholder = <Loader size='massive'>Checking plugin is installed</Loader>
 
     const failedCurrentStep = () => {
@@ -58,12 +58,12 @@ export const WebAppLoadingArea = ({connectionStatus, currentStep, setCurrentStep
                                          prepareMetadata={prepareMetadata}
             />
         case CHECKING_GDS_PLUGIN:
-            return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep}
+            return <CheckGraphAlgorithmsInstalled didNotFindPlugin={failedCurrentStep} desktop={isNeo4jDesktop}
                                                   gdsInstalled={gdsInstalled}>
                 {placeholder}
             </CheckGraphAlgorithmsInstalled>;
         case CHECKING_APOC_PLUGIN:
-            return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep}
+            return <CheckAPOCInstalled didNotFindPlugin={failedCurrentStep} desktop={isNeo4jDesktop}
                                        apocInstalled={apocInstalled}>
                 {placeholder}
             </CheckAPOCInstalled>;
