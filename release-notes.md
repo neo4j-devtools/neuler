@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.43 (2020-11-23)
+
+* Added explanation of how dependency check 
+* Add link to community site for extra help
+
 ## 0.1.42 (2020-11-10)
 
 * Make database selection the final step on startup
