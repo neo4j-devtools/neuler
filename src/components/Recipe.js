@@ -10,15 +10,10 @@ import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {TableView} from "./Results/TableView";
 import CodeView from "./CodeView";
 import {ChartView} from "./Results/ChartView";
-import {communityNodeLimit,  limit} from "../ducks/settings";
-import {addDatabase, initLabel} from "../ducks/metadata";
-import {AlgoFormView} from "./AlgorithmForm";
-import {VisView} from "./Results/VisView";
-
-import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
-import {onRunAlgo} from "../services/tasks";
-import {refreshMetadata} from "./Startup/startup";
+import {communityNodeLimit, limit} from "../ducks/settings";
 import {
+    addDatabase,
+    initLabel,
     setDatabases,
     setLabels,
     setNodePropertyKeys,
@@ -26,126 +21,18 @@ import {
     setRelationshipTypes,
     setVersions
 } from "../ducks/metadata";
+import {AlgoFormView} from "./AlgorithmForm";
+import {VisView} from "./Results/VisView";
+
+import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
+import {onRunAlgo} from "../services/tasks";
+import {refreshMetadata} from "./Startup/startup";
 import {FailedTopBar} from "./Results/FailedTopBar";
 import {sendMetrics} from "./metrics/sendMetrics";
+import {recipes} from "./Recipes";
 
 const containerStyle = {
     padding: '1em'
-}
-
-const recipes = {
-    "directed-graph-influencers": {
-        name: "Directed Graph Influencers",
-        shortDescription: "This recipe contains algorithms that find the most influential nodes in a directed graph.",
-        completionMessage: "You should now have a good idea about how to find the most influential or central nodes in your graph.",
-        slides: [
-            {
-                group: "Centralities",
-                algorithm: "Degree",
-                title: "Degree Centrality",
-                overrides: { formParameters: {} },
-                description: <React.Fragment>
-                    <p>
-                        Degree Centrality finds the most influential or central nodes in a graph based on the
-                        number of relationships that the node has.
-                    </p>
-                    <p>
-                        By default, it counts the number of incoming relationships but this value can be
-                        configured via the <i>Relationship Orientation</i> parameter.
-                    </p>
-                    <p>
-                        The weighted degree centrality for each node is computed by providing an optional
-                        relationship property name via the <i>Weight Property</i> parameter.
-                    </p>
-                </React.Fragment>
-            },
-            {
-                group: "Centralities",
-                algorithm: "Page Rank",
-                title: "Page Rank",
-                overrides: { formParameters: {} },
-                description: <React.Fragment>
-                    <p>
-                        Page Rank finds the nodes that have the great transitive influence.
-                    </p>
-                    <p>
-                        This means that it's not only how many incoming relationships that matters, it's also the importance of the nodes on the other side of that relationship.
-                    </p>
-                </React.Fragment>
-            },
-            {
-                group: "Centralities",
-                algorithm: "Betweenness",
-                title: "Betweenness Centrality",
-                overrides: { formParameters: {} },
-                description: <React.Fragment>
-                    <p>
-                        The Betweenness Centrality algorithm detects the amount of influence a node has over the flow of information in a graph.
-                    </p>
-                    <p>
-                        It is often used to find nodes that serve as a bridge from one part of a graph to another.
-                    </p>
-                    <p>
-                        We can use this algorithm to find nodes that are well connected to a sub graph within the larger graph.
-                    </p>
-                </React.Fragment>
-            }
-        ]
-    },
-    "community-detection": {
-        name: "Community Detection on Multi Partite Graph",
-        shortDescription: "This recipe contains a sequence of algorithms for detecting communities in a multi partite (more than 1 label) graph.",
-        completionMessage: "You should now understand how to find communities in a graph containing multiple labels",
-        slides: [
-            {
-                group: "Similarity",
-                algorithm: "Jaccard",
-                title: "Jaccard Similarity",
-                overrides: {
-                    formParameters: {persist: true},
-                    parameters: {config: {}},
-                    formParametersToPassOn: [
-                        {source: "writeRelationshipType", target: "relationshipType"},
-                        {source: "writeProperty", target: "weightProperty"},
-                        {source: "label", target: "label"}
-                        ],
-                    slidesToUpdate: [1]
-                },
-                description: <React.Fragment>
-                    <p>
-                        The Jaccard or Node similarity algorithm computes the similarity of pairs of nodes based on the nodes that they're connected to.
-                    </p>
-
-                    <p>
-                        We can use this algorithm to create a similarity graph by setting <i>Store results?</i> and specifying <i>Write Property</i> and <i>Write Relationship Type</i>.
-                    </p>
-
-                    <p>
-                        This technique is useful for creating relationships between nodes where none exist in the initial graph. e.g. we could create relationships between <i>Recipe</i> nodes based on the <i>Ingredient</i> nodes that they have in common.
-                    </p>
-
-
-
-                </React.Fragment>
-            },
-            {
-                group: "Community Detection",
-                algorithm: "Label Propagation",
-                title: "Label Propagation",
-                overrides: { formParameters: {}, parameters: {config: {}} },
-                description: <React.Fragment>
-                    <p>
-                        The Label Propagation Algorithm is a fast algorithm for finding communities in a graph, which it does by propagating labels and forming communities based on this process of label propagation
-                    </p>
-
-                    <p>
-                        On initialisation, every node has its own label, but as labels propagate, densely connected groups of nodes quickly reach a consensus on a unique label. At the end of the propagation only a few labels will remain.
-                    </p>
-
-                </React.Fragment>
-            }
-        ]
-    }
 }
 
 
@@ -164,7 +51,7 @@ const RecipeView = (props) => {
                     Algorithm Recipes are collections or series of algorithms that provide provide useful insights on
                     certain types of graphs or can be combined to solve data science problems.
                 </p>
-                <Recipes recipes={recipes}/>
+                <Recipes recipes={recipes(props.metadata.versions.gdsVersion)}/>
 
 
             </div>
@@ -186,7 +73,7 @@ const IndividualRecipeView = (props) => {
     const [page, setPage] = React.useState(START)
 
 
-    const [localRecipes, setLocalRecipes] = React.useState(recipes)
+    const [localRecipes, setLocalRecipes] = React.useState(recipes(props.metadata.versions.gdsVersion))
 
     const addLimits = (params) => {
         return {
@@ -200,6 +87,7 @@ const IndividualRecipeView = (props) => {
 
     const addTaskIfMissing = () => {
         const selectedRecipe = localRecipes[recipeId];
+        console.log("addTaskIfMissing", selectedRecipe, "selectedRecipe.slides[selectedSlide]", selectedRecipe.slides[selectedSlide])
         if (!selectedRecipe.slides[selectedSlide].task) {
             setLocalRecipes(localRecipes => {
                 const newLocalRecipes = Object.assign({}, localRecipes)
@@ -240,6 +128,7 @@ const IndividualRecipeView = (props) => {
             addTaskIfMissing()
         }
     }, [selectedSlide, recipeId, page])
+    console.log("selectedSlide", "recipeId", recipeId, "page", page)
 
     const selectedRecipe = localRecipes[recipeId]
     const maxSlide = selectedRecipe.slides.length
@@ -276,6 +165,8 @@ const IndividualRecipeView = (props) => {
     const handleResultsMenuItemClick = (e, {name}) => {
         updateSelectedTask({activeResultsItem: name})
     }
+
+    console.log("page", page, "selectedRecipe", selectedRecipe, "selectedSlide", selectedSlide, "selectedTask", selectedTask)
 
     return <React.Fragment>
         <TopNav selectedRecipe={selectedRecipe}/>
