@@ -1,11 +1,12 @@
 import {constructSimilarityMaps, constructWeightedSimilarityMaps, runAlgorithm,} from "../../services/similarity"
-import {nodeSimilarityParams, similarityParams} from "../../services/queries";
+import {knnParams, nodeSimilarityParams, similarityParams} from "../../services/queries";
 import JaccardForm from "./JaccardForm";
 import SimilarityResult from "./SimilarityResult";
 import CosineForm from "./CosineForm";
 import PearsonForm from "./PearsonForm";
 import OverlapForm from "./OverlapForm";
 import EuclideanForm from "./EuclideanForm";
+import KNNForm from "./KNNForm";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category, weightProperty) =>
   `${constructMapsFn(item, relationshipType, category, weightProperty)}
@@ -162,15 +163,59 @@ LIMIT toInteger($limit)`,
     description: `measures the straight line distance between two points in n-dimensional space.`
   },
 
+  "K-Nearest Neighbors": {
+    algorithmName: "gds.beta.knn",
+    Form: KNNForm,
+    parametersBuilder: knnParams,
+    service: runAlgorithm,
+    ResultView: SimilarityResult,
+    parameters: {
+      label: "*",
+      relationshipType: "*",
+      persist: false,
+      writeProperty: "score",
+      writeRelationshipType: "SIMILAR_KNN",
+      direction: "Natural",
+      nodeWeightProperty: "weight",
+      topK: 10,
+      sampleRate: 0.5,
+      deltaThreshold: 0.001,
+      maxIterations: 100,
+      randomJoins: 10
+    },
+    streamQuery: (item, relationshipType, category) => `CALL gds.beta.knn.stream($config) YIELD node1, node2, similarity
+    RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
+    ORDER BY similarity DESC
+    LIMIT toInteger($limit)`,
+    storeQuery: (item, relationshipType, category) => `CALL gds.beta.knn.write($config)`,
+    getFetchQuery: constructFetchQuery,
+    description: `computes similarities between node pairs based on node properties`
+  },
+
 };
 export default {
-  algorithmList: [
-    "Jaccard",
-    "Overlap",
-    "Cosine",
-    "Pearson",
-    "Euclidean"
+  algorithmList: (gdsVersion) => {
+    const version = parseInt(gdsVersion.split(".")[1])
 
-  ],
+    if(version >= 4) {
+      return [
+        "Jaccard",
+        "Overlap",
+        "Cosine",
+        "Pearson",
+        "Euclidean",
+        "K-Nearest Neighbors"
+      ]
+    }
+
+    return [
+      "Jaccard",
+      "Overlap",
+      "Cosine",
+      "Pearson",
+      "Euclidean"
+    ]
+
+  },
   algorithmDefinitions: algorithm => algorithms[algorithm],
 }

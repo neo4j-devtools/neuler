@@ -34,7 +34,6 @@ const MainContent = (props) => {
 
     let { path, url } = useRouteMatch();
 
-
     return <Switch>
         <Route exact path={path}>
             <div>
@@ -50,24 +49,29 @@ const MainContent = (props) => {
 
                 {props.tasks.map(task =>
                     <div className="algorithm-item" key={task.taskId}>
-                        <Link to={"/algorithms/" + task.taskId} >{task.group} / {task.algorithm}</Link>
+                        <Link to={"/algorithms/" + task.taskId}>{task.group} / {task.algorithm}</Link>
 
                         <Button onClick={() => {
                             props.removeTask(task.taskId)
-                        }} icon="close" className="close" size="tiny" />
+                        }} icon="close" className="close" size="tiny"/>
 
                         <p className="start-time">
                             Started at: {task.startTime.toLocaleTimeString()}
                         </p>
 
                         <List className="algorithm-detail">
-                            <List.Item >
+                            <List.Item>
                                 <label>Node Projection</label>
                                 <span>{task.parameters.config.nodeProjection}</span>
                             </List.Item>
-                            <List.Item >
+                            <List.Item>
                                 <label>Relationship Projection</label>
-                                <span>{task.parameters.config.relationshipProjection.relType.type}, {task.parameters.config.relationshipProjection.relType.orientation} {task.parameters.config.relationshipWeightProperty ? ", " + task.parameters.config.relationshipWeightProperty : null  }</span>
+                                <span>
+                                    {(typeof task.parameters.config.relationshipProjection == "object") ?
+                                        task.parameters.config.relationshipProjection.relType.type + ', ' + task.parameters.config.relationshipProjection.relType.orientation :
+                                        task.parameters.config.relationshipProjection}
+                                    {task.parameters.config.relationshipWeightProperty ? ", " + task.parameters.config.relationshipWeightProperty : null}
+                                </span>
                             </List.Item>
 
                         </List>

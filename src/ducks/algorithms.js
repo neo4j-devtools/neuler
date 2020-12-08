@@ -4,9 +4,10 @@ const NAME = 'ALGORITHMS'
 const SELECT_GROUP = `${NAME}/SELECT_GROUP`
 const SELECT_ALGORITHM = `${NAME}/SELECT_ALGORITHM`
 
-export const selectGroup = group => ({
+export const selectGroup = (group, gdsVersion) => ({
   type: SELECT_GROUP,
-  group
+  group,
+  gdsVersion
 })
 
 export const selectAlgorithm = algorithm => ({
@@ -23,7 +24,7 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case SELECT_GROUP:
       return {
-        algorithm: getAlgorithms(action.group)[0],
+        algorithm: getAlgorithms(action.group, action.gdsVersion)[0],
         group: action.group
       }
     case SELECT_ALGORITHM:

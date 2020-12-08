@@ -13,7 +13,6 @@ import {
 } from "semantic-ui-react"
 import React from 'react'
 
-import {selectGroup} from "../ducks/algorithms"
 import {connect} from "react-redux";
 import {
     setActiveDatabase,
@@ -38,7 +37,7 @@ import {publicPathTo} from "./AlgorithmGroupsMenu";
 
 
 const Home = (props) => {
-    const {selectGroup, metadata} = props
+    const {metadata} = props
     const credentials = props.connectionInfo.credentials
     const history = useHistory();
 
@@ -186,7 +185,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
     setDatabases: databases => dispatch(setDatabases(databases)),
     setLabels: labels => dispatch(setLabels(labels)),

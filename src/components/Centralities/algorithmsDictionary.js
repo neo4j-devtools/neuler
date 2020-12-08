@@ -178,16 +178,18 @@ const newApproxBetweenness = {
 }
 
 export default {
-  algorithmList: [
-    "Degree",
-    "Eigenvector",
-    "Page Rank",
-    "Article Rank",
-    "Betweenness",
-    "Approx Betweenness",
-    "Closeness",
-    // "Harmonic"
-  ],
+  algorithmList: () => {
+    return [
+      "Degree",
+      "Eigenvector",
+      "Page Rank",
+      "Article Rank",
+      "Betweenness",
+      "Approx Betweenness",
+      "Closeness",
+      // "Harmonic"
+    ]
+  },
   algorithmDefinitions: (algorithm, gdsVersion) => {
     const version = gdsVersion.split(".")[1]
     switch (algorithm) {

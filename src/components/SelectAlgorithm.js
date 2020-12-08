@@ -14,15 +14,15 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
     }, [])
 
     const handleChange = (e, {value}) => {
-        const group = getGroup(value);
-        selectGroup(group)
+        const group = getGroup(value, metadata.versions.gdsVersion);
+        selectGroup(group, metadata.versions.gdsVersion)
         selectAlgorithm(value)
         setSelectedAlgorithm(value)
     }
 
     const allAlgorithms = {}
     Object.keys(algorithmGroups).forEach(group => {
-        getAlgorithms(group).forEach(algorithm => {
+        getAlgorithms(group, metadata.versions.gdsVersion).forEach(algorithm => {
             allAlgorithms[algorithm] = {
                 description: getAlgorithmDefinitions(group, algorithm, metadata.versions.gdsVersion).description,
                 group: group
@@ -48,7 +48,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
                         <div className="algorithm-group">
                             <span>{group}</span>
                         </div>
-                        <Card.Group className="small-cards" items={getAlgorithms(group).map(algorithm => {return {
+                        <Card.Group className="small-cards" items={getAlgorithms(group, metadata.versions.gdsVersion).map(algorithm => {return {
                             description: algorithm,
                             className: selectedAlgorithm === algorithm ? "selected" : "",
                             "onClick": (event, {description}) => handleChange(event, {value: description})
@@ -80,5 +80,5 @@ export default connect(state => ({
     metadata: state.metadata,
 }), dispatch => ({
     selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
-    selectGroup: algorithm => dispatch(selectGroup(algorithm)),
+    selectGroup: (algorithm, gdsVersion) => dispatch(selectGroup(algorithm, gdsVersion)),
 }))(SelectAlgorithmView)

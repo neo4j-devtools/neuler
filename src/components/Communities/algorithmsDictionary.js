@@ -285,18 +285,20 @@ const newLocalClusteringCoefficient = {
 }
 
 export default {
-  algorithmList: [
-    "Louvain",
-    "Modularity Optimization",
-    "Label Propagation",
-    "K1-Coloring",
-    "Connected Components",
-    "Strongly Connected Components",
-    "Triangles",
-    "Triangle Count",
-    "Local Clustering Coefficient"
-    // "Balanced Triads"
-  ],
+  algorithmList: () => {
+    return [
+      "Louvain",
+      "Modularity Optimization",
+      "Label Propagation",
+      "K1-Coloring",
+      "Connected Components",
+      "Strongly Connected Components",
+      "Triangles",
+      "Triangle Count",
+      "Local Clustering Coefficient"
+      // "Balanced Triads"
+    ]
+  },
   algorithmDefinitions: (algorithm, gdsVersion) => {
     const version = gdsVersion.split(".")[1]
     switch (algorithm) {
