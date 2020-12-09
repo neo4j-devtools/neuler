@@ -2,6 +2,7 @@ import React from 'react'
 import {hideProperty, resetLabelsProperties} from "../ducks/settings"
 import {connect} from 'react-redux'
 import NodeLabel from "./NodeLabel";
+import NodeLabelWithSimilarity from "./NodeLabelWithSimilarity";
 
 export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   const keys = Object.keys(hiddenPropertiesMap);
@@ -17,12 +18,17 @@ export const extractHiddenProperties = (labels, hiddenPropertiesMap) => {
   return Array.from(hiddenProps)
 }
 
-const PropertiesView = ({labels, globalLabels, properties, database}) => {
+const PropertiesView = ({labels, globalLabels, properties, database, similarity}) => {
   const [firstLabel] = labels
   if (firstLabel) {
     const captionProps = globalLabels[database][firstLabel].propertyKeys
     const caption = Object.keys(properties).filter(key => captionProps.includes(key)).map(key => properties[key].toString()).join(", ");
-    return <NodeLabel labels={labels} caption={caption} database={database} readOnly={true}/>
+
+    if(similarity) {
+      return <NodeLabelWithSimilarity labels={labels} caption={caption} database={database} similarity={similarity} />
+    } else {
+      return <NodeLabel labels={labels} caption={caption} database={database} readOnly={true}/>
+    }
   } else {
     return null
   }

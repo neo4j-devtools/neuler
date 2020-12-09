@@ -1,4 +1,9 @@
-import {constructSimilarityMaps, constructWeightedSimilarityMaps, runAlgorithm,} from "../../services/similarity"
+import {
+  constructSimilarityMaps,
+  constructWeightedSimilarityMaps,
+  runAlgorithm,
+  runkNNAlgorithm,
+} from "../../services/similarity"
 import {knnParams, nodeSimilarityParams, similarityParams} from "../../services/queries";
 import JaccardForm from "./JaccardForm";
 import SimilarityResult from "./SimilarityResult";
@@ -7,6 +12,7 @@ import PearsonForm from "./PearsonForm";
 import OverlapForm from "./OverlapForm";
 import EuclideanForm from "./EuclideanForm";
 import KNNForm from "./KNNForm";
+import KNNResult from "./KNNResult";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category, weightProperty) =>
   `${constructMapsFn(item, relationshipType, category, weightProperty)}
@@ -41,6 +47,21 @@ RETURN from, to, rel.\`${config.writeProperty}\` AS similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`
 }
+
+const constructkNNFetchQuery = (item, writeRelationshipType, config) => {
+  const itemNode1 = item && item !== "*" ?  `(from:\`${item}\`)` : `(from)`
+  const itemNode2 = item && item !== "*" ?  `(to:\`${item}\`)` : `(to)`
+  const rel =  `[rel:\`${writeRelationshipType}\`]`
+
+  return `MATCH ${itemNode1}-${rel}-${itemNode2}
+WHERE exists(rel.\`${config.writeProperty}\`)
+WITH from, to, rel.\`${config.writeProperty}\` AS similarity
+ORDER BY from, similarity DESC
+WITH from, collect({node: to, similarity: similarity}) AS to
+RETURN from, to
+LIMIT toInteger($limit)`
+}
+
 
 
 const algorithms = {
@@ -167,8 +188,8 @@ LIMIT toInteger($limit)`,
     algorithmName: "gds.beta.knn",
     Form: KNNForm,
     parametersBuilder: knnParams,
-    service: runAlgorithm,
-    ResultView: SimilarityResult,
+    service: runkNNAlgorithm,
+    ResultView: KNNResult,
     parameters: {
       label: "*",
       relationshipType: "*",
@@ -183,12 +204,13 @@ LIMIT toInteger($limit)`,
       maxIterations: 100,
       randomJoins: 10
     },
-    streamQuery: (item, relationshipType, category) => `CALL gds.beta.knn.stream($config) YIELD node1, node2, similarity
-    RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
-    ORDER BY similarity DESC
-    LIMIT toInteger($limit)`,
+    streamQuery: (item, relationshipType, category) => `CALL gds.beta.knn.stream($config) 
+YIELD node1, node2, similarity
+WITH node1, collect({node: gds.util.asNode(node2), similarity: similarity}) AS to
+RETURN gds.util.asNode(node1) AS from, to
+LIMIT toInteger($limit)`,
     storeQuery: (item, relationshipType, category) => `CALL gds.beta.knn.write($config)`,
-    getFetchQuery: constructFetchQuery,
+    getFetchQuery: constructkNNFetchQuery,
     description: `computes similarities between node pairs based on node properties`
   },
 

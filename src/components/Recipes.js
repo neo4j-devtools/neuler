@@ -152,24 +152,12 @@ export const recipes = (gdsVersion) => {
                             {source: "writeProperty", target: "weightProperty"},
                             {source: "label", target: "label"}
                         ],
-                        slidesToUpdate: [1]
+                        slidesToUpdate: [1,2]
                     },
                     description: <React.Fragment>
                         <p>
-                            The Jaccard or Node similarity algorithm computes the similarity of pairs of nodes based on
-                            the
-                            nodes that they're connected to.
-                        </p>
-
-                        <p>
-                            We can use this algorithm to create a similarity graph by setting <i>Store results?</i> and
-                            specifying <i>Write Property</i> and <i>Write Relationship Type</i>.
-                        </p>
-
-                        <p>
-                            This technique is useful for creating relationships between nodes where none exist in the
-                            initial graph. e.g. we could create relationships between <i>Recipe</i> nodes based on
-                            the <i>Ingredient</i> nodes that they have in common.
+                            The K-Nearest Neighbors algorithm computes a distance value for all node pairs in the graph and creates new relationships between each node and its k nearest neighbors.
+                            The distance is calculated based on node properties.
                         </p>
 
 
@@ -179,6 +167,19 @@ export const recipes = (gdsVersion) => {
                     group: "Community Detection",
                     algorithm: "Louvain",
                     title: "Louvain",
+                    overrides: {formParameters: {}, parameters: {config: {}}},
+                    description: <React.Fragment>
+                        <p>
+                            The Louvain method for community detection is an algorithm for detecting communities in networks.
+                            It maximizes a modularity score for each community, where the modularity quantifies the quality of an assignment of nodes to communities.
+                        </p>
+
+                    </React.Fragment>
+                },
+                {
+                    group: "Community Detection",
+                    algorithm: "Label Propagation",
+                    title: "Label Propagation",
                     overrides: {formParameters: {}, parameters: {config: {}}},
                     description: <React.Fragment>
                         <p>

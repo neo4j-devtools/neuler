@@ -91,11 +91,13 @@ const IndividualRecipeView = (props) => {
         if (!selectedRecipe.slides[selectedSlide].task) {
             setLocalRecipes(localRecipes => {
                 const newLocalRecipes = Object.assign({}, localRecipes)
-                const group = selectedRecipe.slides[selectedSlide].group
-                const algorithm = selectedRecipe.slides[selectedSlide].algorithm
+                const newSelectedRecipe = newLocalRecipes[recipeId]
+
+                const group = newSelectedRecipe.slides[selectedSlide].group
+                const algorithm = newSelectedRecipe.slides[selectedSlide].algorithm
                 const {parameters, parametersBuilder} = getAlgorithmDefinitions(group, algorithm, props.metadata.versions.gdsVersion)
 
-                const parametersWithOverrides = Object.assign(parameters, selectedRecipe.slides[selectedSlide].overrides.formParameters)
+                const parametersWithOverrides = Object.assign(parameters, newSelectedRecipe.slides[selectedSlide].overrides.formParameters)
 
                 const params = parametersBuilder({
                     ...parametersWithOverrides,
@@ -105,7 +107,7 @@ const IndividualRecipeView = (props) => {
                 const formParameters = addLimits(parametersWithOverrides)
                 const taskId = generateTaskId()
 
-                selectedRecipe.slides[selectedSlide].task = {
+                newSelectedRecipe.slides[selectedSlide].task = {
                     group: group,
                     algorithm: algorithm,
                     status: ADDED,

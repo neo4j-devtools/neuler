@@ -60,7 +60,7 @@ WITH gds.util.asNode(nodeId) AS node, community, communities
 WITH community, communities, collect(node) AS nodes
 RETURN community, communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
 ORDER BY size DESC
-LIMIT toInteger($limit);`,
+LIMIT toInteger($limit)`,
     storeQuery: `CALL gds.louvain.write($config)`,
     getFetchQuery: getFetchLouvainCypher,
     description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`,
