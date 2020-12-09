@@ -17,6 +17,31 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
   }
 }
 
+export const runkNNAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+  return runAlgorithm({
+    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: (result) => {
+      if (result.records) {
+        let rows = result.records.map(record => {
+          const from = record.get('from')
+          const to = record.get('to')
+          return {
+            fromProperties: parseProperties(from.properties),
+            fromLabels: from.labels,
+            to: to.map(m => {return {"properties": parseProperties(m.node.properties), "labels": m.node.labels, "similarity": parseFloat(m.similarity.toFixed(2))}})
+          }
+        });
+        return {
+          rows: rows,
+          labels: [...new Set(rows.flatMap(result => result.fromLabels.concat(result.to.flatMap(node => node.labels))))]
+        }
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
+    }
+  })
+}
+
 
 const handleException = error => {
   console.error(error)

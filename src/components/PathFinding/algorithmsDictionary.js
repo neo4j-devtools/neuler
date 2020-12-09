@@ -170,13 +170,15 @@ LIMIT toInteger($limit)`,
 
 };
 export default {
-    algorithmList: [
-        "Shortest Path",
-        "A*",
-        "Single Source Shortest Path",
-        "All Pairs Shortest Path",
-        // "Yen’s K-shortest paths"
-        // "Balanced Triads"
-    ],
+    algorithmList: () => {
+        return [
+            "Shortest Path",
+            "A*",
+            "Single Source Shortest Path",
+            "All Pairs Shortest Path",
+            // "Yen’s K-shortest paths"
+            // "Balanced Triads"
+        ]
+    },
     algorithmDefinitions: algorithm => algorithms[algorithm],
 }

@@ -1,5 +1,10 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.44 (2020-12-09)
+
+* Fix bug with weighted similarity algos on list view
+* Added k-Nearest Neighbors and kNN recipe
+
 ## 0.1.43 (2020-11-23)
 
 * Added explanation of how dependency check 

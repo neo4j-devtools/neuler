@@ -118,7 +118,14 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
   return params
 }
 
-export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties}) => {
+const addPersistFields = (config, persist, writeProperty, writeRelationshipType) => {
+  if (persist) {
+    config.writeProperty = writeProperty || null
+    config.writeRelationshipType = writeRelationshipType || null
+  }
+}
+
+export const nodeSimilarityParams = ({label, relationshipType, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
   }
@@ -128,13 +135,39 @@ export const nodeSimilarityParams = ({label, relationshipType, categoryLabel, di
     degreeCutoff: degreeCutoff == null ? null : int(degreeCutoff),
     nodeProjection: label || "*",
     relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
-
   }
 
-  if (persist) {
-    config.writeProperty = writeProperty || null
-    config.writeRelationshipType = writeRelationshipType || null
+  addPersistFields(config, persist, writeProperty, writeRelationshipType);
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
+export const knnParams = ({label, relationshipType,  direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, nodeWeightProperty, topK, sampleRate,
+                            deltaThreshold, randomJoins, limit, requiredProperties}) => {
+  const params = {
+    limit: parseInt(limit) || 50,
   }
+
+  const config = {
+    nodeProjection: label || "*",
+    relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
+    nodeWeightProperty: nodeWeightProperty,
+    topK: int(topK) || 10,
+    randomJoins: int(randomJoins) || 10,
+    sampleRate: parseFloat(sampleRate) || 0.5,
+    deltaThreshold: parseFloat(deltaThreshold) || 0.001
+  }
+
+  if(nodeWeightProperty) {
+    config.nodeProperties = [nodeWeightProperty]
+    requiredProperties.push("nodeProperties")
+  }
+
+  addPersistFields(config, persist, writeProperty, writeRelationshipType);
 
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
@@ -240,16 +273,16 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
   const relTypeKey = "relType"
 
-  return relationshipType == null ? {
+  return relationshipType === null ? {
       [relTypeKey]: {
         type: "*",
-        orientation: direction == null ? "NATURAL" : direction.toUpperCase()
+        orientation: direction === null ? "NATURAL" : direction.toUpperCase()
       }
     }
     : {
       [relTypeKey]: {
         type: relationshipType,
-        orientation: direction == null ? "NATURAL" : direction.toUpperCase(),
+        orientation: direction === null ? "NATURAL" : direction.toUpperCase(),
         properties: !weightProperty ? {} : {
           [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
         }

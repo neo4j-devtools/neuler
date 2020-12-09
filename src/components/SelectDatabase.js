@@ -1,7 +1,6 @@
 import {Button, Container, Dropdown, List, Loader, Message} from "semantic-ui-react"
 import React from 'react'
 
-import {selectGroup} from "../ducks/algorithms"
 import {connect} from "react-redux";
 import {
     setActiveDatabase,
@@ -115,7 +114,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
     setDatabases: databases => dispatch(setDatabases(databases)),
     setLabels: labels => dispatch(setLabels(labels)),

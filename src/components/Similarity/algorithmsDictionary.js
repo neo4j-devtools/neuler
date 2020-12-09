@@ -1,11 +1,18 @@
-import {constructSimilarityMaps, constructWeightedSimilarityMaps, runAlgorithm,} from "../../services/similarity"
-import {nodeSimilarityParams, similarityParams} from "../../services/queries";
+import {
+  constructSimilarityMaps,
+  constructWeightedSimilarityMaps,
+  runAlgorithm,
+  runkNNAlgorithm,
+} from "../../services/similarity"
+import {knnParams, nodeSimilarityParams, similarityParams} from "../../services/queries";
 import JaccardForm from "./JaccardForm";
 import SimilarityResult from "./SimilarityResult";
 import CosineForm from "./CosineForm";
 import PearsonForm from "./PearsonForm";
 import OverlapForm from "./OverlapForm";
 import EuclideanForm from "./EuclideanForm";
+import KNNForm from "./KNNForm";
+import KNNResult from "./KNNResult";
 
 const constructStreamingQueryGetter = (callAlgorithm, constructMapsFn) => (item, relationshipType, category, weightProperty) =>
   `${constructMapsFn(item, relationshipType, category, weightProperty)}
@@ -40,6 +47,21 @@ RETURN from, to, rel.\`${config.writeProperty}\` AS similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`
 }
+
+const constructkNNFetchQuery = (item, writeRelationshipType, config) => {
+  const itemNode1 = item && item !== "*" ?  `(from:\`${item}\`)` : `(from)`
+  const itemNode2 = item && item !== "*" ?  `(to:\`${item}\`)` : `(to)`
+  const rel =  `[rel:\`${writeRelationshipType}\`]`
+
+  return `MATCH ${itemNode1}-${rel}-${itemNode2}
+WHERE exists(rel.\`${config.writeProperty}\`)
+WITH from, to, rel.\`${config.writeProperty}\` AS similarity
+ORDER BY from, similarity DESC
+WITH from, collect({node: to, similarity: similarity}) AS to
+RETURN from, to
+LIMIT toInteger($limit)`
+}
+
 
 
 const algorithms = {
@@ -162,15 +184,60 @@ LIMIT toInteger($limit)`,
     description: `measures the straight line distance between two points in n-dimensional space.`
   },
 
+  "K-Nearest Neighbors": {
+    algorithmName: "gds.beta.knn",
+    Form: KNNForm,
+    parametersBuilder: knnParams,
+    service: runkNNAlgorithm,
+    ResultView: KNNResult,
+    parameters: {
+      label: "*",
+      relationshipType: "*",
+      persist: false,
+      writeProperty: "score",
+      writeRelationshipType: "SIMILAR_KNN",
+      direction: "Natural",
+      nodeWeightProperty: "weight",
+      topK: 10,
+      sampleRate: 0.5,
+      deltaThreshold: 0.001,
+      maxIterations: 100,
+      randomJoins: 10
+    },
+    streamQuery: (item, relationshipType, category) => `CALL gds.beta.knn.stream($config) 
+YIELD node1, node2, similarity
+WITH node1, collect({node: gds.util.asNode(node2), similarity: similarity}) AS to
+RETURN gds.util.asNode(node1) AS from, to
+LIMIT toInteger($limit)`,
+    storeQuery: (item, relationshipType, category) => `CALL gds.beta.knn.write($config)`,
+    getFetchQuery: constructkNNFetchQuery,
+    description: `computes similarities between node pairs based on node properties`
+  },
+
 };
 export default {
-  algorithmList: [
-    "Jaccard",
-    "Overlap",
-    "Cosine",
-    "Pearson",
-    "Euclidean"
+  algorithmList: (gdsVersion) => {
+    const version = parseInt(gdsVersion.split(".")[1])
 
-  ],
+    if(version >= 4) {
+      return [
+        "Jaccard",
+        "Overlap",
+        "Cosine",
+        "Pearson",
+        "Euclidean",
+        "K-Nearest Neighbors"
+      ]
+    }
+
+    return [
+      "Jaccard",
+      "Overlap",
+      "Cosine",
+      "Pearson",
+      "Euclidean"
+    ]
+
+  },
   algorithmDefinitions: algorithm => algorithms[algorithm],
 }

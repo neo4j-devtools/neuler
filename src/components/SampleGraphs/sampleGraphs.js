@@ -124,6 +124,72 @@ MERGE (r)-[:CONTAINS_INGREDIENT]->(i)`
                 description: "Find the most similar recipes."
             }
         ]
+    },
+    "FIFA": {
+        name: "FIFA",
+        author: "Aman Shrivastava",
+        authorLink: "https://github.com/4m4n5",
+        description: `A dataset of FIFA players and their rankings.`,
+        queries: [
+            `CREATE CONSTRAINT ON (p:Player) ASSERT p.name IS UNIQUE`,
+            `USING PERIODIC COMMIT 500
+load csv with headers from "https://github.com/4m4n5/fifa18-all-player-statistics/raw/master/2019/data.csv" AS row
+MERGE (p:Player {name: row.Name})
+SET p.crossing = toInteger(row.Crossing),
+    p.finishing = toInteger(row.Finishing),
+    p.headingAccuracy = toInteger(row.\`HeadingAccuracy\`),
+    p.shortPassing = toInteger(row.\`ShortPassing\`),
+    p.volleys = toInteger(row.\`Volleys\`),
+    
+    p.dribbling = toInteger(row.\`Dribbling\`),
+    p.curve = toInteger(row.\`Curve\`),
+    p.fkAccuracy = toInteger(row.\`FK Accuracy\`),
+    p.longPassing = toInteger(row.\`LongPassing\`),
+    p.ballControl = toInteger(row.\`BallControl\`),
+    
+    p.acceleration = toInteger(row.\`Acceleration\`),
+    p.sprintSpeed = toInteger(row.\`SprintSpeed\`),
+    p.agility = toInteger(row.\`Agility\`),
+    p.reactions = toInteger(row.\`Reactions\`),
+    p.balance = toInteger(row.\`Balance\`),
+    
+    p.shotPower = toInteger(row.\`ShotPower\`),
+    p.jumping = toInteger(row.\`Jumping\`),
+    p.stamina = toInteger(row.\`Stamina\`),
+    p.strength = toInteger(row.\`Strength\`),
+    p.longShots = toInteger(row.\`LongShots\`),
+    
+    p.standingTackle = toInteger(row.\`StandingTackle\`),
+    p.gkHandling = toInteger(row.\`GKHandling\`),
+    p.gkPositioning = toInteger(row.\`GKPositioning\`),
+    p.penalties = toInteger(row.\`Penalties\`),
+    p.aggression = toInteger(row.\`Aggression\`),
+    
+    p.overall = toInteger(row.\`Overall\`),
+    
+    p.position = row.\`Position\`,
+    p.value = row.\`Value\``,
+`MATCH (p:Player)
+SET p.embedding = [key in keys(p) 
+                   WHERE not(key IN ["name", "position", "value", "overall"]) 
+                   AND apoc.meta.cypher.type(p[key]) = "INTEGER"
+                   | p[key]]`,
+`match (p:Player)
+WHERE size(p.embedding) = 0
+DELETE p`
+        ],
+        algorithms: [
+            {
+                name: "Degree",
+                category: "Centralities",
+                description: "Find the most used ingredients or most diverse recipes."
+            },
+            {
+                name: "Jaccard",
+                category: "Similarity",
+                description: "Find the most similar recipes."
+            }
+        ]
     }
 
 }
