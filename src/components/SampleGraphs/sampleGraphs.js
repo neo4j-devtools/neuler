@@ -180,15 +180,10 @@ DELETE p`
         ],
         algorithms: [
             {
-                name: "Degree",
-                category: "Centralities",
-                description: "Find the most used ingredients or most diverse recipes."
-            },
-            {
-                name: "Jaccard",
+                name: "K-Nearest Neighbors",
                 category: "Similarity",
-                description: "Find the most similar recipes."
-            }
+                description: "Find similar pairs of players based on node properties."
+            },
         ]
     }
 
