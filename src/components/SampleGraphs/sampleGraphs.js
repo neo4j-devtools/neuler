@@ -135,7 +135,9 @@ MERGE (r)-[:CONTAINS_INGREDIENT]->(i)`
             `USING PERIODIC COMMIT 500
 load csv with headers from "https://github.com/4m4n5/fifa18-all-player-statistics/raw/master/2019/data.csv" AS row
 MERGE (p:Player {name: row.Name})
-SET p.crossing = toInteger(row.Crossing),
+SET p.club = row.Club,
+
+    p.crossing = toInteger(row.Crossing),
     p.finishing = toInteger(row.Finishing),
     p.headingAccuracy = toInteger(row.\`HeadingAccuracy\`),
     p.shortPassing = toInteger(row.\`ShortPassing\`),
@@ -160,11 +162,21 @@ SET p.crossing = toInteger(row.Crossing),
     p.longShots = toInteger(row.\`LongShots\`),
     
     p.standingTackle = toInteger(row.\`StandingTackle\`),
-    p.gkHandling = toInteger(row.\`GKHandling\`),
-    p.gkPositioning = toInteger(row.\`GKPositioning\`),
+    p.positioning = toInteger(row.\`Positioning\`),
     p.penalties = toInteger(row.\`Penalties\`),
     p.aggression = toInteger(row.\`Aggression\`),
+    p.composure = toInteger(row.\`Composure\`),
+    p.vision = toInteger(row.\`Vision\`),
+    p.marking = toInteger(row.\`Marking\`),
+    p.slidingTackle = toInteger(row.\`SlidingTackle\`),
+    p.crossing = toInteger(row.\`Crossing\`),
     
+    p.gkHandling = toInteger(row.\`GKHandling\`),
+    p.gkPositioning = toInteger(row.\`GKPositioning\`),
+    p.gkReflexes = toInteger(row.\`GKReflexes\`),
+    p.gkDiving = toInteger(row.\`GKDiving\`),
+    p.gkKicking = toInteger(row.\`GKKicking\`),
+
     p.overall = toInteger(row.\`Overall\`),
     
     p.position = row.\`Position\`,
@@ -173,7 +185,7 @@ SET p.crossing = toInteger(row.Crossing),
 SET p.embedding = [key in keys(p) 
                    WHERE not(key IN ["name", "position", "value", "overall"]) 
                    AND apoc.meta.cypher.type(p[key]) = "INTEGER"
-                   | p[key]]`,
+                   | p[key] * 1.0]`,
 `match (p:Player)
 WHERE size(p.embedding) = 0
 DELETE p`

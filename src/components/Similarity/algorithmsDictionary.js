@@ -53,7 +53,7 @@ const constructkNNFetchQuery = (item, writeRelationshipType, config) => {
   const itemNode2 = item && item !== "*" ?  `(to:\`${item}\`)` : `(to)`
   const rel =  `[rel:\`${writeRelationshipType}\`]`
 
-  return `MATCH ${itemNode1}-${rel}-${itemNode2}
+  return `MATCH ${itemNode1}-${rel}->${itemNode2}
 WHERE exists(rel.\`${config.writeProperty}\`)
 WITH from, to, rel.\`${config.writeProperty}\` AS similarity
 ORDER BY from, similarity DESC
