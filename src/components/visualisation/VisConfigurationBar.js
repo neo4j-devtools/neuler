@@ -22,7 +22,7 @@ export default ({ labels, captions, nodeSize, nodeColor, updateCaption, updateNo
           <label>Node Size</label>
           <Select placeholder='Select node size'
                   value={nodeSize}
-                  options={allProps.map(prop => ({ key: prop, value: prop, text: prop }))}
+                  options={[{key: "None", value: null, text: "None"}, ...allProps.map(prop => ({ key: prop, value: prop, text: prop }))]}
                   onChange={(evt, data) => updateNodeSize(data.value)}
           />
         </Form.Field>
@@ -31,7 +31,7 @@ export default ({ labels, captions, nodeSize, nodeColor, updateCaption, updateNo
           <label>Node Color</label>
           <Select placeholder='Select node color'
                   value={nodeColor}
-                  options={allProps.map(prop => ({ key: prop, value: prop, text: prop }))}
+                  options={[{key: "None", value: null, text: "None"}, ...allProps.map(prop => ({ key: prop, value: prop, text: prop }))]}
                   onChange={(evt, data) => updateNodeColor(data.value)}
           />
         </Form.Field>

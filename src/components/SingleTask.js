@@ -7,9 +7,9 @@ import {Menu, Message} from "semantic-ui-react";
 import CodeView from "./CodeView";
 import {SuccessTopBar} from "./Results/SuccessTopBar";
 import {getGroup} from "./algorithmsLibrary";
-import {VisView} from "./Results/VisView";
 import {ChartView} from "./Results/ChartView";
 import {TableView} from "./Results/TableView";
+import {NewVisView} from "./Results/NewVisView";
 
 export const SingleTask = (props) => {
     const {task, currentPage, totalPages} = props
@@ -126,10 +126,11 @@ export const SingleTask = (props) => {
                                     </Menu>
                                 </div>
                                 <div style={{flexGrow: "1", paddingLeft: "10px"}}>
+
                                     {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
-                                        <div style={getResultsStyle('Visualisation')}>
-                                            <VisView task={task} active={activeResultsItem === 'Visualisation'}/>
-                                        </div> : null}
+                                    <div style={getResultsStyle('Visualisation')}>
+                                        <NewVisView task={task} active={activeResultsItem === 'Visualisation'}/>
+                                    </div> : null}
 
                                     {activeGroup === 'Centralities' ?
                                         <div style={getResultsStyle('Chart')}>
