@@ -38,14 +38,20 @@ export const triangles = ({streamCypher, parameters}) => {
         return {
           nodeAProperties: parseProperties(nodeA.properties),
           nodeALabels: nodeA.labels,
+          nodeAIdentity: nodeA.identity.toNumber(),
+
           nodeBProperties: parseProperties(nodeB.properties),
           nodeBLabels: nodeB.labels,
+          nodeBIdentity: nodeB.identity.toNumber(),
+
           nodeCProperties: parseProperties(nodeC.properties),
           nodeCLabels: nodeC.labels,
+          nodeCIdentity: nodeC.identity.toNumber()
         }
       });
       return {
         rows: rows,
+        ids: [...new Set(rows.flatMap(result => [result.nodeAIdentity, result.nodeBIdentity, result.nodeCIdentity]))],
         labels: [...new Set(rows.flatMap(result => result.nodeALabels.concat(result.nodeBLabels).concat(result.nodeCLabels)))]
       }
     } else {
@@ -60,16 +66,18 @@ export const triangleCountOld = ({streamCypher, storeCypher, fetchCypher, parame
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
         let rows = result.records.map(record => {
-          const {properties, labels} = record.get('node')
+          const {properties, labels, identity} = record.get('node')
 
           return {
             properties: parseProperties(properties),
+            identity: identity.toNumber(),
             labels: labels,
             triangles: record.get('triangles').toNumber()
           }
         });
         return {
           rows: rows,
+          ids: rows.map(row => row.identity),
           labels: [...new Set(rows.flatMap(result => result.labels))]
         }
       } else {
@@ -85,16 +93,18 @@ export const triangleCountNew = ({streamCypher, storeCypher, fetchCypher, parame
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
         let rows = result.records.map(record => {
-          const {properties, labels} = record.get('node')
+          const {properties, labels, identity} = record.get('node')
 
           return {
             properties: parseProperties(properties),
+            identity: identity.toNumber(),
             labels: labels,
             triangles: record.get('triangles').toNumber()
           }
         });
         return {
           rows: rows,
+          ids: rows.map(row => row.identity),
           labels: [...new Set(rows.flatMap(result => result.labels))]
         }
       } else {
@@ -110,16 +120,18 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
     streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
       if (result.records) {
         const rows = result.records.map(record => {
-          const {properties, labels} = record.get('node')
+          const {properties, labels, identity} = record.get('node')
 
           return {
             properties: parseProperties(properties),
+            identity: identity.toNumber(),
             labels: labels,
             coefficient: record.get('coefficient')
           }
         });
         return {
           rows: rows,
+          ids: rows.map(row => row.identity),
           labels: [...new Set(rows.flatMap(result => result.labels))]
         }
       } else {
@@ -149,7 +161,7 @@ export const parseResultStream = (result) => {
       const nodes = record.get('nodes')
       const communities = record.has("communities") ? record.get("communities") : null
       return {
-        nodes: nodes.map(node => { return { "properties": parseProperties(node.properties), "labels": node.labels } }) ,
+        nodes: nodes.map(node => { return { properties: parseProperties(node.properties), identity: node.identity.toNumber(), labels: node.labels } }) ,
         size: record.get('size').toNumber(),
         community: record.get('community').toNumber(),
         communities: communities ? communities.map(value => value.toNumber()).toString() : null
@@ -157,6 +169,7 @@ export const parseResultStream = (result) => {
     });
     return {
       rows: rows,
+      ids: [...new Set(rows.flatMap(result => result.nodes.map(node => node.identity)))],
       labels: [...new Set(rows.flatMap(result => result.nodes.flatMap(node => node.labels)))]
     }
   } else {

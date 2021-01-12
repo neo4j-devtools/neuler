@@ -22,7 +22,6 @@ import {
     setVersions
 } from "../ducks/metadata";
 import {AlgoFormView} from "./AlgorithmForm";
-import {VisView} from "./Results/VisView";
 
 import {Route, Switch, useHistory, useParams, useRouteMatch} from "react-router-dom";
 import {onRunAlgo} from "../services/tasks";
@@ -30,6 +29,7 @@ import {refreshMetadata} from "./Startup/startup";
 import {FailedTopBar} from "./Results/FailedTopBar";
 import {sendMetrics} from "./metrics/sendMetrics";
 import {recipes} from "./Recipes";
+import {NewVisView} from "./Results/NewVisView";
 
 const containerStyle = {
     padding: '1em'
@@ -312,7 +312,7 @@ const SuccessResults = ({getStyleResultsTab, selectedTask, handleResultsMenuItem
         <div style={{flexGrow: "1", paddingLeft: "10px"}}>
             {!(activeGroup === 'Path Finding' || activeGroup === 'Similarity') ?
                 <div style={getResultsStyle('Visualisation')}>
-                    <VisView task={selectedTask}
+                    <NewVisView task={selectedTask}
                              active={selectedTask.activeResultsItem === 'Visualisation'}/>
                 </div> : null}
 

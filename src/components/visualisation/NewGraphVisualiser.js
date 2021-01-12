@@ -82,8 +82,8 @@ class GraphVisualiser extends Component {
 
     generateCypher(label, relationshipType, writeProperty, limit) {
         return `match path = (n${label !== '*' ? ':' + label : ''})-[${relationshipType !== '*' ? ':' + relationshipType : ''}]-(m)
-return m, n
-limit toInteger(${limit})`
+        WHERE id(n) in $ids AND id(m) in $ids
+return m, n`
 
     }
 
@@ -122,7 +122,9 @@ limit toInteger(${limit})`
             })
 
             if (this.state.cypher !== null) {
-                runCypher(this.state.cypher).then(result => {
+                console.log("this.state.cypher", this.state.cypher, "task.result", props)
+                const ids = props.results.ids;
+                runCypher(this.state.cypher, {ids: ids}).then(result => {
                     if (result.records) {
                         const nodes = []
                         const links = result.records.map(r => {
@@ -245,7 +247,13 @@ limit toInteger(${limit})`
             </div>
             <div>
                 {!data && <LoaderExampleInlineCentered active={true}/>}
-                {data && <ForceGraph2D graphData={data} nodeVal={nodeSize} nodeAutoColorBy={nodeColor}
+                {data && <ForceGraph2D graphData={data}
+                                       nodeVal={node => {
+                                           const score = node[nodeSize]
+                                           const maxValue = Math.max(...data.nodes.map(node => node[nodeSize]))
+                                           return 10.0 * (score / maxValue)
+                                       }}
+                                       nodeAutoColorBy={nodeColor}
                                        nodeLabel={node => `${node.label}: ${node[captions[node.label]]}`}
                                        height={window.innerHeight-270}
                                        width={window.innerWidth-166}

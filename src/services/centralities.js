@@ -27,9 +27,10 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
 const parseResultStream = result => {
   if (result.records) {
     const rows = result.records.map(record => {
-      const { properties, labels } = record.get('node')
+      const { properties, labels, identity } = record.get('node')
       return {
         properties: parseProperties(properties),
+        identity: identity.toNumber(),
         labels,
         score: record.get('score')
       }
@@ -37,6 +38,7 @@ const parseResultStream = result => {
 
     return {
       rows: rows,
+      ids: rows.map(row => row.identity),
       labels: [...new Set(rows.flatMap(result => result.labels))]
     }
   } else {

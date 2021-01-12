@@ -17,13 +17,18 @@ export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => 
                 return {
                     sourceProperties: parseProperties(source.properties),
                     sourceLabels: source.labels,
+                    sourceIdentity: source.identity.toNumber(),
+
                     targetProperties: parseProperties(target.properties),
                     targetLabels: target.labels,
+                    targetIdentity: target.identity.toNumber(),
+
                     cost: record.get('cost')
                 }
             });
             return {
                 rows: rows,
+                ids: [...new Set(rows.flatMap(result => [result.sourceIdentity, result.targetIdentity]))],
                 labels: [...new Set(rows.flatMap(result => result.sourceLabels.concat(result.targetLabels)))]
             }
         } else {
@@ -38,15 +43,17 @@ export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => 
 export const parseResultStream = (result) => {
     if (result.records) {
         let rows = result.records.map(record => {
-            const { properties, labels } = record.get('node')
+            const { properties, labels, identity } = record.get('node')
             return {
                 properties: parseProperties(properties),
+                identity: identity.toNumber(),
                 labels: labels,
                 cost: record.get('cost')
             }
         });
         return {
             rows: rows,
+            ids: rows.map(row => row.identity),
             labels: [...new Set(rows.flatMap(result => result.labels))]
         }
     } else {

@@ -27,11 +27,13 @@ export const runkNNAlgorithm = ({streamCypher, storeCypher, fetchCypher, paramet
           return {
             fromProperties: parseProperties(from.properties),
             fromLabels: from.labels,
-            to: to.map(m => {return {"properties": parseProperties(m.node.properties), "labels": m.node.labels, "similarity": parseFloat(m.similarity.toFixed(2))}})
+            fromIdentity: from.identity.toNumber(),
+            to: to.map(m => {return {properties: parseProperties(m.node.properties), labels: m.node.labels, identity: m.node.identity.toNumber(), similarity: parseFloat(m.similarity.toFixed(2))}})
           }
         });
         return {
           rows: rows,
+          ids: [...new Set(rows.flatMap(result => [result.fromIdentity].concat(result.to.map(node => node.identity))))],
           labels: [...new Set(rows.flatMap(result => result.fromLabels.concat(result.to.flatMap(node => node.labels))))]
         }
       } else {
@@ -63,14 +65,19 @@ export const parseResultStream = (result) => {
       return {
         fromProperties: parseProperties(from.properties),
         fromLabels: from.labels,
+        fromIdentity: from.identity.toNumber(),
+
         toProperties: to.properties,
         toLabels: to.labels,
+        toIdentity: to.identity.toNumber(),
+
         similarity: record.get("similarity")
 
       }
     });
     return {
       rows: rows,
+      ids: [...new Set(rows.flatMap(result => [result.fromIdentity, result.toIdentity]))],
       labels: [...new Set(rows.flatMap(result => result.fromLabels.concat(result.toLabels)))]
     }
   } else {
