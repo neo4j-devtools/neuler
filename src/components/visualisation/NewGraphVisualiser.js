@@ -122,7 +122,6 @@ return m, n`
             })
 
             if (this.state.cypher !== null) {
-                console.log("this.state.cypher", this.state.cypher, "task.result", props)
                 const ids = props.results.ids;
                 runCypher(this.state.cypher, {ids: ids}).then(result => {
                     if (result.records) {
@@ -236,7 +235,6 @@ return m, n`
     render() {
         const {labels, nodeSize, nodeColor, captions, data} = this.state
 
-        console.log("data", data, "nodeSize", nodeSize, "nodeColor", nodeColor)
         return <div>
             <div style={{marginLeft: '1em'}}>
                 <VisConfigurationBar labels={labels} captions={captions} nodeSize={nodeSize} nodeColor={nodeColor}
@@ -251,7 +249,10 @@ return m, n`
                                        nodeVal={node => {
                                            const score = node[nodeSize]
                                            const maxValue = Math.max(...data.nodes.map(node => node[nodeSize]))
-                                           return 10.0 * (score / maxValue)
+                                           const minValue = Math.min(...data.nodes.map(node => node[nodeSize]))
+
+                                           return Math.max(0.1, (score - minValue) / (maxValue-minValue) * 10.0)
+
                                        }}
                                        nodeAutoColorBy={nodeColor}
                                        nodeLabel={node => `${node.label}: ${node[captions[node.label]]}`}
