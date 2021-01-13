@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.45 (2021-01-13)
+
+* Update visualisation
+
 ## 0.1.44 (2020-12-09)
 
 * Fix bug with weighted similarity algos on list view
