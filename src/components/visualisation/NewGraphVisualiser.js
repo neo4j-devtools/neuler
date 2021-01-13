@@ -159,7 +159,7 @@ return m, n`
 
                         this.setState({
                             data: {
-                                links: links,
+                                links: [...new Set(links.map((o) => JSON.stringify(o)))].map((string) => JSON.parse(string)),
                                 nodes: [...new Set(nodes.map((o) => JSON.stringify(o)))].map((string) => JSON.parse(string))
                             }
                         })
@@ -185,6 +185,18 @@ return m, n`
 
     updateNodeColor(nodeColor) {
         this.setState({nodeColor})
+
+        if(this.state.data !== null) {
+            this.setState(function(state, props) {
+                state.data.nodes.forEach(node => {
+                    delete node.color
+                })
+                return {
+                    data: state.data
+                };
+            });
+        }
+
     }
 
     componentDidMount() {
@@ -235,6 +247,14 @@ return m, n`
     render() {
         const {labels, nodeSize, nodeColor, captions, data} = this.state
 
+        const getVal = (node) => {
+            const score = node[nodeSize]
+            const maxValue = Math.max(...data.nodes.map(node => node[nodeSize]))
+            const minValue = Math.min(...data.nodes.map(node => node[nodeSize]))
+
+            return Math.max(0.1, (score - minValue) / (maxValue-minValue) * 10.0)
+        }
+
         return <div>
             <div style={{marginLeft: '1em'}}>
                 <VisConfigurationBar labels={labels} captions={captions} nodeSize={nodeSize} nodeColor={nodeColor}
@@ -246,13 +266,22 @@ return m, n`
             <div>
                 {!data && <LoaderExampleInlineCentered active={true}/>}
                 {data && <ForceGraph2D graphData={data}
-                                       nodeVal={node => {
-                                           const score = node[nodeSize]
-                                           const maxValue = Math.max(...data.nodes.map(node => node[nodeSize]))
-                                           const minValue = Math.min(...data.nodes.map(node => node[nodeSize]))
+                                       nodeVal={node => getVal(node)}
+                                       nodeCanvasObject={(node, ctx, globalScale) => {
+                                           // Draw wider nodes by 1px on shadow canvas for more precise hovering (due to boundary anti-aliasing)
+                                           const r = Math.sqrt(Math.max(0, getVal(node) || 1)) * 3 + 2;
 
-                                           return Math.max(0.1, (score - minValue) / (maxValue-minValue) * 10.0)
+                                           ctx.beginPath();
+                                           ctx.arc(node.x, node.y, r, 0, 2 * Math.PI, false);
+                                           ctx.fillStyle = node.color || 'rgba(31, 120, 180, 0.92)';
+                                           ctx.fill();
 
+                                           const fontSize = 12/globalScale;
+                                           ctx.font = `${fontSize}px Sans-Serif`;
+                                           ctx.textAlign = 'center';
+                                           ctx.textBaseline = 'middle';
+                                           ctx.fillStyle = "#000000";
+                                           ctx.fillText(node[captions[node.label]], node.x, node.y);
                                        }}
                                        nodeAutoColorBy={nodeColor}
                                        nodeLabel={node => `${node.label}: ${node[captions[node.label]]}`}
