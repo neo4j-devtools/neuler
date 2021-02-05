@@ -62,7 +62,10 @@ const App = WebApp
 const RenderComponentView = (props) => {
     const {View, connectionInfo, routeProps, activeAlgorithm, activeGroup} = props
     if(!connectionInfo.credentials) {
-        return <Redirect to="/login" />
+        return <Redirect to={{
+            pathname: "/login",
+            search: routeProps.location.search
+        }} />
     }
     const page = activeAlgorithm ?  `${constants.version}:${routeProps.location.pathname}:${activeGroup}/${activeAlgorithm}` : `${constants.version}:${routeProps.location.pathname}`
     const [aboutActive, setAboutActive] = React.useState(false)
