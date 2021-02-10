@@ -9,8 +9,7 @@ export default ({ task }) => (
     <Table color='green'>
       <Table.Header>
         <Table.Row>
-          <Table.HeaderCell>Labels</Table.HeaderCell>
-          <Table.HeaderCell>Properties</Table.HeaderCell>
+          <Table.HeaderCell>Node</Table.HeaderCell>
           <Table.HeaderCell>Cost</Table.HeaderCell>
         </Table.Row>
       </Table.Header>
@@ -18,16 +17,15 @@ export default ({ task }) => (
         {task.result ?
           task.result && task.result.rows.length > 0 ? task.result.rows.map((result, idx) =>
           <Table.Row key={idx}>
-            <Table.Cell>{result.labels.join(', ')}</Table.Cell>
             <Table.Cell> <PropertiesView properties={result.properties} labels={result.labels} database={task.database}/></Table.Cell>
             <Table.Cell>{result.cost}</Table.Cell>
           </Table.Row>) :
               (<Table.Row key={"no-results"}>
-            <Table.Cell colspan={3}>No results found</Table.Cell>
+            <Table.Cell colspan={2}>No results found</Table.Cell>
           </Table.Row>)
          :
         <Table.Row key="loading-centrality-result">
-          <Table.Cell colSpan={3}>
+          <Table.Cell colSpan={2}>
             <LoaderExampleInlineCentered />
           </Table.Cell>
         </Table.Row>

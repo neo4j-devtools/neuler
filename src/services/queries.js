@@ -81,14 +81,13 @@ ORDER BY coefficient DESC
 LIMIT toInteger($limit)`
 }
 
-export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
+
+
+export const onePoint5PathFindingParams = ({startNode, endNode, latitudeProperty, longitudeProperty, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
     config: {}
   }
-
-  params.startNodeId = parseInt(startNodeId)
-  params.endNodeId = parseInt(endNodeId)
   params.startNode = startNode || null
   params.endNode = endNode || null
 
@@ -99,8 +98,38 @@ export const pathFindingParams = ({startNodeId, startNode, endNodeId, endNode, d
     nodeProjection: label || "*",
     relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
     relationshipWeightProperty: parsedWeightProperty || null,
-    // weightProperty: parsedWeightProperty || null,
-    // defaultValue: parseFloat(defaultValue) || 1.0,
+    write: true,
+    latitudeProperty: latitudeProperty,
+    longitudeProperty: longitudeProperty,
+  }
+
+  if (persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
+
+
+export const pre1Point5PathFindingParams = ({startNode, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
+  const params = {
+    limit: parseInt(limit) || 50,
+    config: {}
+  }
+  params.startNode = startNode || null
+  params.endNode = endNode || null
+
+  const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
+  const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
+
+  const config = {
+    nodeProjection: label || "*",
+    relationshipProjection: createRelationshipProjection(relationshipType, direction, weightProperty, defaultValue),
+    relationshipWeightProperty: parsedWeightProperty || null,
     write: true,
     propertyKeyLat: propertyKeyLat,
     propertyKeyLon: propertyKeyLon,

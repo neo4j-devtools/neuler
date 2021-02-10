@@ -10,7 +10,7 @@ export const algorithmGroups = {
   "Similarity": similarityDictionary
 }
 
-export const getAlgorithms = (group, gdsVersion) => (algorithmGroups[group]  || {algorithmList: []}).algorithmList(gdsVersion)
+export const getAlgorithms = (group, gdsVersion) => (algorithmGroups[group]  || {algorithmList: () => []}).algorithmList(gdsVersion)
 
 export const getAlgorithmDefinitions = (group, algorithm, gdsVersion) =>  {
   return algorithmGroups[group].algorithmDefinitions(algorithm, gdsVersion)
