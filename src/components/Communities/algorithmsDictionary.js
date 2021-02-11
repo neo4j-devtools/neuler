@@ -1,7 +1,7 @@
 import LouvainForm from "./LouvainForm"
 import {
   localClusteringCoefficient,
-  runAlgorithm,
+  runAlgorithm, runSpeakerListenerLPA,
   triangleCountNew,
   triangleCountOld,
   triangles
@@ -22,7 +22,7 @@ import {
   getFetchLocalClusteringCoefficientCypher,
   getFetchLouvainCypher,
   getFetchNewLocalClusteringCoefficientCypher,
-  getFetchNewTriangleCountCypher,
+  getFetchNewTriangleCountCypher, getFetchSLLPACypher,
   getFetchTriangleCountCypher
 } from "../../services/queries";
 import NewTriangleCountResult from "./NewTriangleCountResult";
@@ -32,6 +32,8 @@ import LocalClusteringCoefficientResult from "./LocalClusteringCoefficientResult
 import NewLocalClusteringCoefficientForm from "./NewLocalClusteringCoefficientForm";
 import ModularityOptimizationForm from "./ModularityOptimizationForm";
 import K1ColoringForm from "./K1ColoringForm";
+import SLLPAForm from "./SLLPA/Form";
+import SLLPAResult from "./SLLPA/Result";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
@@ -64,6 +66,35 @@ LIMIT toInteger($limit)`,
     storeQuery: `CALL gds.louvain.write($config)`,
     getFetchQuery: getFetchLouvainCypher,
     description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`,
+    returnsCommunities: true
+  },
+  "SLLPA": {
+    algorithmName: "gds.alpha.sllpa",
+    Form: SLLPAForm,
+    parametersBuilder: communityParams,
+    service: runSpeakerListenerLPA,
+    ResultView: SLLPAResult,
+    parameters: {
+      label: "*",
+      relationshipType: "*",
+      direction: 'Undirected',
+      persist: false,
+      writeProperty: "pregel_",
+      defaultValue: 1.0,
+      relationshipWeightProperty: null,
+      maxIterations: 10,
+      minAssociationStrength: 0.1
+    },
+    streamQuery: `CALL gds.alpha.sllpa.stream($config)
+YIELD nodeId, values        
+WITH gds.util.asNode(nodeId) AS node, values.communityIds AS communities
+WITH communities, collect(node) AS nodes
+RETURN communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
+ORDER BY size DESC
+LIMIT toInteger($limit)`,
+    storeQuery: `CALL gds.alpha.sllpa.write($config)`,
+    getFetchQuery: getFetchSLLPACypher,
+    description: `variation of the Label Propagation algorithm that is able to detect multiple communities per node.`,
     returnsCommunities: true
   },
   "Modularity Optimization": {
@@ -285,8 +316,10 @@ const newLocalClusteringCoefficient = {
 }
 
 export default {
-  algorithmList: () => {
-    return [
+  algorithmList: (gdsVersion) => {
+    const version = parseInt(gdsVersion.split(".")[1])
+
+    const algorithms = [
       "Louvain",
       "Modularity Optimization",
       "Label Propagation",
@@ -296,11 +329,12 @@ export default {
       "Triangles",
       "Triangle Count",
       "Local Clustering Coefficient"
-      // "Balanced Triads"
     ]
+
+    return version >= 5 ? algorithms.concat(["SLLPA"]) : algorithms;
   },
   algorithmDefinitions: (algorithm, gdsVersion) => {
-    const version = gdsVersion.split(".")[1]
+    const version = parseInt(gdsVersion.split(".")[1])
     switch (algorithm) {
       case "Triangles": {
         const oldStreamQuery = `CALL gds.alpha.triangle.stream($config)
@@ -313,14 +347,14 @@ export default {
                 RETURN gds.util.asNode(nodeA) AS nodeA, gds.util.asNode(nodeB) AS nodeB, gds.util.asNode(nodeC) AS nodeC
                 LIMIT toInteger($limit)`
 
-        baseTriangles.streamQuery = removeSpacing(version > "1" ? newStreamQuery : oldStreamQuery)
+        baseTriangles.streamQuery = removeSpacing(version > 1 ? newStreamQuery : oldStreamQuery)
         return baseTriangles
       }
       case "Triangle Count": {
-        return Object.assign({}, baseTriangleCount, version > "1" ? newTriangleCount : oldTriangleCount)
+        return Object.assign({}, baseTriangleCount, version > 1 ? newTriangleCount : oldTriangleCount)
       }
       case "Local Clustering Coefficient": {
-        return Object.assign({}, baseLocalClusteringCoefficient, version > "1" ? newLocalClusteringCoefficient : oldLocalClusteringCoefficient)
+        return Object.assign({}, baseLocalClusteringCoefficient, version > 1 ? newLocalClusteringCoefficient : oldLocalClusteringCoefficient)
       }
       default:
         return algorithms[algorithm]

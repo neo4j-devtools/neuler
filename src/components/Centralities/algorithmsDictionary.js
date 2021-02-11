@@ -8,8 +8,8 @@ import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
 import NewApproxBetweennessForm from "./NewApproxBetweennessForm"
-import HITSResult from "./HITSResult";
-import HITSForm from "./HITSForm";
+import HITSResult from "./HITS/Result";
+import HITSForm from "./HITS/Form";
 
 
 let algorithms = {

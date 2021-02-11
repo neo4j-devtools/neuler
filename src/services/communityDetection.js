@@ -142,6 +142,32 @@ export const localClusteringCoefficient = ({streamCypher, storeCypher, fetchCyph
   })
 }
 
+export const runSpeakerListenerLPA = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
+  return runAlgorithm({
+    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
+      if (result.records) {
+        const rows = result.records.map(record => {
+          const nodes = record.get('nodes')
+          const communities = record.get("communities")
+          return {
+            nodes: nodes.map(node => { return { properties: parseProperties(node.properties), identity: node.identity.toNumber(), labels: node.labels } }) ,
+            size: record.get('size').toNumber(),
+            communities: communities ? communities.map(value => value.toNumber()).toString() : null
+          }
+        });
+        return {
+          rows: rows,
+          ids: [...new Set(rows.flatMap(result => result.nodes.map(node => node.identity)))],
+          labels: [...new Set(rows.flatMap(result => result.nodes.flatMap(node => node.labels)))]
+        }
+      } else {
+        console.error(result.error)
+        throw new Error(result.error)
+      }
+    }
+  })
+}
+
 
 const handleException = error => {
   console.error(error)

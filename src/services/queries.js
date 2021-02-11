@@ -44,6 +44,18 @@ ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 
+export const getFetchSLLPACypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}communityIds\`)
+WITH node, node.\`${config.writeProperty}communityIds\` AS community
+WITH collect(node) AS allNodes,  
+     CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
+RETURN communities, allNodes[0..$communityNodeLimit] AS nodes, size(allNodes) AS size
+ORDER BY size DESC
+LIMIT toInteger($limit)`
+}
+
 export const getCommunityFetchCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
@@ -241,7 +253,7 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, maxIterations, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, communityNodeLimit, requiredProperties}) => {
+export const communityParams = ({label, relationshipType, direction, persist, maxIterations, minAssociationStrength, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, communityNodeLimit, requiredProperties}) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
   params.communityNodeLimit = communityNodeLimit ?  parseInt(communityNodeLimit) : 10;
 
@@ -252,6 +264,7 @@ export const communityParams = ({label, relationshipType, direction, persist, ma
 
   const config = {
     write: true,
+    minAssociationStrength: parseFloat(minAssociationStrength) || null,
     clusteringCoefficientProperty: clusteringCoefficientProperty,
     includeIntermediateCommunities: includeIntermediateCommunities || false,
     seedProperty: seedProperty || "",

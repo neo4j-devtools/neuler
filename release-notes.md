@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.47 (2021-02-11)
+
+* Added HITS and Speaker Listener LPA algorithms
+
 ## 0.1.46 (2021-02-10)
 
 * Updated shortest path, A*, single source shortest path algorithms to work with GDS 1.5.0

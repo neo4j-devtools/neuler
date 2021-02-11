@@ -276,6 +276,6 @@ export default {
     },
     algorithmDefinitions: (algorithm, gdsVersion)  => {
         const version = parseInt(gdsVersion.split(".")[1])
-        return Object.assign(baseAlgorithms, version < 5 ? pre1Point5Algorithms : onePointFiveAlgorithms)
+        return Object.assign(baseAlgorithms, version < 5 ? pre1Point5Algorithms : onePointFiveAlgorithms)[algorithm]
     }
 }
