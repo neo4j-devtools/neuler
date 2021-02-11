@@ -1,6 +1,6 @@
 import PageRankForm from './PageRankForm'
-import {runAlgorithm} from "../../services/centralities"
-import {centralityParams, getFetchCypher, streamQueryOutline} from '../../services/queries'
+import {runAlgorithm, runHITSAlgorithm} from "../../services/centralities"
+import {centralityParams, getFetchCypher, getFetchHITSCypher, streamQueryOutline} from '../../services/queries'
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
 import ApproxBetweennessForm from "./ApproxBetweennessForm"
@@ -8,6 +8,8 @@ import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
 import NewApproxBetweennessForm from "./NewApproxBetweennessForm"
+import HITSResult from "./HITSResult";
+import HITSForm from "./HITSForm";
 
 
 let algorithms = {
@@ -30,6 +32,31 @@ let algorithms = {
     storeQuery: `CALL gds.alpha.degree.write($config)`,
     getFetchQuery: getFetchCypher,
     description: `detects the number of direct connections a node has`
+  },
+  "HITS": {
+    algorithmName: "gds.alpha.hits.stream",
+    Form: HITSForm,
+    service: runHITSAlgorithm,
+    ResultView: HITSResult,
+    parameters: {
+      label: "*",
+      relationshipType: "*",
+      direction: 'Natural',
+      persist: false,
+      writeProperty: "pregel_",
+      hitsIterations: 20,
+      defaultValue: 1.0,
+      relationshipWeightProperty: null
+    },
+    parametersBuilder: centralityParams,
+    streamQuery: `CALL gds.alpha.hits.stream($config) YIELD nodeId, values
+WITH gds.util.asNode(nodeId) AS node, values.auth AS authScore, values.hub AS hubScore
+RETURN node, authScore, hubScore
+ORDER BY authScore DESC
+LIMIT toInteger($limit)`,
+    storeQuery: `CALL gds.alpha.hits.write($config)`,
+    getFetchQuery: getFetchHITSCypher,
+    description: `link analysis algorithm that rates nodes based on two scores, a hub score and an authority score.`
   },
   "Eigenvector": {
     algorithmName: "gds.alpha.eigenvector",
@@ -178,17 +205,20 @@ const newApproxBetweenness = {
 }
 
 export default {
-  algorithmList: () => {
-    return [
+  algorithmList: (gdsVersion) => {
+    const version = parseInt(gdsVersion.split(".")[1])
+
+    const algorithms = [
       "Degree",
       "Eigenvector",
       "Page Rank",
       "Article Rank",
       "Betweenness",
       "Approx Betweenness",
-      "Closeness",
-      // "Harmonic"
-    ]
+      "Closeness"
+    ];
+
+    return version >= 5 ? algorithms.concat(["HITS"]) : algorithms;
   },
   algorithmDefinitions: (algorithm, gdsVersion) => {
     const version = gdsVersion.split(".")[1]

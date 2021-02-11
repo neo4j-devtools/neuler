@@ -35,8 +35,6 @@ import {subscribeToDatabaseCredentialsForActiveGraph} from "graph-app-kit/compon
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})
     React.useEffect(() => {
-        props.selectGroup("Centralities")
-        props.selectAlgorithm("Degree")
         setQueryParameters(qs.parse(props.location.search, { ignoreQueryPrefix: true }))
         props.history.push(props.location.pathname)
     }, [props.isNeo4jDesktop])

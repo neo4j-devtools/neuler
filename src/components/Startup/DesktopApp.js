@@ -43,9 +43,9 @@ const NewApp = (props) => {
   const [serverInfo, setServerInfo] = React.useState(null)
 
   React.useEffect(() => {
-    props.selectGroup("Centralities")
-    props.selectAlgorithm("Degree")
     initializeDesktopConnection(setConnected, setDisconnected, () => {
+      props.selectGroup("Centralities")
+      props.selectAlgorithm("Degree")
       setCurrentStepFailed(true)
     }, setActiveProject, setActiveGraph, () => {
       setCurrentStepFailed(true)
@@ -120,7 +120,7 @@ const NewApp = (props) => {
         <Divider />
 
         <div>
-          <DesktopAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
+          '<DesktopAppLoadingArea setDisconnected={setDisconnected} setConnected={setConnected}
                                  activeProject={activeProject} activeGraph={activeGraph}
                                  connectionStatus={connectionInfo.status} currentStep={currentStep}
                                  currentStepFailed={currentStepFailed}

@@ -26,7 +26,7 @@ import {
 import {connect} from "react-redux";
 import {Render} from "graph-app-kit/components/Render";
 import SelectedDatabase from "../Onboarding/SelectedDatabase";
-import {selectGroup} from "../../ducks/algorithms";
+import {selectAlgorithm, selectGroup} from "../../ducks/algorithms";
 import {addDatabase, initLabel} from "../../ducks/metadata";
 import WhatIsMissing from "../Onboarding/WhatIsMissing";
 import {hasNodesAndRelationships} from "../SelectDatabase";
@@ -108,7 +108,11 @@ const SelectDatabaseForm =(props) => {
 
     React.useEffect(() => {
         const prepareMetadata = async () => {
-            return await refreshMetadata(props, true, () => setActiveDatabaseSelected(true));
+            return await refreshMetadata(props, true, (versions) =>  {
+                setActiveDatabaseSelected(true)
+                props.selectGroup("Centralities", versions.gdsVersion)
+                props.selectAlgorithm("Degree")
+            });
         }
 
         prepareMetadata()
@@ -226,7 +230,8 @@ const SelectDatabase = connect(state => ({
     metadata: state.metadata,
     labels: state.metadata.allLabels,
 }), dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group)),
+    selectGroup: (group, gdsVersion) => dispatch(selectGroup(group, gdsVersion)),
+    selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
     setDatabases: databases => dispatch(setDatabases(databases)),
     setLabels: labels => dispatch(setLabels(labels)),

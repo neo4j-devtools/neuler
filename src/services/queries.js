@@ -22,6 +22,15 @@ ORDER BY score DESC
 LIMIT toInteger($limit)`
 }
 
+export const getFetchHITSCypher = (label, config) => {
+  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+  return `MATCH (node${escapedLabel})
+WHERE exists(node.\`${config.writeProperty}auth\`) AND exists(node.\`${config.writeProperty}hub\`)
+RETURN node, node.\`${config.writeProperty}auth\` AS authScore, node.\`${config.writeProperty}hub\` AS hubScore
+ORDER BY authScore DESC
+LIMIT toInteger($limit)`
+}
+
 export const getFetchLouvainCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
@@ -266,12 +275,13 @@ export const communityParams = ({label, relationshipType, direction, persist, ma
   return params
 }
 
-export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, dampingFactor, maxIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize}) => {
+export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, dampingFactor, maxIterations, hitsIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize}) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
   const parsedMaxDepth = maxDepth == null ? null : int(maxDepth)
   const parsedIterations = maxIterations == null ? null : int(maxIterations)
+  const parsedHitsIterations = hitsIterations == null ? null : int(hitsIterations)
   // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
   const parsedSamplingSize = samplingSize == null ? null : int(samplingSize)
@@ -279,6 +289,7 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   const config = {
     dampingFactor: parseFloat(dampingFactor) || null,
     maxIterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
+    hitsIterations: parsedHitsIterations && parsedHitsIterations > 0 ? parsedHitsIterations : null,
     maxDepth: parsedMaxDepth && parsedMaxDepth > 0 ? parsedMaxDepth : null,
     probability: parsedProbability && parsedProbability > 0 ? parsedProbability : null,
     strategy: strategy,
