@@ -1,4 +1,4 @@
-import {centralityParams, filterParameters, onePoint5PathFindingParams} from './queries';
+import {centralityParams, filterParameters, onePoint5PathFindingParams, pre1Point5PathFindingParams} from './queries';
 
 test('only keep allowed properties', () => {
   const raw = {mark: [1,2,3], irfan: [4,5,6], michael: 2}
@@ -37,7 +37,7 @@ test('relationshipProjection has optional weight property', () => {
   })
 });
 
-test('path finding have optional node lat/long properties', () => {
+test('(1.5) path finding have optional node lat/long properties', () => {
   const params = onePoint5PathFindingParams({
     requiredProperties:["latitudeProperty", "longitudeProperty"],
     label: "Foo", relationshipType: "BAR", direction: "Reverse",
@@ -61,6 +61,33 @@ test('path finding have optional node lat/long properties', () => {
     },
     latitudeProperty: "foo1",
     longitudeProperty: "foo2",
+  })
+});
+
+test('(pre 1.5) path finding have optional node lat/long properties', () => {
+  const params = pre1Point5PathFindingParams({
+    requiredProperties:["propertyKeyLat", "propertyKeyLon"],
+    label: "Foo", relationshipType: "BAR", direction: "Reverse",
+    weightProperty: "distance", propertyKeyLat: "foo1", propertyKeyLon: "foo2"
+  })
+  expect(params.config).toEqual({
+    nodeProjection: {
+      nodeLabel: {
+        label: "Foo",
+        properties: ["foo1", "foo2"]
+      }
+    },
+    relationshipProjection: {
+      relType: {
+        type: "BAR",
+        orientation: "REVERSE",
+        properties: {
+          distance: {property: "distance", defaultValue: null},
+        }
+      }
+    },
+    propertyKeyLat: "foo1",
+    propertyKeyLon: "foo2",
   })
 });
 

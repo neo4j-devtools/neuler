@@ -166,6 +166,15 @@ export const pre1Point5PathFindingParams = ({startNode, endNode, delta, property
     delta: delta
   }
 
+  if(propertyKeyLat || propertyKeyLon) {
+    config.nodeProjection = {
+      nodeLabel: {
+        label: config.nodeProjection,
+        properties: [propertyKeyLat, propertyKeyLon]
+      }
+    }
+  }
+
   if (persist) {
     config.writeProperty = parsedWriteProperty
   }
