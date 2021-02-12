@@ -1,5 +1,5 @@
 import React from 'react'
-import {Form, Input, Popup} from "semantic-ui-react"
+import {Dropdown, Form, Input, Popup} from "semantic-ui-react"
 import {ProjectedGraphWithWeights} from "../../Form/ProjectedGraph";
 import {ResultsFilteringWrapper} from "../../Form/ResultsFiltering";
 import {OpenCloseSection} from "../../Form/OpenCloseSection";
@@ -27,14 +27,14 @@ const AlgoForm = ({
             <Parameters onChange={onChange}
                         startNode={startNode} endNode={endNode}
                         latitudeProperty={latitudeProperty} longitudeProperty={longitudeProperty}
-                        readOnly={readOnly}
+                        readOnly={readOnly} propertyKeyOptions={propertyKeyOptions}
             />
             <ResultsFilteringWrapper>{children}</ResultsFilteringWrapper>
         </Form>
     )
 }
 
-const Parameters = ({onChange, startNode, endNode, latitudeProperty, longitudeProperty, readOnly}) => {
+const Parameters = ({onChange, startNode, endNode, latitudeProperty, longitudeProperty, readOnly, propertyKeyOptions}) => {
     return <OpenCloseSection title="Algorithm Parameters">
         <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Start Node</label>
@@ -54,23 +54,23 @@ const Parameters = ({onChange, startNode, endNode, latitudeProperty, longitudePr
             </Form.Field>
         </Form.Group>
 
-
         <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Latitude Property</label>
-            <input
-                value={latitudeProperty}
-                onChange={evt => onChange('latitudeProperty', evt.target.value)}
-                style={{'width': '7em'}}
-            />
+            <Dropdown disabled={readOnly} placeholder='Weight Property' value={latitudeProperty}
+                      search selection
+                      options={propertyKeyOptions}
+                      onChange={(evt, data) => onChange("latitudeProperty", data.value)}/>
         </Form.Field>
+
         <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Longitude Property</label>
-            <input size='mini'
-                   value={longitudeProperty}
-                   onChange={evt => onChange('longitudeProperty', evt.target.value)}
-
-            />
+            <Dropdown disabled={readOnly} placeholder='Weight Property' value={longitudeProperty}
+                      search selection
+                      options={propertyKeyOptions}
+                      onChange={(evt, data) => onChange("longitudeProperty", data.value)}/>
         </Form.Field>
+
+
     </OpenCloseSection>
 }
 

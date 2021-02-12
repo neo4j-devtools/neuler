@@ -124,6 +124,15 @@ export const onePoint5PathFindingParams = ({startNode, endNode, latitudeProperty
     longitudeProperty: longitudeProperty,
   }
 
+  if(latitudeProperty || longitudeProperty) {
+    config.nodeProjection = {
+      nodeLabel: {
+        label: config.nodeProjection,
+        properties: [latitudeProperty, longitudeProperty]
+      }
+    }
+  }
+
   if (persist) {
     config.writeProperty = parsedWriteProperty
   }
@@ -136,7 +145,7 @@ export const onePoint5PathFindingParams = ({startNode, endNode, latitudeProperty
 }
 
 
-export const pre1Point5PathFindingParams = ({startNode, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
+export const pre1Point5PathFindingParams = ({startNode, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties}) => {
   const params = {
     limit: parseInt(limit) || 50,
     config: {}
@@ -325,24 +334,22 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
 
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
   const relTypeKey = "relType"
-
-  return relationshipType === null ? {
+  return (relationshipType === null || relationshipType === undefined) ? {
       [relTypeKey]: {
         type: "*",
-        orientation: direction === null ? "NATURAL" : direction.toUpperCase()
+        orientation: (direction === null || direction === undefined) ? "NATURAL" : direction.toUpperCase()
       }
     }
     : {
       [relTypeKey]: {
         type: relationshipType,
-        orientation: direction === null ? "NATURAL" : direction.toUpperCase(),
+        orientation: (direction === null || direction === undefined) ? "NATURAL" : direction.toUpperCase(),
         properties: !weightProperty ? {} : {
           [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
         }
       }
     }
 }
-
 
 export const baseParameters = (label, relationshipType, direction, limit, weightProperty, defaultValue) => {
   const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty

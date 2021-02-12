@@ -1,4 +1,4 @@
-import {filterParameters, baseParameters, centralityParams} from './queries';
+import {centralityParams, filterParameters, onePoint5PathFindingParams} from './queries';
 
 test('only keep allowed properties', () => {
   const raw = {mark: [1,2,3], irfan: [4,5,6], michael: 2}
@@ -22,7 +22,9 @@ test('relationshipProjection uses direction', () => {
 });
 
 test('relationshipProjection has optional weight property', () => {
-  const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse", weightProperty: "distance"})
+  const params = centralityParams({
+    requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse", weightProperty: "distance"
+  })
   expect(params.config).toEqual({nodeProjection: "Foo", relationshipProjection: {
       relType: {
       type: "BAR",
@@ -34,6 +36,34 @@ test('relationshipProjection has optional weight property', () => {
   }
   })
 });
+
+test('path finding have optional node lat/long properties', () => {
+  const params = onePoint5PathFindingParams({
+    requiredProperties:["latitudeProperty", "longitudeProperty"],
+    label: "Foo", relationshipType: "BAR", direction: "Reverse",
+    weightProperty: "distance", latitudeProperty: "foo1", longitudeProperty: "foo2"
+  })
+  expect(params.config).toEqual({
+    nodeProjection: {
+      nodeLabel: {
+        label: "Foo",
+        properties: ["foo1", "foo2"]
+      }
+    },
+    relationshipProjection: {
+      relType: {
+        type: "BAR",
+        orientation: "REVERSE",
+        properties: {
+          distance: {property: "distance", defaultValue: null},
+        }
+      }
+    },
+    latitudeProperty: "foo1",
+    longitudeProperty: "foo2",
+  })
+});
+
 
 test('relationshipProjection has optional weight property even if it is an empty string', () => {
   const params = centralityParams({requiredProperties:[], label: "Foo", relationshipType: "BAR", direction: "Reverse", weightProperty: ""})
@@ -65,7 +95,7 @@ test('relationshipProjection removes hyphens', () => {
 
 
 test('writeProperty if persist is true', () => {
-  const params = centralityParams({requiredProperties:["writeProperty"], persist: false, writeProperty: "foo"})
+  const params = centralityParams({requiredProperties:["writeProperty"], persist: true, writeProperty: "foo"})
   const config = params.config;
   expect(config.writeProperty).toEqual("foo")
 });

@@ -6,6 +6,7 @@ import AStarForm from "./1.5/AStarForm";
 import SingleSourceShortestPathForm from "./SingleSourceShortestPathForm";
 import AllPairsShortestPathForm from "./AllPairsShortestPathForm";
 import AllPairsShortestPathResult from "./AllPairsShortestPathResult";
+import OldAStarForm from "./AStarForm";
 
 const findStartEndNodes = () => `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
 WITH start
@@ -109,7 +110,7 @@ RETURN gds.util.asNode(nodeId) AS node, cost;`,
         description: `The Shortest Path algorithm calculates the shortest (weighted) path between a pair of nodes. `
     },
     "A*": {
-        Form: AStarForm,
+        Form: OldAStarForm,
         parametersBuilder: pre1Point5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
@@ -120,7 +121,6 @@ RETURN gds.util.asNode(nodeId) AS node, cost;`,
             relationshipQuery: null,
             direction: 'Undirected',
             persist: false,
-            writeProperty: "louvain",
             defaultValue: 1.0,
             relationshipWeightProperty: "weight",
             propertyKeyLat: "latitude",
