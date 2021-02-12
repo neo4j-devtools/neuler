@@ -15,11 +15,13 @@ const generateGuidesUrl = 'https://3uvkamww2b.execute-api.us-east-1.amazonaws.co
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
 export const constructQueries = (algorithmDefinition, parameters, streamQuery) => {
-    const graphProperties = filterParameters(parameters.config, ["relationshipWeightProperty"])
+    const graphProperties = filterParameters(parameters.config, [])
     const algorithmProperties = filterParameters(parameters.config, [
         "writeProperty", "writeRelationshipType",
         "maxIterations", "normalization", "dampingFactor", "samplingSize",
-        "similarityCutoff", "degreeCutoff", "includeIntermediateCommunities", "seedProperty"
+        "similarityCutoff", "degreeCutoff", "includeIntermediateCommunities", "seedProperty",
+        "latitudeProperty", "longitudeProperty", "propertyKeyLat", "propertyKeyLon",
+        "relationshipWeightProperty"
     ])
 
     Object.keys(algorithmProperties).forEach(key => {

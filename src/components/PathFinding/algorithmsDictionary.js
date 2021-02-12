@@ -132,9 +132,15 @@ WITH config { .*, startNode: start, endNode: end} as config
 CALL gds.alpha.shortestPath.astar.stream(config)
 YIELD nodeId, cost
 RETURN gds.util.asNode(nodeId) AS node, cost`,
-        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.alpha.shortestPath.astar.stream("${namedGraph}", {startNode: start, endNode: end})
+        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.alpha.shortestPath.astar.stream("${namedGraph}", {
+  startNode: start, 
+  endNode: end, 
+  propertyKeyLat: $config.propertyKeyLat, 
+  propertyKeyLon: $config.propertyKeyLon,
+  relationshipWeightProperty: $config.relationshipWeightProperty
+})
 YIELD nodeId, cost
-RETURN gds.util.asNode(nodeId) AS node, cost;`,
+RETURN gds.util.asNode(nodeId) AS node, cost`,
         storeQuery: ``,
         getFetchQuery: () => "",
         description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
@@ -226,9 +232,15 @@ WITH config { .*, sourceNode: id(start), targetNode: id(end)} as config
 CALL gds.beta.shortestPath.astar.stream(config)
 YIELD targetNode, totalCost AS cost
 RETURN gds.util.asNode(targetNode) AS node, cost`,
-        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.beta.shortestPath.astar.stream("${namedGraph}", {sourceNode: id(start), targetNode: id(end)})
+        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.beta.shortestPath.astar.stream("${namedGraph}", {
+  sourceNode: id(start), 
+  targetNode: id(end),
+  latitudeProperty: $config.latitudeProperty, 
+  longitudeProperty: $config.longitudeProperty,
+  relationshipWeightProperty: $config.relationshipWeightProperty
+})
 YIELD targetNode, totalCost AS cost
-RETURN gds.util.asNode(targetNode) AS node, cost;`,
+RETURN gds.util.asNode(targetNode) AS node, cost`,
         storeQuery: ``,
         getFetchQuery: () => "",
         description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
