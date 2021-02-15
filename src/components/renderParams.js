@@ -8,7 +8,7 @@ class RenderParams extends React.Component {
   extractValue(parameters, key) {
     return parameters[key]
       ? (typeof parameters[key] === 'string'
-        ? `'${parameters[key]}'`
+        ? `'${parameters[key].replace(/'/g, "\\'")}'`
         : (typeof parameters[key] === "object" ? `${stringifyObject(parameters[key], {
           indent: "  ",
           transform: (obj, prop, originalResult) => {

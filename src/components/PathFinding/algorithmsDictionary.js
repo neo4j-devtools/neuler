@@ -176,10 +176,7 @@ RETURN gds.util.asNode(targetNode) AS node, cost`,
         parametersBuilder: onePoint5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
-        parameters: { ...commonParameters, ...{
-            nodeQuery: null,
-            relationshipQuery: null,
-        }},
+        parameters: { ...commonParameters, ...{nodeQuery: null, relationshipQuery: null,}},
         streamQuery: findStartNode() + `WITH $config AS config, start
 WITH config { .*, sourceNode: id(start)} as config
 CALL gds.beta.allShortestPaths.dijkstra.stream(config)
