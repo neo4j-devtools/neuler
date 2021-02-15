@@ -129,10 +129,7 @@ const baseBetweenness = {
   Form: BetweennesForm,
   service: runAlgorithm,
   ResultView: CentralityResult,
-  parameters: {
-    ...commonParameters,
-    ...{ writeProperty: "betweenness",}
-  },
+  parameters: { ...commonParameters, ...{ writeProperty: "betweenness",}},
   parametersBuilder: centralityParams,
   getFetchQuery: getFetchCypher,
   description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
@@ -158,10 +155,7 @@ const oldApproxBetweenness = {
 
 const newApproxBetweenness = {
   Form: NewApproxBetweennessForm,
-  parameters: {
-    ...commonParameters,
-    ...{ samplingSize: 100, writeProperty: "approxBetweenness"}
-  },
+  parameters: { ...commonParameters, ...{ samplingSize: 100, writeProperty: "approxBetweenness"}},
   streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($config) YIELD nodeId, score`),
   storeQuery: `CALL gds.betweenness.write($config)`
 }

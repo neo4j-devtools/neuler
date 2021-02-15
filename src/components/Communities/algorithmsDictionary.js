@@ -37,6 +37,20 @@ import SLLPAResult from "./SLLPA/Result";
 
 const removeSpacing = (query) => query.replace(/^[^\S\r\n]+|[^\S\r\n]+$/gm, "")
 
+const commonParameters = {
+  label: "*",
+  relationshipType: "*",
+  persist: false,
+  direction: 'Undirected'
+}
+
+const commonRelWeightParameters = {
+  ...commonParameters, ...{
+    defaultValue: 1.0,
+    relationshipWeightProperty: null,
+  }
+}
+
 let algorithms = {
   "Louvain": {
     algorithmName: "gds.louvain",
@@ -45,16 +59,12 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: LouvainResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Undirected',
-      persist: false,
-      writeProperty: "louvain",
-      includeIntermediateCommunities: false,
-      intermediateCommunitiesWriteProperty: "louvainIntermediate",
-      defaultValue: 1.0,
-      relationshipWeightProperty: null,
-      seedProperty: null,
+      ...commonRelWeightParameters, ...{
+        writeProperty: "louvain",
+        includeIntermediateCommunities: false,
+        intermediateCommunitiesWriteProperty: "louvainIntermediate",
+        seedProperty: null,
+      }
     },
     streamQuery: `CALL gds.louvain.stream($config)
 YIELD nodeId, communityId AS community, intermediateCommunityIds AS communities
@@ -75,15 +85,11 @@ LIMIT toInteger($limit)`,
     service: runSpeakerListenerLPA,
     ResultView: SLLPAResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Undirected',
-      persist: false,
-      writeProperty: "pregel_",
-      defaultValue: 1.0,
-      relationshipWeightProperty: null,
-      maxIterations: 10,
-      minAssociationStrength: 0.1
+      ...commonRelWeightParameters, ...{
+        writeProperty: "pregel_",
+        maxIterations: 10,
+        minAssociationStrength: 0.1
+      }
     },
     streamQuery: `CALL gds.alpha.sllpa.stream($config)
 YIELD nodeId, values        
@@ -104,16 +110,12 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Undirected',
-      persist: false,
-      writeProperty: "modularityOptimization",
-      defaultValue: 1.0,
-      relationshipWeightProperty: null,
-      seedProperty: null,
-      maxIterations: 10,
-      tolerance: 0.0001
+      ...commonRelWeightParameters, ...{
+        writeProperty: "modularityOptimization",
+        seedProperty: null,
+        maxIterations: 10,
+        tolerance: 0.0001
+      }
     },
     streamQuery: communityStreamQueryOutline(`CALL gds.beta.modularityOptimization.stream($config) YIELD nodeId, communityId AS community`),
     storeQuery: `CALL gds.beta.modularityOptimization.write($config)`,
@@ -128,14 +130,10 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Undirected',
-      persist: false,
-      writeProperty: "k1Coloring",
-      defaultValue: 1.0,
-      relationshipWeightProperty: null,
-      maxIterations: 10
+      ...commonRelWeightParameters, ...{
+        writeProperty: "k1Coloring",
+        maxIterations: 10
+      }
     },
     streamQuery: communityStreamQueryOutline(`CALL gds.beta.k1coloring.stream($config) YIELD nodeId, color AS community`),
     storeQuery: `CALL gds.beta.k1coloring.write($config)`,
@@ -149,15 +147,7 @@ LIMIT toInteger($limit)`,
     parametersBuilder: communityParams,
     service: runAlgorithm,
     ResultView: CommunityResult,
-    parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Undirected',
-      persist: false,
-      writeProperty: "lpa",
-      defaultValue: 1.0,
-      relationshipWeightProperty: null
-    },
+    parameters: {...commonRelWeightParameters, ...{writeProperty: "lpa"}},
     streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, communityId AS community`),
     storeQuery: `CALL gds.labelPropagation.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
@@ -171,12 +161,10 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      persist: false,
-      writeProperty: "unionFind",
-      defaultValue: 1.0,
-      direction: 'Undirected',
+      ...commonParameters, ...{
+        writeProperty: "unionFind",
+        defaultValue: 1.0
+      }
     },
     streamQuery: communityStreamQueryOutline(`CALL gds.wcc.stream($config) YIELD nodeId, componentId AS community`),
     storeQuery: `CALL gds.wcc.write($config)`,
@@ -190,21 +178,13 @@ LIMIT toInteger($limit)`,
     parametersBuilder: communityParams,
     service: runAlgorithm,
     ResultView: CommunityResult,
-    parameters: {label: "*",  relationshipType: "*",persist: false, writeProperty: "scc", defaultValue: 1.0, direction: 'Undirected',},
+    parameters: { ...commonParameters, ...{ writeProperty: "scc", defaultValue: 1.0} },
     streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, componentId AS community`),
     storeQuery: `CALL gds.alpha.scc.write($config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set",
     returnsCommunities: true
   }
-  /*,
-"Balanced Triads": {
-Form: BalancedTriadsForm,
-service: balancedTriads,
-ResultView: BalancedTriadsResult,
-parameters: { persist: false, balancedProperty: "balanced", unbalancedProperty: "unbalanced", concurrency: 8, direction: 'Both'},
-description: "used to evaluate structural balance of the graph"
-}*/
 };
 
 
@@ -213,7 +193,7 @@ const baseTriangles = {
   parametersBuilder: communityParams,
   service: triangles,
   ResultView: TrianglesResult,
-  parameters: {label: "*", relationshipType: "*", persist: false, direction: 'Undirected'},
+  parameters: commonParameters,
   storeQuery: ``,
   getFetchQuery: () => ``,
   description: "finds set of three nodes, where each node has a relationship to all other nodes"
@@ -236,13 +216,7 @@ const oldTriangleCount = {
         ORDER BY triangles DESC
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
-  parameters: {
-    label: "*",
-    relationshipType: "*",
-    persist: false,
-    writeProperty: "trianglesCount",
-    direction: "Undirected"
-  },
+  parameters: { ...commonParameters, ...{writeProperty: "trianglesCount"}},
   getFetchQuery: getFetchTriangleCountCypher,
 }
 
@@ -258,13 +232,7 @@ const newTriangleCount = {
         ORDER BY triangles DESC
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.triangleCount.write($config)`,
-  parameters: {
-    label: "*",
-    relationshipType: "*",
-    persist: false,
-    writeProperty: "trianglesCount",
-    direction: "Undirected"
-  },
+  parameters: { ...commonParameters, ...{ writeProperty: "trianglesCount", }},
   getFetchQuery: getFetchNewTriangleCountCypher
 }
 
@@ -285,13 +253,7 @@ const oldLocalClusteringCoefficient = {
         ORDER BY coefficient DESC
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
-  parameters: {
-    label: "*",
-    relationshipType: "*",
-    persist: false,
-    clusteringCoefficientProperty: "coefficient",
-    direction: "Undirected"
-  },
+  parameters: { ...commonParameters, ...{ clusteringCoefficientProperty: "coefficient" }},
   getFetchQuery: getFetchLocalClusteringCoefficientCypher
 }
 
@@ -305,13 +267,7 @@ const newLocalClusteringCoefficient = {
         ORDER BY coefficient DESC
         LIMIT toInteger($limit)`),
   storeQuery: `CALL gds.localClusteringCoefficient.write($config)`,
-  parameters: {
-    label: "*",
-    relationshipType: "*",
-    persist: false,
-    writeProperty: "coefficient",
-    direction: "Undirected"
-  },
+  parameters: { ...commonParameters, ...{writeProperty: "coefficient"}},
   getFetchQuery: getFetchNewLocalClusteringCoefficientCypher
 }
 
