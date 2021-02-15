@@ -11,6 +11,12 @@ import NewApproxBetweennessForm from "./NewApproxBetweennessForm"
 import HITSResult from "./HITS/Result";
 import HITSForm from "./HITS/Form";
 
+const commonParameters = {
+  label: "*",
+  relationshipType: "*",
+  persist: false,
+  direction: 'Natural'
+}
 
 let algorithms = {
   "Degree": {
@@ -19,13 +25,8 @@ let algorithms = {
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Reverse',
-      persist: false,
-      writeProperty: "degree",
-      defaultValue: 1.0,
-      relationshipWeightProperty: null
+      ...commonParameters,
+      ...{ direction: 'Reverse', writeProperty: "degree", defaultValue: 1.0, relationshipWeightProperty: null}
     },
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.degree.stream($config) YIELD nodeId, score`),
@@ -39,14 +40,8 @@ let algorithms = {
     service: runHITSAlgorithm,
     ResultView: HITSResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Natural',
-      persist: false,
-      writeProperty: "pregel_",
-      hitsIterations: 20,
-      defaultValue: 1.0,
-      relationshipWeightProperty: null
+      ...commonParameters,
+      ...{ writeProperty: "pregel_",  hitsIterations: 20, defaultValue: 1.0,  relationshipWeightProperty: null}
     },
     parametersBuilder: centralityParams,
     streamQuery: `CALL gds.alpha.hits.stream($config) YIELD nodeId, values
@@ -64,14 +59,8 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Natural',
-      persist: false,
-      writeProperty: "eigenvector",
-      maxIterations: 20,
-      defaultValue: 1.0,
-      normalization: "none"
+      ...commonParameters,
+      ...{ writeProperty: "eigenvector", maxIterations: 20, defaultValue: 1.0, normalization: "none"}
     },
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.eigenvector.stream($config) YIELD nodeId, score`),
@@ -85,15 +74,8 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Natural',
-      persist: false,
-      writeProperty: "pagerank",
-      dampingFactor: 0.85,
-      maxIterations: 20,
-      defaultValue: 1.0,
-      relationshipWeightProperty: null
+      ...commonParameters,
+      ...{ writeProperty: "pagerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
     },
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.pageRank.stream($config) YIELD nodeId, score`),
@@ -107,15 +89,8 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CentralityResult,
     parameters: {
-      label: "*",
-      relationshipType: "*",
-      direction: 'Natural',
-      persist: false,
-      writeProperty: "articlerank",
-      dampingFactor: 0.85,
-      maxIterations: 20,
-      defaultValue: 1.0,
-      relationshipWeightProperty: null
+      ...commonParameters,
+      ...{ writeProperty: "articlerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
     },
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.articleRank.stream($config) YIELD nodeId, score`),
@@ -128,7 +103,7 @@ LIMIT toInteger($limit)`,
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
-    parameters: {       label: "*", relationshipType: "*", persist: false, writeProperty: "closeness", direction:"Natural"},
+    parameters: {...commonParameters, ...{ writeProperty: "closeness", }},
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($config) YIELD nodeId, centrality AS score`),
     storeQuery: `CALL gds.alpha.closeness.write($config)`,
@@ -140,7 +115,7 @@ LIMIT toInteger($limit)`,
     Form: ClosenessCentralityForm,
     service: runAlgorithm,
     ResultView: CentralityResult,
-    parameters: {       label: "*", relationshipType: "*", persist: false, writeProperty: "harmonic", direction:"Natural"},
+    parameters: {...commonParameters, ...{ writeProperty: "harmonic", }},
     parametersBuilder: centralityParams,
     streamQuery: streamQueryOutline(`CALL gds.alpha.harmonic.stream($config) YIELD nodeId, centrality AS score`),
     storeQuery: `CALL gds.alpha.harmonic.stream($config)`,
@@ -155,11 +130,8 @@ const baseBetweenness = {
   service: runAlgorithm,
   ResultView: CentralityResult,
   parameters: {
-    label: "*",
-    relationshipType: "*",
-    direction: 'Natural',
-    persist: false,
-    writeProperty: "betweenness",
+    ...commonParameters,
+    ...{ writeProperty: "betweenness",}
   },
   parametersBuilder: centralityParams,
   getFetchQuery: getFetchCypher,
@@ -177,14 +149,8 @@ const baseApproxBetweenness = {
 const oldApproxBetweenness = {
   Form: ApproxBetweennessForm,
   parameters: {
-    label: "*",
-    relationshipType: "*",
-    strategy: "random",
-    direction: "Natural",
-    persist: false,
-    maxDepth: null,
-    probability: null,
-    writeProperty: "approxBetweenness"
+    ...commonParameters,
+    ...{ strategy: "random", maxDepth: null, probability: null, writeProperty: "approxBetweenness"}
   },
   streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.sampled.stream($config) YIELD nodeId, centrality AS score`),
   storeQuery: `CALL gds.alpha.betweenness.sampled.write($config)`
@@ -193,12 +159,8 @@ const oldApproxBetweenness = {
 const newApproxBetweenness = {
   Form: NewApproxBetweennessForm,
   parameters: {
-    label: "*",
-    relationshipType: "*",
-    samplingSize: 100,
-    direction: "Natural",
-    persist: false,
-    writeProperty: "approxBetweenness"
+    ...commonParameters,
+    ...{ samplingSize: 100, writeProperty: "approxBetweenness"}
   },
   streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($config) YIELD nodeId, score`),
   storeQuery: `CALL gds.betweenness.write($config)`
@@ -207,29 +169,17 @@ const newApproxBetweenness = {
 export default {
   algorithmList: (gdsVersion) => {
     const version = parseInt(gdsVersion.split(".")[1])
-
-    const algorithms = [
-      "Degree",
-      "Eigenvector",
-      "Page Rank",
-      "Article Rank",
-      "Betweenness",
-      "Approx Betweenness",
-      "Closeness"
-    ];
-
+    const algorithms = ["Degree", "Eigenvector", "Page Rank", "Article Rank", "Betweenness", "Approx Betweenness", "Closeness"];
     return version >= 5 ? algorithms.concat(["HITS"]) : algorithms;
   },
   algorithmDefinitions: (algorithm, gdsVersion) => {
-    const version = gdsVersion.split(".")[1]
+    const version = parseInt(gdsVersion.split(".")[1])
     switch (algorithm) {
       case "Betweenness": {
         const oldStreamQuery = `CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`
-
         const newStreamQuery = `CALL gds.betweenness.stream($config) YIELD nodeId, score`
 
         const oldStoreQuery = `CALL gds.alpha.betweenness.write($config)`
-
         const newStoreQuery = `CALL gds.betweenness.write($config)`
 
         baseBetweenness.streamQuery = streamQueryOutline(version > "2" ? newStreamQuery : oldStreamQuery)
@@ -239,7 +189,7 @@ export default {
       }
 
       case "Approx Betweenness": {
-        return Object.assign({}, baseApproxBetweenness, version > "2" ? newApproxBetweenness : oldApproxBetweenness)
+        return Object.assign({}, baseApproxBetweenness, version > 2 ? newApproxBetweenness : oldApproxBetweenness)
       }
       default:
         return algorithms[algorithm]
