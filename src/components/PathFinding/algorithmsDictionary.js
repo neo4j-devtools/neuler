@@ -21,23 +21,23 @@ WITH start
 LIMIT 1
 `
 
+const commonParameters = {
+    label: "*",
+    relationshipType: "*",
+    persist: false,
+    direction: 'Undirected',
+    defaultValue: 1.0,
+    relationshipWeightProperty: "weight",
+
+}
+
 let baseAlgorithms = {
     "All Pairs Shortest Path": {
         Form: AllPairsShortestPathForm,
         parametersBuilder: pre1Point5PathFindingParams,
         service: runAllPairsShortestPathAlgorithm,
         ResultView: AllPairsShortestPathResult,
-        parameters: {
-            label: "*",
-            relationshipType: "*",
-            nodeQuery: null,
-            relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-
-        },
+        parameters: {...commonParameters, ...{nodeQuery: null, relationshipQuery: null,}},
         streamQuery: `CALL gds.alpha.allShortestPaths.stream($config)
 YIELD sourceNodeId, targetNodeId, distance AS cost
 RETURN gds.util.asNode(sourceNodeId) AS source, gds.util.asNode(targetNodeId) AS target, cost
@@ -46,37 +46,6 @@ LIMIT toInteger($limit)`,
         getFetchQuery: () => "",
         description: `The All Pairs Shortest Path (APSP) calculates the shortest (weighted) path between all pairs of nodes.`
     },
-
-//         "Yen’s K-shortest paths": {
-//             Form: ShortestPathForm,
-//             parametersBuilder: pathFindingParams,
-//             service: runStreamingAlgorithm,
-//             ResultView: PathFindingResult,
-//             parameters: {
-//                 nodeQuery: null,
-//                 relationshipQuery: null,
-//                 direction: 'Both',
-//                 persist: false,
-//                 writeProperty: "louvain",
-//                 defaultValue: 1.0,
-//                 weightProperty: "weight",
-//                 k: 3,
-//                 concurrency: 8
-//             },
-//             streamQuery: `CALL db.propertyKeys() YIELD propertyKey MATCH (start) WHERE start[propertyKey] contains $startNode
-// WITH start
-// LIMIT 1
-// CALL db.propertyKeys() YIELD propertyKey MATCH (end) WHERE end[propertyKey] contains $endNode
-// WITH start, end
-// LIMIT 1
-// CALL algo.kShortestPaths.stream(start, end, $config.k, $config.weightProperty, $config)
-// YIELD index, nodeIds, costs
-// RETURN algo.getNodesById(nodeIds), costs`,
-//             storeQuery: ``,
-//             getFetchQuery: () => "",
-//             description: `Yen’s K-shortest paths algorithm computes single-source K-shortest loopless paths for a graph with non-negative relationship weights.`
-//         },
-
 };
 
 const pre1Point5Algorithms = {
@@ -85,18 +54,7 @@ const pre1Point5Algorithms = {
         parametersBuilder: pre1Point5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
-        parameters: {
-            label: "*",
-            relationshipType: "*",
-            nodeQuery: null,
-            relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            writeProperty: "louvain",
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-
-        },
+        parameters: { ...commonParameters, ...{nodeQuery: null, relationshipQuery: null, writeProperty: "louvain",}},
         streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
 WITH config { .*, startNode: start, endNode: end} as config
 CALL gds.alpha.shortestPath.stream(config)
@@ -114,18 +72,12 @@ RETURN gds.util.asNode(nodeId) AS node, cost;`,
         parametersBuilder: pre1Point5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
-        parameters: {
-            label: "*",
-            relationshipType: "*",
-            nodeQuery: null,
-            relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-            propertyKeyLat: "latitude",
-            propertyKeyLon: "longitude",
-
+        parameters: { ...commonParameters, ...{
+                nodeQuery: null,
+                relationshipQuery: null,
+                propertyKeyLat: "latitude",
+                propertyKeyLon: "longitude",
+            }
         },
         streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
 WITH config { .*, startNode: start, endNode: end} as config
@@ -150,18 +102,7 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
         parametersBuilder: pre1Point5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
-        parameters: {
-            label: "*",
-            relationshipType: "*",
-            nodeQuery: null,
-            relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-
-            delta: 3.0
-        },
+        parameters: { ...commonParameters, ...{nodeQuery: null, relationshipQuery: null, delta: 3.0}},
         streamQuery: findStartNode() + `WITH $config AS config, start
 WITH config { .*, startNode: start} as config
 CALL gds.alpha.shortestPath.deltaStepping.stream(config)
@@ -183,17 +124,7 @@ const onePointFiveAlgorithms = {
         parametersBuilder: pre1Point5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
-        parameters: {
-            label: "*",
-            relationshipType: "*",
-            nodeQuery: null,
-            relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-
-        },
+        parameters: {...commonParameters, ...{nodeQuery: null, relationshipQuery: null,}},
         streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
 WITH config { .*, sourceNode: id(start), targetNode: id(end)} as config
 CALL gds.beta.shortestPath.dijkstra.stream(config)
@@ -214,18 +145,13 @@ RETURN gds.util.asNode(nodeIds[index]) AS node, costs[index] AS cost`,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
         parameters: {
-            label: "*",
-            relationshipType: "*",
-            nodeQuery: null,
-            relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            writeProperty: "louvain",
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-            latitudeProperty: "latitude",
-            longitudeProperty: "longitude",
-
+            ...commonParameters, ...{
+                nodeQuery: null,
+                relationshipQuery: null,
+                writeProperty: "louvain",
+                latitudeProperty: "latitude",
+                longitudeProperty: "longitude",
+            }
         },
         streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
 WITH config { .*, sourceNode: id(start), targetNode: id(end)} as config
@@ -250,16 +176,10 @@ RETURN gds.util.asNode(targetNode) AS node, cost`,
         parametersBuilder: onePoint5PathFindingParams,
         service: runStreamingAlgorithm,
         ResultView: PathFindingResult,
-        parameters: {
-            label: "*",
-            relationshipType: "*",
+        parameters: { ...commonParameters, ...{
             nodeQuery: null,
             relationshipQuery: null,
-            direction: 'Undirected',
-            persist: false,
-            defaultValue: 1.0,
-            relationshipWeightProperty: "weight",
-        },
+        }},
         streamQuery: findStartNode() + `WITH $config AS config, start
 WITH config { .*, sourceNode: id(start)} as config
 CALL gds.beta.allShortestPaths.dijkstra.stream(config)
@@ -277,17 +197,10 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
 
 export default {
     algorithmList: () => {
-        return [
-            "Shortest Path",
-            "A*",
-            "Single Source Shortest Path",
-            "All Pairs Shortest Path",
-            // "Yen’s K-shortest paths"
-            // "Balanced Triads"
-        ]
+        return ["Shortest Path", "A*", "Single Source Shortest Path", "All Pairs Shortest Path",]
     },
     algorithmDefinitions: (algorithm, gdsVersion)  => {
         const version = parseInt(gdsVersion.split(".")[1])
-        return Object.assign(baseAlgorithms, version < 5 ? pre1Point5Algorithms : onePointFiveAlgorithms)[algorithm]
+        return {...baseAlgorithms, ...(version < 5 ? pre1Point5Algorithms : onePointFiveAlgorithms)}[algorithm]
     }
 }
