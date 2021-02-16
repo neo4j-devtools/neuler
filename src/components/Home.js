@@ -176,7 +176,6 @@ const Home = (props) => {
 
 
 const mapStateToProps = state => ({
-    activeGroup: state.algorithms.group,
     metadata: state.metadata,
     labels: state.metadata.allLabels,
     connectionInfo: state.connections,

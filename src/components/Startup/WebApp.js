@@ -148,8 +148,6 @@ const NewApp = (props) => {
 }
 
 const mapStateToProps = state => ({
-    activeGroup: state.algorithms.group,
-    activeAlgorithm: state.algorithms.algorithm,
     connectionInfo: state.connections,
     metadata: state.metadata,
     limit: state.settings.limit,
