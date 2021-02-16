@@ -110,8 +110,8 @@ const SelectDatabaseForm =(props) => {
         const prepareMetadata = async () => {
             return await refreshMetadata(props, true, (versions) =>  {
                 setActiveDatabaseSelected(true)
-                props.selectGroup("Centralities", versions.gdsVersion)
-                props.selectAlgorithm("Degree")
+                // props.selectGroup("Centralities", versions.gdsVersion)
+                // props.selectAlgorithm("Degree")
             });
         }
 

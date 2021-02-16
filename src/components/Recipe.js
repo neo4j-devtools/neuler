@@ -542,9 +542,6 @@ const Recipes = (props) => {
 
 
 const AlgoForm = connect(state => ({
-    activeGroup: "Centralities",
-    activeAlgorithm: "Degree",
-    currentAlgorithm: getAlgorithmDefinitions("Centralities", "Degree", state.metadata.versions.gdsVersion),
     metadata: state.metadata,
     limit: state.settings.limit,
     communityNodeLimit: state.settings.communityNodeLimit,
