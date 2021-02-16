@@ -1,7 +1,6 @@
 import {Checkbox, Divider, Grid, Modal} from "semantic-ui-react";
 import React from "react";
 import {connect} from "react-redux";
-import {selectGroup} from "../../ducks/algorithms";
 import {SketchPicker} from 'react-color';
 import reactCSS from 'reactcss'
 import {updateLabelColor, updateLabelPropertyKeys} from "../../ducks/metadata";

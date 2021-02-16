@@ -2,7 +2,6 @@ import React from 'react'
 import {connect} from 'react-redux'
 import {Button, Header} from 'semantic-ui-react'
 import {getAlgorithmDefinitions} from "./algorithmsLibrary"
-import {getCurrentAlgorithm} from "../ducks/algorithms"
 import {communityNodeLimit, limit} from "../ducks/settings"
 import {ResultFilteringFields} from "./Form/ResultsFiltering";
 import {ADDED} from "../ducks/tasks";
@@ -63,7 +62,6 @@ export const AlgoFormView = (props) => {
 
   const onRunAlgo = () => {
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
-
     const {service, parametersBuilder} = currentAlgorithm
     if (service) {
       let formParameters = parameters;
@@ -83,7 +81,6 @@ export const AlgoFormView = (props) => {
 
   const onCopyAlgo = () => {
     const currentAlgorithm = getAlgorithmDefinitions(task.group, task.algorithm, props.metadata.versions.gdsVersion)
-
     const {service, parametersBuilder} = currentAlgorithm
     if (service) {
       let formParameters = parameters;
@@ -173,7 +170,6 @@ const SelectedAlgorithm = ({task, currentAlgorithm}) => {
 }
 
 const mapStateToProps = state => ({
-  currentAlgorithm: getCurrentAlgorithm(state),
   metadata: state.metadata,
   limit: state.settings.limit,
   communityNodeLimit: state.settings.communityNodeLimit,

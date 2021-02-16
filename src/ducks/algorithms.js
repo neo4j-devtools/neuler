@@ -36,8 +36,3 @@ export default (state = initialState, action) => {
       return state
   }
 }
-
-export const getCurrentAlgorithm = state => {
-  const { group, algorithm } = state.algorithms
-  return getAlgorithmDefinitions(group, algorithm, state.metadata.versions.gdsVersion)
-}

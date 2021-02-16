@@ -54,27 +54,10 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
                             "onClick": (event, {description}) => handleChange(event, {value: description})
                         }})} />
                     </div>)
-
                     }
                 </div>
-
             </div>
-
-
-
         </OpenCloseSection>)
-
-
-    // return <OpenCloseSection title="Algorithm">
-    //     <Form>
-    //         <Form.Field>
-    //             <Dropdown search selection options={algorithmDescriptions} value={selectedAlgorithm} fluid
-    //                       onChange={handleChange}
-    //             />
-    //         </Form.Field>
-    //     </Form>
-    // </OpenCloseSection>
-
 }
 export default connect(state => ({
     metadata: state.metadata,
