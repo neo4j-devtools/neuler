@@ -90,7 +90,7 @@ const MainContent = (props) => {
                         history.push("/algorithms/new")
                     }} icon="plus" labelPosition="right" content="New algorithm"  style={{marginLeft: "3px"}} className="new-algorithm" />
                 </nav>
-                <SpecificTask tasks={props.tasks} />
+                <SpecificTask metadata={props.metadata} tasks={props.tasks} />
             </div>
         </Route>
     </Switch>

@@ -12,7 +12,9 @@ import {TableView} from "./Results/TableView";
 import {NewVisView} from "./Results/NewVisView";
 
 export const SingleTask = (props) => {
-    const {task, currentPage, totalPages} = props
+    const {task, currentPage, totalPages, metadata} = props
+    console.log("metadata", metadata, "props", props)
+    const gdsVersion  = metadata.versions.gdsVersion
 
     const panelRef = React.createRef()
     const [activeItem, setActiveItem] = React.useState("Results")
@@ -109,14 +111,14 @@ export const SingleTask = (props) => {
                                             onClick={handleResultsMenuItemClick}
                                         />
 
-                                        {getGroup(task.algorithm) === "Centralities" &&
+                                        {getGroup(task.algorithm, gdsVersion) === "Centralities" &&
                                         <Menu.Item
                                             name='Chart'
                                             active={activeResultsItem === 'Chart'}
                                             onClick={handleResultsMenuItemClick}
                                         />}
 
-                                        {!(getGroup(task.algorithm) === 'Path Finding' || getGroup(task.algorithm) === 'Similarity') &&
+                                        {!(getGroup(task.algorithm, gdsVersion) === 'Path Finding' || getGroup(task.algorithm, gdsVersion) === 'Similarity') &&
                                         <Menu.Item
                                             name='Visualisation'
                                             active={activeResultsItem === 'Visualisation'}

@@ -8,6 +8,8 @@ import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selectGroup}) => {
     const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
     const [selectingAlgorithm, setSelectingAlgorithm] = React.useState(false)
+    const algoGroupsForVersion = algorithmGroups(metadata.versions.gdsVersion);
+    console.log("algoGroupsForVersion", algoGroupsForVersion)
 
     React.useEffect(() => {
         setSelectedAlgorithm(currentAlgorithm)
@@ -21,7 +23,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
     }
 
     const allAlgorithms = {}
-    Object.keys(algorithmGroups).forEach(group => {
+    Object.keys(algoGroupsForVersion).forEach(group => {
         getAlgorithms(group, metadata.versions.gdsVersion).forEach(algorithm => {
             allAlgorithms[algorithm] = {
                 description: getAlgorithmDefinitions(group, algorithm, metadata.versions.gdsVersion).description,
@@ -29,6 +31,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
             }
         })
     })
+    console.log("allAlgorithms", allAlgorithms)
 
     return (selectedAlgorithm &&
         <OpenCloseSection title="Algorithm">
@@ -44,7 +47,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
                 </div>
 
                 <div style={selectingAlgorithm ? {display: ''} : {display: 'none'}} className="algorithm-groups">
-                    {Object.keys(algorithmGroups).map(group => <div key={group} className="algorithm-group-container">
+                    {Object.keys(algoGroupsForVersion).map(group => <div key={group} className="algorithm-group-container">
                         <div className="algorithm-group">
                             <span>{group}</span>
                         </div>

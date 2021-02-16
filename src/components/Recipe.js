@@ -293,14 +293,14 @@ const SuccessResults = ({getStyleResultsTab, selectedTask, handleResultsMenuItem
                     onClick={handleResultsMenuItemClick}
                 />
 
-                {getGroup(selectedTask.algorithm) === "Centralities" &&
+                {getGroup(selectedTask.algorithm, gdsVersion) === "Centralities" &&
                 <Menu.Item
                     name='Chart'
                     active={selectedTask.activeResultsItem === 'Chart'}
                     onClick={handleResultsMenuItemClick}
                 />}
 
-                {!(getGroup(selectedTask.algorithm) === 'Path Finding' || getGroup(selectedTask.algorithm) === 'Similarity') &&
+                {!(getGroup(selectedTask.algorithm, gdsVersion) === 'Path Finding' || getGroup(selectedTask.algorithm, gdsVersion) === 'Similarity') &&
                 <Menu.Item
                     name='Visualisation'
                     active={selectedTask.activeResultsItem === 'Visualisation'}

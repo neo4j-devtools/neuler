@@ -8,7 +8,8 @@ import {
     CHECKING_GDS_PLUGIN,
     CONNECTING_TO_DATABASE,
     refreshMetadata,
-    SELECT_DATABASE, updateMetadata
+    SELECT_DATABASE,
+    updateMetadata
 } from "./startup";
 import {CONNECTING, DISCONNECTED, INITIAL} from "../../ducks/connection";
 import {ConnectModal} from "../ConnectModal";
@@ -16,19 +17,20 @@ import {tryConnect} from "../../services/connections";
 import {loadDatabases, loadMetadata} from "../../services/metadata";
 import {getActiveDatabase, getNeo4jVersion, onActiveDatabase} from "../../services/stores/neoStore";
 import {
+    addDatabase,
+    initLabel,
     setActiveDatabase,
     setDatabases,
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
-    setRelationshipTypes, setVersions
+    setRelationshipTypes,
+    setVersions
 } from "../../ducks/metadata";
 import {connect} from "react-redux";
 import {Render} from "graph-app-kit/components/Render";
 import SelectedDatabase from "../Onboarding/SelectedDatabase";
 import {selectAlgorithm, selectGroup} from "../../ducks/algorithms";
-import {addDatabase, initLabel} from "../../ducks/metadata";
-import WhatIsMissing from "../Onboarding/WhatIsMissing";
 import {hasNodesAndRelationships} from "../SelectDatabase";
 
 
@@ -110,8 +112,8 @@ const SelectDatabaseForm =(props) => {
         const prepareMetadata = async () => {
             return await refreshMetadata(props, true, (versions) =>  {
                 setActiveDatabaseSelected(true)
-                // props.selectGroup("Centralities", versions.gdsVersion)
-                // props.selectAlgorithm("Degree")
+                props.selectGroup("Centralities", versions.gdsVersion)
+                props.selectAlgorithm("Degree")
             });
         }
 
