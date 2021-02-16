@@ -6,7 +6,6 @@ import {getAlgorithmDefinitions} from "./algorithmsLibrary"
 import {ADDED, addTask, completeTask, removeTask, runTask} from "../ducks/tasks"
 import {NavBar} from "./Results/SuccessTopBar";
 import {v4 as generateTaskId} from "uuid";
-import {getCurrentAlgorithm} from "../ducks/algorithms";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import NewAlgorithmModal from "./NewAlgorithmModal";
 import {onRunAlgo} from "../services/tasks";
@@ -144,7 +143,6 @@ const mapStateToProps = state => ({
   metadata: state.metadata,
   activeGroup: state.algorithms.group,
   activeAlgorithm: state.algorithms.algorithm,
-  currentAlgorithm: getCurrentAlgorithm(state),
   limit: state.settings.limit,
   communityNodeLimit: state.settings.communityNodeLimit,
 })

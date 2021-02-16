@@ -1,15 +1,14 @@
 import {connect} from "react-redux";
-import {getCurrentAlgorithm} from "../ducks/algorithms";
 import {addTask, completeTask, runTask} from "../ducks/tasks";
 import {getActiveDatabase} from "../services/stores/neoStore";
 import {
+    addDatabase,
+    initLabel,
     setDatabases,
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
     setRelationshipTypes,
-    addDatabase,
-    initLabel,
     setVersions
 } from "../ducks/metadata";
 import {useHistory} from "react-router-dom";
@@ -84,7 +83,6 @@ export const NewAlgorithm = connect(state => ({
     metadata: state.metadata,
     activeGroup: state.algorithms.group,
     activeAlgorithm: state.algorithms.algorithm,
-    currentAlgorithm: getCurrentAlgorithm(state),
     communityNodeLimit: state.settings.communityNodeLimit,
 }), (dispatch, ownProps) => ({
     runTask: (taskId, query, namedGraphQueries, parameters, formParameters, persisted) => {

@@ -1,8 +1,6 @@
 import {Divider, Icon, Image, List, Popup, Table} from "semantic-ui-react"
 import React from "react"
 import {connect} from "react-redux"
-import {selectGroup} from "../ducks/algorithms"
-import {selectMenuItem} from "../ducks/menu";
 import {NavLink} from "react-router-dom";
 import constants from "../constants";
 import {setDisconnected} from "../ducks/connection";
@@ -122,8 +120,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group)),
-    selectMenuItem: item => dispatch(selectMenuItem(item)),
     setDisconnected: () => dispatch(setDisconnected()),
 })
 

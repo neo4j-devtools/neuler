@@ -1,9 +1,10 @@
 import React from 'react'
 import {Container, Divider, Segment} from "semantic-ui-react"
 import '../../App.css'
-import {selectAlgorithm, selectGroup} from "../../ducks/algorithms"
 import {connect} from "react-redux"
 import {
+    addDatabase,
+    initLabel,
     setDatabases,
     setLabels,
     setNodePropertyKeys,
@@ -12,7 +13,6 @@ import {
     setVersions
 } from "../../ducks/metadata"
 import {CONNECTED, setConnected, setDisconnected} from "../../ducks/connection"
-import {addDatabase, initLabel} from "../../ducks/metadata";
 import {communityNodeLimit, limit} from "../../ducks/settings";
 import {WebAppLoadingArea} from "./WebAppLoadingArea";
 import {LoadingIcon, UserInputLoadingIcon} from "./LoadingIcon";
@@ -21,7 +21,6 @@ import {
     CHECKING_APOC_PLUGIN,
     CHECKING_GDS_PLUGIN,
     CONNECTING_TO_DATABASE,
-    refreshMetadata,
     SELECT_DATABASE,
     setLimitDefaults,
     webAppSteps
@@ -158,7 +157,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
     setLabels: labels => dispatch(setLabels(labels)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
@@ -174,7 +172,6 @@ const mapDispatchToProps = dispatch => ({
     updateLimit: value => dispatch(limit(value)),
     updateCommunityNodeLimit: value => dispatch(communityNodeLimit(value)),
 
-    selectGroup: algorithm => dispatch(selectGroup(algorithm)),
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(NewApp)

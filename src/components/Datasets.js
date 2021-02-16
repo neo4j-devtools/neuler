@@ -4,7 +4,6 @@ import {runCypher} from "../services/stores/neoStore"
 import {connect} from "react-redux";
 import {sendMetrics} from "./metrics/sendMetrics";
 import Clipboard from "react-clipboard.js";
-import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
 import {sampleGraphs} from "./SampleGraphs/sampleGraphs";
 import {useHistory} from "react-router-dom";
 import {getAlgorithmDefinitions} from "./algorithmsLibrary";
@@ -20,7 +19,6 @@ export const steps = [
 
 const Datasets = (props) => {
     const [currentStep, setCurrentStep] = React.useState(SELECT_DATASET)
-    const {selectGroup, selectAlgorithm} = props
     const [selectedDataset, setSelectedDataset] = React.useState(null)
     const [currentQueryIndex, setCurrentQueryIndex] = React.useState(-1)
     const [completedQueryIndexes, setCompletedQueryIndexes] = React.useState({})
@@ -111,8 +109,8 @@ const Datasets = (props) => {
             case SELECT_ALGORITHM:
                 return {
                     header: "Choose algorithm",
-                    view: <SelectAlgorithms allDone={resetState} selectedDataset={selectedDataset} selectAlgorithm={selectAlgorithm}
-                                            selectGroup={selectGroup} metadata={props.metadata} limit={props.limit} communityNodeLimit={props.communityNodeLimit}/>,
+                    view: <SelectAlgorithms allDone={resetState} selectedDataset={selectedDataset}
+                                             metadata={props.metadata} limit={props.limit} communityNodeLimit={props.communityNodeLimit}/>,
                     next: <Button disabled={!nextEnabled} positive onClick={resetState}>All Done</Button>
                 }
             default:
@@ -242,7 +240,7 @@ const ImportDataset = ({selectedDataset, completedQueryIndexes, currentQueryInde
 }
 
 const SelectAlgorithms = (props) => {
-    const {selectedDataset, selectGroup, selectAlgorithm} = props
+    const {selectedDataset} = props
 
     const history = useHistory();
 
@@ -315,15 +313,9 @@ const SelectAlgorithms = (props) => {
 
 
 const mapStateToProps = state => ({
-   metadata: state.metadata,
+    metadata: state.metadata,
     limit: state.settings.limit,
     communityNodeLimit: state.settings.communityNodeLimit,
 })
 
-const mapDispatchToProps = dispatch => ({
-    selectAlgorithm: algorithm => dispatch(selectAlgorithm(algorithm)),
-    selectGroup: algorithm => dispatch(selectGroup(algorithm)),
-})
-
-
-export default connect(mapStateToProps, mapDispatchToProps)(Datasets)
+export default connect(mapStateToProps)(Datasets)

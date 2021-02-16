@@ -173,8 +173,6 @@ const SelectedAlgorithm = ({task, currentAlgorithm}) => {
 }
 
 const mapStateToProps = state => ({
-  activeGroup: state.algorithms.group,
-  activeAlgorithm: state.algorithms.algorithm,
   currentAlgorithm: getCurrentAlgorithm(state),
   metadata: state.metadata,
   limit: state.settings.limit,

@@ -3,9 +3,7 @@ import {getActiveDatabase} from "../services/stores/neoStore";
 import {Modal} from "semantic-ui-react";
 import AlgorithmForm from "./AlgorithmForm";
 import {connect} from "react-redux";
-import {getCurrentAlgorithm} from "../ducks/algorithms";
 import {addTask, runTask} from "../ducks/tasks";
-import {getAlgorithmDefinitions} from "./algorithmsLibrary";
 
 export const NewAlgorithmModal = (props) => {
     const {activeGroup, activeAlgorithm, metadata, open, setOpen, task} = props
@@ -44,7 +42,6 @@ const mapStateToProps = state => ({
     metadata: state.metadata,
     activeGroup: state.algorithms.group,
     activeAlgorithm: state.algorithms.algorithm,
-    currentAlgorithm: getCurrentAlgorithm(state),
     communityNodeLimit: state.settings.communityNodeLimit,
 });
 

@@ -1,7 +1,6 @@
 import {Button, Message, Table} from "semantic-ui-react";
 import React from "react";
 import {connect} from "react-redux";
-import {selectGroup} from "../../ducks/algorithms";
 import NodeLabel from "../NodeLabel";
 
 
@@ -51,8 +50,4 @@ const mapStateToProps = state => ({
     metadata: state.metadata
 })
 
-const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(SelectedDatabase)
+export default connect(mapStateToProps)(SelectedDatabase)

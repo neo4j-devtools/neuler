@@ -6,13 +6,12 @@ import {PersistGate} from 'redux-persist/integration/react'
 import {Container, Dimmer, Loader} from 'semantic-ui-react'
 
 import './index.css';
-import DesktopApp from './components/Startup/DesktopApp';
 import * as serviceWorker from './serviceWorker';
 import {createStore} from "redux"
 import {connect, Provider} from 'react-redux'
 import rootReducer from './ducks'
 import WebApp from "./components/Startup/WebApp";
-import  {Redirect, BrowserRouter as Router, Route, Switch} from "react-router-dom";
+import {BrowserRouter as Router, Redirect, Route, Switch} from "react-router-dom";
 import AlgorithmsGroupMenu from "./components/AlgorithmGroupsMenu";
 import {FeedbackForm} from "./components/Feedback/FeedbackForm";
 import About from "./components/About";
@@ -20,16 +19,17 @@ import Datasets from "./components/Datasets";
 import constants from "./constants";
 import SelectDatabase from "./components/SelectDatabase";
 import Home from "./components/Home";
-import {selectGroup} from "./ducks/algorithms";
 import {
+    addDatabase,
+    initLabel,
     setActiveDatabase,
     setDatabases,
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
-    setRelationshipTypes, setVersions
+    setRelationshipTypes,
+    setVersions
 } from "./ducks/metadata";
-import {addDatabase, initLabel} from "./ducks/metadata";
 import MainContent from "./components/MainContent";
 import {NewAlgorithm} from "./components/NewAlgorithm";
 import {refreshMetadata} from "./components/Startup/startup";
@@ -92,7 +92,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group)),
     setActiveDatabase: database => dispatch(setActiveDatabase(database)),
     setDatabases: databases => dispatch(setDatabases(databases)),
     setLabels: labels => dispatch(setLabels(labels)),

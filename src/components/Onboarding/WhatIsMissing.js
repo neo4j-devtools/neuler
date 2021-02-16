@@ -1,7 +1,6 @@
 import {Button, Message} from "semantic-ui-react";
 import React from "react";
 import {connect} from "react-redux";
-import {selectGroup} from "../../ducks/algorithms";
 
 
 const whatIsMissing = (metadata) => {
@@ -23,7 +22,7 @@ const whatIsMissing = (metadata) => {
     return null
 }
 
-const WhatIsMissing = ({metadata, selectGroup, setDatasetsActive}) => {
+const WhatIsMissing = ({metadata,  setDatasetsActive}) => {
     return <div>
         <Message color='purple'>
             <Message.Header>
@@ -53,8 +52,4 @@ const mapStateToProps = state => ({
     metadata: state.metadata
 })
 
-const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group))
-})
-
-export default connect(mapStateToProps, mapDispatchToProps)(WhatIsMissing)
+export default connect(mapStateToProps)(WhatIsMissing)

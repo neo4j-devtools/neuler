@@ -138,7 +138,6 @@ const mapStateToProps = state => ({
 })
 
 const mapDispatchToProps = dispatch => ({
-    selectGroup: group => dispatch(selectGroup(group)),
     updateLabelColor: (database, label, color) => dispatch(updateLabelColor(database, label, color))
 })
 
