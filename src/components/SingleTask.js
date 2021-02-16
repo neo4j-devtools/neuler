@@ -13,7 +13,6 @@ import {NewVisView} from "./Results/NewVisView";
 
 export const SingleTask = (props) => {
     const {task, currentPage, totalPages, metadata} = props
-    console.log("metadata", metadata, "props", props)
     const gdsVersion  = metadata.versions.gdsVersion
 
     const panelRef = React.createRef()
@@ -118,7 +117,7 @@ export const SingleTask = (props) => {
                                             onClick={handleResultsMenuItemClick}
                                         />}
 
-                                        {!(getGroup(task.algorithm, gdsVersion) === 'Path Finding' || getGroup(task.algorithm, gdsVersion) === 'Similarity') &&
+                                        {!(["Path Finding", "Graph Embeddings", "Similarity"].includes(getGroup(task.algorithm, gdsVersion))) &&
                                         <Menu.Item
                                             name='Visualisation'
                                             active={activeResultsItem === 'Visualisation'}

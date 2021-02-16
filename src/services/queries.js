@@ -313,7 +313,6 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   const parsedMaxDepth = maxDepth == null ? null : int(maxDepth)
   const parsedIterations = maxIterations == null ? null : int(maxIterations)
   const parsedHitsIterations = hitsIterations == null ? null : int(hitsIterations)
-  // const parsedWeightProperty = weightProperty ? weightProperty.trim() : weightProperty
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
   const parsedSamplingSize = samplingSize == null ? null : int(samplingSize)
 
@@ -340,6 +339,35 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   return params
 }
 
+export const embeddingParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties, iterations, embeddingDimension, walkLength, inOutFactor, returnFactor}) => {
+  const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
+  const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
+
+  const parsedIterations = iterations == null ? null : int(iterations)
+  const parsedEmbeddingDimension = embeddingDimension == null ? null : int(embeddingDimension)
+  const parsedWalkLength = walkLength == null ? null : int(walkLength)
+  const parsedInoutFactor = parseFloat(inOutFactor)
+  const parsedReturnFactor = parseFloat(returnFactor)
+
+  const config = {
+    write: true,
+    iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
+    embeddingDimension: parsedEmbeddingDimension && parsedEmbeddingDimension > 0 ? parsedEmbeddingDimension : null,
+    walkLength: parsedWalkLength && parsedWalkLength > 0 ? parsedWalkLength : null,
+    inOutFactor: parsedInoutFactor && parsedInoutFactor > 0 ? parsedInoutFactor : null,
+    returnFactor: parsedReturnFactor && parsedReturnFactor > 0 ? parsedReturnFactor : null,
+  }
+
+  if (persist) {
+    config.writeProperty = parsedWriteProperty
+  }
+
+  requiredProperties.push("nodeProjection")
+  requiredProperties.push("relationshipProjection")
+
+  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  return params
+}
 
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
   const relTypeKey = "relType"

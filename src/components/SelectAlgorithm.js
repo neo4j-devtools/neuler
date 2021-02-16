@@ -9,7 +9,6 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
     const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
     const [selectingAlgorithm, setSelectingAlgorithm] = React.useState(false)
     const algoGroupsForVersion = algorithmGroups(metadata.versions.gdsVersion);
-    console.log("algoGroupsForVersion", algoGroupsForVersion)
 
     React.useEffect(() => {
         setSelectedAlgorithm(currentAlgorithm)
@@ -31,7 +30,6 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
             }
         })
     })
-    console.log("allAlgorithms", allAlgorithms)
 
     return (selectedAlgorithm &&
         <OpenCloseSection title="Algorithm">

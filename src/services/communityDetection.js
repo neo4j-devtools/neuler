@@ -1,15 +1,6 @@
 import {runCypher} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 
-const baseParameters = (label, relationshipType, direction, limit) => {
-  return {
-    label: label || null,
-    relationshipType: relationshipType || null,
-    direction: direction || 'Outgoing',
-    limit: parseInt(limit) || 50
-  }
-}
-
 
 export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn = parseResultStream}) => {
   if (!persisted) {
