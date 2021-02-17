@@ -501,7 +501,7 @@ div.select-algorithm {
   border: hsl(211, 13%, 65%) 1px solid;
   padding: 7px;
   margin: 3px;
-  font-size: .8rem;
+  font-size: 0.9rem;
   color: rgba(0,0,0,.68);
   border-radius: 0.25rem;
 }

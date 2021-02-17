@@ -71,6 +71,8 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
                                         arrowLeft={ArrowLeft}
                                         arrowRight={ArrowRight}
                                         scrollBy={0}
+                                        hideArrows={true}
+                                        translate={0}
                             />
 
                     </div>)
