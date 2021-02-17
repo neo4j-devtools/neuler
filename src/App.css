@@ -208,7 +208,7 @@ div.small-cards a.ui.card:hover {
 }
 
 div.algorithm-groups div.algorithm-group {
-  padding: 0 0 0.5rem 0;
+  padding: 0 0 0.1rem 0;
 }
 
 div.algorithm-group span {
@@ -216,7 +216,7 @@ div.algorithm-group span {
 }
 
 div.algorithm-group-container {
-  padding: 0 0 1.5rem 0;
+  padding: 0 0 .7rem 0;
 }
 
 p.connected {
@@ -472,3 +472,54 @@ p.intro {
 div.startup-selectDatabase {
   margin: 1em 0;
 }
+
+.menu-item {
+  padding: 0 40px;
+  margin: 5px 10px;
+  user-select: none;
+  cursor: pointer;
+  border: none;
+}
+
+
+.scroll-menu-arrow {
+  cursor: pointer;
+}
+
+.scroll-menu-arrow > div.arrow-prev {
+  padding: 0 10px 0 0;
+  color: rgba(0,0,0,.68);
+}
+
+.scroll-menu-arrow > div.arrow-next {
+  padding: 0 0 0 10px;
+  color: rgba(0,0,0,.68);
+
+}
+
+div.select-algorithm {
+  border: hsl(211, 13%, 65%) 1px solid;
+  padding: 7px;
+  margin: 3px;
+  font-size: .8rem;
+  color: rgba(0,0,0,.68);
+  border-radius: 0.25rem;
+}
+
+div.select-algorithm:hover {
+  cursor: pointer;
+}
+
+div.select-algorithm:hover, div.select-algorithm:active {
+  -webkit-transform: translateY(0px);
+  transform: translateY(0px);
+}
+
+div.select-algorithm.selected {
+  background: #e5f9e7;
+}
+
+*:focus {
+  outline: 0;
+}
+

@@ -1,6 +1,6 @@
 {
   "name": "neuler",
-  "version": "0.1.47",
+  "version": "0.1.48",
   "description": "Playground for Neo4j Graph Data Science Library",
   "author": "Neo4j Labs",
   "neo4jDesktop": {
@@ -43,6 +43,7 @@
     "react-color": "^2.18.1",
     "react-dom": "^16.13.1",
     "react-force-graph": "^1.37.1",
+    "react-horizontal-scrolling-menu": "^0.7.9",
     "react-redux": "^6.0.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "2.1.1",

@@ -53,42 +53,26 @@ const AlgorithmsGroupMenu = ({metadata, setDatasetsActive, credentials, setDisco
                             <div className="configure-database">
                                 <NavLink to="/database">Configure Database</NavLink>
                             </div>
-
                         </List.Item>
 
 
                         <Divider/>
                         <List.Item>
-                            <Table basic='very' celled collapsing className="versions">
-                                <Table.Header>
-                                    <Table.Row>
-                                        <Table.HeaderCell>
-                                            Component
-                                        </Table.HeaderCell>
-                                        <Table.HeaderCell>
-                                            Version
-                                        </Table.HeaderCell>
-                                    </Table.Row>
-                                </Table.Header>
-                                <Table.Body>
-                                    <Table.Row>
-                                        <Table.Cell>NEuler</Table.Cell>
-                                        <Table.Cell>
-                                            {constants.version}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell>Graph Data Science Library</Table.Cell>
-                                        <Table.Cell>{metadata.versions.gdsVersion}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                    <Table.Row>
-                                        <Table.Cell>Neo4j Server</Table.Cell>
-                                        <Table.Cell>{metadata.versions.neo4jVersion}
-                                        </Table.Cell>
-                                    </Table.Row>
-                                </Table.Body>
-                            </Table>
+                            <List className="connection">
+                                <List.Item className="connection-item">
+                                    <label>NEuler</label>
+                                    <span>{constants.version}</span>
+                                </List.Item>
+                                <List.Item className="connection-item">
+                                    <label>GDSL</label>
+                                    <span>{metadata.versions.gdsVersion}</span>
+                                </List.Item>
+                                <List.Item className="connection-item">
+                                    <label>Neo4j Server</label>
+                                    <span>{metadata.versions.neo4jVersion}</span>
+                                </List.Item>
+                            </List>
+
                         </List.Item>
 
                         <Divider/>

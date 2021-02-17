@@ -1,9 +1,10 @@
 import React from "react";
 import {algorithmGroups, getAlgorithmDefinitions, getAlgorithms, getGroup} from "./algorithmsLibrary";
 import {OpenCloseSection} from "./Form/OpenCloseSection";
-import {Dropdown, Form, Header, Icon, Card, Divider} from "semantic-ui-react";
+import {Card, Header, Icon} from "semantic-ui-react";
 import {connect} from "react-redux";
 import {selectAlgorithm, selectGroup} from "../ducks/algorithms";
+import ScrollMenu from "react-horizontal-scrolling-menu";
 
 const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selectGroup}) => {
     const [selectedAlgorithm, setSelectedAlgorithm] = React.useState(null)
@@ -14,7 +15,7 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
         setSelectedAlgorithm(currentAlgorithm)
     }, [])
 
-    const handleChange = (e, {value}) => {
+    const handleChange = ({value}) => {
         const group = getGroup(value, metadata.versions.gdsVersion);
         selectGroup(group, metadata.versions.gdsVersion)
         selectAlgorithm(value)
@@ -31,9 +32,15 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
         })
     })
 
+    const Arrow = ({ text, className }) => {
+        return <div className={className}>{text}</div>;
+    };
+    const ArrowLeft = <Icon className="arrow alternate circle left grey arrow-prev" />
+    const ArrowRight = <Icon className="arrow alternate circle right grey arrow-next" />
+
     return (selectedAlgorithm &&
         <OpenCloseSection title="Algorithm">
-            <div style={{border: "1px solid rgba(34,36,38,.15)", borderRadius: ".28571429rem", padding: "10px 0 0 10px"}}>
+            <div style={{border: "1px solid rgba(34,36,38,.15)", borderRadius: ".28571429rem", padding: "10px"}}>
                 <div style={{display: "flex", cursor: "pointer" ,justifyContent: "space-between"}} onClick={() => setSelectingAlgorithm(!selectingAlgorithm)}>
                 <Header as="h3">
                     {selectedAlgorithm}
@@ -49,11 +56,23 @@ const SelectAlgorithmView = ({currentAlgorithm, metadata, selectAlgorithm, selec
                         <div className="algorithm-group">
                             <span>{group}</span>
                         </div>
-                        <Card.Group className="small-cards" items={getAlgorithms(group, metadata.versions.gdsVersion).map(algorithm => {return {
-                            description: algorithm,
-                            className: selectedAlgorithm === algorithm ? "selected" : "",
-                            "onClick": (event, {description}) => handleChange(event, {value: description})
-                        }})} />
+
+                            <ScrollMenu data={getAlgorithms(group, metadata.versions.gdsVersion).map(algorithm => {
+                                return <div key={"card-" + algorithm}
+                                             className={selectedAlgorithm === algorithm ? "select-algorithm selected" : "select-algorithm"}
+                                             onClick={() => {
+                                                 handleChange({value: algorithm})
+                                             }}
+                                >
+                                    {algorithm}
+                                </div>
+                            })}
+                                        transition={0.4}
+                                        arrowLeft={ArrowLeft}
+                                        arrowRight={ArrowRight}
+                                        scrollBy={0}
+                            />
+
                     </div>)
                     }
                 </div>
