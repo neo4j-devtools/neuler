@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.48 (2021-03-01)
+
+* Added Node2Vec algorithm
+
 ## 0.1.47 (2021-02-15)
 
 * Added HITS and Speaker Listener LPA algorithms
