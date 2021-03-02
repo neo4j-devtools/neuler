@@ -1,6 +1,6 @@
 import React from 'react'
 import { Tab, Table } from "semantic-ui-react"
-import PropertiesView from "../../PropertiesView"
+import PropertiesView from "../PropertiesView"
 
 import { Loader } from 'semantic-ui-react'
 const LoaderExampleInlineCentered = () => <Loader size='big' active inline='centered'>Algorithm running</Loader>

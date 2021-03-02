@@ -339,23 +339,34 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   return params
 }
 
-export const embeddingParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties, iterations, embeddingDimension, walkLength, inOutFactor, returnFactor}) => {
+export const embeddingParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties, iterations, embeddingDimension, walkLength,
+                                  inOutFactor, returnFactor, modelName, batchSize, normalizationStrength, embeddingSize, maxIterations
+}) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
 
   const parsedIterations = iterations == null ? null : int(iterations)
+  const parsedMaxIterations = maxIterations == null ? null : int(maxIterations)
   const parsedEmbeddingDimension = embeddingDimension == null ? null : int(embeddingDimension)
+  const parsedEmbeddingSize = embeddingSize == null ? null : int(embeddingSize)
+  const parsedBatchSize = batchSize == null ? null : int(batchSize)
   const parsedWalkLength = walkLength == null ? null : int(walkLength)
   const parsedInoutFactor = parseFloat(inOutFactor)
   const parsedReturnFactor = parseFloat(returnFactor)
+  const parsedNormalizationStrength = parseFloat(normalizationStrength)
 
   const config = {
     write: true,
     iterations: parsedIterations && parsedIterations > 0 ? parsedIterations : null,
+    maxIterations: parsedMaxIterations && parsedMaxIterations > 0 ? parsedMaxIterations : null,
     embeddingDimension: parsedEmbeddingDimension && parsedEmbeddingDimension > 0 ? parsedEmbeddingDimension : null,
+    embeddingSize: parsedEmbeddingSize && parsedEmbeddingSize > 0 ? parsedEmbeddingSize : null,
     walkLength: parsedWalkLength && parsedWalkLength > 0 ? parsedWalkLength : null,
     inOutFactor: parsedInoutFactor && parsedInoutFactor > 0 ? parsedInoutFactor : null,
     returnFactor: parsedReturnFactor && parsedReturnFactor > 0 ? parsedReturnFactor : null,
+    batchSize: parsedBatchSize && parsedBatchSize > 0 ? parsedBatchSize : null,
+    normalizationStrength: parsedNormalizationStrength && parsedNormalizationStrength > 0 ? parsedNormalizationStrength : null,
+    modelName: modelName
   }
 
   if (persist) {

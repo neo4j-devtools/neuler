@@ -1,8 +1,8 @@
 import React from 'react'
 import {Form, Input} from "semantic-ui-react"
-import {ProjectedGraphWithWeights} from "../../Form/ProjectedGraph";
-import {StoreProperty} from "../../Form/StoreProperty";
-import {OpenCloseSection} from "../../Form/OpenCloseSection";
+import {ProjectedGraphWithWeights} from "../../../Form/ProjectedGraph";
+import {StoreProperty} from "../../../Form/StoreProperty";
+import {OpenCloseSection} from "../../../Form/OpenCloseSection";
 
 const Node2VecForm = ({
                           readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,
