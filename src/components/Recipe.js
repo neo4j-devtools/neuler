@@ -87,7 +87,7 @@ const IndividualRecipeView = (props) => {
 
     const addTaskIfMissing = () => {
         const selectedRecipe = localRecipes[recipeId];
-        console.log("addTaskIfMissing", selectedRecipe, "selectedRecipe.slides[selectedSlide]", selectedRecipe.slides[selectedSlide])
+
         if (!selectedRecipe.slides[selectedSlide].task) {
             setLocalRecipes(localRecipes => {
                 const newLocalRecipes = Object.assign({}, localRecipes)
@@ -130,7 +130,6 @@ const IndividualRecipeView = (props) => {
             addTaskIfMissing()
         }
     }, [selectedSlide, recipeId, page])
-    console.log("selectedSlide", "recipeId", recipeId, "page", page)
 
     const selectedRecipe = localRecipes[recipeId]
     const maxSlide = selectedRecipe.slides.length
@@ -167,8 +166,6 @@ const IndividualRecipeView = (props) => {
     const handleResultsMenuItemClick = (e, {name}) => {
         updateSelectedTask({activeResultsItem: name})
     }
-
-    console.log("page", page, "selectedRecipe", selectedRecipe, "selectedSlide", selectedSlide, "selectedTask", selectedTask)
 
     return <React.Fragment>
         <TopNav selectedRecipe={selectedRecipe}/>
@@ -371,7 +368,7 @@ const StartSlide = ({selectedRecipe, gdsVersion, setPage, setSelectedSlide}) => 
 
             <p>{selectedRecipe.shortDescription}</p>
 
-        <Card.Group className="algorithms">
+        <div className="ui cards algorithms">
             {selectedRecipe.slides.map((slide, idx) => {
                 const algo = getAlgorithmDefinitions(slide.group, slide.algorithm, gdsVersion)
                 return <Card key={"recipe" + idx}>
@@ -382,7 +379,7 @@ const StartSlide = ({selectedRecipe, gdsVersion, setPage, setSelectedSlide}) => 
                     </Card.Description>
                 </Card.Content>
             </Card>})}
-        </Card.Group>
+        </div>
 
         <div className='ui buttons'>
             <Button className="try-recipe" onClick={() => {
@@ -410,7 +407,7 @@ const EndSlide = ({selectedRecipe}) => {
             Below are some ideas for things to try next:
         </p>
 
-        <Card.Group className="algorithms">
+        <div className="ui cards algorithms">
             <Card>
                 <Card.Content>
                     <Card.Header>Another recipe</Card.Header>
@@ -447,7 +444,7 @@ const EndSlide = ({selectedRecipe}) => {
                 </Card.Content>
             </Card>
 
-        </Card.Group>
+        </div>
 
     </div>
 }
