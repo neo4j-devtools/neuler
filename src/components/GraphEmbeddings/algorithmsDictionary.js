@@ -1,7 +1,8 @@
 import {runAlgorithm} from "../../services/embedding"
 import {embeddingParams} from "../../services/queries";
 import Result from "./Result";
-import Node2VecForm from "./Node2Vec/1.3/Form";
+import Node2VecForm_1Point3 from "./Node2Vec/1.3/Form";
+import Node2VecForm_1Point4 from "./Node2Vec/1.4/Form";
 import FastRPForm_1Point4 from "./FastRP/1.4/Form";
 import FastRPForm_1Point3 from "./FastRP/1.3/Form";
 
@@ -22,7 +23,7 @@ const commonRelWeightParameters = {
 const node2Vec1_4 = {
     "Node2Vec": {
         algorithmName: "gds.alpha.node2vec",
-        Form: Node2VecForm,
+        Form: Node2VecForm_1Point4,
         parametersBuilder: embeddingParams,
         service: runAlgorithm,
         ResultView: Result,
@@ -57,7 +58,7 @@ LIMIT toInteger($limit)`
 const node2Vec1_3 = {
     "Node2Vec": {
         algorithmName: "gds.alpha.node2vec",
-        Form: Node2VecForm,
+        Form: Node2VecForm_1Point3,
         parametersBuilder: embeddingParams,
         service: runAlgorithm,
         ResultView: Result,

@@ -18,6 +18,6 @@ export const SpecificTask = (props) => {
         })}
         task={currentTask}
         totalPages={tasks.length}
-        gdsVersion="1.3"
+        gdsVersion={props.metadata.versions.gdsVersion}
     />
 }

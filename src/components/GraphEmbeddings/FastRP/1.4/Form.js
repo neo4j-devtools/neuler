@@ -4,7 +4,7 @@ import {ProjectedGraphWithWeights} from "../../../Form/ProjectedGraph";
 import {StoreProperty} from "../../../Form/StoreProperty";
 import {OpenCloseSection} from "../../../Form/OpenCloseSection";
 
-const Node2VecForm = ({
+const FastRPForm = ({
                           readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,
                           propertyKeyOptions, writeProperty, onChange, weightProperty, defaultValue, direction, persist, children,
                           embeddingDimension, normalizationStrength
@@ -50,4 +50,4 @@ const Parameters = ({ embeddingDimension, normalizationStrength, onChange, readO
     </OpenCloseSection>
 }
 
-export default Node2VecForm
+export default FastRPForm
