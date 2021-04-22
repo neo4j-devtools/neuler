@@ -10,7 +10,7 @@ const generateTSNELayout = (data) => {
         perplexity: 30.0,
         earlyExaggeration: 4.0,
         learningRate: 100.0,
-        nIter: 300,
+        nIter: 100,
         metric: "euclidean",
     })
 
