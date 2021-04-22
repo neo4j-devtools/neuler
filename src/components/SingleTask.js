@@ -10,6 +10,7 @@ import {getGroup} from "./algorithmsLibrary";
 import {ChartView} from "./Results/ChartView";
 import {TableView} from "./Results/TableView";
 import {NewVisView} from "./Results/NewVisView";
+import { TSNEView } from "./Results/TSNEView";
 
 export const SingleTask = (props) => {
     const {task, currentPage, totalPages, metadata} = props
@@ -123,7 +124,12 @@ export const SingleTask = (props) => {
                                             active={activeResultsItem === 'Visualisation'}
                                             onClick={handleResultsMenuItemClick}
                                         />}
-
+                                        {getGroup(task.algorithm, gdsVersion) === "Graph Embeddings" &&
+                                        <Menu.Item
+                                        name="Scatter Plot"
+                                        active={activeResultsItem === "Scatter Plot"}
+                                        onClick={handleResultsMenuItemClick}
+                                        />}
                                     </Menu>
                                 </div>
                                 <div style={{flexGrow: "1", paddingLeft: "10px"}}>
@@ -137,6 +143,11 @@ export const SingleTask = (props) => {
                                         <div style={getResultsStyle('Chart')}>
                                             <ChartView task={task} active={activeResultsItem === 'Chart'}/>
                                         </div> : null}
+
+                                    {activeGroup === 'Graph Embeddings' ?
+                                    <div style={getResultsStyle('Scatter Plot')}>
+                                        <TSNEView task={task} active={activeResultsItem === 'Scatter Plot'}/>
+                                    </div> : null}
 
                                     <div style={getResultsStyle('Table')}>
                                         <TableView task={task} gdsVersion={props.gdsVersion}/>
