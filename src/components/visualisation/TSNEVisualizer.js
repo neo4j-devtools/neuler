@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react"
 import { ResponsiveScatterPlot } from '@nivo/scatterplot'
 import TSNE from "tsne-js"
+import {Loader} from "semantic-ui-react"
+
 
 const cachedOutputs = {}
 
@@ -66,7 +68,7 @@ export default ({ taskId, result, completed }) => {
     )
 
     if (data.length === 0) {
-        return <p>Computing t-SNE layout.</p>
+        return <Loader active={true} inline='centered'>Rendering</Loader>
     }
 
     return (
