@@ -1,5 +1,11 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.51
+
+* Fix node2vec form
+* Add TSNE visualization for embeddings
+* Updated dependencies
+
 ## 0.1.50 (2021-03-05)
 
 * Fix for some Semantic UI weirdness on the recipes page

@@ -1,6 +1,6 @@
 {
   "name": "neuler",
-  "version": "0.1.50",
+  "version": "0.1.51",
   "description": "Playground for Neo4j Graph Data Science Library",
   "author": "Neo4j Labs",
   "neo4jDesktop": {
