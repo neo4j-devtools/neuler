@@ -148,7 +148,7 @@ RETURN gds.util.asNode(nodeIds[index]) AS node, costs[index] AS cost`,
             ...commonParameters, ...{
                 nodeQuery: null,
                 relationshipQuery: null,
-                writeProperty: "louvain",
+                writeProperty: "astar",
                 latitudeProperty: "latitude",
                 longitudeProperty: "longitude",
             }
@@ -192,12 +192,86 @@ RETURN gds.util.asNode(nodeId) AS node, cost`,
     },
 }
 
+const onePointSixAlgorithms = {
+    "Shortest Path": {
+        Form: ShortestPathForm,
+        parametersBuilder: pre1Point5PathFindingParams,
+        service: runStreamingAlgorithm,
+        ResultView: PathFindingResult,
+        parameters: {...commonParameters, ...{nodeQuery: null, relationshipQuery: null,}},
+        streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
+WITH config { .*, sourceNode: id(start), targetNode: id(end)} as config
+CALL gds.shortestPath.dijkstra.stream(config)
+YIELD nodeIds, costs
+UNWIND range(0, size(nodeIds)-1) AS index
+RETURN gds.util.asNode(nodeIds[index]) AS node, costs[index] AS cost`,
+        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.shortestPath.dijkstra.stream("${namedGraph}", {sourceNode: id(start), targetNode: id(end)})
+YIELD nodeIds, costs
+UNWIND range(0, size(nodeIds)-1) AS index
+RETURN gds.util.asNode(nodeIds[index]) AS node, costs[index] AS cost`,
+        storeQuery: ``,
+        getFetchQuery: () => "",
+        description: `The Shortest Path algorithm calculates the shortest (weighted) path between a pair of nodes. `
+    },
+    "A*": {
+        Form: AStarForm,
+        parametersBuilder: onePoint5PathFindingParams,
+        service: runStreamingAlgorithm,
+        ResultView: PathFindingResult,
+        parameters: {
+            ...commonParameters, ...{
+                nodeQuery: null,
+                relationshipQuery: null,
+                writeProperty: "astar",
+                latitudeProperty: "latitude",
+                longitudeProperty: "longitude",
+            }
+        },
+        streamQuery: findStartEndNodes() + `WITH $config AS config, start, end
+WITH config { .*, sourceNode: id(start), targetNode: id(end)} as config
+CALL gds.shortestPath.astar.stream(config)
+YIELD targetNode, totalCost AS cost
+RETURN gds.util.asNode(targetNode) AS node, cost`,
+        namedGraphStreamQuery: (namedGraph) => findStartEndNodes() + `CALL gds.shortestPath.astar.stream("${namedGraph}", {
+  sourceNode: id(start), 
+  targetNode: id(end),
+  latitudeProperty: $config.latitudeProperty, 
+  longitudeProperty: $config.longitudeProperty,
+  relationshipWeightProperty: $config.relationshipWeightProperty
+})
+YIELD targetNode, totalCost AS cost
+RETURN gds.util.asNode(targetNode) AS node, cost`,
+        storeQuery: ``,
+        getFetchQuery: () => "",
+        description: `The A* algorithm improves on the classic Dijkstra algorithm. by using a heuristic that guides the paths taken.`
+    },
+    "Single Source Shortest Path": {
+        Form: SingleSourceShortestPathForm,
+        parametersBuilder: onePoint5PathFindingParams,
+        service: runStreamingAlgorithm,
+        ResultView: PathFindingResult,
+        parameters: { ...commonParameters, ...{nodeQuery: null, relationshipQuery: null,}},
+        streamQuery: findStartNode() + `WITH $config AS config, start
+WITH config { .*, sourceNode: id(start)} as config
+CALL gds.allShortestPaths.dijkstra.stream(config)
+YIELD targetNode AS nodeId, totalCost AS cost
+RETURN gds.util.asNode(nodeId) AS node, cost
+LIMIT toInteger($limit)`,
+        namedGraphStreamQuery: (namedGraph) => findStartNode() + `CALL gds.allShortestPaths.dijkstra.stream("${namedGraph}", {sourceNode: id(start)})
+YIELD targetNode AS nodeId, totalCost AS cost
+RETURN gds.util.asNode(nodeId) AS node, cost`,
+        storeQuery: ``,
+        getFetchQuery: () => "",
+        description: `The Single Source Shortest Path (SSSP) algorithm calculates the shortest (weighted) path from a node to all other nodes in the graph..`
+    },
+}
+
 export default {
     algorithmList: () => {
         return ["Shortest Path", "A*", "Single Source Shortest Path", "All Pairs Shortest Path",]
     },
     algorithmDefinitions: (algorithm, gdsVersion)  => {
         const version = parseInt(gdsVersion.split(".")[1])
-        return {...baseAlgorithms, ...(version < 5 ? pre1Point5Algorithms : onePointFiveAlgorithms)}[algorithm]
+        return {...baseAlgorithms, ...(version >= 6 ? onePointSixAlgorithms : version === 5 ? onePointFiveAlgorithms : pre1Point5Algorithms)}[algorithm]
     }
 }
