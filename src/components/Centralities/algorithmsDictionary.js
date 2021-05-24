@@ -10,6 +10,7 @@ import ClosenessCentralityForm from "./ClosenessCentralityForm"
 import NewApproxBetweennessForm from "./NewApproxBetweennessForm"
 import HITSResult from "./HITS/Result";
 import HITSForm from "./HITS/Form";
+import EigenvectorForm from "./Eigenvector/Form"
 
 const commonParameters = {
   label: "*",
@@ -19,21 +20,6 @@ const commonParameters = {
 }
 
 let algorithms = {
-  "Degree": {
-    algorithmName: "gds.alpha.degree",
-    Form: DegreeForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      ...commonParameters,
-      ...{ direction: 'Reverse', writeProperty: "degree", defaultValue: 1.0, relationshipWeightProperty: null}
-    },
-    parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.alpha.degree.stream($config) YIELD nodeId, score`),
-    storeQuery: `CALL gds.alpha.degree.write($config)`,
-    getFetchQuery: getFetchCypher,
-    description: `detects the number of direct connections a node has`
-  },
   "HITS": {
     algorithmName: "gds.alpha.hits.stream",
     Form: HITSForm,
@@ -53,21 +39,6 @@ LIMIT toInteger($limit)`,
     getFetchQuery: getFetchHITSCypher,
     description: `link analysis algorithm that rates nodes based on two scores, a hub score and an authority score.`
   },
-  "Eigenvector": {
-    algorithmName: "gds.alpha.eigenvector",
-    Form: PageRankForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      ...commonParameters,
-      ...{ writeProperty: "eigenvector", maxIterations: 20, defaultValue: 1.0, normalization: "none"}
-    },
-    parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.alpha.eigenvector.stream($config) YIELD nodeId, score`),
-    storeQuery: `CALL gds.alpha.eigenvector.write($config)`,
-    getFetchQuery: getFetchCypher,
-    description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
-  },
   "Page Rank": {
     algorithmName: "gds.pageRank",
     Form: PageRankForm,
@@ -82,21 +53,6 @@ LIMIT toInteger($limit)`,
     storeQuery: `CALL gds.pageRank.write($config)`,
     getFetchQuery: getFetchCypher,
     description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
-  },
-  'Article Rank': {
-    algorithmName: "gds.alpha.articleRank",
-    Form: PageRankForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      ...commonParameters,
-      ...{ writeProperty: "articlerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
-    },
-    parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.alpha.articleRank.stream($config) YIELD nodeId, score`),
-    storeQuery: `CALL gds.alpha.articleRank.write($config)`,
-    getFetchQuery: getFetchCypher,
-    description: `a variant of the PageRank algorithm`
   },
   "Closeness": {
     algorithmName: "gds.alpha.closeness",
@@ -160,6 +116,44 @@ const newApproxBetweenness = {
   storeQuery: `CALL gds.betweenness.write($config)`
 }
 
+const baseDegree = {
+    Form: DegreeForm,
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parameters: {
+      ...commonParameters,
+      ...{ direction: 'Reverse', writeProperty: "degree", defaultValue: 1.0, relationshipWeightProperty: null}
+    },
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    description: `detects the number of direct connections a node has`
+}
+
+const baseEigenvector = {
+  service: runAlgorithm,
+  ResultView: CentralityResult,
+  parameters: {
+    ...commonParameters,
+    ...{ writeProperty: "eigenvector", maxIterations: 20, defaultValue: 1.0}
+  },
+  parametersBuilder: centralityParams,
+  getFetchQuery: getFetchCypher,
+  description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
+}
+
+const baseArticle = {
+    Form: PageRankForm,
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parameters: {
+      ...commonParameters,
+      ...{ writeProperty: "articlerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
+    },
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    description: `a variant of the PageRank algorithm`
+}
+
 export default {
   algorithmList: (gdsVersion) => {
     const version = parseInt(gdsVersion.split(".")[1])
@@ -185,6 +179,55 @@ export default {
       case "Approx Betweenness": {
         return Object.assign({}, baseApproxBetweenness, version > 2 ? newApproxBetweenness : oldApproxBetweenness)
       }
+      case "Degree": {
+        const oldName = "gds.alpha.degree"
+        const oldStreamQuery = `CALL gds.alpha.degree.stream($config) YIELD nodeId, score`
+        const oldStoreQuery = `CALL gds.alpha.degree.write($config)`
+
+        const newName = "gds.degree"
+        const newStreamQuery = `CALL gds.degree.stream($config) YIELD nodeId, score`
+        const newStoreQuery = `CALL gds.degree.write($config)`
+
+        baseDegree.algorithmName = version >= "6" ? newName : oldName
+        baseDegree.streamQuery = streamQueryOutline(version >= "6" ? newStreamQuery : oldStreamQuery)
+        baseDegree.storeQuery = version >= "6" ? newStoreQuery : oldStoreQuery
+
+        return baseDegree
+      }
+      case "Eigenvector" : {
+        const oldName = "gds.alpha.eigenvector"
+        const oldStreamQuery = `CALL gds.alpha.eigenvector.stream($config) YIELD nodeId, score`
+        const oldStoreQuery = `CALL gds.alpha.eigenvector.write($config)`
+
+        const newName = "gds.eigenvector"
+        const newStreamQuery = `CALL gds.eigenvector.stream($config) YIELD nodeId, score`
+        const newStoreQuery = `CALL gds.eigenvector.write($config)`
+
+        baseEigenvector.algorithmName = version >= "6" ? newName : oldName
+        baseEigenvector.streamQuery = streamQueryOutline(version >= "6" ? newStreamQuery : oldStreamQuery)
+        baseEigenvector.storeQuery = version >= "6" ? newStoreQuery : oldStoreQuery
+
+        baseEigenvector.Form = version >= "6" ? EigenvectorForm : PageRankForm
+
+        return baseEigenvector
+      }
+
+      case "Article Rank" : {
+        const oldName = "gds.alpha.articleRank"
+        const oldStreamQuery = `CALL gds.alpha.articleRank.stream($config) YIELD nodeId, score`
+        const oldStoreQuery = `CALL gds.alpha.articleRank.write($config)`
+
+        const newName = "gds.articleRank"
+        const newStreamQuery = `CALL gds.articleRank.stream($config) YIELD nodeId, score`
+        const newStoreQuery = `CALL gds.articleRank.write($config)`
+
+        baseArticle.algorithmName = version >= "6" ? newName : oldName
+        baseArticle.streamQuery = streamQueryOutline(version >= "6" ? newStreamQuery : oldStreamQuery)
+        baseArticle.storeQuery = version >= "6" ? newStoreQuery : oldStoreQuery
+
+        return baseArticle
+      }
+
       default:
         return algorithms[algorithm]
     }
