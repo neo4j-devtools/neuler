@@ -1,5 +1,11 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.52
+
+* Update pathfinding algos to support 1.6
+* Update node2vec to support 1.6
+* Update centralities algos to support 1.6
+
 ## 0.1.51
 
 * Fix node2vec form
