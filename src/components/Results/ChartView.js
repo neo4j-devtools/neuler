@@ -7,7 +7,7 @@ const LoaderExampleInlineCentered = ({ active }) => <Loader active={active} inli
 export const ChartView = ({task}) => {
     if (task.result && task.result.rows.length > 0) {
         return <Chart data={task.result.rows.map(result => ({
-            name: result.properties.name || 'Node',
+            name: result.properties.name || result.properties.title || result.properties.id || 'Node',
             score: result.score
         }))}/>
     } else {
