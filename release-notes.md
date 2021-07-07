@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.53
+
+* Add caption and label toggle option for TSNE visualization
+
 ## 0.1.52
 
 * Update pathfinding algos to support 1.6
