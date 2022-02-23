@@ -11,7 +11,7 @@ export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters
 }
 
 export const triangles = ({streamCypher, parameters}) => {
-  return runStreamingAlgorithm(streamCypher, parameters, result => {
+  return runStreamQuery(streamCypher, parameters, result => {
     if (result.records) {
       let rows = result.records.map(record => {
         const nodeA = record.get('nodeA')
@@ -129,14 +129,6 @@ const handleException = error => {
   console.error(error)
   throw new Error(error)
 }
-
-const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = parseResultStream) => {
-  return runCypher(streamCypher, parameters)
-    .then(result => parseResultStreamFn(result))
-    .catch(handleException)
-}
-
-
 export const parseResultStream = (result) => {
   if (result.records) {
     const rows = result.records.map(record => {

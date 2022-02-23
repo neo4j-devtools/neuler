@@ -5,7 +5,7 @@ import {StoreProperty} from "../Form/StoreProperty";
 import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const PageRankForm = ({
-                          readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,
+                          readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,relPropertyKeyOptions,
                           propertyKeyOptions, writeProperty, onChange, maxIterations, dampingFactor, weightProperty, defaultValue, direction, persist, children
                       }) => {
     const projectedGraphProps = {
@@ -19,7 +19,8 @@ const PageRankForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     return (

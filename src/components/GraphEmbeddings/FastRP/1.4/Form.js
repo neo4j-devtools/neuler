@@ -7,7 +7,7 @@ import {OpenCloseSection} from "../../../Form/OpenCloseSection";
 const FastRPForm = ({
                           readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,
                           propertyKeyOptions, writeProperty, onChange, weightProperty, defaultValue, direction, persist, children,
-                          embeddingDimension, normalizationStrength
+                          embeddingDimension, normalizationStrength, relPropertyKeyOptions
                       }) => {
     const projectedGraphProps = {
         label,
@@ -20,7 +20,8 @@ const FastRPForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     return (

@@ -19,6 +19,7 @@ const HITSForm = ({
                       defaultValue,
                       direction,
                       persist,
+                      relPropertyKeyOptions,
                       children
                   }) => {
     const projectedGraphProps = {
@@ -32,7 +33,8 @@ const HITSForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     return (

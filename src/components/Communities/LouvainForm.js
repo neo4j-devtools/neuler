@@ -4,7 +4,7 @@ import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 import {OpenCloseSection} from "../Form/OpenCloseSection";
 
-const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,
+const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions, relPropertyKeyOptions,
                          propertyKeyOptions, weightProperty, writeProperty, seedProperty, includeIntermediateCommunities, defaultValue, direction, persist,
                      children}) => {
     const projectedGraphProps = {
@@ -18,7 +18,8 @@ const LouvainForm = ({readOnly, onChange, labelOptions, label, relationshipType,
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     const parameterProps = {

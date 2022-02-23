@@ -4,7 +4,7 @@ import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {StoreProperty} from "../Form/StoreProperty";
 
 const DegreeForm = (props) => {
-    const {taskId, readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, propertyKeyOptions, relationshipOrientationOptions, onChange, writeProperty, weightProperty, defaultValue, direction, persist, children} = props
+    const {taskId, readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, propertyKeyOptions, relPropertyKeyOptions,  relationshipOrientationOptions, onChange, writeProperty, weightProperty, defaultValue, direction, persist, children} = props
     const projectedGraphProps = {
         readOnly,
         label,
@@ -14,6 +14,7 @@ const DegreeForm = (props) => {
         relationshipTypeOptions,
         relationshipOrientationOptions,
         propertyKeyOptions,
+        relPropertyKeyOptions,
         weightProperty,
         defaultValue,
         onChange,

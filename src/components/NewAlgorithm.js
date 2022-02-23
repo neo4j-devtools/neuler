@@ -8,6 +8,7 @@ import {
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
+    setRelPropertyKeys,
     setRelationshipTypes,
     setVersions
 } from "../ducks/metadata";
@@ -108,6 +109,7 @@ export const NewAlgorithm = connect(state => ({
     setLabels: labels => dispatch(setLabels(labels)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setRelPropertyKeys: propertyKeys => dispatch(setRelPropertyKeys(propertyKeys)),
     setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
     setDatabases: databases => dispatch(setDatabases(databases)),
     addDatabase: database => dispatch(addDatabase(database)),

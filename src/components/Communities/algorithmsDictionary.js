@@ -85,14 +85,14 @@ LIMIT toInteger($limit)`,
         minAssociationStrength: 0.1
       }
     },
-    streamQuery: `CALL gds.alpha.sllpa.stream($config)
+    streamQuery: `CALL gds.alpha.sllpa.stream($generatedName, $config)
 YIELD nodeId, values        
 WITH gds.util.asNode(nodeId) AS node, values.communityIds AS communities
 WITH communities, collect(node) AS nodes
 RETURN communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
 ORDER BY size DESC
 LIMIT toInteger($limit)`,
-    storeQuery: `CALL gds.alpha.sllpa.write($config)`,
+    storeQuery: `CALL gds.alpha.sllpa.write($generatedName, $config)`,
     getFetchQuery: getFetchSLLPACypher,
     description: `variation of the Label Propagation algorithm that is able to detect multiple communities per node.`,
     returnsCommunities: true
@@ -213,19 +213,23 @@ LIMIT toInteger($limit)`,
     parametersBuilder: communityParams,
     description: "finds set of three nodes, where each node has a relationship to all other nodes"
 
+  },
+  "Triangles": {
+    algorithmName: "gds.alpha.triangles",
+    Form: TrianglesForm,
+    parametersBuilder: communityParams,
+    service: triangles,
+    ResultView: TrianglesResult,
+    parameters: commonParameters,
+    storeQuery: ``,
+    getFetchQuery: () => ``,
+    description: "finds set of three nodes, where each node has a relationship to all other nodes",
+    streamQuery: removeSpacing(`CALL gds.alpha.triangles($generatedName, $config)
+    YIELD nodeA, nodeB, nodeC
+    RETURN gds.util.asNode(nodeA) AS nodeA, gds.util.asNode(nodeB) AS nodeB, gds.util.asNode(nodeC) AS nodeC
+    LIMIT toInteger($limit)`)
   }
 };
-
-const baseTriangles = {
-  Form: TrianglesForm,
-  parametersBuilder: communityParams,
-  service: triangles,
-  ResultView: TrianglesResult,
-  parameters: commonParameters,
-  storeQuery: ``,
-  getFetchQuery: () => ``,
-  description: "finds set of three nodes, where each node has a relationship to all other nodes"
-}
 
 export default {
   algorithmList: (gdsVersion) => {
@@ -249,6 +253,7 @@ export default {
   algorithmDefinitions: (algorithm, gdsVersion) => {
     const version = parseInt(gdsVersion.split(".")[1])
     switch (algorithm) {
+      /*
       case "Triangles": {
         const oldStreamQuery = `CALL gds.alpha.triangle.stream($config)
                 YIELD nodeA, nodeB, nodeC
@@ -262,7 +267,7 @@ export default {
 
         baseTriangles.streamQuery = removeSpacing(version > 1 ? newStreamQuery : oldStreamQuery)
         return baseTriangles
-      }
+      }*/
       default:
         return algorithms[algorithm]
     }

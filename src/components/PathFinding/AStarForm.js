@@ -5,7 +5,7 @@ import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
 import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const AlgoForm = ({
-                      children, readOnly, onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions,
+                      children, readOnly, onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions, relPropertyKeyOptions,
                       relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, latitudeProperty, longitudeProperty, direction, persist
                   }) => {
     const projectedGraphProps = {
@@ -19,7 +19,8 @@ const AlgoForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>

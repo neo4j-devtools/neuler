@@ -2,7 +2,7 @@ import {Dropdown, Form, Input} from "semantic-ui-react";
 import React from "react";
 import {OpenCloseSection} from "./OpenCloseSection";
 
-const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direction, relationshipTypeOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, defaultValue, onChange, showWeightProperty}) => {
+const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direction, relationshipTypeOptions, relPropertyKeyOptions, relationshipOrientationOptions, propertyKeyOptions, weightProperty, defaultValue, onChange, showWeightProperty}) => {
     return <OpenCloseSection title="Projected Graph">
         <Form.Field inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Label</label>
@@ -32,7 +32,7 @@ const ProjectedGraph = ({readOnly, label, labelOptions, relationshipType, direct
                 <label style={{'width': '12em'}}>Weight Property</label>
                 <Dropdown disabled={readOnly} placeholder='Weight Property' value={weightProperty}
                           search selection
-                          options={propertyKeyOptions}
+                          options={relPropertyKeyOptions}
                           onChange={(evt, data) => onChange("weightProperty", data.value)}/>
             </Form.Field> : null}
 
