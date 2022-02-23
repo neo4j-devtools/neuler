@@ -32,7 +32,6 @@ export const constructQueries = (algorithmDefinition, parameters, streamQuery) =
 
     const mainGdsVersion = parseInt(parameters.gdsVersion.split(".")[0])
 
-    const generatedName = `in-memory-graph-${Date.now()}`
     const createGraph = `CALL gds.graph.${mainGdsVersion > 1 ? "project" : "create"}($generatedName, $graphConfig.nodeProjection, $graphConfig.relationshipProjection, ${stringfyParam(graphProperties)})`
     const dropGraph = `CALL gds.graph.drop("$generatedName")`
 
@@ -157,7 +156,6 @@ export default class extends Component {
     }
 
     createPanes(task) {
-        const anonymous = this.renderQueries(task.query)
         const named = this.renderQueries(task.namedGraphQueries);
         const namedDatabaseParam = this.renderNamedDatabaseParam(task.database)
         const params = this.renderParams(task)
@@ -181,6 +179,7 @@ export default class extends Component {
 
     renderQueries = queries => {
         return queries.map(query => {
+            console.log(query)
             const cleanQuery = removeSpacing(query.replace('\n  ', '\n')) + ";";
             return <Message key={cleanQuery}>
 

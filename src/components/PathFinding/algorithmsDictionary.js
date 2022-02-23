@@ -109,7 +109,7 @@ CALL gds.allShortestPaths.dijkstra.stream($generatedName, config)
 YIELD targetNode AS nodeId, totalCost AS cost
 RETURN gds.util.asNode(nodeId) AS node, cost
 LIMIT toInteger($limit)`,
-        namedGraphStreamQuery: (namedGraph) => findStartNode() + `CALL gds.allShortestPaths.dijkstra.stream($generatedName, {sourceNode: id(start)})
+        namedGraphStreamQuery: findStartNode() + `CALL gds.allShortestPaths.dijkstra.stream($generatedName, {sourceNode: id(start)})
 YIELD targetNode AS nodeId, totalCost AS cost
 RETURN gds.util.asNode(nodeId) AS node, cost`,
         storeQuery: ``,
