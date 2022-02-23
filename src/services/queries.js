@@ -13,8 +13,8 @@ RETURN community, allNodes[0..$communityNodeLimit] AS nodes, size(allNodes) AS s
 ORDER BY size DESC
 LIMIT toInteger($limit);`
 
-export const getFetchCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getFetchCypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
 RETURN node, node.\`${config.writeProperty}\` AS score
@@ -22,8 +22,8 @@ ORDER BY score DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchHITSCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getFetchHITSCypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}auth\`) AND exists(node.\`${config.writeProperty}hub\`)
 RETURN node, node.\`${config.writeProperty}auth\` AS authScore, node.\`${config.writeProperty}hub\` AS hubScore
@@ -31,8 +31,8 @@ ORDER BY authScore DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchLouvainCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getFetchLouvainCypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
 WITH node, node.\`${config.writeProperty}\` AS community
@@ -44,8 +44,8 @@ ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchSLLPACypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getFetchSLLPACypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}communityIds\`)
 WITH node, node.\`${config.writeProperty}communityIds\` AS community
@@ -56,8 +56,8 @@ ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 
-export const getCommunityFetchCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getCommunityFetchCypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
 WITH node.\`${config.writeProperty}\` AS community, collect(node) AS allNodes
@@ -66,8 +66,8 @@ ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchNewTriangleCountCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getFetchNewTriangleCountCypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`) 
 RETURN node, node.\`${config.writeProperty}\` AS triangles
@@ -75,8 +75,8 @@ ORDER BY triangles DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchNewLocalClusteringCoefficientCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
+export const getFetchNewLocalClusteringCoefficientCypher = (label, config, graphConfig) => {
+  const escapedLabel = graphConfig.nodeProjection && graphConfig.nodeProjection !== "*" ? ":`" + graphConfig.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`)
 RETURN node, node.\`${config.writeProperty}\` AS coefficient
@@ -354,9 +354,9 @@ export const embeddingParams = ({ label, relationshipType, direction, persist, w
     config.writeProperty = parsedWriteProperty
   }
 
-  requiredProperties.push("nodeProjection")
-  requiredProperties.push("relationshipProjection")
+  let graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
 
+  params.graphConfig = filterParameters({ ...params.config, ...config }, graphRequiredProperties)
   params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }

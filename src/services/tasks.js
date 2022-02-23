@@ -77,12 +77,12 @@ export const onRunAlgo = (task, parameters, formParameters, persisted, versions,
         streamQuery = streamQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
         storeQuery = storeQuery(itemLabel, relationshipType, categoryLabel, weightProperty)
 
-        fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType, parameters.config)
+        fetchCypher = getFetchQuery(itemLabel, parameters.config.writeRelationshipType, parameters.config, parameters.graphConfig)
         delete parameters.itemLabel
         delete parameters.relationshipType
         delete parameters.categoryLabel
     } else {
-        fetchCypher = getFetchQuery(parameters.label, parameters.config)
+        fetchCypher = getFetchQuery(parameters.label, parameters.config, parameters.graphConfig)
     }
 
     const serviceParameters = {
