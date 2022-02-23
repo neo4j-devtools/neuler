@@ -30,14 +30,16 @@ export const constructQueries = (algorithmDefinition, parameters, streamQuery) =
         }
     })
 
-    const generatedName = `in-memory-graph-${Date.now()}`
-    const createGraph = `CALL gds.graph.create("${generatedName}", $config.nodeProjection, $config.relationshipProjection, ${stringfyParam(graphProperties)})`
-    const dropGraph = `CALL gds.graph.drop("${generatedName}")`
+    const mainGdsVersion = parseInt(parameters.gdsVersion.split(".")[0])
 
-    const storeAlgorithmNamedGraph = `CALL ${algorithmDefinition.algorithmName}.write("${generatedName}", ${stringfyParam(algorithmProperties)})`;
+    const generatedName = `in-memory-graph-${Date.now()}`
+    const createGraph = `CALL gds.graph.${mainGdsVersion > 1 ? "project" : "create"}($generatedName, $graphConfig.nodeProjection, $graphConfig.relationshipProjection, ${stringfyParam(graphProperties)})`
+    const dropGraph = `CALL gds.graph.drop("$generatedName")`
+
+    const storeAlgorithmNamedGraph = `CALL ${algorithmDefinition.algorithmName}.write($generatedName, ${stringfyParam(algorithmProperties)})`;
     const streamAlgorithmNamedGraph = algorithmDefinition.namedGraphStreamQuery ?
-        algorithmDefinition.namedGraphStreamQuery(generatedName) :
-        streamQuery.replace("$config", `"${generatedName}", ${stringfyParam(algorithmProperties)}`)
+        algorithmDefinition.namedGraphStreamQuery :
+        streamQuery.replace("$config", `${stringfyParam(algorithmProperties)}`)
 
     return {
         createGraph,
@@ -62,7 +64,7 @@ export const stringfyParam = value => {
 export default class extends Component {
     state = {
         browserGuide: {},
-        activeTab: "Anonymous Graph"
+        activeTab: "Named Graph"
     }
 
     extractValue(parameters, key) {
@@ -84,7 +86,8 @@ export default class extends Component {
     constructPayload(parameters, query, guid, supportsNamedGraph, namedGraphQueries) {
         return {
             uuid: guid,
-            params: Object.keys(parameters).map(key => `:param ${key} => (${this.extractValue(parameters, key)});`).join('\n'),
+            params: Object.keys(parameters).filter((el) => el !== "gdsVersion")
+              .map(key => `:param ${key} => (${this.extractValue(parameters, key)});`).join('\n'),
             query: query,
             supportsNamedGraph,
             namedGraphQueries
@@ -96,7 +99,6 @@ export default class extends Component {
         const guid = generateId()
 
         const supportsNamedGraph = this.supportsNamedGraph(group, algorithm)
-
         const payload = this.constructPayload(parameters, query, guid, supportsNamedGraph, namedGraphQueries)
 
         return fetch(generateGuidesUrl, {
@@ -161,20 +163,6 @@ export default class extends Component {
         const params = this.renderParams(task)
 
         return [
-            {
-                menuItem: "Anonymous Graph", render: () => <div>
-                    <React.Fragment>
-                        <p>
-                            An anonymous graph is created for the duration of the algorithm run. It is deleted before
-                            the algorithm returns its results.
-                        </p>
-                        {namedDatabaseParam}
-                        {params}
-                        {anonymous}
-                    </React.Fragment>
-
-                </div>,
-            },
             {
                 menuItem: "Named Graph", render: () => <div>
                     <React.Fragment>

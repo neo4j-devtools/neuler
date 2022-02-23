@@ -118,10 +118,8 @@ export const onePoint5PathFindingParams = ({ startNode, endNode, latitudePropert
   if (persist) {
     config.writeProperty = parsedWriteProperty
   }
-
-  requiredProperties.push("nodeProjection")
-  requiredProperties.push("relationshipProjection")
-
+  const graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
+  params.graphConfig = filterParameters({ ...params.config, ...config }, graphRequiredProperties)
   params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
@@ -161,9 +159,8 @@ export const pre1Point5PathFindingParams = ({ startNode, endNode, delta, propert
     config.writeProperty = parsedWriteProperty
   }
 
-  requiredProperties.push("nodeProjection")
-  requiredProperties.push("relationshipProjection")
-
+  const graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
+  params.graphConfig = filterParameters({ ...params.config, ...config }, graphRequiredProperties)
   params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
