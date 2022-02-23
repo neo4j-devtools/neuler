@@ -49,8 +49,8 @@ LIMIT toInteger($limit)`,
       ...{ writeProperty: "pagerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
     },
     parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.pageRank.stream($config) YIELD nodeId, score`),
-    storeQuery: `CALL gds.pageRank.write($config)`,
+    streamQuery: streamQueryOutline(`CALL gds.pageRank.stream($generatedName, $config) YIELD nodeId, score`),
+    storeQuery: `CALL gds.pageRank.write($generatedName, $config)`,
     getFetchQuery: getFetchCypher,
     description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
   },
@@ -61,8 +61,8 @@ LIMIT toInteger($limit)`,
     ResultView: CentralityResult,
     parameters: {...commonParameters, ...{ writeProperty: "closeness", }},
     parametersBuilder: centralityParams,
-    streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($config) YIELD nodeId, centrality AS score`),
-    storeQuery: `CALL gds.alpha.closeness.write($config)`,
+    streamQuery: streamQueryOutline(`CALL gds.alpha.closeness.stream($generatedName, $config) YIELD nodeId, centrality AS score`),
+    storeQuery: `CALL gds.alpha.closeness.write($generatedName, $config)`,
     getFetchQuery: getFetchCypher,
     description: `detect nodes that are able to spread information very efficiently through a graph`
   },
@@ -78,18 +78,78 @@ LIMIT toInteger($limit)`,
     getFetchQuery: getFetchCypher,
     description: `a variant of closeness centrality, that was invented to solve the problem the original
 -                  formula had when dealing with unconnected graphs.`
+  },
+  "Degree": {
+    algorithmName: "gds.degree",
+    Form: DegreeForm,
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parameters: {
+      ...commonParameters,
+      ...{ direction: 'Reverse', writeProperty: "degree", defaultValue: 1.0, relationshipWeightProperty: null}
+    },
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    streamQuery: streamQueryOutline(`CALL gds.degree.stream($generatedName, $config) YIELD nodeId, score`),
+    storeQuery: `CALL gds.degree.write($generatedName, $config)`,
+    description: `detects the number of direct connections a node has`
+  },
+  "Eigenvector": {
+    algorithmName: "gds.eigenvector",
+    Form: EigenvectorForm,
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parameters: {
+      ...commonParameters,
+      ...{ writeProperty: "eigenvector", maxIterations: 20, defaultValue: 1.0}
+    },
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>,
+    streamQuery: streamQueryOutline(`CALL gds.eigenvector.stream($generatedName, $config) YIELD nodeId, score`),
+    storeQuery: `CALL gds.eigenvector.write($generatedName, $config)`
+  },
+  "Article Rank": {
+    algorithmName: "gds.articleRank",
+    Form: PageRankForm,
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parameters: {
+      ...commonParameters,
+      ...{ writeProperty: "articlerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
+    },
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    description: `a variant of the PageRank algorithm`,
+    streamQuery: streamQueryOutline(`CALL gds.articleRank.stream($generatedName, $config) YIELD nodeId, score`),
+    storeQuery: `CALL gds.articleRank.write($generatedName, $config)`
+  },
+  "Betweenness": {
+    algorithmName: "gds.betweenness",
+    Form: BetweennesForm,
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parameters: { ...commonParameters, ...{ writeProperty: "betweenness",}},
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    description: `a way of detecting the amount of influence a node has over the flow of information in a graph`,
+    streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($generatedName, $config) YIELD nodeId, score`),
+    storeQuery: `CALL gds.betweenness.write($generatedName, $config)`
+  },
+  "Approx Betweenness": {
+    algorithmName: "gds.betweenness",
+    service: runAlgorithm,
+    ResultView: CentralityResult,
+    parametersBuilder: centralityParams,
+    getFetchQuery: getFetchCypher,
+    description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`,
+    Form: NewApproxBetweennessForm,
+    parameters: { ...commonParameters, ...{ samplingSize: 100, writeProperty: "approxBetweenness"}},
+    streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($generatedName, $config) YIELD nodeId, score`),
+    storeQuery: `CALL gds.betweenness.write($generatedName, $config)`
+
   }
 };
-
-const baseBetweenness = {
-  Form: BetweennesForm,
-  service: runAlgorithm,
-  ResultView: CentralityResult,
-  parameters: { ...commonParameters, ...{ writeProperty: "betweenness",}},
-  parametersBuilder: centralityParams,
-  getFetchQuery: getFetchCypher,
-  description: `a way of detecting the amount of influence a node has over the flow of information in a graph`
-}
 
 const baseApproxBetweenness = {
   service: runAlgorithm,
@@ -115,45 +175,6 @@ const newApproxBetweenness = {
   streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($config) YIELD nodeId, score`),
   storeQuery: `CALL gds.betweenness.write($config)`
 }
-
-const baseDegree = {
-    Form: DegreeForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      ...commonParameters,
-      ...{ direction: 'Reverse', writeProperty: "degree", defaultValue: 1.0, relationshipWeightProperty: null}
-    },
-    parametersBuilder: centralityParams,
-    getFetchQuery: getFetchCypher,
-    description: `detects the number of direct connections a node has`
-}
-
-const baseEigenvector = {
-  service: runAlgorithm,
-  ResultView: CentralityResult,
-  parameters: {
-    ...commonParameters,
-    ...{ writeProperty: "eigenvector", maxIterations: 20, defaultValue: 1.0}
-  },
-  parametersBuilder: centralityParams,
-  getFetchQuery: getFetchCypher,
-  description: <div>Measures the <strong>transitive</strong> influence or connectivity of nodes</div>
-}
-
-const baseArticle = {
-    Form: PageRankForm,
-    service: runAlgorithm,
-    ResultView: CentralityResult,
-    parameters: {
-      ...commonParameters,
-      ...{ writeProperty: "articlerank", dampingFactor: 0.85, maxIterations: 20, defaultValue: 1.0, relationshipWeightProperty: null}
-    },
-    parametersBuilder: centralityParams,
-    getFetchQuery: getFetchCypher,
-    description: `a variant of the PageRank algorithm`
-}
-
 export default {
   algorithmList: (gdsVersion) => {
     const version = parseInt(gdsVersion.split(".")[1])
@@ -161,8 +182,10 @@ export default {
     return version >= 5 ? algorithms.concat(["HITS"]) : algorithms;
   },
   algorithmDefinitions: (algorithm, gdsVersion) => {
+    const mainVersion = parseInt(gdsVersion.split(".")[0])
     const version = parseInt(gdsVersion.split(".")[1])
     switch (algorithm) {
+      /*
       case "Betweenness": {
         const oldStreamQuery = `CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`
         const newStreamQuery = `CALL gds.betweenness.stream($config) YIELD nodeId, score`
@@ -179,55 +202,7 @@ export default {
       case "Approx Betweenness": {
         return Object.assign({}, baseApproxBetweenness, version > 2 ? newApproxBetweenness : oldApproxBetweenness)
       }
-      case "Degree": {
-        const oldName = "gds.alpha.degree"
-        const oldStreamQuery = `CALL gds.alpha.degree.stream($config) YIELD nodeId, score`
-        const oldStoreQuery = `CALL gds.alpha.degree.write($config)`
-
-        const newName = "gds.degree"
-        const newStreamQuery = `CALL gds.degree.stream($config) YIELD nodeId, score`
-        const newStoreQuery = `CALL gds.degree.write($config)`
-
-        baseDegree.algorithmName = version >= "6" ? newName : oldName
-        baseDegree.streamQuery = streamQueryOutline(version >= "6" ? newStreamQuery : oldStreamQuery)
-        baseDegree.storeQuery = version >= "6" ? newStoreQuery : oldStoreQuery
-
-        return baseDegree
-      }
-      case "Eigenvector" : {
-        const oldName = "gds.alpha.eigenvector"
-        const oldStreamQuery = `CALL gds.alpha.eigenvector.stream($config) YIELD nodeId, score`
-        const oldStoreQuery = `CALL gds.alpha.eigenvector.write($config)`
-
-        const newName = "gds.eigenvector"
-        const newStreamQuery = `CALL gds.eigenvector.stream($config) YIELD nodeId, score`
-        const newStoreQuery = `CALL gds.eigenvector.write($config)`
-
-        baseEigenvector.algorithmName = version >= "6" ? newName : oldName
-        baseEigenvector.streamQuery = streamQueryOutline(version >= "6" ? newStreamQuery : oldStreamQuery)
-        baseEigenvector.storeQuery = version >= "6" ? newStoreQuery : oldStoreQuery
-
-        baseEigenvector.Form = version >= "6" ? EigenvectorForm : PageRankForm
-
-        return baseEigenvector
-      }
-
-      case "Article Rank" : {
-        const oldName = "gds.alpha.articleRank"
-        const oldStreamQuery = `CALL gds.alpha.articleRank.stream($config) YIELD nodeId, score`
-        const oldStoreQuery = `CALL gds.alpha.articleRank.write($config)`
-
-        const newName = "gds.articleRank"
-        const newStreamQuery = `CALL gds.articleRank.stream($config) YIELD nodeId, score`
-        const newStoreQuery = `CALL gds.articleRank.write($config)`
-
-        baseArticle.algorithmName = version >= "6" ? newName : oldName
-        baseArticle.streamQuery = streamQueryOutline(version >= "6" ? newStreamQuery : oldStreamQuery)
-        baseArticle.storeQuery = version >= "6" ? newStoreQuery : oldStoreQuery
-
-        return baseArticle
-      }
-
+      */
       default:
         return algorithms[algorithm]
     }

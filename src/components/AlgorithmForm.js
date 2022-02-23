@@ -10,7 +10,6 @@ import SelectAlgorithm from "./SelectAlgorithm";
 
 export const AlgoFormView = (props) => {
   const {task} = props
-
   const [parameters, setParameters] = React.useState({})
   const [labelOptions, setLabelOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
   const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
@@ -71,10 +70,13 @@ export const AlgoFormView = (props) => {
       })
 
       const persisted = formParameters.persist
+      const gdsVersion = props.metadata.versions.gdsVersion
+
       props.onRun({
         ...params,
         limit: props.limit,
-        communityNodeLimit: props.communityNodeLimit
+        communityNodeLimit: props.communityNodeLimit,
+        gdsVersion: gdsVersion
       }, formParameters, persisted)
     }
   }

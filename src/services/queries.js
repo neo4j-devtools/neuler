@@ -331,10 +331,9 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   if (persist) {
     config.writeProperty = parsedWriteProperty
   }
-
-  requiredProperties.push("nodeProjection")
-  requiredProperties.push("relationshipProjection")
-
+  
+  let graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
+  params.graphConfig = filterParameters({...params.config, ...config}, graphRequiredProperties)
   params.config = filterParameters({...params.config, ...config}, requiredProperties)
   return params
 }
