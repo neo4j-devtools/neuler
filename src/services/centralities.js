@@ -1,4 +1,4 @@
-import { runCypher } from "./stores/neoStore"
+import { runCypher, runStreamQuery, runStoreQuery } from "./stores/neoStore"
 import { parseProperties } from "./resultMapper"
 
 const handleException = error => {
@@ -13,44 +13,15 @@ export const runAlgorithm = ({
 	parameters,
 	persisted
 }) => {
-	const gdsMainVersion = parseInt(parameters.gdsVersion.split(".")[0])
-	const generatedName = `in-memory-graph-${Date.now()}`
-	parameters.generatedName = generatedName
-	const createGraph = `CALL gds.graph.${
-		gdsMainVersion === 1 ? "create" : "project"
-	}("${generatedName}", $graphConfig.nodeProjection, $graphConfig.relationshipProjection)`
-	const dropGraph = `CALL gds.graph.drop("${generatedName}")`
-
-  console.log(streamCypher)
-
 	if (!persisted) {
-		return new Promise((resolve, reject) => {
-			runCypher(createGraph, parameters)
-				.then(() =>
-					runCypher(streamCypher, parameters)
-						.then(result => {
-							runCypher(dropGraph)
-							resolve(parseResultStream(result))
-						})
-						.catch(reject)
-				)
-				.catch(reject)
-		})
+		return runStreamQuery(streamCypher, parameters, parseResultStream)
 	} else {
-		return new Promise((resolve, reject) => {
-			runCypher(createGraph, parameters).then(() =>
-				runCypher(storeCypher, parameters)
-					.then(() => {
-						runCypher(fetchCypher, parameters)
-							.then(result => {
-								runCypher(dropGraph)
-								resolve(parseResultStream(result))
-							})
-							.catch(reject)
-					})
-					.catch(reject)
-			)
-		})
+		return runStoreQuery(
+			storeCypher,
+			fetchCypher,
+			parameters,
+			parseResultStream
+		)
 	}
 }
 
@@ -85,19 +56,14 @@ export const runHITSAlgorithm = ({
 	persisted
 }) => {
 	if (!persisted) {
-		return runCypher(streamCypher, parameters)
-			.then(result => parseHITSResultStream(result))
-			.catch(handleException)
+		return runStreamQuery(streamCypher, parameters, parseHITSResultStream)
 	} else {
-		return new Promise((resolve, reject) => {
-			runCypher(storeCypher, parameters)
-				.then(() => {
-					runCypher(fetchCypher, parameters)
-						.then(result => resolve(parseHITSResultStream(result)))
-						.catch(reject)
-				})
-				.catch(reject)
-		})
+		return runStoreQuery(
+			storeCypher,
+			fetchCypher,
+			parameters,
+			parseHITSResultStream
+		)
 	}
 }
 

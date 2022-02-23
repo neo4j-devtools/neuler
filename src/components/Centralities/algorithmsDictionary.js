@@ -30,12 +30,12 @@ let algorithms = {
       ...{ writeProperty: "pregel_",  hitsIterations: 20, defaultValue: 1.0,  relationshipWeightProperty: null}
     },
     parametersBuilder: centralityParams,
-    streamQuery: `CALL gds.alpha.hits.stream($config) YIELD nodeId, values
+    streamQuery: `CALL gds.alpha.hits.stream($generatedName, $config) YIELD nodeId, values
 WITH gds.util.asNode(nodeId) AS node, values.auth AS authScore, values.hub AS hubScore
 RETURN node, authScore, hubScore
 ORDER BY authScore DESC
 LIMIT toInteger($limit)`,
-    storeQuery: `CALL gds.alpha.hits.write($config)`,
+    storeQuery: `CALL gds.alpha.hits.write($generatedName, $config)`,
     getFetchQuery: getFetchHITSCypher,
     description: `link analysis algorithm that rates nodes based on two scores, a hub score and an authority score.`
   },
@@ -177,9 +177,11 @@ const newApproxBetweenness = {
 }
 export default {
   algorithmList: (gdsVersion) => {
+    const mainVersion = parseInt(gdsVersion.split(".")[0])
     const version = parseInt(gdsVersion.split(".")[1])
-    const algorithms = ["Degree", "Eigenvector", "Page Rank", "Article Rank", "Betweenness", "Approx Betweenness", "Closeness"];
-    return version >= 5 ? algorithms.concat(["HITS"]) : algorithms;
+    const algorithms = ["Degree", "Eigenvector", "Page Rank", "Article Rank", "Betweenness", "Approx Betweenness", "Closeness", "HITS"];
+    return algorithms
+    //return version >= 5 ? algorithms.concat(["HITS"]) : algorithms;
   },
   algorithmDefinitions: (algorithm, gdsVersion) => {
     const mainVersion = parseInt(gdsVersion.split(".")[0])
