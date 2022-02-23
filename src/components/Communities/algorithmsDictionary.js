@@ -3,7 +3,6 @@ import {
   localClusteringCoefficient,
   runAlgorithm, runSpeakerListenerLPA,
   triangleCountNew,
-  triangleCountOld,
   triangles
 } from "../../services/communityDetection"
 import CommunityResult from "./CommunityResult"
@@ -11,23 +10,18 @@ import LabelPropagationForm from "./LabelPropagationForm"
 import ConnectedComponentsForm from "./ConnectedComponentsForm"
 import StronglyConnectedComponentsForm from "./StronglyConnectedComponentsForm"
 import TrianglesForm from "./TrianglesForm"
-import TriangleCountForm from "./TriangleCountForm"
 import TrianglesResult from "./TrianglesResult"
 import LouvainResult from "./LouvainResult"
-import TriangleCountResult from "./TriangleCountResult"
 import {
   communityParams,
   communityStreamQueryOutline,
   getCommunityFetchCypher,
-  getFetchLocalClusteringCoefficientCypher,
   getFetchLouvainCypher,
   getFetchNewLocalClusteringCoefficientCypher,
   getFetchNewTriangleCountCypher, getFetchSLLPACypher,
-  getFetchTriangleCountCypher
 } from "../../services/queries";
 import NewTriangleCountResult from "./NewTriangleCountResult";
 import NewTriangleCountForm from "./NewTriangleCountForm";
-import LocalClusteringCoefficientForm from "./LocalClusteringCoefficientForm";
 import LocalClusteringCoefficientResult from "./LocalClusteringCoefficientResult";
 import NewLocalClusteringCoefficientForm from "./NewLocalClusteringCoefficientForm";
 import ModularityOptimizationForm from "./ModularityOptimizationForm";
@@ -66,14 +60,14 @@ let algorithms = {
         seedProperty: null,
       }
     },
-    streamQuery: `CALL gds.louvain.stream($config)
+    streamQuery: `CALL gds.louvain.stream($generatedName, $config)
 YIELD nodeId, communityId AS community, intermediateCommunityIds AS communities
 WITH gds.util.asNode(nodeId) AS node, community, communities
 WITH community, communities, collect(node) AS nodes
 RETURN community, communities, nodes[0..$communityNodeLimit] AS nodes, size(nodes) AS size
 ORDER BY size DESC
 LIMIT toInteger($limit)`,
-    storeQuery: `CALL gds.louvain.write($config)`,
+    storeQuery: `CALL gds.louvain.write($generatedName, $config)`,
     getFetchQuery: getFetchLouvainCypher,
     description: `one of the fastest modularity-based algorithms and also reveals a hierarchy of communities at different scales`,
     returnsCommunities: true
@@ -117,8 +111,8 @@ LIMIT toInteger($limit)`,
         tolerance: 0.0001
       }
     },
-    streamQuery: communityStreamQueryOutline(`CALL gds.beta.modularityOptimization.stream($config) YIELD nodeId, communityId AS community`),
-    storeQuery: `CALL gds.beta.modularityOptimization.write($config)`,
+    streamQuery: communityStreamQueryOutline(`CALL gds.beta.modularityOptimization.stream($generatedName, $config) YIELD nodeId, communityId AS community`),
+    storeQuery: `CALL gds.beta.modularityOptimization.write($generatedName, $config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: `detect communities in the graph based on their modularity.`,
     returnsCommunities: true
@@ -135,8 +129,8 @@ LIMIT toInteger($limit)`,
         maxIterations: 10
       }
     },
-    streamQuery: communityStreamQueryOutline(`CALL gds.beta.k1coloring.stream($config) YIELD nodeId, color AS community`),
-    storeQuery: `CALL gds.beta.k1coloring.write($config)`,
+    streamQuery: communityStreamQueryOutline(`CALL gds.beta.k1coloring.stream($generatedName, $config) YIELD nodeId, color AS community`),
+    storeQuery: `CALL gds.beta.k1coloring.write($generatedName, $config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: `assigns a color to each node trying to use as few colours as possible and making sure neighbors of a node have a different color to that node.`,
     returnsCommunities: true
@@ -148,8 +142,8 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: {...commonRelWeightParameters, ...{writeProperty: "lpa"}},
-    streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($config) YIELD nodeId, communityId AS community`),
-    storeQuery: `CALL gds.labelPropagation.write($config)`,
+    streamQuery: communityStreamQueryOutline(`CALL gds.labelPropagation.stream($generatedName, $config) YIELD nodeId, communityId AS community`),
+    storeQuery: `CALL gds.labelPropagation.write($generatedName, $config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: "a fast algorithm for finding communities in a graph",
     returnsCommunities: true
@@ -166,8 +160,8 @@ LIMIT toInteger($limit)`,
         defaultValue: 1.0
       }
     },
-    streamQuery: communityStreamQueryOutline(`CALL gds.wcc.stream($config) YIELD nodeId, componentId AS community`),
-    storeQuery: `CALL gds.wcc.write($config)`,
+    streamQuery: communityStreamQueryOutline(`CALL gds.wcc.stream($generatedName, $config) YIELD nodeId, componentId AS community`),
+    storeQuery: `CALL gds.wcc.write($generatedName, $config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: "finds sets of connected nodes in an undirected graph where each node is reachable from any other node in the same set",
     returnsCommunities: true
@@ -179,14 +173,48 @@ LIMIT toInteger($limit)`,
     service: runAlgorithm,
     ResultView: CommunityResult,
     parameters: { ...commonParameters, ...{ writeProperty: "scc", defaultValue: 1.0} },
-    streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($config) YIELD nodeId, componentId AS community`),
-    storeQuery: `CALL gds.alpha.scc.write($config)`,
+    streamQuery: communityStreamQueryOutline(`CALL gds.alpha.scc.stream($generatedName, $config) YIELD nodeId, componentId AS community`),
+    storeQuery: `CALL gds.alpha.scc.write($generatedName, $config)`,
     getFetchQuery: getCommunityFetchCypher,
     description: "finds sets of connected nodes in a directed graph where each node is reachable in both directions from any other node in the same set",
     returnsCommunities: true
+  },
+  "Local Clustering Coefficient": {
+    algorithmName: "gds.localClusteringCoefficient",
+    parametersBuilder: communityParams,
+    ResultView: LocalClusteringCoefficientResult,
+    service: localClusteringCoefficient,
+    description: "describes the likelihood that the neighbours of node are also connected",
+    Form: NewLocalClusteringCoefficientForm,
+    streamQuery: removeSpacing(`CALL gds.localClusteringCoefficient.stream($generatedName, $config)
+          YIELD nodeId, localClusteringCoefficient AS coefficient
+          WITH gds.util.asNode(nodeId) AS node, coefficient
+          RETURN node, coefficient
+          ORDER BY coefficient DESC
+          LIMIT toInteger($limit)`),
+    storeQuery: `CALL gds.localClusteringCoefficient.write($generatedName, $config)`,
+    parameters: { ...commonParameters, ...{writeProperty: "coefficient"}},
+    getFetchQuery: getFetchNewLocalClusteringCoefficientCypher
+  },
+  "Triangle Count": {
+    algorithmName: "gds.triangleCount",
+    Form: NewTriangleCountForm,
+    service: triangleCountNew,
+    ResultView: NewTriangleCountResult,
+    streamQuery: removeSpacing(`CALL gds.triangleCount.stream($generatedName, $config)
+          YIELD nodeId, triangleCount AS triangles
+          WITH gds.util.asNode(nodeId) AS node, triangles
+          RETURN node, triangles
+          ORDER BY triangles DESC
+          LIMIT toInteger($limit)`),
+    storeQuery: `CALL gds.triangleCount.write($generatedName, $config)`,
+    parameters: { ...commonParameters, ...{ writeProperty: "trianglesCount", }},
+    getFetchQuery: getFetchNewTriangleCountCypher,
+    parametersBuilder: communityParams,
+    description: "finds set of three nodes, where each node has a relationship to all other nodes"
+
   }
 };
-
 
 const baseTriangles = {
   Form: TrianglesForm,
@@ -197,78 +225,6 @@ const baseTriangles = {
   storeQuery: ``,
   getFetchQuery: () => ``,
   description: "finds set of three nodes, where each node has a relationship to all other nodes"
-}
-
-const baseTriangleCount = {
-  parametersBuilder: communityParams,
-  description: "finds set of three nodes, where each node has a relationship to all other nodes"
-}
-
-const oldTriangleCount = {
-  algorithmName: "gds.alpha.triangleCount",
-  Form: TriangleCountForm,
-  service: triangleCountOld,
-  ResultView: TriangleCountResult,
-  streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
-        YIELD nodeId, triangles, coefficient
-        WITH gds.util.asNode(nodeId) AS node, coefficient, triangles
-        RETURN node, triangles, coefficient
-        ORDER BY triangles DESC
-        LIMIT toInteger($limit)`),
-  storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
-  parameters: { ...commonParameters, ...{writeProperty: "trianglesCount"}},
-  getFetchQuery: getFetchTriangleCountCypher,
-}
-
-const newTriangleCount = {
-  algorithmName: "gds.triangleCount",
-  Form: NewTriangleCountForm,
-  service: triangleCountNew,
-  ResultView: NewTriangleCountResult,
-  streamQuery: removeSpacing(`CALL gds.triangleCount.stream($config)
-        YIELD nodeId, triangleCount AS triangles
-        WITH gds.util.asNode(nodeId) AS node, triangles
-        RETURN node, triangles
-        ORDER BY triangles DESC
-        LIMIT toInteger($limit)`),
-  storeQuery: `CALL gds.triangleCount.write($config)`,
-  parameters: { ...commonParameters, ...{ writeProperty: "trianglesCount", }},
-  getFetchQuery: getFetchNewTriangleCountCypher
-}
-
-const baseLocalClusteringCoefficient = {
-  parametersBuilder: communityParams,
-  ResultView: LocalClusteringCoefficientResult,
-  service: localClusteringCoefficient,
-  description: "describes the likelihood that the neighbours of node are also connected"
-}
-
-const oldLocalClusteringCoefficient = {
-  algorithmName: "gds.alpha.triangleCount",
-  Form: LocalClusteringCoefficientForm,
-  streamQuery: removeSpacing(`CALL gds.alpha.triangleCount.stream($config)
-        YIELD nodeId, coefficient
-        WITH gds.util.asNode(nodeId) AS node, coefficient
-        RETURN node, coefficient
-        ORDER BY coefficient DESC
-        LIMIT toInteger($limit)`),
-  storeQuery: `CALL gds.alpha.triangleCount.write($config)`,
-  parameters: { ...commonParameters, ...{ clusteringCoefficientProperty: "coefficient" }},
-  getFetchQuery: getFetchLocalClusteringCoefficientCypher
-}
-
-const newLocalClusteringCoefficient = {
-  algorithmName: "gds.localClusteringCoefficient",
-  Form: NewLocalClusteringCoefficientForm,
-  streamQuery: removeSpacing(`CALL gds.localClusteringCoefficient.stream($config)
-        YIELD nodeId, localClusteringCoefficient AS coefficient
-        WITH gds.util.asNode(nodeId) AS node, coefficient
-        RETURN node, coefficient
-        ORDER BY coefficient DESC
-        LIMIT toInteger($limit)`),
-  storeQuery: `CALL gds.localClusteringCoefficient.write($config)`,
-  parameters: { ...commonParameters, ...{writeProperty: "coefficient"}},
-  getFetchQuery: getFetchNewLocalClusteringCoefficientCypher
 }
 
 export default {
@@ -284,10 +240,11 @@ export default {
       "Strongly Connected Components",
       "Triangles",
       "Triangle Count",
-      "Local Clustering Coefficient"
+      "Local Clustering Coefficient",
+      "SLLPA"
     ]
-
-    return version >= 5 ? algorithms.concat(["SLLPA"]) : algorithms;
+    return algorithms;
+    //return version >= 5 ? algorithms.concat(["SLLPA"]) : algorithms;
   },
   algorithmDefinitions: (algorithm, gdsVersion) => {
     const version = parseInt(gdsVersion.split(".")[1])
@@ -305,12 +262,6 @@ export default {
 
         baseTriangles.streamQuery = removeSpacing(version > 1 ? newStreamQuery : oldStreamQuery)
         return baseTriangles
-      }
-      case "Triangle Count": {
-        return Object.assign({}, baseTriangleCount, version > 1 ? newTriangleCount : oldTriangleCount)
-      }
-      case "Local Clustering Coefficient": {
-        return Object.assign({}, baseLocalClusteringCoefficient, version > 1 ? newLocalClusteringCoefficient : oldLocalClusteringCoefficient)
       }
       default:
         return algorithms[algorithm]

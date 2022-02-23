@@ -3,7 +3,6 @@ import {runAlgorithm, runHITSAlgorithm} from "../../services/centralities"
 import {centralityParams, getFetchCypher, getFetchHITSCypher, streamQueryOutline} from '../../services/queries'
 import BetweennesForm from "./BetweennesForm"
 import DegreeForm from "./DegreeForm"
-import ApproxBetweennessForm from "./ApproxBetweennessForm"
 import React from "react"
 import CentralityResult from "./CentralityResult"
 import ClosenessCentralityForm from "./ClosenessCentralityForm"
@@ -151,30 +150,6 @@ LIMIT toInteger($limit)`,
   }
 };
 
-const baseApproxBetweenness = {
-  service: runAlgorithm,
-  ResultView: CentralityResult,
-  parametersBuilder: centralityParams,
-  getFetchQuery: getFetchCypher,
-  description: `calculates shortest paths between a subset of nodes, unlike Betweenness which considers all pairs of nodes`
-}
-
-const oldApproxBetweenness = {
-  Form: ApproxBetweennessForm,
-  parameters: {
-    ...commonParameters,
-    ...{ strategy: "random", maxDepth: null, probability: null, writeProperty: "approxBetweenness"}
-  },
-  streamQuery: streamQueryOutline(`CALL gds.alpha.betweenness.sampled.stream($config) YIELD nodeId, centrality AS score`),
-  storeQuery: `CALL gds.alpha.betweenness.sampled.write($config)`
-}
-
-const newApproxBetweenness = {
-  Form: NewApproxBetweennessForm,
-  parameters: { ...commonParameters, ...{ samplingSize: 100, writeProperty: "approxBetweenness"}},
-  streamQuery: streamQueryOutline(`CALL gds.betweenness.stream($config) YIELD nodeId, score`),
-  storeQuery: `CALL gds.betweenness.write($config)`
-}
 export default {
   algorithmList: (gdsVersion) => {
     const mainVersion = parseInt(gdsVersion.split(".")[0])

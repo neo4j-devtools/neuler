@@ -1,4 +1,4 @@
-import { runCypher, runStreamQuery, runStoreQuery } from "./stores/neoStore"
+import { runStreamQuery, runStoreQuery } from "./stores/neoStore"
 import { parseProperties } from "./resultMapper"
 
 const handleException = error => {

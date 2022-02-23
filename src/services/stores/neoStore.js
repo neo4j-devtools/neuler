@@ -88,7 +88,7 @@ export const runCypherSystemDatabase = (cypher, parameters = {}) => {
 	return session.run(cypher, parameters)
 }
 
-export const runStreamQuery = (streamCypher, parameters, parseResultStream) => {
+export const runStreamQuery = (streamCypher, parameters, parseResultStreamFn) => {
 	const gdsMainVersion = parseInt(parameters.gdsVersion.split(".")[0])
 	const generatedName = `in-memory-graph-${Date.now()}`
 	parameters.generatedName = generatedName
@@ -103,7 +103,7 @@ export const runStreamQuery = (streamCypher, parameters, parseResultStream) => {
 				runCypher(streamCypher, parameters)
 					.then(result => {
 						runCypher(dropGraph)
-						resolve(parseResultStream(result))
+						resolve(parseResultStreamFn(result))
 					})
 					.catch(reject)
 			)
@@ -115,7 +115,7 @@ export const runStoreQuery = (
 	storeCypher,
 	fetchCypher,
 	parameters,
-	parseResultStream
+	parseResultStreamFn
 ) => {
 	const gdsMainVersion = parseInt(parameters.gdsVersion.split(".")[0])
 	const generatedName = `in-memory-graph-${Date.now()}`
@@ -132,7 +132,7 @@ export const runStoreQuery = (
 					runCypher(fetchCypher, parameters)
 						.then(result => {
 							runCypher(dropGraph)
-							resolve(parseResultStream(result))
+							resolve(parseResultStreamFn(result))
 						})
 						.catch(reject)
 				})

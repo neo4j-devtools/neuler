@@ -1,4 +1,4 @@
-import {int} from "neo4j-driver"
+import { int } from "neo4j-driver"
 
 export const streamQueryOutline = (callAlgorithm) => `${callAlgorithm}
 WITH gds.util.asNode(nodeId) AS node, score
@@ -66,30 +66,12 @@ ORDER BY size DESC
 LIMIT toInteger($limit)`
 }
 
-export const getFetchTriangleCountCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
-  return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`)
-RETURN node, node.\`${config.writeProperty}\` AS triangles
-ORDER BY triangles DESC
-LIMIT toInteger($limit)`
-}
-
 export const getFetchNewTriangleCountCypher = (label, config) => {
   const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
   return `MATCH (node${escapedLabel})
 WHERE exists(node.\`${config.writeProperty}\`) 
 RETURN node, node.\`${config.writeProperty}\` AS triangles
 ORDER BY triangles DESC
-LIMIT toInteger($limit)`
-}
-
-export const getFetchLocalClusteringCoefficientCypher = (label, config) => {
-  const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
-  return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.clusteringCoefficientProperty}\`)
-RETURN node, node.\`${config.clusteringCoefficientProperty}\` AS coefficient
-ORDER BY coefficient DESC
 LIMIT toInteger($limit)`
 }
 
@@ -104,7 +86,7 @@ LIMIT toInteger($limit)`
 
 
 
-export const onePoint5PathFindingParams = ({startNode, endNode, latitudeProperty, longitudeProperty, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties}) => {
+export const onePoint5PathFindingParams = ({ startNode, endNode, latitudeProperty, longitudeProperty, label, relationshipType, direction, persist, writeProperty, weightProperty, clusteringCoefficientProperty, communityProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, requiredProperties }) => {
   const params = {
     limit: parseInt(limit) || 50,
     config: {}
@@ -124,7 +106,7 @@ export const onePoint5PathFindingParams = ({startNode, endNode, latitudeProperty
     longitudeProperty: longitudeProperty,
   }
 
-  if(latitudeProperty || longitudeProperty) {
+  if (latitudeProperty || longitudeProperty) {
     config.nodeProjection = {
       nodeLabel: {
         label: config.nodeProjection,
@@ -140,12 +122,12 @@ export const onePoint5PathFindingParams = ({startNode, endNode, latitudeProperty
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
 
-export const pre1Point5PathFindingParams = ({startNode, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties}) => {
+export const pre1Point5PathFindingParams = ({ startNode, endNode, delta, propertyKeyLat, propertyKeyLon, label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties }) => {
   const params = {
     limit: parseInt(limit) || 50,
     config: {}
@@ -166,7 +148,7 @@ export const pre1Point5PathFindingParams = ({startNode, endNode, delta, property
     delta: delta
   }
 
-  if(propertyKeyLat || propertyKeyLon) {
+  if (propertyKeyLat || propertyKeyLon) {
     config.nodeProjection = {
       nodeLabel: {
         label: config.nodeProjection,
@@ -182,7 +164,7 @@ export const pre1Point5PathFindingParams = ({startNode, endNode, delta, property
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
@@ -193,7 +175,7 @@ const addPersistFields = (config, persist, writeProperty, writeRelationshipType)
   }
 }
 
-export const nodeSimilarityParams = ({label, relationshipType, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties}) => {
+export const nodeSimilarityParams = ({ label, relationshipType, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties }) => {
   const params = {
     limit: parseInt(limit) || 50,
   }
@@ -210,12 +192,12 @@ export const nodeSimilarityParams = ({label, relationshipType, direction, persis
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
-export const knnParams = ({label, relationshipType,  direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, nodeWeightProperty, topK, sampleRate,
-                            deltaThreshold, randomJoins, limit, requiredProperties}) => {
+export const knnParams = ({ label, relationshipType, direction, persist, writeProperty, defaultValue, weightProperty, writeRelationshipType, nodeWeightProperty, topK, sampleRate,
+  deltaThreshold, randomJoins, limit, requiredProperties }) => {
   const params = {
     limit: parseInt(limit) || 50,
   }
@@ -230,7 +212,7 @@ export const knnParams = ({label, relationshipType,  direction, persist, writePr
     deltaThreshold: parseFloat(deltaThreshold) || 0.001
   }
 
-  if(nodeWeightProperty) {
+  if (nodeWeightProperty) {
     config.nodeProperties = [nodeWeightProperty]
     requiredProperties.push("nodeProperties")
   }
@@ -240,12 +222,12 @@ export const knnParams = ({label, relationshipType,  direction, persist, writePr
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
 
-export const similarityParams = ({itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties}) => {
+export const similarityParams = ({ itemLabel, relationshipType, categoryLabel, direction, persist, writeProperty, weightProperty, writeRelationshipType, similarityCutoff, degreeCutoff, limit, requiredProperties }) => {
   const params = {
     limit: parseInt(limit) || 50,
     itemLabel: itemLabel || null,
@@ -267,13 +249,13 @@ export const similarityParams = ({itemLabel, relationshipType, categoryLabel, di
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
-export const communityParams = ({label, relationshipType, direction, persist, maxIterations, minAssociationStrength, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, communityNodeLimit, requiredProperties}) => {
+export const communityParams = ({ label, relationshipType, direction, persist, maxIterations, minAssociationStrength, tolerance, writeProperty, weightProperty, clusteringCoefficientProperty, seedProperty, includeIntermediateCommunities, intermediateCommunitiesWriteProperty, defaultValue, limit, communityNodeLimit, requiredProperties }) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
-  params.communityNodeLimit = communityNodeLimit ?  parseInt(communityNodeLimit) : 10;
+  params.communityNodeLimit = communityNodeLimit ? parseInt(communityNodeLimit) : 10;
 
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
   const parsedIterations = maxIterations == null ? null : int(maxIterations)
@@ -290,7 +272,7 @@ export const communityParams = ({label, relationshipType, direction, persist, ma
     tolerance: parsedTolerance && parsedTolerance > 0 ? parsedTolerance : null,
   }
 
-  if(seedProperty) {
+  if (seedProperty) {
     config.nodeProperties = [seedProperty]
   }
 
@@ -298,15 +280,15 @@ export const communityParams = ({label, relationshipType, direction, persist, ma
     config.writeProperty = parsedWriteProperty
   }
 
-  requiredProperties.push("nodeProjection")
-  requiredProperties.push("relationshipProjection")
   requiredProperties.push("nodeProperties")
+  let graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.graphConfig = filterParameters({ ...params.config, ...config }, graphRequiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
-export const centralityParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, dampingFactor, maxIterations, hitsIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize}) => {
+export const centralityParams = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, dampingFactor, maxIterations, hitsIterations, maxDepth, probability, strategy, limit, normalization, requiredProperties, samplingSize }) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
 
   const parsedProbability = parseFloat(probability)
@@ -331,15 +313,15 @@ export const centralityParams = ({label, relationshipType, direction, persist, w
   if (persist) {
     config.writeProperty = parsedWriteProperty
   }
-  
+
   let graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
-  params.graphConfig = filterParameters({...params.config, ...config}, graphRequiredProperties)
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.graphConfig = filterParameters({ ...params.config, ...config }, graphRequiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
-export const embeddingParams = ({label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties, iterations, embeddingDimension, walkLength,
-                                  inOutFactor, returnFactor, modelName, batchSize, normalizationStrength, embeddingSize, maxIterations
+export const embeddingParams = ({ label, relationshipType, direction, persist, writeProperty, weightProperty, defaultValue, limit, requiredProperties, iterations, embeddingDimension, walkLength,
+  inOutFactor, returnFactor, modelName, batchSize, normalizationStrength, embeddingSize, maxIterations
 }) => {
   const params = baseParameters(label, relationshipType, direction, limit, weightProperty, defaultValue)
   const parsedWriteProperty = writeProperty ? writeProperty.trim() : writeProperty
@@ -375,24 +357,24 @@ export const embeddingParams = ({label, relationshipType, direction, persist, wr
   requiredProperties.push("nodeProjection")
   requiredProperties.push("relationshipProjection")
 
-  params.config = filterParameters({...params.config, ...config}, requiredProperties)
+  params.config = filterParameters({ ...params.config, ...config }, requiredProperties)
   return params
 }
 
 export const createRelationshipProjection = (relationshipType, direction, weightProperty, defaultValue) => {
   const relTypeKey = "relType"
   return (relationshipType === null || relationshipType === undefined) ? {
-      [relTypeKey]: {
-        type: "*",
-        orientation: (direction === null || direction === undefined) ? "NATURAL" : direction.toUpperCase()
-      }
+    [relTypeKey]: {
+      type: "*",
+      orientation: (direction === null || direction === undefined) ? "NATURAL" : direction.toUpperCase()
     }
+  }
     : {
       [relTypeKey]: {
         type: relationshipType,
         orientation: (direction === null || direction === undefined) ? "NATURAL" : direction.toUpperCase(),
         properties: !weightProperty ? {} : {
-          [weightProperty]: {property: weightProperty, defaultValue: parseFloat(defaultValue) || null},
+          [weightProperty]: { property: weightProperty, defaultValue: parseFloat(defaultValue) || null },
         }
       }
     }
