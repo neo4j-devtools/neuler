@@ -88,13 +88,21 @@ export const runCypherSystemDatabase = (cypher, parameters = {}) => {
 	return session.run(cypher, parameters)
 }
 
-export const runStreamQuery = (streamCypher, parameters, parseResultStreamFn) => {
+export const runStreamQuery = (
+	streamCypher,
+	parameters,
+	parseResultStreamFn
+) => {
 	const gdsMainVersion = parseInt(parameters.gdsVersion.split(".")[0])
 	const generatedName = `in-memory-graph-${Date.now()}`
 	parameters.generatedName = generatedName
 	const createGraph = `CALL gds.graph.${
 		gdsMainVersion === 1 ? "create" : "project"
-	}("${generatedName}", $graphConfig.nodeProjection, $graphConfig.relationshipProjection)`
+	}("${generatedName}", $graphConfig.nodeProjection, $graphConfig.relationshipProjection ${
+		parameters.config.nodeProperties
+			? `,{ nodeProperties: [$graphConfig.nodeProperties]}`
+			: ""
+	})`
 	const dropGraph = `CALL gds.graph.drop("${generatedName}")`
 
 	return new Promise((resolve, reject) => {
