@@ -20,7 +20,7 @@ export const constructQueries = (
 	parameters,
 	streamQuery
 ) => {
-	const graphProperties = filterParameters(parameters.config, [
+	const graphProperties = filterParameters(parameters.graphConfig, [
 		"nodeProperties"
 	])
 	const algorithmProperties = filterParameters(parameters.config, [
@@ -56,14 +56,10 @@ export const constructQueries = (
 	}($generatedName, $graphConfig.nodeProjection, $graphConfig.relationshipProjection, ${stringfyParam(
 		graphProperties
 	)})`
-	const dropGraph = `CALL gds.graph.drop("$generatedName")`
+	const dropGraph = `CALL gds.graph.drop($generatedName)`
 
-	const storeAlgorithmNamedGraph = `CALL ${
-		algorithmDefinition.algorithmName
-	}.write($generatedName, ${stringfyParam(algorithmProperties)})`
-	const streamAlgorithmNamedGraph = algorithmDefinition.namedGraphStreamQuery
-		? algorithmDefinition.namedGraphStreamQuery
-		: streamQuery.replace("$config", `${stringfyParam(algorithmProperties)}`)
+	const storeAlgorithmNamedGraph = algorithmDefinition.storeQuery
+	const streamAlgorithmNamedGraph = algorithmDefinition.streamQuery
 
 	return {
 		createGraph,

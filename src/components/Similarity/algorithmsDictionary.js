@@ -97,16 +97,11 @@ const algorithms = {
 			degreeCutoff: 1,
 			direction: "Natural"
 		},
-		streamQuery: (
-			item,
-			relationshipType,
-			category
-		) => `CALL gds.nodeSimilarity.stream($config) YIELD node1, node2, similarity
+		streamQuery: `CALL gds.nodeSimilarity.stream($config) YIELD node1, node2, similarity
 RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`,
-		storeQuery: (item, relationshipType, category) =>
-			`CALL gds.nodeSimilarity.write($config)`,
+		storeQuery: `CALL gds.nodeSimilarity.write($config)`,
 		getFetchQuery: constructFetchQuery,
 		description: `measures similarities between sets. It is defined as the size of the intersection divided by the size of the union of two sets.`
 	},
@@ -245,16 +240,11 @@ LIMIT toInteger($limit)`,
 			direction: "Natural",
 			similarityMetric: "Jaccard"
 		},
-		streamQuery: (
-			item,
-			relationshipType,
-			category
-		) => `CALL gds.nodeSimilarity.stream($generatedName, $config) YIELD node1, node2, similarity
+		streamQuery: `CALL gds.nodeSimilarity.stream($generatedName, $config) YIELD node1, node2, similarity
 RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`,
-		storeQuery: (item, relationshipType, category) =>
-			`CALL gds.nodeSimilarity.write($generatedName, $config)`,
+		storeQuery: `CALL gds.nodeSimilarity.write($generatedName, $config)`,
 		getFetchQuery: constructFetchQuery,
 		description: `measures similarities between sets. It can use either the Jaccard or Overlap similarity metric.`
 	}
@@ -280,17 +270,12 @@ const knnBase = {
 		maxIterations: 100,
 		randomJoins: 10
 	},
-	streamQuery: (
-		item,
-		relationshipType,
-		category
-	) => `CALL gds.beta.knn.stream($config) 
+	streamQuery: `CALL gds.beta.knn.stream($config) 
 YIELD node1, node2, similarity
 WITH node1, collect({node: gds.util.asNode(node2), similarity: similarity}) AS to
 RETURN gds.util.asNode(node1) AS from, to
 LIMIT toInteger($limit)`,
-	storeQuery: (item, relationshipType, category) =>
-		`CALL gds.beta.knn.write($config)`,
+	storeQuery: `CALL gds.beta.knn.write($config)`,
 	getFetchQuery: constructkNNFetchQuery,
 	description: `computes similarities between node pairs based on node properties`
 }
@@ -320,12 +305,12 @@ export default {
 				if (mainVersion == 1) {
 					return knnBase
 				}
-				knnBase.streamQuery = () => `CALL gds.knn.stream($generatedName, $config) 
+				knnBase.streamQuery = `CALL gds.knn.stream($generatedName, $config) 
 				YIELD node1, node2, similarity
 				WITH node1, collect({node: gds.util.asNode(node2), similarity: similarity}) AS to
 				RETURN gds.util.asNode(node1) AS from, to
 				LIMIT toInteger($limit)`
-				knnBase.storeQuery = () => `CALL gds.knn.write($generatedName, $config)`
+				knnBase.storeQuery = `CALL gds.knn.write($generatedName, $config)`
 				knnBase.Form = KNNFormNew
 				knnBase.parametersBuilder = knnParamsNew
 
