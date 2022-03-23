@@ -2,7 +2,8 @@ import {
 	constructSimilarityMaps,
 	constructWeightedSimilarityMaps,
 	runAlgorithm,
-	runkNNAlgorithm
+	runkNNAlgorithm,
+	runAlgorithmOld
 } from "../../services/similarity"
 import {
 	knnParams,
@@ -97,11 +98,11 @@ const algorithms = {
 			degreeCutoff: 1,
 			direction: "Natural"
 		},
-		streamQuery: `CALL gds.nodeSimilarity.stream($config) YIELD node1, node2, similarity
+		streamQuery: `CALL gds.nodeSimilarity.stream($generatedName, $config) YIELD node1, node2, similarity
 RETURN gds.util.asNode(node1) AS from, gds.util.asNode(node2) AS to, similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`,
-		storeQuery: `CALL gds.nodeSimilarity.write($config)`,
+		storeQuery: `CALL gds.nodeSimilarity.write($generatedName, $config)`,
 		getFetchQuery: constructFetchQuery,
 		description: `measures similarities between sets. It is defined as the size of the intersection divided by the size of the union of two sets.`
 	},
@@ -109,7 +110,7 @@ LIMIT toInteger($limit)`,
 		algorithmName: "gds.alpha.similarity",
 		Form: OverlapForm,
 		parametersBuilder: similarityParams,
-		service: runAlgorithm,
+		service: runAlgorithmOld,
 		ResultView: SimilarityResult,
 		parameters: {
 			itemLabel: "*",
@@ -138,7 +139,7 @@ LIMIT toInteger($limit)`,
 		algorithmName: "gds.alpha.similarity.cosine",
 		Form: CosineForm,
 		parametersBuilder: similarityParams,
-		service: runAlgorithm,
+		service: runAlgorithmOld,
 		ResultView: SimilarityResult,
 		parameters: {
 			itemLabel: "*",
@@ -168,7 +169,7 @@ LIMIT toInteger($limit)`,
 		algorithmName: "gds.alpha.similarity.pearson",
 		Form: PearsonForm,
 		parametersBuilder: similarityParams,
-		service: runAlgorithm,
+		service: runAlgorithmOld,
 		ResultView: SimilarityResult,
 		parameters: {
 			itemLabel: "*",
@@ -198,7 +199,7 @@ LIMIT toInteger($limit)`,
 		algorithmName: "gds.alpha.similarity.euclidean",
 		Form: EuclideanForm,
 		parametersBuilder: similarityParams,
-		service: runAlgorithm,
+		service: runAlgorithmOld,
 		ResultView: SimilarityResult,
 		parameters: {
 			itemLabel: "*",
@@ -251,7 +252,7 @@ LIMIT toInteger($limit)`,
 }
 
 const knnBase = {
-	algorithmName: "gds.knn",
+	algorithmName: "gds.beta.knn",
 	Form: KNNForm,
 	parametersBuilder: knnParams,
 	service: runkNNAlgorithm,
@@ -270,12 +271,12 @@ const knnBase = {
 		maxIterations: 100,
 		randomJoins: 10
 	},
-	streamQuery: `CALL gds.beta.knn.stream($config) 
+	streamQuery: `CALL gds.beta.knn.stream($generatedName, $config) 
 YIELD node1, node2, similarity
 WITH node1, collect({node: gds.util.asNode(node2), similarity: similarity}) AS to
 RETURN gds.util.asNode(node1) AS from, to
 LIMIT toInteger($limit)`,
-	storeQuery: `CALL gds.beta.knn.write($config)`,
+	storeQuery: `CALL gds.beta.knn.write($generatedName, $config)`,
 	getFetchQuery: constructkNNFetchQuery,
 	description: `computes similarities between node pairs based on node properties`
 }
@@ -313,6 +314,7 @@ export default {
 				knnBase.storeQuery = `CALL gds.knn.write($generatedName, $config)`
 				knnBase.Form = KNNFormNew
 				knnBase.parametersBuilder = knnParamsNew
+				knnBase.algorithmName = "gds.knn"
 
 				Object.assign(knnBase.parameters, { similarityMetric: "COSINE" })
 

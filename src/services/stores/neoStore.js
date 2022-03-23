@@ -99,7 +99,7 @@ export const runStreamQuery = (
 	const createGraph = `CALL gds.graph.${
 		gdsMainVersion === 1 ? "create" : "project"
 	}("${generatedName}", $graphConfig.nodeProjection, $graphConfig.relationshipProjection ${
-		parameters.config.nodeProperties
+		parameters.graphConfig.nodeProperties
 			? `,{ nodeProperties: [$graphConfig.nodeProperties]}`
 			: ""
 	})`
@@ -131,7 +131,7 @@ export const runStoreQuery = (
 	const createGraph = `CALL gds.graph.${
 		gdsMainVersion === 1 ? "create" : "project"
 	}("${generatedName}", $graphConfig.nodeProjection, $graphConfig.relationshipProjection ${
-		parameters.config.nodeProperties
+		parameters.graphConfig.nodeProperties
 			? `,{ nodeProperties: [$graphConfig.nodeProperties]}`
 			: ""
 	})`

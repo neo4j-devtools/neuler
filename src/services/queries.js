@@ -298,8 +298,11 @@ export const nodeSimilarityParams = ({
 
 	addPersistFields(config, persist, writeProperty, writeRelationshipType)
 
-	requiredProperties.push("nodeProjection")
-	requiredProperties.push("relationshipProjection")
+	const graphRequiredProperties = ["nodeProjection", "relationshipProjection"]
+	params.graphConfig = filterParameters(
+		{ ...params.config, ...config },
+		graphRequiredProperties
+	)
 
 	params.config = filterParameters(
 		{ ...params.config, ...config },
@@ -393,18 +396,26 @@ export const knnParams = ({
 
 	if (nodeWeightProperty) {
 		config.nodeProperties = [nodeWeightProperty]
-		requiredProperties.push("nodeProperties")
 	}
 
 	addPersistFields(config, persist, writeProperty, writeRelationshipType)
 
-	requiredProperties.push("nodeProjection")
-	requiredProperties.push("relationshipProjection")
+	let graphRequiredProperties = [
+		"nodeProjection",
+		"relationshipProjection",
+		"nodeProperties"
+	]
+	params.graphConfig = filterParameters(
+		{ ...params.config, ...config },
+		graphRequiredProperties
+	)
 
 	params.config = filterParameters(
 		{ ...params.config, ...config },
 		requiredProperties
 	)
+	params.config.nodeWeightProperty = nodeWeightProperty
+
 	return params
 }
 

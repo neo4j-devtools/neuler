@@ -86,7 +86,7 @@ const handleException = error => {
 	throw new Error(error)
 }
 
-const runStreamingAlgorithm = (
+const runStreamingAlgorithmOld = (
 	streamCypher,
 	parameters,
 	parseResultStreamFn = parseResultStream
@@ -94,6 +94,33 @@ const runStreamingAlgorithm = (
 	return runCypher(streamCypher, parameters)
 		.then(result => parseResultStreamFn(result))
 		.catch(handleException)
+}
+
+export const runAlgorithmOld = ({
+	streamCypher,
+	storeCypher,
+	fetchCypher,
+	parameters,
+	persisted,
+	parseResultStreamFn = parseResultStream
+}) => {
+	if (!persisted) {
+		return runStreamingAlgorithmOld(
+			streamCypher(),
+			parameters,
+			parseResultStreamFn
+		)
+	} else {
+		return new Promise((resolve, reject) => {
+			runCypher(storeCypher(), parameters)
+				.then(() => {
+					runCypher(fetchCypher, parameters)
+						.then(result => resolve(parseResultStreamFn(result)))
+						.catch(reject)
+				})
+				.catch(reject)
+		})
+	}
 }
 
 export const parseResultStream = result => {

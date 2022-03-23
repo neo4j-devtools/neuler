@@ -20,9 +20,10 @@ export const constructQueries = (
 	parameters,
 	streamQuery
 ) => {
-	const graphProperties = filterParameters(parameters.graphConfig, [
-		"nodeProperties"
-	])
+	const graphProperties = filterParameters(
+		parameters.graphConfig ? parameters.graphConfig : {},
+		["nodeProperties"]
+	)
 	const algorithmProperties = filterParameters(parameters.config, [
 		"writeProperty",
 		"writeRelationshipType",
@@ -247,6 +248,10 @@ export default class extends Component {
 
 	renderQueries = queries => {
 		return queries.map(query => {
+			if (typeof query === "function") {
+				query = query()
+			}
+
 			const cleanQuery = removeSpacing(query.replace("\n  ", "\n")) + ";"
 			return (
 				<Message key={cleanQuery}>

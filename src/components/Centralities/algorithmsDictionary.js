@@ -76,20 +76,6 @@ LIMIT toInteger($limit)`,
 			</div>
 		)
 	},
-	Closeness: {
-		algorithmName: "gds.beta.closeness",
-		Form: ClosenessCentralityForm,
-		service: runAlgorithm,
-		ResultView: CentralityResult,
-		parameters: { ...commonParameters, ...{ writeProperty: "closeness" } },
-		parametersBuilder: centralityParams,
-		streamQuery: streamQueryOutline(
-			`CALL gds.beta.closeness.stream($generatedName, $config) YIELD nodeId, score`
-		),
-		storeQuery: `CALL gds.beta.closeness.write($generatedName, $config)`,
-		getFetchQuery: getFetchCypher,
-		description: `detect nodes that are able to spread information very efficiently through a graph`
-	},
 	Harmonic: {
 		algorithmName: "gds.alpha.harmonic",
 		Form: ClosenessCentralityForm,
@@ -205,6 +191,21 @@ LIMIT toInteger($limit)`,
 	}
 }
 
+const baseCloseness = {
+	algorithmName: "gds.beta.closeness",
+	Form: ClosenessCentralityForm,
+	service: runAlgorithm,
+	ResultView: CentralityResult,
+	parameters: { ...commonParameters, ...{ writeProperty: "closeness" } },
+	parametersBuilder: centralityParams,
+	streamQuery: streamQueryOutline(
+		`CALL gds.beta.closeness.stream($generatedName, $config) YIELD nodeId, score`
+	),
+	storeQuery: `CALL gds.beta.closeness.write($generatedName, $config)`,
+	getFetchQuery: getFetchCypher,
+	description: `detect nodes that are able to spread information very efficiently through a graph`
+}
+
 export default {
 	algorithmList: gdsVersion => {
 		const mainVersion = parseInt(gdsVersion.split(".")[0])
@@ -226,24 +227,17 @@ export default {
 		const mainVersion = parseInt(gdsVersion.split(".")[0])
 		const version = parseInt(gdsVersion.split(".")[1])
 		switch (algorithm) {
-			/*
-      case "Betweenness": {
-        const oldStreamQuery = `CALL gds.alpha.betweenness.stream($config) YIELD nodeId, centrality AS score`
-        const newStreamQuery = `CALL gds.betweenness.stream($config) YIELD nodeId, score`
+			case "Closeness": {
+				if (mainVersion == 1) {
+					baseCloseness.streamQuery = streamQueryOutline(
+						`CALL gds.alpha.closeness.stream($generatedName, $config) YIELD nodeId, score`
+					)
+					baseCloseness.storeQuery = `CALL gds.alpha.closeness.write($generatedName, $config)`
+					baseCloseness.algorithmName = "gds.alpha.closeness"
+				}
+				return baseCloseness
+			}
 
-        const oldStoreQuery = `CALL gds.alpha.betweenness.write($config)`
-        const newStoreQuery = `CALL gds.betweenness.write($config)`
-
-        baseBetweenness.streamQuery = streamQueryOutline(version > "2" ? newStreamQuery : oldStreamQuery)
-        baseBetweenness.storeQuery = version > "2" ? newStoreQuery : oldStoreQuery
-
-        return baseBetweenness
-      }
-
-      case "Approx Betweenness": {
-        return Object.assign({}, baseApproxBetweenness, version > 2 ? newApproxBetweenness : oldApproxBetweenness)
-      }
-      */
 			default:
 				return algorithms[algorithm]
 		}
