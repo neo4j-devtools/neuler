@@ -1,10 +1,8 @@
-import {runCypher} from "./stores/neoStore"
+import {runStreamQuery} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 
 export const runStreamingAlgorithm = ({streamCypher, parameters, parseResultStreamFn=parseResultStream}) => {
-    return runCypher(streamCypher, parameters)
-        .then(result => parseResultStreamFn(result))
-        .catch(handleException)
+    return runStreamQuery(streamCypher, parameters, parseResultStreamFn)
 }
 
 export const runAllPairsShortestPathAlgorithm = ({streamCypher, parameters}) => {

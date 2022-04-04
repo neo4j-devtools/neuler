@@ -35,6 +35,20 @@ RETURN key AS label, keys(value[key].properties) AS propertyKeys`, {})
       .catch(handleException)
 }
 
+export const loadRelPropertyKeys = () => {
+  return runCypher(`CALL apoc.meta.schema({maxRels: 0})
+  YIELD value
+  UNWIND keys(value) AS key
+  WITH key, value 
+  WHERE value[key].type = "relationship"
+  UNWIND keys(value[key].properties) AS propertyKey
+  RETURN distinct propertyKey
+  ORDER BY propertyKey
+  `, {})
+      .then(parsePropertyKeysResultStream)
+      .catch(handleException)
+}
+
 export const loadVersions = () => {
   return runCypher(`CALL dbms.components() 
 YIELD versions
@@ -62,9 +76,11 @@ export const loadMetadata = (neo4jVersion) => {
     return loadLabels().then(labels => {
       return loadRelationshipTypes().then(relationships => {
         return loadPropertyKeys().then(propertyKeys => {
-          return loadNodePropertyKeys().then(nodePropertyKeys => ({
-          labels, relationships, propertyKeys, nodePropertyKeys, databases
-          }))
+          return loadRelPropertyKeys().then(relPropertyKeys => {
+            return loadNodePropertyKeys().then(nodePropertyKeys => ({
+              labels, relationships, propertyKeys, nodePropertyKeys, databases, relPropertyKeys
+            }))
+          })
         })
       })
     })

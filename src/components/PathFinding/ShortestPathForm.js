@@ -4,7 +4,7 @@ import {ProjectedGraphWithWeights} from "../Form/ProjectedGraph";
 import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
 import {OpenCloseSection} from "../Form/OpenCloseSection";
 
-const AlgoForm = ({children, readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions,
+const AlgoForm = ({children, readOnly, onChange, labelOptions, label, relationshipType, relationshipTypeOptions, propertyKeyOptions, relPropertyKeyOptions,
                       relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, direction, persist}) => {
     const projectedGraphProps = {
         label,
@@ -17,7 +17,8 @@ const AlgoForm = ({children, readOnly, onChange, labelOptions, label, relationsh
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     return (

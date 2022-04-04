@@ -7,6 +7,7 @@ import {
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
+    setRelPropertyKeys,
     setRelationshipTypes,
     setVersions
 } from "../ducks/metadata";
@@ -119,6 +120,7 @@ const mapDispatchToProps = dispatch => ({
     setGds: version => dispatch(setVersions(version)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setRelPropertyKeys: propertyKeys => dispatch(setRelPropertyKeys(propertyKeys)),
     setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
     setDatabases: databases => dispatch(setDatabases(databases)),
     addDatabase: database => dispatch(addDatabase(database)),

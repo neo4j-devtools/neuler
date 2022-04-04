@@ -8,6 +8,7 @@ import {
     setLabels,
     setNodePropertyKeys,
     setPropertyKeys,
+    setRelPropertyKeys,
     setRelationshipTypes
 } from "../ducks/metadata";
 import {getActiveDatabase, hasNamedDatabase, onActiveDatabase} from "../services/stores/neoStore";
@@ -118,6 +119,7 @@ const mapDispatchToProps = dispatch => ({
     setLabels: labels => dispatch(setLabels(labels)),
     setRelationshipTypes: relationshipTypes => dispatch(setRelationshipTypes(relationshipTypes)),
     setPropertyKeys: propertyKeys => dispatch(setPropertyKeys(propertyKeys)),
+    setRelPropertyKeys: propertyKeys => dispatch(setRelPropertyKeys(propertyKeys)),
     setNodePropertyKeys: propertyKeys => dispatch(setNodePropertyKeys(propertyKeys)),
     addDatabase: database => dispatch(addDatabase(database)),
     initLabel: (database, label, color, propertyKeys) => dispatch(initLabel(database, label, color, propertyKeys))

@@ -5,7 +5,7 @@ import {StoreProperty} from "../../Form/StoreProperty";
 import {OpenCloseSection} from "../../Form/OpenCloseSection";
 
 const EigenvectorForm = ({
-                          readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,
+                          readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions, relPropertyKeyOptions,
                           propertyKeyOptions, writeProperty, onChange, maxIterations, weightProperty, defaultValue, direction, persist, children
                       }) => {
     const projectedGraphProps = {
@@ -19,7 +19,8 @@ const EigenvectorForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     return (

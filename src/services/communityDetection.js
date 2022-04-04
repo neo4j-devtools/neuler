@@ -1,25 +1,17 @@
-import {runCypher} from "./stores/neoStore"
+import {runCypher, runStreamQuery, runStoreQuery} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 
 
 export const runAlgorithm = ({streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn = parseResultStream}) => {
   if (!persisted) {
-    return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
+    return runStreamQuery(streamCypher, parameters, parseResultStreamFn)
   } else {
-    return new Promise((resolve, reject) => {
-      runCypher(storeCypher, parameters)
-        .then(() => {
-          runCypher(fetchCypher, parameters)
-            .then(result => resolve(parseResultStreamFn(result)))
-            .catch(reject)
-        })
-        .catch(reject)
-    })
+    return runStoreQuery(storeCypher, fetchCypher, parameters, parseResultStreamFn)
   }
 }
 
 export const triangles = ({streamCypher, parameters}) => {
-  return runStreamingAlgorithm(streamCypher, parameters, result => {
+  return runStreamQuery(streamCypher, parameters, result => {
     if (result.records) {
       let rows = result.records.map(record => {
         const nodeA = record.get('nodeA')
@@ -48,33 +40,6 @@ export const triangles = ({streamCypher, parameters}) => {
     } else {
       console.error(result.error)
       throw new Error(result.error)
-    }
-  })
-}
-
-export const triangleCountOld = ({streamCypher, storeCypher, fetchCypher, parameters, persisted}) => {
-  return runAlgorithm({
-    streamCypher, storeCypher, fetchCypher, parameters, persisted, parseResultStreamFn: result => {
-      if (result.records) {
-        let rows = result.records.map(record => {
-          const {properties, labels, identity} = record.get('node')
-
-          return {
-            properties: parseProperties(properties),
-            identity: identity.toNumber(),
-            labels: labels,
-            triangles: record.get('triangles').toNumber()
-          }
-        });
-        return {
-          rows: rows,
-          ids: rows.map(row => row.identity),
-          labels: [...new Set(rows.flatMap(result => result.labels))]
-        }
-      } else {
-        console.error(result.error)
-        throw new Error(result.error)
-      }
     }
   })
 }
@@ -164,14 +129,6 @@ const handleException = error => {
   console.error(error)
   throw new Error(error)
 }
-
-const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = parseResultStream) => {
-  return runCypher(streamCypher, parameters)
-    .then(result => parseResultStreamFn(result))
-    .catch(handleException)
-}
-
-
 export const parseResultStream = (result) => {
   if (result.records) {
     const rows = result.records.map(record => {

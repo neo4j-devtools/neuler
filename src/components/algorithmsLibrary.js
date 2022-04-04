@@ -11,12 +11,11 @@ export const algorithmGroups = (gdsVersion) => {
         "Centralities": centralitiesDictionary,
         "Community Detection": communitiesDictionary,
         "Path Finding": pathFindingDictionary,
-        "Similarity": similarityDictionary
+        "Similarity": similarityDictionary,
+        "Graph Embeddings": embeddingsDictionary
     };
 
-    return version >= 3 ?
-        {...commonCategories, "Graph Embeddings": embeddingsDictionary} :
-        commonCategories
+    return commonCategories
 }
 
 export const getAlgorithms = (group, gdsVersion) => {

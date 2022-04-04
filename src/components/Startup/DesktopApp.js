@@ -9,6 +9,7 @@ import {
   setLabels,
   setNodePropertyKeys,
   setPropertyKeys,
+  setRelPropertyKeys,
   setRelationshipTypes,
   setVersions
 } from "../../ducks/metadata"

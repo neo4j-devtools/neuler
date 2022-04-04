@@ -1,4 +1,4 @@
-import {runCypher} from "./stores/neoStore"
+import {runStreamQuery, runStoreQuery} from "./stores/neoStore"
 import {parseProperties} from "./resultMapper"
 
 
@@ -11,17 +11,9 @@ export const runAlgorithm = ({
                                  parseResultStreamFn = parseResultStream
                              }) => {
     if (!persisted) {
-        return runStreamingAlgorithm(streamCypher, parameters, parseResultStreamFn)
+        return runStreamQuery(streamCypher, parameters, parseResultStreamFn)
     } else {
-        return new Promise((resolve, reject) => {
-            runCypher(storeCypher, parameters)
-                .then(() => {
-                    runCypher(fetchCypher, parameters)
-                        .then(result => resolve(parseResultStreamFn(result)))
-                        .catch(reject)
-                })
-                .catch(reject)
-        })
+        return runStoreQuery(storeCypher, fetchCypher, parameters, parseResultStreamFn)
     }
 }
 
@@ -30,13 +22,6 @@ const handleException = error => {
     console.error(error)
     throw new Error(error)
 }
-
-const runStreamingAlgorithm = (streamCypher, parameters, parseResultStreamFn = parseResultStream) => {
-    return runCypher(streamCypher, parameters)
-        .then(result => parseResultStreamFn(result))
-        .catch(handleException)
-}
-
 
 export const parseResultStream = (result) => {
     if (result.records) {

@@ -7,7 +7,7 @@ import {OpenCloseSection} from "../../../Form/OpenCloseSection";
 const Node2VecForm = ({
                           readOnly, label, relationshipType, labelOptions, relationshipTypeOptions, relationshipOrientationOptions,
                           propertyKeyOptions, writeProperty, onChange, weightProperty, defaultValue, direction, persist, children,
-                          iterations, embeddingDimension, walkLength, inOutFactor, returnFactor, windowSize
+                          iterations, embeddingDimension, walkLength, inOutFactor, returnFactor, windowSize, relPropertyKeyOptions
                       }) => {
     const projectedGraphProps = {
         label,
@@ -20,7 +20,8 @@ const Node2VecForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     return (

@@ -10,11 +10,11 @@ import SelectAlgorithm from "./SelectAlgorithm";
 
 export const AlgoFormView = (props) => {
   const {task} = props
-
   const [parameters, setParameters] = React.useState({})
   const [labelOptions, setLabelOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
   const [relationshipTypeOptions, setRelationshipTypeOptions] = React.useState([{key: "*", value: "*", text: 'Any'}])
   const [propertyKeyOptions, setPropertyKeyOptions] = React.useState([])
+  const [relPropertyKeyOptions, setRelPropertyKeyOptions] = React.useState([])
   const [relationshipOrientationOptions, setRelationshipOrientationOptions] = React.useState([{
     key: "Natural",
     value: "Natural",
@@ -39,6 +39,12 @@ export const AlgoFormView = (props) => {
     });
     propertyKeys.unshift({key: null, value: null, text: 'None'})
     setPropertyKeyOptions(propertyKeys)
+
+    const relPropertyKeys = metadata.relPropertyKeys.map(row => {
+      return {key: row.propertyKey, value: row.propertyKey, text: row.propertyKey}
+    });
+    relPropertyKeys.unshift({key: null, value: null, text: 'None'})
+    setRelPropertyKeyOptions(relPropertyKeys)
 
     setRelationshipOrientationOptions([
       {key: "Natural", value: "Natural", text: "Natural"},
@@ -71,10 +77,13 @@ export const AlgoFormView = (props) => {
       })
 
       const persisted = formParameters.persist
+      const gdsVersion = props.metadata.versions.gdsVersion
+
       props.onRun({
         ...params,
         limit: props.limit,
-        communityNodeLimit: props.communityNodeLimit
+        communityNodeLimit: props.communityNodeLimit,
+        gdsVersion: gdsVersion
       }, formParameters, persisted)
     }
   }
@@ -130,6 +139,7 @@ export const AlgoFormView = (props) => {
                     relationshipTypeOptions={relationshipTypeOptions}
                     relationshipOrientationOptions={relationshipOrientationOptions}
                     propertyKeyOptions={propertyKeyOptions}
+                    relPropertyKeyOptions={relPropertyKeyOptions}
                     readOnly={readOnly}
                     onChange={onChangeParam}>
             <ResultFilteringFields limit={parameters.limit}

@@ -6,7 +6,7 @@ import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const AlgoForm = ({
                       children, readOnly, onChange, labelOptions, maxIterations, tolerance, label, relationshipType, relationshipTypeOptions, relationshipOrientationOptions,
-                      propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist
+                      propertyKeyOptions, weightProperty, writeProperty, seedProperty, defaultValue, direction, persist, relPropertyKeyOptions
                   }) => {
     const projectedGraphProps = {
         label,
@@ -19,7 +19,8 @@ const AlgoForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
 
     const parameterProps = {

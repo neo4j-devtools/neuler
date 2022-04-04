@@ -5,8 +5,8 @@ import {ResultsFilteringWrapper} from "../Form/ResultsFiltering";
 import {OpenCloseSection} from "../Form/OpenCloseSection";
 
 const AlgoForm = ({
-                      children, readOnly, onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions,
-                      relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, propertyKeyLat, propertyKeyLon, direction, persist
+                      children, readOnly, onChange, relationshipType, labelOptions, label, propertyKeyOptions, relationshipTypeOptions, relPropertyKeyOptions,
+                      relationshipOrientationOptions, startNode, endNode, weightProperty, defaultValue, latitudeProperty, longitudeProperty, direction, persist
                   }) => {
     const projectedGraphProps = {
         label,
@@ -19,14 +19,15 @@ const AlgoForm = ({
         weightProperty,
         defaultValue,
         onChange,
-        readOnly
+        readOnly,
+        relPropertyKeyOptions
     }
     return (
         <Form size='mini' style={{marginBottom: '1em'}}>
             <ProjectedGraphWithWeights {...projectedGraphProps} />
             <Parameters onChange={onChange}
                         startNode={startNode} endNode={endNode}
-                        propertyKeyLat={propertyKeyLat} propertyKeyLon={propertyKeyLon}
+                        latitudeProperty={latitudeProperty} longitudeProperty={longitudeProperty}
                         readOnly={readOnly} propertyKeyOptions={propertyKeyOptions}
             />
             <ResultsFilteringWrapper>{children}</ResultsFilteringWrapper>
@@ -34,7 +35,7 @@ const AlgoForm = ({
     )
 }
 
-const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLon, readOnly, propertyKeyOptions}) => {
+const Parameters = ({onChange, startNode, endNode, latitudeProperty, longitudeProperty, readOnly, propertyKeyOptions}) => {
     return <OpenCloseSection title="Algorithm Parameters">
         <Form.Group inline className={readOnly ? "disabled" : null}>
             <label style={{'width': '12em'}}>Start Node</label>
@@ -55,20 +56,21 @@ const Parameters = ({onChange, startNode, endNode, propertyKeyLat, propertyKeyLo
         </Form.Group>
 
         <Form.Field inline className={readOnly ? "disabled" : null}>
-            <label style={{'width': '12em'}}>Property Key Lat</label>
-            <Dropdown disabled={readOnly} placeholder='Weight Property' value={propertyKeyLat}
+            <label style={{'width': '12em'}}>Latitude Property</label>
+            <Dropdown disabled={readOnly} placeholder='Weight Property' value={latitudeProperty}
                       search selection
                       options={propertyKeyOptions}
-                      onChange={(evt, data) => onChange("propertyKeyLat", data.value)}/>
+                      onChange={(evt, data) => onChange("latitudeProperty", data.value)}/>
         </Form.Field>
 
         <Form.Field inline className={readOnly ? "disabled" : null}>
-            <label style={{'width': '12em'}}>Property Key Lon</label>
-            <Dropdown disabled={readOnly} placeholder='Weight Property' value={propertyKeyLon}
+            <label style={{'width': '12em'}}>Longitude Property</label>
+            <Dropdown disabled={readOnly} placeholder='Weight Property' value={longitudeProperty}
                       search selection
                       options={propertyKeyOptions}
-                      onChange={(evt, data) => onChange("propertyKeyLon", data.value)}/>
+                      onChange={(evt, data) => onChange("longitudeProperty", data.value)}/>
         </Form.Field>
+
 
     </OpenCloseSection>
 }

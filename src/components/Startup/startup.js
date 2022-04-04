@@ -44,6 +44,7 @@ export const updateMetadata = (props, metadata, selectedDatabase) => {
     props.setLabels(metadata.labels)
     props.setRelationshipTypes(metadata.relationships)
     props.setPropertyKeys(metadata.propertyKeys)
+    props.setRelPropertyKeys(metadata.relPropertyKeys)
     props.setNodePropertyKeys(metadata.nodePropertyKeys)
     props.setDatabases(metadata.databases)
 
