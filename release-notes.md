@@ -1,5 +1,12 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.54
+
+* Support GDS 2.0
+* Differentiate between node and rel properties
+* Remove support for GDS versions previous than 1.8.x
+* Remove anonymous graph syntax
+
 ## 0.1.53
 
 * Add caption and label toggle option for TSNE visualization
