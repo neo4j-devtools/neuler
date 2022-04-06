@@ -284,7 +284,7 @@ LIMIT toInteger($limit)`,
 export default {
 	algorithmList: gdsVersion => {
 		const version = parseInt(gdsVersion.split(".")[1])
-		const mainVersion = parseInt(gdsVersion.split(".")[2])
+		const mainVersion = parseInt(gdsVersion.split(".")[0])
 		if (mainVersion == 1) {
 			return [
 				"Jaccard",
