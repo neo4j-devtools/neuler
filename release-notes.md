@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.55
+
+* Fix similarity algorithms bug
+
 ## 0.1.54
 
 * Support GDS 2.0
