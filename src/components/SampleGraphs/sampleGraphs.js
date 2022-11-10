@@ -119,7 +119,7 @@ MERGE (r)-[:CONTAINS_INGREDIENT]->(i)`
                 description: "Find the most used ingredients or most diverse recipes."
             },
             {
-                name: "Jaccard",
+                name: "Node Similarity",
                 category: "Similarity",
                 description: "Find the most similar recipes."
             }
