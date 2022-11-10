@@ -71,7 +71,7 @@ const baseRecipes = {
         slides: [
             {
                 group: "Similarity",
-                algorithm: "Jaccard",
+                algorithm: "Node Similarity",
                 title: "Jaccard Similarity",
                 overrides: {
                     formParameters: {persist: true},
@@ -133,8 +133,8 @@ const baseRecipes = {
 
 
 export const recipes = (gdsVersion) => {
-    const version = parseInt(gdsVersion.split(".")[1])
-    if (version >= 4) {
+    const version = parseInt(gdsVersion.split(".")[0])
+    if (version >= 2) {
         baseRecipes["categorise-unstructured-data"] = {
             name: "Categorise Unstructured Data",
             shortDescription: "This recipe contains a sequence of algorithms for creating a graph structure based on node property similarities.",

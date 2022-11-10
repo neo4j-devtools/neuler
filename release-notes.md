@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.56
+
+* Fix Jaccard Similarity algorithm in sample graph recipes
+
 ## 0.1.55
 
 * Fix similarity algorithms bug
