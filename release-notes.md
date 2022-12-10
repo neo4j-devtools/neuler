@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.57
+
+* Change verification of GDS and APOC procedures due to deprecations in Neo4j v5
+
 ## 0.1.56
 
 * Fix Jaccard Similarity algorithm in sample graph recipes
