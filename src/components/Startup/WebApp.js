@@ -30,7 +30,7 @@ import * as qs from "qs";
 import {FeedbackForm} from "../Feedback/FeedbackForm";
 import constants from "../../constants";
 import {Redirect} from "react-router-dom";
-import {subscribeToDatabaseCredentialsForActiveGraph} from "graph-app-kit/components/GraphAppBase";
+import { subscribeToDatabaseCredentialsForActiveGraph } from '../../services/graph-app-kit/helpers'
 
 const NewApp = (props) => {
     const [queryParameters, setQueryParameters] = React.useState({})

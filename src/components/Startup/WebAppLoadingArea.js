@@ -29,7 +29,7 @@ import {
     setVersions
 } from "../../ducks/metadata";
 import {connect} from "react-redux";
-import {Render} from "graph-app-kit/components/Render";
+import {Render} from "../Render";
 import SelectedDatabase from "../Onboarding/SelectedDatabase";
 import {selectAlgorithm, selectGroup} from "../../ducks/algorithms";
 import {hasNodesAndRelationships} from "../SelectDatabase";
