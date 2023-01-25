@@ -62,6 +62,7 @@ const App = WebApp
 
 const RenderComponentView = (props) => {
     const {View, connectionInfo, routeProps, activeAlgorithm, activeGroup} = props
+    const neo4jVersion = props.metadata && props.metadata.versions ? props.metadata.versions.neo4jVersion : false
     if(!connectionInfo.credentials) {
         return <Redirect to={{
             pathname: "/login",
@@ -79,7 +80,8 @@ const RenderComponentView = (props) => {
             <View {...routeProps} setAboutActive={setAboutActive} setDatasetsActive={setDatasetsActive}  />
             <FeedbackForm page={page}/>
             <About open={aboutActive} onClose={() => setAboutActive(false)}/>
-            <Datasets onComplete={() => refreshMetadata(props)} open={datasetsActive} onClose={() => setDatasetsActive(false)}/>
+            <Datasets onComplete={() => refreshMetadata(props)} open={datasetsActive} onClose={() => setDatasetsActive(false)}
+                      neo4jVersion={neo4jVersion}/>
         </div>
     </Container>
 }

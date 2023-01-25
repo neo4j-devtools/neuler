@@ -1,4 +1,4 @@
-import {subscribeToDatabaseCredentialsForActiveGraph} from 'graph-app-kit/components/GraphAppBase'
+import {subscribeToDatabaseCredentialsForActiveGraph} from './graph-app-kit/helpers'
 import {
     extractMainVersion,
     onDisconnected,

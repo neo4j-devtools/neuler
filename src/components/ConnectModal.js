@@ -1,5 +1,5 @@
 import React from 'react'
-import {Render} from 'graph-app-kit/components/Render'
+import {Render} from './Render'
 import {Button, Divider, Dropdown, Form, Input, Message} from 'semantic-ui-react'
 
 const defaultUrlComponents = { scheme: "neo4j", port: 7687, address: "localhost"}
