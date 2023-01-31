@@ -49,7 +49,6 @@ export const constructQueries = (
 			algorithmProperties[key] = algorithmProperties[key].toNumber()
 		}
 	})
-
 	const mainGdsVersion = parseInt(parameters.gdsVersion.split(".")[0])
 
 	const createGraph = `CALL gds.graph.${

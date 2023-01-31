@@ -1,9 +1,9 @@
 import {parseResultStream} from './installation';
-import { v1 as neo } from "neo4j-driver"
+import neo4j from "neo4j-driver"
 
 test('installed', () => {
   const value = {
-    count: neo.int(3)
+    count: neo4j.int(3)
   }
 
   const record = {
@@ -16,7 +16,7 @@ test('installed', () => {
 
 test('not installed', () => {
   const value = {
-    count: neo.int(0)
+    count: neo4j.int(0)
   }
 
   const record = {
