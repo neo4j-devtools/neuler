@@ -1,11 +1,11 @@
-import { RenderParams, cleanParams } from './renderParams';
+import RenderParams from './renderParams';
 import { render } from 'react-testing-library'
 import React from 'react'
 
 describe("Parameter renderer should", () => {
 
   it('renders empty with nothing provided', () => {
-    const { container } = render(<RenderParams/>)
+    const { container } = render(<RenderParams parameters={{}}/>)
     expect(container.getElementsByTagName('div')).toHaveLength(0)
     expect(container.getElementsByTagName('pre')).toHaveLength(0)
   })
