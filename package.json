@@ -16,8 +16,8 @@
   "main": "index.js",
   "homepage": ".",
   "dependencies": {
-    "@apollo/react-components": "^3.1.5",
-    "@apollo/react-hooks": "^3.1.5",
+    "@apollo/react-components": "^4.0.0",
+    "@apollo/react-hooks": "^4.0.0",
     "@nivo/bar": "^0.52.1",
     "@nivo/core": "^0.72.0",
     "@nivo/legends": "^0.72.0",
@@ -56,6 +56,10 @@
     "tsne-js": "^1.0.3",
     "uuid": "^3.3.2",
     "vis": "^4.21.0"
+  },
+  "devDependencies": { 
+    "node-pre-gyp": "0.17.0",
+    "fsevents": "2.2.1"
   },
   "scripts": {
     "start": "react-scripts start",

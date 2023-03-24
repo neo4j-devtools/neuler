@@ -130,7 +130,7 @@ const MissingLibraryOnWebapp = () => {
             <Message.Content>
                 <p>
                     This application relies on the APOC Library.
-                    <br/>You can find installation instructions at <a target="_blank" rel="noopener noreferrer" href="https://neo4j.com/labs/apoc/4.1/installation/">neo4j.com/labs/apoc/4.1/installation</a>
+                    <br/>You can find installation instructions in the <a target="_blank" rel="noopener noreferrer" href="https://neo4j.com/docs/apoc/current/installation/">documentation</a>.
                 </p>
             </Message.Content>
         </Message>
@@ -138,7 +138,7 @@ const MissingLibraryOnWebapp = () => {
 }
 
 const MetaUnavailable = () => {
-    const sandboxSetting = "dbms.security.procedures.unrestricted=,jwt.security.*,gds.*,apoc.*"
+    const sandboxSetting = "dbms.security.procedures.unrestricted=jwt.security.*,gds.*,apoc.*"
     return <React.Fragment>
         <Message color="grey" attached={true}  align="center"  >
             <Message.Content>
