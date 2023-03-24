@@ -40,7 +40,7 @@ class GraphVisualiser extends Component {
         }
       },
       initial_cypher: `match (n:Person)
-      where exists(n.pagerank)
+      WHERE n.pagerank IS NOT NULL
       return n
       LIMIT 50`
     }

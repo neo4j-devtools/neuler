@@ -44,7 +44,7 @@ LIMIT toInteger($limit)`,
         getFetchQuery: (label, config) => {
             const escapedLabel = config.nodeProjection && config.nodeProjection !== "*" ? ":`" + config.nodeProjection + "`" : ""
             return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`)
+WHERE node.\`${config.writeProperty}\` IS NOT NULL
 WITH node, node.\`${config.writeProperty}\` AS embedding
 WITH node, CASE WHEN apoc.meta.type(embedding) = "float[]" THEN embedding ELSE null END as embedding
 RETURN node, embedding
