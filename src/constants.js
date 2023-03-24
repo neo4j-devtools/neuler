@@ -6,5 +6,5 @@ export default {
 	},
 	defaultLimit: 42,
 	defaultCommunityNodeLimit: 10,
-	version: "0.1.57"
+	version: "0.1.58"
 }
