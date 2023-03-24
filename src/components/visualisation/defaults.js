@@ -1,11 +1,11 @@
 const defaults = {
 
   neo4j: {
-    initialQuery:   `MATCH (n) WHERE exists(n.pagerank)
+    initialQuery:   `MATCH (n) WHERE n.pagerank IS NOT NULL
                         WITH (n), RAND() AS random
                         ORDER BY random LIMIT 3000
                         OPTIONAL MATCH (n)-[r]-(m)
-                        //WITH n,r,m WHERE exists(n.pagerank) AND exists(m.pagerank) AND exists(m.community)
+                        //WITH n,r,m WHERE n.pagerank IS NOT NULL AND m.pagerank IS NOT NULL AND m.community IS NOT NULL
                         RETURN n, r, m;`,
     neo4jUri: "bolt://localhost:7687",
     neo4jUser: "neo4j",

@@ -19,7 +19,7 @@ export const getFetchCypher = (label, config, graphConfig) => {
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`)
+WHERE node.\`${config.writeProperty}\` IS NOT NULL
 RETURN node, node.\`${config.writeProperty}\` AS score
 ORDER BY score DESC
 LIMIT toInteger($limit)`
@@ -31,9 +31,9 @@ export const getFetchHITSCypher = (label, config, graphConfig) => {
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}auth\`) AND exists(node.\`${
+WHERE node.\`${config.writeProperty}auth\` IS NOT NULL AND node.\`${
 		config.writeProperty
-	}hub\`)
+	}hub\`  IS NOT NULL
 RETURN node, node.\`${config.writeProperty}auth\` AS authScore, node.\`${
 		config.writeProperty
 	}hub\` AS hubScore
@@ -47,7 +47,7 @@ export const getFetchLouvainCypher = (label, config, graphConfig) => {
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`)
+WHERE node.\`${config.writeProperty}\` IS NOT NULL
 WITH node, node.\`${config.writeProperty}\` AS community
 WITH collect(node) AS allNodes, 
      CASE WHEN apoc.meta.type(community) = "long[]" THEN community[-1] ELSE community END AS community, 
@@ -63,7 +63,7 @@ export const getFetchSLLPACypher = (label, config, graphConfig) => {
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}communityIds\`)
+WHERE node.\`${config.writeProperty}communityIds\`  IS NOT NULL
 WITH node, node.\`${config.writeProperty}communityIds\` AS community
 WITH collect(node) AS allNodes,  
      CASE WHEN apoc.meta.type(community) = "long[]" THEN community ELSE null END as communities
@@ -78,7 +78,7 @@ export const getCommunityFetchCypher = (label, config, graphConfig) => {
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`)
+WHERE node.\`${config.writeProperty}\`  IS NOT NULL
 WITH node.\`${config.writeProperty}\` AS community, collect(node) AS allNodes
 RETURN community, allNodes[0..$communityNodeLimit] AS nodes, size(allNodes) AS size
 ORDER BY size DESC
@@ -91,7 +91,7 @@ export const getFetchNewTriangleCountCypher = (label, config, graphConfig) => {
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`) 
+WHERE node.\`${config.writeProperty}\` IS NOT NULL
 RETURN node, node.\`${config.writeProperty}\` AS triangles
 ORDER BY triangles DESC
 LIMIT toInteger($limit)`
@@ -107,7 +107,7 @@ export const getFetchNewLocalClusteringCoefficientCypher = (
 			? ":`" + graphConfig.nodeProjection + "`"
 			: ""
 	return `MATCH (node${escapedLabel})
-WHERE exists(node.\`${config.writeProperty}\`)
+WHERE node.\`${config.writeProperty}\`  IS NOT NULL
 RETURN node, node.\`${config.writeProperty}\` AS coefficient
 ORDER BY coefficient DESC
 LIMIT toInteger($limit)`

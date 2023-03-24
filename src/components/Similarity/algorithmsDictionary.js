@@ -61,7 +61,7 @@ const constructFetchQuery = (item, writeRelationshipType, config) => {
 	const rel = `[rel:\`${writeRelationshipType}\`]`
 
 	return `MATCH ${itemNode1}-${rel}-${itemNode2}
-WHERE exists(rel.\`${config.writeProperty}\`)
+WHERE rel.\`${config.writeProperty}\` IS NOT NULL
 RETURN from, to, rel.\`${config.writeProperty}\` AS similarity
 ORDER BY similarity DESC
 LIMIT toInteger($limit)`
@@ -73,7 +73,7 @@ const constructkNNFetchQuery = (item, writeRelationshipType, config) => {
 	const rel = `[rel:\`${writeRelationshipType}\`]`
 
 	return `MATCH ${itemNode1}-${rel}->${itemNode2}
-WHERE exists(rel.\`${config.writeProperty}\`)
+WHERE rel.\`${config.writeProperty}\` IS NOT NULL
 WITH from, to, rel.\`${config.writeProperty}\` AS similarity
 ORDER BY from, similarity DESC
 WITH from, collect({node: to, similarity: similarity}) AS to
