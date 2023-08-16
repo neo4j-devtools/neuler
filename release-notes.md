@@ -1,5 +1,9 @@
 # Neuler: The Graph Data Science Playground Release Notes
 
+## 0.1.59
+
+* Fix multi-database support in Neo4j v5
+
 ## 0.1.58
 
 * Fix deprecated Cypher statements in Neo4j v5
