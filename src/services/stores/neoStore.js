@@ -69,7 +69,7 @@ export const mainNeo4jVersion = () => {
 
 export const runCypher = (cypher, parameters = {}) => {
 	const version = mainNeo4jVersion()
-	if (version === 4) {
+	if (version >= 4) {
 		return getSession(activeDatabase).run(cypher, parameters)
 	} else {
 		return getDriver()
